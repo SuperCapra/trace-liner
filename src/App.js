@@ -2,11 +2,21 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
+const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_AUTORIZE_URL + 
+  '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
+  '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
+  '/&response_type=code&scope=activity:read_all'
 
 function App() {
+  //checkParameters()
   return (
     <Homepage/>
   );
+}
+
+function checkParameters() {
+  let variable = this.props.location.query.testVariable
+  console.log('test variable: ', variable)
 }
 
 class Homepage extends React.Component{
@@ -56,14 +66,14 @@ class Homepage extends React.Component{
   // }
 
   render() {
-    return (    
+    return (   
       <div className="App">
           {/* {this.returnRadioLang()}
           {this.returnBack()} */}
         <div className="App-header">
           <div>
             {/* {this.routesToStage()} */}
-            ciao!
+            <button onClick={() => window.location.href = stravaAuthorizeUrl}>LOGIN TO STRAVA</button>
           </div>
         </div>
       </div>
