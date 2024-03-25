@@ -2,21 +2,86 @@ import logo from './logo.svg';
 import './App.css';
 import React from 'react';
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
-const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_AUTORIZE_URL + 
+const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
+const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
+var called = false 
+var athleteData = {}
+var activities = []
+var accessToken
+
 function App() {
+  const queryParameters = new URLSearchParams(window.location.search)
+  const code = queryParameters.get('code')
+  console.log('code:', code)
+  if(code && !called) {
+    called = true
+    getAccessTokenAndActivities(code)
+  }
   //checkParameters()
   return (
     <Homepage/>
   );
 }
 
-function checkParameters() {
-  let variable = this.props.location.query.testVariable
-  console.log('test variable: ', variable)
+function getAccessTokenAndActivities(userCode) {
+  console.log('getting the access token...')
+  let urlAccessToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
+    '?client_id=' + clientId + 
+    '&client_secret=' + clientSecret + 
+    '&code=' + userCode +
+    '&grant_type=authorization_code'
+
+  fetch(urlAccessToken, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Content-Length': '0'
+    },
+  }).then(response => response.json())
+    .then(res => {
+      console.log('res: ', res)
+      accessToken = res.access_token
+      athleteData = res.athlete
+      console.log('athleteData: ', athleteData)
+      if(accessToken) getActivities()
+    })
+    .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+}
+
+function getActivities() {
+  console.log('getting all the activities...')
+  let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITIES_DIRECTORY +
+    '?access_token=' + accessToken
+
+  fetch(urlActivities, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Content-Length': '0'
+    },
+  }).then(response => response.json())
+    .then(res => {
+      console.log('res: ', res)
+      if(res) {
+        res.forEach(e => {
+          console.log('Activity: ', e)
+          activities.push({
+            name: e.name,
+            id: e.id
+          })
+        })
+      }
+    })
+    .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+    console.log('activities: ', activities)
 }
 
 class Homepage extends React.Component{
