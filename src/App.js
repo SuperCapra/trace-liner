@@ -8,10 +8,14 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
-var called = false 
-var athleteData = {}
-var activities = []
-var accessToken
+let called = false 
+let athleteData = {}
+let activities = []
+let accessToken
+let isLoading = false
+let stage = 'RequestedLogin'
+let stageHistory = ['RequestedLogin']
+let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto']
 
 function App() {
   const queryParameters = new URLSearchParams(window.location.search)
@@ -28,6 +32,7 @@ function App() {
 }
 
 function getAccessTokenAndActivities(userCode) {
+  isLoading = true
   console.log('getting the access token...')
   let urlAccessToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
     '?client_id=' + clientId + 
@@ -81,32 +86,45 @@ function getActivities() {
       }
     })
     .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
-    console.log('activities: ', activities)
+    .finally(() => {
+      isLoading = false
+      //TODO solve the problem with the state and rendering the data when coming to strava
+      // stage = ''
+      console.log('activities: ', activities)
+    })
 }
 
+
+
 class Homepage extends React.Component{
-  // constructor(props) {
-  //   super(props);
-  //   // this.state = {
-  //   //   stage : stage,
-  //   //   stageHistory : stageHistory
-  //   // }
-  // }
+  constructor(props) {
+    super(props);
+    this.state = {
+      stage : stage,
+      stageHistory : stageHistory
+    }
+  }
   
-  // routesToStravaLogin() {
-  //   if(!Boolean(active)) {
-  //     return (
-  //       <code className="code-inactive">{message}</code>
-  //     )
-  //   }
-  //   if(this.state.stage === 'LanguageSelection') {
-  //     return (<LanguageSelection onClick={value => this.changeStage(value)}/>)
-  //   } else if(this.state.stage === 'FirstStep') {
-  //     return (<FirstStep onInteractiveSelection={value => this.changeStage(value)}/>)
-  //   } else if(this.state.stage === 'Interactive') return (
-  //     <Interactive/>
-  //   )
-  // }
+  loadingOrchestrator() {
+    if(isLoading) {
+      return (
+        <p>IT'S LOADING</p>
+      )
+    } else {
+      return (
+        <button onClick={() => {
+          window.location.href = stravaAuthorizeUrl
+        }}>LOGIN TO STRAVA</button>
+      )
+    }
+    // if(this.state.stage === 'LanguageSelection') {
+    //   return (<LanguageSelection onClick={value => this.changeStage(value)}/>)
+    // } else if(this.state.stage === 'FirstStep') {
+    //   return (<FirstStep onInteractiveSelection={value => this.changeStage(value)}/>)
+    // } else if(this.state.stage === 'Interactive') return (
+    //   <Interactive/>
+    // )
+  }
 
   // returnRadioLang() {
   //   if(language) return (
@@ -137,8 +155,7 @@ class Homepage extends React.Component{
           {this.returnBack()} */}
         <div className="App-header">
           <div>
-            {/* {this.routesToStage()} */}
-            <button onClick={() => window.location.href = stravaAuthorizeUrl}>LOGIN TO STRAVA</button>
+            {this.loadingOrchestrator()}
           </div>
         </div>
       </div>
