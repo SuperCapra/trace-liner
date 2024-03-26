@@ -11,11 +11,12 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
 let called = false 
 let athleteData = {}
 let activities = []
+let activity = {}
 let accessToken
 let isLoading = false
 let stage = 'RequestedLogin'
 let stageHistory = ['RequestedLogin']
-let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto']
+let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
 
 function App() {
   return (
@@ -81,9 +82,13 @@ class Homepage extends React.Component{
           <p>FetchingActivities</p>
         )
       } else if(this.state.stage === 'ShowingActivities') {
-        console.log('it come ShowingActivities')
+        let activitiesButton = activities.map(element => <div key={element.id}><button onClick={() => this.getActivity(element.id)}>{element.name}</button></div>)
         return (
-          <p>ShowingActivities</p>
+          activitiesButton
+        )
+      } else if(this.state.stage === 'ShowingActivity') {
+        return (
+          <p>ShowingActivity</p>
         )
       }
     }
@@ -119,7 +124,7 @@ class Homepage extends React.Component{
   
   getActivities() {
     console.log('getting all the activities...')
-    let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITIES_DIRECTORY +
+    let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY +
       '?access_token=' + accessToken
   
     fetch(urlActivities, {
@@ -146,9 +151,37 @@ class Homepage extends React.Component{
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         isLoading = false
-        //TODO solve the problem with the state and rendering the data when coming to strava
         this.changeStage({stage:'ShowingActivities'})
         console.log('activities: ', activities)
+      })
+  }
+
+  getActivity(activityId) {
+    console.log('getting activityId: ', activityId)
+    let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
+      '/' + activityId +
+      '?access_token=' + accessToken
+  
+    fetch(urlActivities, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Length': '0'
+      },
+    }).then(response => response.json())
+      .then(res => {
+        console.log('res: ', res)
+        if(res) {
+          activity = res
+        }
+      })
+      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .finally(() => {
+        isLoading = false
+        this.changeStage({stage:'ShowingActivity'})
+        console.log('activity: ', activity)
       })
   }
 
