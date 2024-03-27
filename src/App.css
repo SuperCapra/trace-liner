@@ -54,10 +54,38 @@ button {
   font-size: calc(10px + 1vmin);
   height: calc(10px + 3vmin);
   font-family: 'SourceCodePro';
-  margin: 5px;
+  margin: 1vmin;
 }
 button:hover {
   cursor: pointer
+}
+.button-activity {
+  text-align: left;
+  width: 80vw;
+  height: 7vh;
+  margin: 1vmin;
+  background-color: var(--palette-yellow);
+  border-radius: 5px;
+}
+.button-activity:hover{
+  cursor: pointer;
+}
+.title-activity {
+  padding: 1vh 2vw 1vh 2vw;
+  font-family: 'SourceCodePro';
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--palette-background);
+  margin-block-start: 0px; 
+  margin-block-end: 0px;
+}
+.subtitle-activity {
+  padding: 0vh 2vw 1vh 2vw;
+  font-family: 'SourceCodePro';
+  font-size: 10px;
+  color: var(--palette-background);
+  margin-block-start: 0px; 
+  margin-block-end: 0px;
 }
 
 .img-bordered {
@@ -147,7 +175,7 @@ button:hover {
 }
 
 .p-unmargin {
-  margin-block-start: 0px;
+  margin-block-start: 0px; 
   margin-block-end: 0px;
 }
 

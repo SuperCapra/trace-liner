@@ -72,9 +72,13 @@ class Homepage extends React.Component{
       if(this.state.stage === 'RequestedLogin') {
         console.log('it come RequestedLogin')
         return (
-          <button onClick={() => {
-            window.location.href = stravaAuthorizeUrl
-          }}>LOGIN TO STRAVA</button>
+          <div className="button-activity">
+            <p className="title-activity">IWD</p>
+            <p className="subtitle-activity">Ride | 123km | 2h 36m | 9 march 2024</p>
+          </div>
+          // <button onClick={() => {
+          //   window.location.href = stravaAuthorizeUrl
+          // }}>LOGIN TO STRAVA</button>
         )
       } else if(this.state.stage === 'FetchingActivities') {
         console.log('it come FetchingActivities')
