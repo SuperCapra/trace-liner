@@ -1,7 +1,7 @@
-import logo from './logo.svg';
-import stravaLogo from './strava-logo.png';
 import './App.css';
-import React, { useState } from 'react';
+import React from 'react';
+import utils from './utils.js'
+import Loader from './Loader.js'
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
 const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
@@ -65,30 +65,23 @@ class Homepage extends React.Component{
     console.log('isLoading: ', isLoading)
     console.log('this.state.stage: ', this.state.stage)
     if(isLoading) {
-      console.log('it come here')
       return (
-        <p>IT'S LOADING</p>
+        <Loader/>
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
-        console.log('it come RequestedLogin')
         return (
-          // <div className="button-activity">
-          //   <p className="title-activity">IWD</p>
-          //   <p className="subtitle-activity">Ride | 123km | 2h 36m | 9 march 2024</p>
-          // </div>
-          <div className="button-login" onClick={() => {
+          <div className="button-login justify-center-column" onClick={() => {
             window.location.href = stravaAuthorizeUrl
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
       } else if(this.state.stage === 'FetchingActivities') {
-        console.log('it come FetchingActivities')
         return (
           <p>FetchingActivities</p>
         )
       } else if(this.state.stage === 'ShowingActivities') {
         let activitiesButton = activities.map(element => 
-          <div key={element.id} className="button-activity" onClick={() => this.getActivity(element.id)}>
+          <div key={element.id} className="button-activity justify-center-column" onClick={() => this.getActivity(element.id)}>
             <p className="title-activity">{element.name}</p>
             <p className="subtitle-activity">{element.subtitle}</p>
           </div>)
@@ -130,6 +123,54 @@ class Homepage extends React.Component{
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
   }
+
+  draw(coodinates) {
+    let width = 500
+    let height = 500
+    let border = 20
+    const canvas = this.template.querySelector('.canvas');
+
+    if(!canvas || !canvas.getContext) return
+
+    let minX = Math.min(...coodinates.map(x => x[0]))
+    let maxX = Math.max(...coodinates.map(x => x[0]))
+    let minY = Math.min(...coodinates.map(x => x[1]))
+    let maxY = Math.max(...coodinates.map(x => x[1]))
+
+    console.log('minX:', minX)
+    console.log('maxX:', maxX)
+    console.log('minY:', minY)
+    console.log('maxY:', maxY)
+    
+    let mapWidth = maxX - minX
+    let mapHeight = maxY - minY
+    let mapCenterX = (minX + maxX) / 2
+    let mapCenterY = (minY + maxY) / 2
+
+    console.log('mapWidth:', mapWidth)
+    console.log('mapHeight:', mapHeight)
+
+    let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
+
+    console.log('mapWidth*zoomFactor:', mapWidth*zoomFactor)
+    console.log('mapHeight*zoomFactor:', mapHeight*zoomFactor)
+
+    const ctx = canvas.getContext('2d')
+
+    // set line stroke and line width
+    ctx.strokeStyle = 'red'
+    ctx.lineWidth = 4
+
+    ctx.beginPath()
+
+    for(let i = 0; i < coodinates.length; i++) {
+      let c = coodinates[i]
+      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
+    }
+
+    ctx.stroke()
+    this.changeStage({stage:'ShowingActivity'})
+  }
   
   getActivities() {
     console.log('getting all the activities...')
@@ -150,20 +191,26 @@ class Homepage extends React.Component{
         if(res) {
           res.forEach(e => {
             console.log('Activity: ', e)
-            activities.push({
+            let t = {
               name: e.name,
-              sportType: e.spor_type,
+              sportType: utils.labelize(e.sport_type),
+              duration: e.elapsed_time,
+              beautyDuration: utils.getBeautyDuration(e.elapsed_time),
               distance: e.distance,
+              distanceKm: Number((e.distance / 1000).toFixed(2)),
               locationCountry: e.location_country,
               movingTime: e.moving_time,
               startDate: e.start_date,
+              beautyStartDate: utils.getBeautyDate(e.start_date),
               startDateLocal: e.start_date_local,
-              startLatitude: e.start_latng && e.start_latLng.length && e.start_latLng.length === 2 ? e.start_latLng[0] : undefined,
-              startLongitude: e.start_latLng && e.start_latLng.length && e.start_latLng.length === 2 ? e.start_latLng[1] : undefined,
-              endLatitude: e.end_latng && e.end_latng.length && e.end_latng.length === 2 ? e.end_latng[0] : undefined,
-              endLongitude: e.end_latng && e.end_latng.length && e.end_latng.length === 2 ? e.end_latng[1] : undefined,
+              startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
+              startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined,
+              endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
+              endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
               id: e.id
-            })
+            }
+            t.subtitle = t.beautyStartDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
+            activities.push(t)
           })
         }
       })
