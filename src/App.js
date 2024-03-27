@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import stravaLogo from './strava-logo.png';
 import './App.css';
 import React, { useState } from 'react';
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
@@ -72,13 +73,13 @@ class Homepage extends React.Component{
       if(this.state.stage === 'RequestedLogin') {
         console.log('it come RequestedLogin')
         return (
-          <div className="button-activity">
-            <p className="title-activity">IWD</p>
-            <p className="subtitle-activity">Ride | 123km | 2h 36m | 9 march 2024</p>
-          </div>
-          // <button onClick={() => {
-          //   window.location.href = stravaAuthorizeUrl
-          // }}>LOGIN TO STRAVA</button>
+          // <div className="button-activity">
+          //   <p className="title-activity">IWD</p>
+          //   <p className="subtitle-activity">Ride | 123km | 2h 36m | 9 march 2024</p>
+          // </div>
+          <div className="button-login" onClick={() => {
+            window.location.href = stravaAuthorizeUrl
+          }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
       } else if(this.state.stage === 'FetchingActivities') {
         console.log('it come FetchingActivities')
@@ -196,9 +197,7 @@ class Homepage extends React.Component{
           {/* {this.returnRadioLang()}
           {this.returnBack()} */}
         <div className="App-header">
-          <div>
             {this.routesToStage()}
-          </div>
         </div>
       </div>
     )

@@ -14,6 +14,10 @@
    url('./fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf') format('truetype');
   font-weight: bold;
 }
+p {
+  margin-block-start: 0px; 
+  margin-block-end: 0px;
+}
 
 .code-inactive {
   background: var(--palette-pink); 
@@ -50,14 +54,24 @@
   text-align: center;
 }
 
-button {
-  font-size: calc(10px + 1vmin);
-  height: calc(10px + 3vmin);
-  font-family: 'SourceCodePro';
+.button-login {
+  display: flex;
+  height: 5vh;
   margin: 1vmin;
+  background-color: var(--palette-pink);
+  border-radius: 5px;
 }
-button:hover {
+.button-login:hover {
   cursor: pointer
+}
+.p-login{
+  display: flex;
+  padding: 1vh 2vw 1vh 2vw;
+  font-family: 'SourceCodePro';
+  font-size: 18px;
+  color: var(--palette-background);
+  justify-content: center;
+  flex-direction: column;
 }
 .button-activity {
   text-align: left;
@@ -76,16 +90,12 @@ button:hover {
   font-size: 14px;
   font-weight: bold;
   color: var(--palette-background);
-  margin-block-start: 0px; 
-  margin-block-end: 0px;
 }
 .subtitle-activity {
   padding: 0vh 2vw 1vh 2vw;
   font-family: 'SourceCodePro';
   font-size: 10px;
   color: var(--palette-background);
-  margin-block-start: 0px; 
-  margin-block-end: 0px;
 }
 
 .img-bordered {
