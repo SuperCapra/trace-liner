@@ -87,7 +87,11 @@ class Homepage extends React.Component{
           <p>FetchingActivities</p>
         )
       } else if(this.state.stage === 'ShowingActivities') {
-        let activitiesButton = activities.map(element => <div key={element.id}><button onClick={() => this.getActivity(element.id)}>{element.name}</button></div>)
+        let activitiesButton = activities.map(element => 
+          <div key={element.id} className="button-activity" onClick={() => this.getActivity(element.id)}>
+            <p className="title-activity">{element.name}</p>
+            <p className="subtitle-activity">{element.subtitle}</p>
+          </div>)
         return (
           activitiesButton
         )
@@ -148,6 +152,16 @@ class Homepage extends React.Component{
             console.log('Activity: ', e)
             activities.push({
               name: e.name,
+              sportType: e.spor_type,
+              distance: e.distance,
+              locationCountry: e.location_country,
+              movingTime: e.moving_time,
+              startDate: e.start_date,
+              startDateLocal: e.start_date_local,
+              startLatitude: e.start_latng && e.start_latLng.length && e.start_latLng.length === 2 ? e.start_latLng[0] : undefined,
+              startLongitude: e.start_latLng && e.start_latLng.length && e.start_latLng.length === 2 ? e.start_latLng[1] : undefined,
+              endLatitude: e.end_latng && e.end_latng.length && e.end_latng.length === 2 ? e.end_latng[0] : undefined,
+              endLongitude: e.end_latng && e.end_latng.length && e.end_latng.length === 2 ? e.end_latng[1] : undefined,
               id: e.id
             })
           })
