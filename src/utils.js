@@ -67,7 +67,7 @@ export default {
 
     getBeautyDuration(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's '
+        return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },
 
     labelize(value) {

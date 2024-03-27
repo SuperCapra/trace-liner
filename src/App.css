@@ -199,6 +199,9 @@ p {
 .camouflage{
   color: var(--palette-background);
 }
+.canvas-image{
+  width: 80vw
+}
 .padding-horizontal{
   padding-bottom: 1rem;
   padding-top: 3rem;

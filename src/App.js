@@ -2,6 +2,8 @@ import './App.css';
 import React from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
+import ButtonImage from './ButtonImage.js'
+import imageDefault from './image.jpg'
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
 const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
@@ -9,14 +11,17 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
+const image = new Image()
+
 let called = false 
 let athleteData = {}
 let activities = []
 let activity = {}
 let accessToken
 let isLoading = false
-let stage = 'RequestedLogin'
-let stageHistory = ['RequestedLogin']
+let isLoadingImage = false
+let stage = 'ShowingActivity'
+let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
 
 function App() {
@@ -26,7 +31,6 @@ function App() {
 }
 
 class Homepage extends React.Component{
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -36,35 +40,40 @@ class Homepage extends React.Component{
   }
 
   changeStage(value) {
-    // console.log('handleClick: ', value)
     if(value.stage) {
       stage = value.stage
       if(value.stage === stages[0]) {
         stageHistory = [stages[0]]
       } else if(stageHistory[stageHistory.length - 1] !== value.stage) {
         stageHistory.push(value.stage)
-        // if(value.stage === 'Interactive') this.returnRadioLang()
       }
     }
-    console.log('stageHistory', stageHistory)
     this.setState({
       stage : stage,
       stageHistory : stageHistory
     })
   }
 
+  handleDownloadClick = () => {
+    const canvas = this.canvasRef;
+    const dataURL = canvas.toDataURL('image/png'); // Convert canvas content to data URL
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'image_with_drawing.png'; // Set the filename for the downloaded image
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   routesToStage() {
-    console.log('routesToStage')
+    isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
-    console.log('code:', code)
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
     }
-    console.log('isLoading: ', isLoading)
-    console.log('this.state.stage: ', this.state.stage)
-    if(isLoading) {
+    if(isLoading || this.state.stage === 'FetchingActivities') {
       return (
         <Loader/>
       )
@@ -74,10 +83,6 @@ class Homepage extends React.Component{
           <div className="button-login justify-center-column" onClick={() => {
             window.location.href = stravaAuthorizeUrl
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
-        )
-      } else if(this.state.stage === 'FetchingActivities') {
-        return (
-          <p>FetchingActivities</p>
         )
       } else if(this.state.stage === 'ShowingActivities') {
         let activitiesButton = activities.map(element => 
@@ -89,8 +94,29 @@ class Homepage extends React.Component{
           activitiesButton
         )
       } else if(this.state.stage === 'ShowingActivity') {
+        image.src = imageDefault;
+        isLoadingImage = true
         return (
-          <p>ShowingActivity</p>
+          <div>
+              <canvas className="canvas-image"
+                ref={(canvas) => {
+                  this.canvasRef = canvas
+                  if (canvas) {
+                    const ctx = canvas.getContext('2d')
+                    console.log('image:', image)
+                    console.log('image:', image.src)
+                    image.onload = () => {
+                      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+                      this.drawLine(ctx, activity.coordinates, canvas.width, canvas.height)
+                      isLoadingImage = false
+                    }
+                  }
+                }}
+                width={1000}
+                height={1000}
+              />
+              {/* <ButtonImage onClick={this.handleDownloadClick}/> */}
+          </div>
         )
       }
     }
@@ -124,38 +150,31 @@ class Homepage extends React.Component{
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
   }
 
-  draw(coodinates) {
-    let width = 500
-    let height = 500
-    let border = 20
-    const canvas = this.template.querySelector('.canvas');
-
-    if(!canvas || !canvas.getContext) return
+  drawLine(ctx, coodinates, width, height) {
+    let border = width*0.2
 
     let minX = Math.min(...coodinates.map(x => x[0]))
     let maxX = Math.max(...coodinates.map(x => x[0]))
     let minY = Math.min(...coodinates.map(x => x[1]))
     let maxY = Math.max(...coodinates.map(x => x[1]))
 
-    console.log('minX:', minX)
-    console.log('maxX:', maxX)
-    console.log('minY:', minY)
-    console.log('maxY:', maxY)
+    // console.log('minX:', minX)
+    // console.log('maxX:', maxX)
+    // console.log('minY:', minY)
+    // console.log('maxY:', maxY)
     
     let mapWidth = maxX - minX
     let mapHeight = maxY - minY
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
 
-    console.log('mapWidth:', mapWidth)
-    console.log('mapHeight:', mapHeight)
+    // console.log('mapWidth:', mapWidth)
+    // console.log('mapHeight:', mapHeight)
 
     let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
 
-    console.log('mapWidth*zoomFactor:', mapWidth*zoomFactor)
-    console.log('mapHeight*zoomFactor:', mapHeight*zoomFactor)
-
-    const ctx = canvas.getContext('2d')
+    // console.log('mapWidth*zoomFactor:', mapWidth*zoomFactor)
+    // console.log('mapHeight*zoomFactor:', mapHeight*zoomFactor)
 
     // set line stroke and line width
     ctx.strokeStyle = 'red'
@@ -169,7 +188,6 @@ class Homepage extends React.Component{
     }
 
     ctx.stroke()
-    this.changeStage({stage:'ShowingActivity'})
   }
   
   getActivities() {
@@ -223,6 +241,8 @@ class Homepage extends React.Component{
   }
 
   getActivity(activityId) {
+    isLoading = false
+    this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
       '/' + activityId +
@@ -240,7 +260,11 @@ class Homepage extends React.Component{
       .then(res => {
         console.log('res: ', res)
         if(res) {
-          activity = res
+          let indexActivity = activities.findIndex(x => x.id === activityId)
+          activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
+          activities[indexActivity].polyline = res.map.polyline
+          activity = activities[indexActivity]
+          console.log(activities)
         }
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
@@ -253,6 +277,7 @@ class Homepage extends React.Component{
 
 
   render() {
+    activity.coordinates = [[100,100],[150,100]]
     return (   
       <div className="App">
           {/* {this.returnRadioLang()}
