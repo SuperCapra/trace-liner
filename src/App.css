@@ -99,6 +99,10 @@ p {
   font-size: 10px;
   color: var(--palette-background);
 }
+.wrapper-buttons{
+  display:flex;
+  flex-direction: row;
+}
 
 .img-bordered {
   border-width: 3px;

@@ -26,7 +26,7 @@ let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','Fetchin
 
 function App() {
   return (
-    <Homepage/>
+    <Homepage />
   );
 }
 
@@ -55,15 +55,17 @@ class Homepage extends React.Component{
   }
 
   handleDownloadClick = () => {
-    const canvas = this.canvasRef;
-    const dataURL = canvas.toDataURL('image/png'); // Convert canvas content to data URL
-    const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = 'image_with_drawing.png'; // Set the filename for the downloaded image
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+    const canvas = this.canvasRef
+    if(canvas) {
+        const dataURL = canvas.toDataURL('image/png') // Convert canvas content to data URL
+        const a = document.createElement('a')
+        a.href = dataURL
+        a.download = 'image_with_drawing.png' // Set the filename for the downloaded image
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+    }
+}
 
   routesToStage() {
     isLoading = false
@@ -115,7 +117,7 @@ class Homepage extends React.Component{
                 width={1000}
                 height={1000}
               />
-              {/* <ButtonImage onClick={this.handleDownloadClick}/> */}
+              <ButtonImage clickShare={this.handleDownloadClick}/>
           </div>
         )
       }
