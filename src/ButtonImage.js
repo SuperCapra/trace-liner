@@ -8,17 +8,18 @@ class ButtonImage extends React.Component{
     render() {
         const shareStyle = {
             fill: brandingPalette.pink,
-            margin: '1vw'
+            margin: '1vw 2vw 1vw 2vw',
         }
         const modifyStyle = {
             fill: brandingPalette.pink,
-            margin: '1vw'
+            margin: '1vw 2vw 1vw 2vw'
         }
         return(
             <div className="wrapper-buttons">
                 <div style={modifyStyle} onClick={() => this.props.clickModify()}>
                     <ModifySVG />
                 </div>
+
                 <div style={shareStyle} onClick={() => this.props.clickShare()}>
                     <ShareSVG />
                 </div>

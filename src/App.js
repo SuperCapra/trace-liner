@@ -54,7 +54,7 @@ class Homepage extends React.Component{
     })
   }
 
-  handleDownloadClick = () => {
+  handleDownloadClick() {
     const canvas = this.canvasRef
     if(canvas) {
         const dataURL = canvas.toDataURL('image/png') // Convert canvas content to data URL
@@ -65,7 +65,11 @@ class Homepage extends React.Component{
         a.click()
         document.body.removeChild(a)
     }
-}
+  }
+
+  handleModifyClick() {
+    console.log('handle modify!')
+  }
 
   routesToStage() {
     isLoading = false
@@ -117,7 +121,7 @@ class Homepage extends React.Component{
                 width={1000}
                 height={1000}
               />
-              <ButtonImage clickShare={this.handleDownloadClick}/>
+              <ButtonImage clickShare={this.handleDownloadClick} clickModify={this.handleModifyClick}/>
           </div>
         )
       }
