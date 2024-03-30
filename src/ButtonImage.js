@@ -5,20 +5,28 @@ import {ReactComponent as ModifySVG} from './modify.svg'
 import {ReactComponent as TextSVG} from './text.svg'
 import {ReactComponent as RectangleSVG} from './rectangle.svg'
 import {ReactComponent as SquareSVG} from './square.svg'
+import {ReactComponent as ViewSVG} from './view.svg'
+import {ReactComponent as HideSVG} from './hide.svg'
 import brandingPalette from './brandingPalette';
 
 function ButtonImage() {
     const [showModifyImage, setModifyImgae] = useState(false);
     const [showModifyText, setModifyText] = useState(false);
+    const [showName, setShowName] = useState(false);
+    const [showDistance, setShowDistance] = useState(false);
+    const [showDuration, setShowDuration] = useState(false);
+    const [showAverage, setShowAverage] = useState(false);
+    const [showPower, setShowPower] = useState(false);
+    const [showCoordinates, setShowCoordinates] = useState(false);
 
     const showModifySetImage = () => {
         setModifyText(false)
         setModifyImgae(!showModifyImage)
-    };
+    }
     const showModifySetText = () => {
         setModifyImgae(false)
         setModifyText(!showModifyText)
-    };
+    }
 
     const shareStyle = {
         fill: brandingPalette.pink,
@@ -44,6 +52,47 @@ function ButtonImage() {
         }
         console.log('colors', colors)
         return (colors)
+    }
+
+    const eyeName = () => {
+        return(
+            <div>
+                {showName && (<ViewSVG style={modifyStyle} onClick={() => setShowName(!showName)} />)}
+                {!showName && (<HideSVG style={modifyStyle} onClick={() => setShowName(!showName)} />)}
+            </div>
+        )
+    }
+    const eyeDistance = () => {
+        return(
+            <div>
+                {showDistance && (<ViewSVG style={modifyStyle} onClick={() => setShowDistance(!showDistance)} />)}
+                {!showDistance && (<HideSVG style={modifyStyle} onClick={() => setShowDistance(!showDistance)} />)}
+            </div>
+        )
+    }
+    const eyeDuration = () => {
+        return(
+            <div>
+                {showDuration && (<ViewSVG style={modifyStyle} onClick={() => setShowDuration(!showDuration)} />)}
+                {!showDuration && (<HideSVG style={modifyStyle} onClick={() => setShowDuration(!showDuration)} />)}
+            </div>
+        )
+    }
+    const eyePower = () => {
+        return(
+            <div>
+                {showPower && (<ViewSVG style={modifyStyle} onClick={() => setShowPower(!showPower)} />)}
+                {!showPower && (<HideSVG style={modifyStyle} onClick={() => setShowPower(!showPower)} />)}
+            </div>
+        )
+    }
+    const eyeCoordinates = () => {
+        return(
+            <div>
+                {showCoordinates && (<ViewSVG style={modifyStyle} onClick={() => setShowCoordinates(!showCoordinates)} />)}
+                {!showCoordinates && (<HideSVG style={modifyStyle} onClick={() => setShowCoordinates(!showCoordinates)} />)}
+            </div>
+        )
     }
 
     return (
@@ -72,7 +121,26 @@ function ButtonImage() {
             )}
             {showModifyText && (
                 <div>
-                    <div>TODO MODIFY TEXT</div>
+                    <div className="wrapper-buttons">
+                        {eyeName()}
+                        <p>NAME</p>
+                    </div>
+                    <div className="wrapper-buttons">
+                        {eyeDistance()}
+                        <p>DISTANCE</p>
+                    </div>
+                    <div className="wrapper-buttons">
+                        {eyeDuration()}
+                        <p>DURATION</p>
+                    </div>
+                    <div className="wrapper-buttons">
+                        {eyePower()}
+                        <p>POWER</p>
+                    </div>
+                    <div className="wrapper-buttons">
+                        {eyeCoordinates()}
+                        <p>COORDINATES</p>
+                    </div>
                 </div>
             )}
         </div>
