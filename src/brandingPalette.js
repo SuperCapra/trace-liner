@@ -5,7 +5,8 @@ const brandingPalette = {
     lightblue: '#00bbf9',
     watergreen: '#00f5d4',
     background: '#282c34',
-    white: '#edf6f9'
+    white: '#edf6f9',
+    black: '#000000'
 }
 
 export default brandingPalette

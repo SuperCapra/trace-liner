@@ -126,6 +126,9 @@ p {
   padding-bottom: 1rem;
   padding-top: 3rem;
 }
+.colors{
+  margin: 1vw;
+}
 .dot-typing {
     position: relative;
     left: -9999px;
