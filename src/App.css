@@ -105,15 +105,26 @@ p {
   align-items: center;
   justify-content: center;
 }
+.wrapper-buttons-left{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+}
 .back{
   color: var(--palette-background);
   background: var(--palette-lightblue);
 }
-
 .back:hover{
   cursor: pointer;
   color: var(--palette-background);
   background: var(--palette-pink);
+}
+.colors-background{
+  background-color: var(--palette-white);
+  border-radius: 15px;
+  max-width: 60vw;
+  margin: 2vw 20vw;
 }
 
 .camouflage{

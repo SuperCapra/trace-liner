@@ -71,6 +71,14 @@ class Homepage extends React.Component{
     console.log('handle modify!')
   }
 
+  handleCrop(ratio) {
+    if(ratio === '1:1') {
+      console.log('handle square!')
+    } else {
+      console.log('handle rectangle!')
+    }
+  }
+
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -121,7 +129,7 @@ class Homepage extends React.Component{
                 width={1000}
                 height={1000}
               />
-              <ButtonImage clickShare={this.handleDownloadClick} clickModify={this.handleModifyClick}/>
+              <ButtonImage onClickShare={this.handleDownloadClick} onClickRectangle={this.handleCrop('1:1')} onClickSquare={this.handleCrop('9:16')}/>
           </div>
         )
       }
