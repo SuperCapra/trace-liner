@@ -43,6 +43,56 @@ export default {
         return res
     },
 
+    getBeautyCoordinates(coordinates) {
+        let result = {
+            coordinates: coordinates,
+            beautyCoordinates: [],
+            beautyCoordinatesTextTime: undefined,
+            beautyCoordinatesTextDecimal: undefined,
+            latDeg: undefined,
+            latMin: undefined,
+            latSec: undefined,
+            longDeg: undefined,
+            longMin: undefined,
+            longSec: undefined,
+        }
+        let latCoord = coordinates[0]
+        let longCoord = coordinates[1]
+        let tempLat = Math.floor(latCoord * 100)
+        let tempLong = Math.floor(longCoord * 100)
+
+        result.latDeg = (latCoord > 0) ? Math.abs(Math.floor(latCoord)) : Math.abs(Math.ceil(latCoord))
+        result.longDeg = (latCoord > 0) ? Math.abs(Math.floor(longCoord)) : Math.abs(Math.ceil(longCoord))
+
+        let latPolarDirection = result.latDeg + (latCoord > 0) ? 'N' : 'S'
+        let longPolarDirection = result.longDeg + (longCoord > 0) ? 'W' : 'E'
+
+        let tempLatSec = (Math.abs((tempLat) - (result.latDeg * 100))) * 36
+        let tempLongSec = (Math.abs((tempLong) - (result.longDeg * 100))) * 36
+
+        console.log('tempLong:', tempLong)
+        console.log('tempLatSec:', tempLongSec)
+        console.log('longCoord:', longCoord)
+        console.log('(tempLong) - (result.longDeg * 100):', (tempLong) - (result.longDeg * 100))
+        
+        result.latSec = Math.floor(tempLatSec % 60)
+        result.longSec = Math.floor(tempLongSec % 60)
+        console.log('result.longSec:', result.longSec)
+
+        result.latMin = Math.floor((tempLatSec - result.latSec) / 60)
+        result.longMin = Math.floor((tempLongSec - result.longSec) / 60)
+
+        result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'' + result.latSec + '\'\'' + latPolarDirection)
+        result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'' + result.longSec + '\'\'' + longPolarDirection)
+        
+        result.beautyCoordinatesTextTime = result.beautyCoordinates[0] + ' | ' + result.beautyCoordinates[1]
+        result.beautyCoordinatesTextDecimal = Math.abs(result.coordinates[0]).toFixed(5) + '°' + latPolarDirection + ' | ' + Math.abs(result.coordinates[1]).toFixed(5) + '°' + longPolarDirection
+
+        console.log(result)
+
+        return result
+    },
+
     getBeautyDate(dateUnparsed) {
         let parsedDate = this.getJsonDate(dateUnparsed, true)
         return parsedDate.monthText + ' ' + parsedDate.day
@@ -71,7 +121,7 @@ export default {
     },
 
     labelize(value) {
-        return value.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toLowerCase() })
+        return value.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){ return str.toLowerCase() }).trim()
     },
 
     polylineDecode(str, precision) {
@@ -131,5 +181,9 @@ export default {
     polylineToGeoJSON(str, precision) {
         let coords = this.polylineDecode(str, precision);
         return this.flipped(coords)
-    } 
+    },
+
+    removeEmoji(text) {
+        return text.replaceAll('[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]','')
+    }
 }

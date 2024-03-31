@@ -59,6 +59,15 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
     activity.coordinates = [[100,100],[150,100]]
+    activity.beautyName = 'ciccio pasticcio il pusillanime che se va in giro con un pollo sotto il braccio'
+    activity.beautyDuration = '4h 36m'
+    activity.beautyDate = 'Mar 31'
+    activity.beautyDistance = '123.34km'
+    activity.beautyPower = '203W'
+    activity.beautyCoordinates = utils.getBeautyCoordinates([45.15,10.2]).beautyCoordinatesTextTime
+    activity.beautyCoordinatesComplete = utils.getBeautyCoordinates([45.15,10.2])
+    activity.beautyAverage = '27.56km/h'
+    activity.beautyElevation = '3290m'
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -141,29 +150,44 @@ class Homepage extends React.Component{
           res.forEach(e => {
             console.log('Activity: ', e)
             let t = {
-              name: e.name,
-              sportType: utils.labelize(e.sport_type),
-              duration: e.elapsed_time,
+              average: e.average_speed,
+              beautyAverage: e.average_speed + 'km/h',
+              beautyCoordinates: undefined,
+              beautyEndCoordinates: undefined,
+              beautyElevation: e.total_elevation + 'm',
+              beautyDistance: (e.distance / 1000).toFixed(2) + 'km',
               beautyDuration: utils.getBeautyDuration(e.elapsed_time),
+              beautyName: utils.removeEmoji(e.name),
+              beautyPower: e.average_watts + 'W',
+              beautyStartDate: utils.getBeautyDate(e.start_date),
               distance: e.distance,
               distanceKm: Number((e.distance / 1000).toFixed(2)),
-              locationCountry: e.location_country,
-              movingTime: e.moving_time,
-              startDate: e.start_date,
-              beautyStartDate: utils.getBeautyDate(e.start_date),
-              startDateLocal: e.start_date_local,
-              startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
-              startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined,
+              duration: e.elapsed_time,
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
               endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
-              id: e.id
+              elevation: e.total_elevation,
+              id: e.id,
+              locationCountry: e.location_country,
+              movingTime: e.moving_time,
+              name: e.name,
+              power: e.average_watts,
+              photoUrl: undefined,
+              sportType: utils.labelize(e.sport_type),
+              startDate: e.start_date,
+              startDateLocal: e.start_date_local,
+              startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
+              startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined
             }
+            t.beautyCoordinatesComplete = utils.getBeautyCoordinates(t.startLatitude, t.startLongitude)
+            t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
+            t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates(t.endLatitude, t.endLongitude)
+            t.beautyCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
             t.subtitle = t.beautyStartDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
             activities.push(t)
           })
         }
       })
-      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => console.log('Fatal Error: ', e))
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
@@ -195,7 +219,8 @@ class Homepage extends React.Component{
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
           activity = activities[indexActivity]
-          console.log(activities)
+          activity.photoUrl = res?.photos?.primary?.urls['600']
+          console.log(activity)
         }
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))

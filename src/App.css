@@ -133,6 +133,24 @@ p {
 .canvas-image{
   width: 80vw
 }
+.canvas-container {
+  position: relative;
+}
+.canvas-container canvas {
+  display: block;
+  height: auto;
+}
+.text-overlay {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 5px;
+}
 .padding-horizontal{
   padding-bottom: 1rem;
   padding-top: 3rem;
