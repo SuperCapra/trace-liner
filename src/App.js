@@ -2,7 +2,8 @@ import './App.css';
 import React from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
-import ButtonImage from './ButtonImage.js'
+// import ButtonImage from './ButtonImage.js'
+import ImageComponent from './ImageComponent.js'
 import imageDefault from './image.jpg'
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
 const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
@@ -11,7 +12,7 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
-const image = new Image()
+// const image = new Image()
 
 let called = false 
 let athleteData = {}
@@ -19,7 +20,6 @@ let activities = []
 let activity = {}
 let accessToken
 let isLoading = false
-let isLoadingImage = false
 let stage = 'ShowingActivity'
 let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
@@ -35,7 +35,7 @@ class Homepage extends React.Component{
     super(props);
     this.state = {
       stage : stage,
-      stageHistory : stageHistory
+      stageHistory : stageHistory,
     }
   }
 
@@ -54,35 +54,11 @@ class Homepage extends React.Component{
     })
   }
 
-  handleDownloadClick() {
-    const canvas = this.canvasRef
-    if(canvas) {
-        const dataURL = canvas.toDataURL('image/png') // Convert canvas content to data URL
-        const a = document.createElement('a')
-        a.href = dataURL
-        a.download = 'image_with_drawing.png' // Set the filename for the downloaded image
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-    }
-  }
-
-  handleModifyClick() {
-    console.log('handle modify!')
-  }
-
-  handleCrop(ratio) {
-    if(ratio === '1:1') {
-      console.log('handle square!')
-    } else {
-      console.log('handle rectangle!')
-    }
-  }
-
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
+    activity.coordinates = [[100,100],[150,100]]
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -108,28 +84,9 @@ class Homepage extends React.Component{
           activitiesButton
         )
       } else if(this.state.stage === 'ShowingActivity') {
-        image.src = imageDefault;
-        isLoadingImage = true
         return (
           <div>
-              <canvas className="canvas-image"
-                ref={(canvas) => {
-                  this.canvasRef = canvas
-                  if (canvas) {
-                    const ctx = canvas.getContext('2d')
-                    console.log('image:', image)
-                    console.log('image:', image.src)
-                    image.onload = () => {
-                      ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-                      this.drawLine(ctx, activity.coordinates, canvas.width, canvas.height)
-                      isLoadingImage = false
-                    }
-                  }
-                }}
-                width={1000}
-                height={1000}
-              />
-              <ButtonImage onClickShare={this.handleDownloadClick} onClickRectangle={this.handleCrop('1:1')} onClickSquare={this.handleCrop('9:16')}/>
+              <ImageComponent activity={activity} image={imageDefault}/>
           </div>
         )
       }
@@ -162,46 +119,6 @@ class Homepage extends React.Component{
         if(accessToken) this.getActivities()
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
-  }
-
-  drawLine(ctx, coodinates, width, height) {
-    let border = width*0.2
-
-    let minX = Math.min(...coodinates.map(x => x[0]))
-    let maxX = Math.max(...coodinates.map(x => x[0]))
-    let minY = Math.min(...coodinates.map(x => x[1]))
-    let maxY = Math.max(...coodinates.map(x => x[1]))
-
-    // console.log('minX:', minX)
-    // console.log('maxX:', maxX)
-    // console.log('minY:', minY)
-    // console.log('maxY:', maxY)
-    
-    let mapWidth = maxX - minX
-    let mapHeight = maxY - minY
-    let mapCenterX = (minX + maxX) / 2
-    let mapCenterY = (minY + maxY) / 2
-
-    // console.log('mapWidth:', mapWidth)
-    // console.log('mapHeight:', mapHeight)
-
-    let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-
-    // console.log('mapWidth*zoomFactor:', mapWidth*zoomFactor)
-    // console.log('mapHeight*zoomFactor:', mapHeight*zoomFactor)
-
-    // set line stroke and line width
-    ctx.strokeStyle = 'red'
-    ctx.lineWidth = 4
-
-    ctx.beginPath()
-
-    for(let i = 0; i < coodinates.length; i++) {
-      let c = coodinates[i]
-      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
-    }
-
-    ctx.stroke()
   }
   
   getActivities() {
@@ -291,7 +208,6 @@ class Homepage extends React.Component{
 
 
   render() {
-    activity.coordinates = [[100,100],[150,100]]
     return (   
       <div className="App">
           {/* {this.returnRadioLang()}

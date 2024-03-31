@@ -9,7 +9,7 @@ import {ReactComponent as ViewSVG} from './view.svg'
 import {ReactComponent as HideSVG} from './hide.svg'
 import brandingPalette from './brandingPalette';
 
-function ButtonImage() {
+function ButtonImage({onClickButton}) {
     const [showModifyImage, setModifyImgae] = useState(false);
     const [showModifyText, setModifyText] = useState(false);
     const [square, setSquare] = useState(false);
@@ -31,15 +31,19 @@ function ButtonImage() {
         setModifyText(!showModifyText)
     }
 
+    const handleClick = (data) => {
+        onClickButton(data)
+    }
+
     const propagateSquare = () => {
         if(rectangle) setRectangle(false)
         setSquare(true)
-        // onClickSquare()
+        handleClick({type: 'square'})
     }
     const propagateRectangle = () => {
         if(square) setSquare(false)
         setRectangle(true)
-        // onClickRectangle()
+        handleClick({type: 'rectangle'})
     }
 
     const shareStyle = {
@@ -71,13 +75,13 @@ function ButtonImage() {
         if(!colors.length) {
             for(let color in brandingPalette) {
                 let styleColor = {
-                    'background-color': brandingPalette[color],
-                    'width': '20px',
-                    'height': '20px',
-                    'border-radius': '20px',
-                    'border': '2px solid ' + brandingPalette['background']
+                    backgroundColor: brandingPalette[color],
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '20px',
+                    border: '2px solid ' + brandingPalette['background']
                 }
-                colors.push(<div className="colors" key={color} style={styleColor} onClick={() => this.props.changeColor(brandingPalette[color])}/>)
+                colors.push(<div className="colors" key={color} style={styleColor} onClick={() => handleClick({type: 'changing-color', color: brandingPalette[color]})}/>)
             }
             console.log('colors', colors)
         }
@@ -133,9 +137,9 @@ function ButtonImage() {
         )
     }
 
-    const handleShare = () => {
-        // onClickShare()
-    }
+    // const handleShare = () => {
+    //     onClickShare()
+    // }
 
     return (
         <div>
@@ -146,7 +150,7 @@ function ButtonImage() {
                 <div style={modifyStyle} onClick={() => showModifySetImage()}>
                     <ModifySVG />
                 </div>
-                <div style={shareStyle} onClick={() => handleShare()}>
+                <div style={shareStyle} onClick={() => handleClick({type: 'share'})}>
                     <ShareSVG />
                 </div>
             </div>
@@ -193,4 +197,4 @@ function ButtonImage() {
     )
 }
 
-export default ButtonImage;
+export default ButtonImage
