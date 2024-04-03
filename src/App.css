@@ -122,19 +122,23 @@ p {
 }
 .colors-background{
   background-color: var(--palette-white);
-  border-radius: 15px;
+  border-radius: 5vw;
   max-width: 60vw;
-  margin: 2vw 20vw;
+  margin: 2vw 10vw;
 }
 
 .camouflage{
   color: var(--palette-background);
+}
+.width-80{
+  width: 80vw
 }
 .canvas-image{
   width: 80vw
 }
 .canvas-container {
   position: relative;
+  width: 80vw
 }
 .canvas-container canvas {
   display: block;
@@ -142,8 +146,8 @@ p {
 }
 .text-overlay {
   position: absolute;
-  top: 10%;
-  left: 50%;
+  top: 0%;
+  left: 0%;
   font-size: 24px;
   font-weight: bold;
   color: white;

@@ -2,6 +2,8 @@ import './App.css';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonImage from './ButtonImage.js'
 import domtoimage from 'dom-to-image';
+import logoNamaSVG from './logoNama.png'
+import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -25,59 +27,13 @@ function ImageComponent(props) {
   const image = new Image()
 
   const handleDownloadClick = () => {
-    const canvas = document.getElementById('canvasImage')
-    const textOverlayCanvas = document.getElementById('textOverlayCanvas');
-    mergeTextToCanvas(canvas, textOverlayCanvas)
-    // if(mergedCanvas) {
-    //   console.log('mergedCanvas', mergedCanvas)
-    //   const dataURL = mergedCanvas.toDataURL('image/jpeg') // Convert canvas content to data URL
-    //   const a = document.createElement('a')
-    //   a.href = dataURL
-    //   a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.png' // Set the filename for the downloaded image
-    //   document.body.appendChild(a)
-    //   a.click()
-    //   document.body.removeChild(a)
-    // }
-  }
-
-  const mergeTextToCanvas = (canvas, textOverlay) => {
-    const mergedCanvas = document.createElement('canvas');
-    const mergedCtx = mergedCanvas.getContext('2d');
-  
-    // Set the dimensions of the merged canvas to match the original canvas
-    mergedCanvas.width = canvas.width;
-    mergedCanvas.height = canvas.height;
-  
-    // Draw the original canvas content onto the merged canvas
-    mergedCtx.drawImage(canvas, 0, 0);
-  
-    // Convert the text overlay to a data URL
-    console.log('eccolo')
-    domtoimage.toPng(textOverlay).then(dataUrl => {
-      console.log(dataUrl)
-      // Create an image element for the text overlay
-      const textImage = new Image();
-      textImage.onload = function() {
-        // Draw the text overlay onto the merged canvas
-        mergedCtx.drawImage(textImage, 0, 0);
-        saveMerged(mergedCanvas)
-      };
-      textImage.src = dataUrl;
-    })
-
-  
-  }
-
-  const saveMerged = (mergedCanvas) => {
-    console.log('mergedCanvas', mergedCanvas)
-    const dataURL = mergedCanvas.toDataURL('image/jpeg') // Convert canvas content to data URL
-    const a = document.createElement('a')
-    a.href = dataURL
-    a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.png' // Set the filename for the downloaded image
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    // Save the merged canvas as an image
+    html2canvas(document.getElementById('printingAnchor')).then(canvas => {
+      const dataURL = canvas.toDataURL('image/jpeg');
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+      a.click();
+    });
   }
 
   const drawLine = (ctx, coodinates, width, height) => {
@@ -210,11 +166,8 @@ function ImageComponent(props) {
     // image.src = props.activity.photoUrl
     image.src = props.image
 
-    if(image.src) console.log('is there the image!')
-
     if (canvas && canvasWidth && canvasHeight) {
-      console.log('image:', image)
-      console.log('image:', image.src)
+      console.log('hey ma qua?')
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
         drawLine(ctx, props.activity.coordinates, canvasWidth, canvasHeight)
@@ -244,13 +197,13 @@ function ImageComponent(props) {
     ])
   
   return (
-    <div>
-      <div className="canvas-container">
+    <div className="width-80">
+      <div className="canvas-container" id="printingAnchor">
         <canvas id="canvasImage" className="canvas-image"
           ref={canvasRef}
           width={canvasWidth}
           height={canvasHeight}/>
-          <div id="textOverlayCanvas" className="text-overlay">Overlay Text</div>
+        <div id="textOverlayCanvas" className="text-overlay">{props.activity.beautyName}</div>
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
