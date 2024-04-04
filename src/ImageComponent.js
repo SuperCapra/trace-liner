@@ -26,6 +26,10 @@ function ImageComponent(props) {
 
   const image = new Image()
 
+  const styleText = {
+    color: drawingColor
+  }
+
   const handleDownloadClick = () => {
     html2canvas(document.getElementById('printingAnchor')).then(canvas => {
       const dataURL = canvas.toDataURL('image/jpeg');
@@ -36,10 +40,11 @@ function ImageComponent(props) {
     });
   }
 
-  const drawLine = (ctx, coodinates, width, height) => {
+  const drawLine = (coodinates, width, height) => {
+    let canvasSketch = document.getElementById('canvasSketch')
+    let ctx = canvasSketch.getContext('2d')
     let border = width*0.2
     setThickness(width*0.01)
-    let fontSize = String(width*0.04)
 
     let minX = Math.min(...coodinates.map(x => x[0]))
     let maxX = Math.max(...coodinates.map(x => x[0]))
@@ -52,7 +57,8 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
 
     let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-
+    
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.strokeStyle = drawingColor
     ctx.fillStyle = drawingColor
     ctx.lineWidth = thickness
@@ -65,6 +71,15 @@ function ImageComponent(props) {
     }
 
     ctx.stroke()
+  }
+
+  const drawFilter = () => {
+    let canvasFilter = document.getElementById('canvasFilter')
+    let ctx = canvasFilter.getContext('2d')
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+    ctx.fillStyle = drawingColor
+    ctx.filter = 'opacity(20%)'
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
 
   const handleClickDispatcher = (data) => {
@@ -91,6 +106,17 @@ function ImageComponent(props) {
         setShowCoordinates(data.show)
       }
     }
+  }
+
+  const inizializeShowProps = () => {
+    setShowName(showName)
+    setShowDate(showDate)
+    setShowDistance(showDistance)
+    setShowDuration(showDuration)
+    setShowElevation(showElevation)
+    setShowAverage(showAverage)
+    setShowPower(showPower)
+    setShowCoordinates(showCoordinates)
   }
 
   const handleColorChange = (color) => {
@@ -123,7 +149,8 @@ function ImageComponent(props) {
       const ctx = canvas.getContext('2d')
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(ctx, props.activity.coordinates, canvasWidth, canvasHeight)
+        drawLine(props.activity.coordinates, canvasWidth, canvasHeight)
+        drawFilter()
       }
     }
     setRatio(ratioText)
@@ -135,15 +162,12 @@ function ImageComponent(props) {
     const ctx = canvas.getContext('2d')
     // image.src = props.activity.photoUrl
     image.src = props.image
-    image.style = {
-      opacity: 0
-    }
 
     if (canvas && canvasWidth && canvasHeight) {
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        ctx.filter = 'greyscale(100%)'
-        drawLine(ctx, props.activity.coordinates, canvasWidth, canvasHeight)
+        drawLine(props.activity.coordinates, canvasWidth, canvasHeight)
+        drawFilter()
       }
     } else if(!canvasWidth && !canvasHeight) {
       handleCrop(ratio)
@@ -172,18 +196,17 @@ function ImageComponent(props) {
   return (
     <div className="width-80">
       <div className="canvas-container" id="printingAnchor">
-        <canvas id="canvasImage" className="canvas-image"
-          ref={canvasRef}
-          width={canvasWidth}
-          height={canvasHeight}/>
-          {showName && (<div className="text-name">{props.activity.beautyName}</div>)}
-          {showDate && (<div className="text-date">{props.activity.beautyDate}</div>)}
-          {showDistance && (<div className="text-distance">{props.activity.beautyDistance}</div>)}
-          {showDuration && (<div className="text-duration">{props.activity.beautyDuration}</div>)}
-          {showElevation && (<div className="text-elevation">{props.activity.beautyElevation}</div>)}
-          {showAverage && (<div className="text-average">{props.activity.beautyAverage}</div>)}
-          {showPower && (<div className="text-power">{props.activity.beautyAverage}</div>)}
-          {showCoordinates && (<div className="text-coordinates">{props.activity.beautyCoordinates}</div>)}
+          <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasSketch" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
+          {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
+          {/* {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
+          {showDistance && (<div className="text-overlay text-distance">{props.activity.beautyDistance}</div>)}
+          {showDuration && (<div className="text-overlay text-duration">{props.activity.beautyDuration}</div>)}
+          {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
+          {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
+          {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)}
+          {showCoordinates && (<div className="text-overlay text-coordinates">{props.activity.beautyCoordinates}</div>)} */}
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>

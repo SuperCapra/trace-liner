@@ -134,7 +134,7 @@ p {
   width: 80vw
 }
 .canvas-image{
-  width: 80vw
+  width: 80vw;
 }
 .canvas-container {
   position: relative;
@@ -144,16 +144,65 @@ p {
   display: block;
   height: auto;
 }
+.canvas-filter{
+  width: 80vw;
+  position: absolute;
+  top: 0
+}
+#canvasImage {
+  z-index: 1;
+}
+#canvasFilter {
+  z-index: 2;
+}
+#canvasSketch {
+  z-index: 3;
+}
+#canvasText {
+  z-index: 4;
+}
 .text-overlay {
   position: absolute;
-  top: 0%;
-  left: 0%;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
-  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
-  border-radius: 5px;
+}
+.text-title{
+  top: 5%;
+  left: 5%;
+}
+.text-name{
+  top: 5%;
+  left: 5%;
+}
+.text-date{
+  top: 5%;
+  left: 5%;
+}
+.text-duration{
+  top: 5%;
+  left: 5%;
+}
+.text-distance{
+  top: 5%;
+  left: 5%;
+}
+.text-elevation{
+  top: 5%;
+  left: 5%;
+}
+.text-average{
+  top: 5%;
+  left: 5%;
+}
+.text-power{
+  top: 5%;
+  left: 5%;
+}
+.text-coordinates{
+  top: 80%;
+  left: 5%;
 }
 .padding-horizontal{
   padding-bottom: 1rem;
