@@ -169,7 +169,7 @@ function ButtonImage(props) {
           {showElevation && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
           {!showElevation && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
         </div>
-        <p>DURATION: {activity.beautyElevation}</p>
+        <p>ELEVATION: {activity.beautyElevation}</p>
       </div>
     )
   }

@@ -57,52 +57,6 @@ function ImageComponent(props) {
     ctx.fillStyle = drawingColor
     ctx.lineWidth = thickness
 
-    ctx.font = fontSize + 'px SourceCodePro';
-    ctx.fillStyle = drawingColor;
-
-    if(showName) {
-      const xName = height*0.03;
-      const yName = height*0.05;
-  
-      ctx.fillText(props.activity.beautyName, xName, yName);
-    }
-    if(showDate) {
-      const xDate = height*0.03;
-      const yDate = height*0.5;
-  
-      ctx.fillText(props.activity.beautyDate, xDate, yDate);
-    }
-    if(showDistance) {
-      const xDistance = height*0.03;
-      const yDistance = height*0.05;
-  
-      ctx.fillText(props.activity.beautyDistance, xDistance, yDistance);
-    }
-    if(showDuration) {
-      const xDuration = height*0.03;
-      const yDuration = height*0.05;
-  
-      ctx.fillText(props.activity.beautyDuration, xDuration, yDuration);
-    }
-    if(showElevation) {
-      const xElevation = height*0.03;
-      const yElevation = height*0.05;
-  
-      ctx.fillText(props.activity.beautyElevation, xElevation, yElevation);
-    }
-    if(showPower) {
-      const xPower = height*0.03;
-      const yPower = height*0.05;
-  
-      ctx.fillText(props.activity.beautyPower, xPower, yPower);
-    }
-    if(showCoordinates) {
-      const xCoordinates = height*0.03;
-      const yCoordinates = height*0.05;
-  
-      ctx.fillText(props.activity.beautyCoordinates, xCoordinates, yCoordinates);
-    }
-
     ctx.beginPath()
 
     for(let i = 0; i < coodinates.length; i++) {
@@ -119,7 +73,23 @@ function ImageComponent(props) {
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') handleCrop(data.type === 'square' ? '1:1' : '9:16')
     else if(data.type === 'show-hide') {
-      //TODO handle al the showing-hiding...
+      if(data.subtype === 'name') {
+        setShowName(data.show)
+      } else if(data.subtype === 'date') {
+        setShowDate(data.show)
+      } else if(data.subtype === 'distance') {
+        setShowDistance(data.show)
+      } else if(data.subtype === 'duration') {
+        setShowDuration(data.show)
+      } else if(data.subtype === 'elevation') {
+        setShowElevation(data.show)
+      } else if(data.subtype === 'average') {
+        setShowAverage(data.show)
+      } else if(data.subtype === 'power') {
+        setShowPower(data.show)
+      } else if(data.subtype === 'coordinates') {
+        setShowCoordinates(data.show)
+      }
     }
   }
 
@@ -165,11 +135,14 @@ function ImageComponent(props) {
     const ctx = canvas.getContext('2d')
     // image.src = props.activity.photoUrl
     image.src = props.image
+    image.style = {
+      opacity: 0
+    }
 
     if (canvas && canvasWidth && canvasHeight) {
-      console.log('hey ma qua?')
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+        ctx.filter = 'greyscale(100%)'
         drawLine(ctx, props.activity.coordinates, canvasWidth, canvasHeight)
       }
     } else if(!canvasWidth && !canvasHeight) {
@@ -203,7 +176,14 @@ function ImageComponent(props) {
           ref={canvasRef}
           width={canvasWidth}
           height={canvasHeight}/>
-        <div id="textOverlayCanvas" className="text-overlay">{props.activity.beautyName}</div>
+          {showName && (<div className="text-name">{props.activity.beautyName}</div>)}
+          {showDate && (<div className="text-date">{props.activity.beautyDate}</div>)}
+          {showDistance && (<div className="text-distance">{props.activity.beautyDistance}</div>)}
+          {showDuration && (<div className="text-duration">{props.activity.beautyDuration}</div>)}
+          {showElevation && (<div className="text-elevation">{props.activity.beautyElevation}</div>)}
+          {showAverage && (<div className="text-average">{props.activity.beautyAverage}</div>)}
+          {showPower && (<div className="text-power">{props.activity.beautyAverage}</div>)}
+          {showCoordinates && (<div className="text-coordinates">{props.activity.beautyCoordinates}</div>)}
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
