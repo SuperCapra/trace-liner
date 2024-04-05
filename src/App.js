@@ -4,7 +4,7 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 // import ButtonImage from './ButtonImage.js'
 import ImageComponent from './ImageComponent.js'
-import imageDefault from './image.jpg'
+import imageDefault from './image2.jpeg'
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
 const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
@@ -59,9 +59,9 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
     activity.coordinates = [[100,100],[150,100]]
-    activity.beautyName = 'ciccio pasticcio il pusillanime che se va in giro con un pollo sotto il braccio'
+    activity.beautyName = 'ciccio pasticcio il pusillanime che porta con se un pollo sotto il braccios'
     activity.beautyDuration = '4h 36m'
-    activity.beautyDate = 'Mar 31'
+    activity.beautyDate = 'March 31, 19:37'
     activity.beautyDistance = '123.34km'
     activity.beautyPower = '203W'
     activity.beautyCoordinates = utils.getBeautyCoordinates([45.15,10.2]).beautyCoordinatesTextTime
@@ -159,7 +159,7 @@ class Homepage extends React.Component{
               beautyDuration: utils.getBeautyDuration(e.elapsed_time),
               beautyName: utils.removeEmoji(e.name),
               beautyPower: e.average_watts + 'W',
-              beautyStartDate: utils.getBeautyDate(e.start_date),
+              beautyStartDate: utils.getBeautyDatetime(e.start_date),
               distance: e.distance,
               distanceKm: Number((e.distance / 1000).toFixed(2)),
               duration: e.elapsed_time,

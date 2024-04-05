@@ -163,22 +163,58 @@ p {
 }
 .text-overlay {
   position: absolute;
+  font-family: 'Helvetica';
+  text-align: left;
   font-size: 16px;
   font-weight: bold;
   color: white;
-  padding: 10px;
 }
 .text-title{
-  top: 5%;
-  left: 5%;
+  width: 72vw;
+  top: 8vw;
+  left: 4vw;
+  display: flex;
+  flex-direction: row;
+}
+.text-title-props:first-child{
+  bottom:-8vw
+}
+.text-title-props:last-child{
+  top:8.5vw
+}
+.text-name-props{
+  font-weight: 900;
+}
+.text-date-props{
+  font-size: 12px;
+  font-weight: 100;
+}
+.text-coordinates-props{
+  font-size: 20px;
+  width: 100%;
+  top:92%;
+  left:50%;
+  text-align: center;
+  transform: translate(-50%,0)
+}
+.text-title-props-rect:first-child{
+  bottom:-16vw
+}
+.text-title-props-rect:last-child{
+  top:16.5vw
+}
+.text-coordinates-props-rect{
+  top:84%;
 }
 .text-name{
   top: 5%;
   left: 5%;
+  flex: 1;
 }
 .text-date{
   top: 5%;
   left: 5%;
+  flex: 1;
 }
 .text-duration{
   top: 5%;

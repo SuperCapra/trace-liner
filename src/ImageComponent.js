@@ -1,7 +1,6 @@
 import './App.css';
 import React, {useState, useRef, useEffect} from 'react';
 import ButtonImage from './ButtonImage.js'
-import domtoimage from 'dom-to-image';
 import logoNamaSVG from './logoNama.png'
 import html2canvas from 'html2canvas';
 
@@ -12,8 +11,10 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(null); // Initial height
   const [isCropped, setIsCropped] = useState(false);
   const [drawingColor, setDrawingColor] = useState('white');
+  const [filterColor, setFilterColor] = useState('white');
   const [thickness, setThickness] = useState(null);
   const [ratio, setRatio] = useState('9:16');
+  const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
@@ -29,6 +30,9 @@ function ImageComponent(props) {
   const styleText = {
     color: drawingColor
   }
+  const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
+  const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
+  const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
 
   const handleDownloadClick = () => {
     html2canvas(document.getElementById('printingAnchor')).then(canvas => {
@@ -57,7 +61,7 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
 
     let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-    
+
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.strokeStyle = drawingColor
     ctx.fillStyle = drawingColor
@@ -77,7 +81,7 @@ function ImageComponent(props) {
     let canvasFilter = document.getElementById('canvasFilter')
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-    ctx.fillStyle = drawingColor
+    ctx.fillStyle = filterColor
     ctx.filter = 'opacity(20%)'
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
@@ -89,7 +93,7 @@ function ImageComponent(props) {
     else if(data.type === 'rectangle' || data.type === 'square') handleCrop(data.type === 'square' ? '1:1' : '9:16')
     else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
-        setShowName(data.show)
+        setShowTitle(data.show)
       } else if(data.subtype === 'date') {
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
@@ -106,17 +110,6 @@ function ImageComponent(props) {
         setShowCoordinates(data.show)
       }
     }
-  }
-
-  const inizializeShowProps = () => {
-    setShowName(showName)
-    setShowDate(showDate)
-    setShowDistance(showDistance)
-    setShowDuration(showDuration)
-    setShowElevation(showElevation)
-    setShowAverage(showAverage)
-    setShowPower(showPower)
-    setShowCoordinates(showCoordinates)
   }
 
   const handleColorChange = (color) => {
@@ -156,6 +149,7 @@ function ImageComponent(props) {
     setRatio(ratioText)
     setIsCropped(true);
   }
+
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -199,14 +193,20 @@ function ImageComponent(props) {
           <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasSketch" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-          {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
-          {/* {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
+          {showTitle && (
+            <div className="text-overlay text-title">
+              <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
+              <div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>
+            </div>
+          )}
+          {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
+          {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
           {showDistance && (<div className="text-overlay text-distance">{props.activity.beautyDistance}</div>)}
           {showDuration && (<div className="text-overlay text-duration">{props.activity.beautyDuration}</div>)}
           {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
           {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
-          {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)}
-          {showCoordinates && (<div className="text-overlay text-coordinates">{props.activity.beautyCoordinates}</div>)} */}
+          {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
+          {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>

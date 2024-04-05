@@ -7,7 +7,8 @@ export default {
             day: undefined,
             hours: undefined,
             minutes: undefined,
-            seconds: undefined
+            seconds: undefined,
+
         }
         res.year = removeZero ? String(Number(dateUnparsed.substring(0,4))) : dateUnparsed.substring(0,4)
         res.month = removeZero ? String(Number(dateUnparsed.substring(5,7))) : dateUnparsed.substring(5,7)
@@ -16,29 +17,29 @@ export default {
         res.minutes = removeZero ? String(Number(dateUnparsed.substring(14,16))) : dateUnparsed.substring(14,16)
         res.seconds = removeZero ? String(Number(dateUnparsed.substring(17,19))) : dateUnparsed.substring(17,19)
         if(Number(res.month) === 1) {
-            res.monthText = 'Jan'
+            res.monthText = 'January'
         } else if(Number(res.month) === 2) {
-            res.monthText = 'Feb'
+            res.monthText = 'February'
         } else if(Number(res.month) === 3) {
-            res.monthText = 'Mar'
+            res.monthText = 'March'
         } else if(Number(res.month) === 4) {
-            res.monthText = 'Apr'
+            res.monthText = 'April'
         } else if(Number(res.month) === 5) {
             res.monthText = 'May'
         } else if(Number(res.month) === 6) {
-            res.monthText = 'Jun'
+            res.monthText = 'June'
         } else if(Number(res.month) === 7) {
-            res.monthText = 'Jul'
+            res.monthText = 'July'
         } else if(Number(res.month) === 8) {
-            res.monthText = 'Aug'
+            res.monthText = 'August'
         } else if(Number(res.month) === 9) {
-            res.monthText = 'Sep'
+            res.monthText = 'September'
         } else if(Number(res.month) === 10) {
-            res.monthText = 'Oct'
+            res.monthText = 'October'
         } else if(Number(res.month) === 11) {
-            res.monthText = 'Nov'
+            res.monthText = 'November'
         } else if(Number(res.month) === 12) {
-            res.monthText = 'Dic'
+            res.monthText = 'Dicember'
         }
         return res
     },
@@ -100,7 +101,7 @@ export default {
 
     getBeautyDatetime(dateUnparsed) {
         let parsedDate = this.getJsonDate(dateUnparsed, true)
-        return parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDate.hours + ':' + parsedDate.minutes + ':' + parsedDate.seconds
+        return parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDate.hours + ':' + parsedDate.minutes
     },
 
     getJsonDuration(durationInSec) {
