@@ -149,6 +149,18 @@ p {
   position: absolute;
   top: 0
 }
+.canvas-sketch{
+  width: 49vw;
+  height: 49vw !important;
+  position: absolute;
+  margin: 15.5vw 15.5vw
+}
+.canvas-sketch-rect{
+  width: 68vw;
+  height: 68vw !important;
+  position: absolute;
+  margin: 37vw 6vw
+}
 #canvasImage {
   z-index: 1;
 }
@@ -177,10 +189,10 @@ p {
   flex-direction: row;
 }
 .text-title-props:first-child{
-  bottom:-8vw
+  bottom:-4vw
 }
 .text-title-props:last-child{
-  top:8.5vw
+  top:4.5vw
 }
 .text-name-props{
   font-weight: 900;
@@ -192,7 +204,7 @@ p {
 .text-coordinates-props{
   font-size: 20px;
   width: 100%;
-  top:92%;
+  top:88%;
   left:50%;
   text-align: center;
   transform: translate(-50%,0)

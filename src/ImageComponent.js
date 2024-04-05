@@ -33,6 +33,7 @@ function ImageComponent(props) {
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
+  const classesSketch = ratio === '1:1' ? 'canvas-filter canvas-sketch' : 'canvas-filter canvas-sketch-rect'
 
   const handleDownloadClick = () => {
     html2canvas(document.getElementById('printingAnchor')).then(canvas => {
@@ -47,7 +48,7 @@ function ImageComponent(props) {
   const drawLine = (coodinates, width, height) => {
     let canvasSketch = document.getElementById('canvasSketch')
     let ctx = canvasSketch.getContext('2d')
-    let border = width*0.2
+    // let border = width*0.2
     setThickness(width*0.01)
 
     let minX = Math.min(...coodinates.map(x => x[0]))
@@ -60,7 +61,10 @@ function ImageComponent(props) {
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
 
-    let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
+    //TODO with this altgorithim the sketch results distorted
+    // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
+    let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
+    // let zoomFactor = width / mapWidth
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.strokeStyle = drawingColor
@@ -72,6 +76,7 @@ function ImageComponent(props) {
     for(let i = 0; i < coodinates.length; i++) {
       let c = coodinates[i]
       ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
+      // ctx.lineTo((c[0]-mapCenterY)*zoomFactor + width/2, -(c[0]-mapCenterY)*zoomFactor + width/2)
     }
 
     ctx.stroke()
@@ -82,7 +87,7 @@ function ImageComponent(props) {
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.fillStyle = filterColor
-    ctx.filter = 'opacity(20%)'
+    ctx.filter = 'opacity(50%)'
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
   }
 
@@ -122,12 +127,20 @@ function ImageComponent(props) {
     imageReference.src = image.src
     let imageReferenceWidth = imageReference.width
     let imageReferenceHeight = imageReference.height
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
     if(ratioText === '1:1') {
       let min = Math.min(imageReferenceWidth, imageReferenceHeight)
       setXCrop(imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2)
       setYCrop(imageReferenceWidth === imageReferenceHeight || imageReferenceWidth > imageReferenceHeight ? 0 : (imageReferenceHeight - min) / 2)
       setCanvasWidth(min)
       setCanvasHeight(min)
+      image.onload = () => {
+        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+        let minLength = Math.min(canvasWidth, canvasHeight)
+        drawLine(props.activity.coordinates, minLength, minLength)
+        drawFilter()
+      }
     } else {
       let ratioSplitted = ratioText.split(':')
       let ratioCalculated = ratioSplitted[0]/ratioSplitted[1]
@@ -138,11 +151,10 @@ function ImageComponent(props) {
       setYCrop(widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - heightRationalized) / 2)
       setCanvasWidth(widthRationalized)
       setCanvasHeight(heightRationalized)
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(props.activity.coordinates, canvasWidth, canvasHeight)
+        let minLength = Math.min(canvasWidth, canvasHeight)
+        drawLine(props.activity.coordinates, minLength, minLength)
         drawFilter()
       }
     }
@@ -160,7 +172,8 @@ function ImageComponent(props) {
     if (canvas && canvasWidth && canvasHeight) {
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(props.activity.coordinates, canvasWidth, canvasHeight)
+        let minLength = Math.min(canvasWidth, canvasHeight)
+        drawLine(props.activity.coordinates, minLength, minLength)
         drawFilter()
       }
     } else if(!canvasWidth && !canvasHeight) {
@@ -192,7 +205,7 @@ function ImageComponent(props) {
       <div className="canvas-container" id="printingAnchor">
           <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-          <canvas id="canvasSketch" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
           {showTitle && (
             <div className="text-overlay text-title">
               <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>

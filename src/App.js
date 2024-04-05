@@ -58,7 +58,7 @@ class Homepage extends React.Component{
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
-    activity.coordinates = [[100,100],[150,100]]
+    activity.coordinates = [[0,0],[100,100],[150,100]]
     activity.beautyName = 'ciccio pasticcio il pusillanime che porta con se un pollo sotto il braccios'
     activity.beautyDuration = '4h 36m'
     activity.beautyDate = 'March 31, 19:37'
