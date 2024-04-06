@@ -20,7 +20,7 @@ let activities = []
 let activity = {}
 let accessToken
 let isLoading = false
-let stage = 'ShowingActivity'
+let stage = 'RequestedLogin'
 let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
 
@@ -58,16 +58,16 @@ class Homepage extends React.Component{
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
-    activity.coordinates = [[0,0],[100,100],[150,100]]
-    activity.beautyName = 'ciccio pasticcio il pusillanime che porta con se un pollo sotto il braccios'
-    activity.beautyDuration = '4h 36m'
-    activity.beautyDate = 'March 31, 19:37'
-    activity.beautyDistance = '123.34km'
-    activity.beautyPower = '203W'
-    activity.beautyCoordinates = utils.getBeautyCoordinates([45.15,10.2]).beautyCoordinatesTextTime
-    activity.beautyCoordinatesComplete = utils.getBeautyCoordinates([45.15,10.2])
-    activity.beautyAverage = '27.56km/h'
-    activity.beautyElevation = '3290m'
+    // activity.coordinates = [[0,0],[100,100],[150,100]]
+    // activity.beautyName = 'ciccio pasticcio il pusillanime che porta con se un pollo sotto il braccios'
+    // activity.beautyDuration = '4h 36m'
+    // activity.beautyDate = 'March 31, 19:37'
+    // activity.beautyDistance = '123.34km'
+    // activity.beautyPower = '203W'
+    // activity.beautyCoordinates = utils.getBeautyCoordinates([45.15,10.2]).beautyCoordinatesTextTime
+    // activity.beautyCoordinatesComplete = utils.getBeautyCoordinates([45.15,10.2])
+    // activity.beautyAverage = '27.56km/h'
+    // activity.beautyElevation = '3290m'
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -154,18 +154,18 @@ class Homepage extends React.Component{
               beautyAverage: e.average_speed + 'km/h',
               beautyCoordinates: undefined,
               beautyEndCoordinates: undefined,
-              beautyElevation: e.total_elevation + 'm',
+              beautyElevation: e.total_elevation_gain + 'm',
               beautyDistance: (e.distance / 1000).toFixed(2) + 'km',
               beautyDuration: utils.getBeautyDuration(e.elapsed_time),
               beautyName: utils.removeEmoji(e.name),
               beautyPower: e.average_watts + 'W',
-              beautyStartDate: utils.getBeautyDatetime(e.start_date),
+              beautyDate: utils.getBeautyDatetime(e.start_date_local),
               distance: e.distance,
               distanceKm: Number((e.distance / 1000).toFixed(2)),
               duration: e.elapsed_time,
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
               endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
-              elevation: e.total_elevation,
+              elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
               movingTime: e.moving_time,
@@ -178,10 +178,10 @@ class Homepage extends React.Component{
               startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
               startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined
             }
-            t.beautyCoordinatesComplete = utils.getBeautyCoordinates(t.startLatitude, t.startLongitude)
+            t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
-            t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates(t.endLatitude, t.endLongitude)
-            t.beautyCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+            t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
+            t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
             t.subtitle = t.beautyStartDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
             activities.push(t)
           })

@@ -131,7 +131,8 @@ p {
   color: var(--palette-background);
 }
 .width-80{
-  width: 80vw
+  width: 80vw;
+  margin: 5vh 0vh
 }
 .canvas-image{
   width: 80vw;

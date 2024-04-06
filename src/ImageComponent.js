@@ -48,6 +48,8 @@ function ImageComponent(props) {
   const drawLine = (coodinates, width, height) => {
     let canvasSketch = document.getElementById('canvasSketch')
     let ctx = canvasSketch.getContext('2d')
+    console.log('width: ', width)
+    console.log('height: ', height)
     // let border = width*0.2
     setThickness(width*0.01)
 
@@ -64,6 +66,7 @@ function ImageComponent(props) {
     //TODO with this altgorithim the sketch results distorted
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
+    console.log('zoomFactor:', zoomFactor)
     // let zoomFactor = width / mapWidth
 
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
@@ -75,7 +78,13 @@ function ImageComponent(props) {
 
     for(let i = 0; i < coodinates.length; i++) {
       let c = coodinates[i]
-      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
+      let rightHeight = height/2
+      let rightZoom = zoomFactor
+      if(ratio !== '1:1') {
+        rightHeight = height
+        rightZoom = zoomFactor*2
+      }
+      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoom + rightHeight)
       // ctx.lineTo((c[0]-mapCenterY)*zoomFactor + width/2, -(c[0]-mapCenterY)*zoomFactor + width/2)
     }
 

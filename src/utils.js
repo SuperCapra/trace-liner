@@ -45,6 +45,7 @@ export default {
     },
 
     getBeautyCoordinates(coordinates) {
+        console.log('coordinates: ', coordinates)
         let result = {
             coordinates: coordinates,
             beautyCoordinates: [],
@@ -66,7 +67,7 @@ export default {
         result.longDeg = (latCoord > 0) ? Math.abs(Math.floor(longCoord)) : Math.abs(Math.ceil(longCoord))
 
         let latPolarDirection = result.latDeg + (latCoord > 0) ? 'N' : 'S'
-        let longPolarDirection = result.longDeg + (longCoord > 0) ? 'W' : 'E'
+        let longPolarDirection = result.longDeg + (longCoord > 0) ? 'E' : 'W'
 
         let tempLatSec = (Math.abs((tempLat) - (result.latDeg * 100))) * 36
         let tempLongSec = (Math.abs((tempLong) - (result.longDeg * 100))) * 36

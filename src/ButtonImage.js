@@ -28,6 +28,7 @@ function ButtonImage(props) {
   const colors = []
 
   const showModifySetImage = () => {
+    console.log('mannaggia!')
     setModifyText(false)
     setModifyImgae(!showModifyImage)
   }
