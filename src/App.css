@@ -260,6 +260,37 @@ p {
 .colors{
   margin: 1vw;
 }
+.image-props{
+  margin: 1vw;
+  border-radius: 5px
+
+}
+.image-container {
+  margin: 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+}
+
+.image-square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: var(--palette-yellow); 
+}
+.image-square:hover{
+  cursor: pointer
+}
+
+.image-square p {
+  font-size: 28px;
+  color: var(--palette-background);
+}
 .dot-typing {
     position: relative;
     left: -9999px;

@@ -182,7 +182,7 @@ class Homepage extends React.Component{
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-            t.subtitle = t.beautyStartDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
+            t.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
             activities.push(t)
           })
         }

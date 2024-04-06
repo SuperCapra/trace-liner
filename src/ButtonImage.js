@@ -8,6 +8,8 @@ import {ReactComponent as SquareSVG} from './square.svg'
 import {ReactComponent as ViewSVG} from './view.svg'
 import {ReactComponent as HideSVG} from './hide.svg'
 import brandingPalette from './brandingPalette';
+import image1 from './image1.jpeg'
+import image2 from './image2.jpeg'
 
 function ButtonImage(props) {
 
@@ -25,7 +27,20 @@ function ButtonImage(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [imageSrc, setImageSrc] = useState(false);
+  const [additionalImages, setAdditionalImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const colors = []
+  const images = [{
+    photo: props.activity.photoUrl, 
+    alt: 'activity'
+  },{
+    photo: image1, 
+    alt: 'default-1'
+  },{
+    photo: image2, 
+    alt: 'default-2'
+  }]
 
   const showModifySetImage = () => {
     console.log('mannaggia!')
@@ -208,6 +223,49 @@ function ButtonImage(props) {
     )
   }
 
+  const returnImages = () => {
+    let htmlImages = []
+    for(let element of images) {
+      console.log(element)
+      htmlImages.push(<img src={element.photo} id={element.key} key={element.alt} onClick={() => resetImage(alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
+    }
+    return(htmlImages)
+  }
+
+  const resetImage = (alt) => {
+    console.log('TODO construct this function')
+  }
+
+  const handleClickPlus = () => {
+    const fileInput = document.getElementById('fileInput')
+    if(fileInput) {
+      fileInput.click()
+    }
+  }
+
+  const loadImage = (event) => {
+    console.log('bau haus')
+    if(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+
+      console.log('non capisco perchè non funzioni', file)
+  
+      reader.onload = (e) => {
+        const imageDataURL = e.target.result;
+        returnImages(imageDataURL)
+        let key = additionalImages.length + 1
+        let alt = 'loaded-images-' + key
+        setImageSrc(true)
+        setAdditionalImages([...additionalImages, <img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/>])
+      };
+  
+      reader.readAsDataURL(file);
+      // let image
+      // returnImages(image)
+    }
+  }
+
   return (
     <div>
       <div className="wrapper-buttons">
@@ -229,6 +287,12 @@ function ButtonImage(props) {
           </div>
           <div className="wrapper-buttons colors-background">
             {returnsColors()}
+          </div>
+          <div className="wrapper-buttons">
+            {returnImages()}
+            {imageSrc && additionalImages}
+            <div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>
+            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>
       )}
