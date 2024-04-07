@@ -3,6 +3,7 @@ import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
 import logoNamaSVG from './logoNama.png'
 import html2canvas from 'html2canvas';
+import {toBlob} from 'html-to-image';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -24,6 +25,7 @@ function ImageComponent(props) {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const canvasRef = useRef(null)
+  const imageRef = useRef(null)
   const action = useRef('setInitialImage')
 
   const calculateMemoImage = useCallback((action) => {
@@ -47,14 +49,44 @@ function ImageComponent(props) {
   const classesSketch = ratio === '1:1' ? 'canvas-filter canvas-sketch' : 'canvas-filter canvas-sketch-rect'
 
   const handleDownloadClick = () => {
-    html2canvas(document.getElementById('printingAnchor')).then(canvas => {
-      const dataURL = canvas.toDataURL('image/jpeg');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-      a.click();
-    });
+    handleShare()
+    // html2canvas(document.getElementById('printingAnchor')).then(canvas => {
+    //   const dataURL = canvas.toDataURL('image/jpeg');
+    //   const a = document.createElement('a');
+    //   a.href = dataURL;
+    //   a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+    //   a.click();
+    // });
   }
+
+  const handleShare = async () => {
+    console.log('ma passi di qua?')
+    // const newFile = await toBlob(imageRef.current);
+    html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
+      const dataURL = canvas.toDataURL('image/jpeg');
+      // const a = document.createElement('a');
+      // a.href = dataURL;
+      // a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+      // a.click();
+      const newimage = new Image()
+      newimage.src = dataURL
+      const data = {
+        files: [
+          new File([newimage], props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg', {
+            type: newimage.type,
+          }),
+        ],
+        title: 'Image',
+        text: 'image',
+      };
+      try {
+        await navigator.share(data);
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+}
 
   const drawLine = useCallback((color) => {
     let coordinates = props.activity.coordinates
@@ -262,7 +294,7 @@ function ImageComponent(props) {
   
   return (
     <div className="width-80">
-      <div className="canvas-container" id="printingAnchor">
+      <div ref={imageRef} className="canvas-container" id="printingAnchor">
           <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
