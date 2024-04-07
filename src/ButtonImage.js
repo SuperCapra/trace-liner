@@ -227,7 +227,7 @@ function ButtonImage(props) {
     let htmlImages = []
     for(let element of images) {
       console.log(element)
-      htmlImages.push(<img src={element.photo} id={element.key} key={element.alt} onClick={() => resetImage(alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
+      htmlImages.push(<img src={element.photo} id={element.key} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
     }
     return(htmlImages)
   }

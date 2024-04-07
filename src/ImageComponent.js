@@ -63,13 +63,10 @@ function ImageComponent(props) {
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
 
-    //TODO with this altgorithim the sketch results distorted
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
     console.log('zoomFactor:', zoomFactor)
-    // let zoomFactor = width / mapWidth
 
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.strokeStyle = drawingColor
     ctx.fillStyle = drawingColor
     ctx.lineWidth = thickness
@@ -79,13 +76,13 @@ function ImageComponent(props) {
     for(let i = 0; i < coodinates.length; i++) {
       let c = coodinates[i]
       let rightHeight = height/2
-      let rightZoom = zoomFactor
+      let rightZoomY = zoomFactor
       if(ratio !== '1:1') {
-        rightHeight = height
-        rightZoom = zoomFactor*2
+        rightHeight = rightHeight*1.77
+        rightZoomY = zoomFactor*1.77
       }
-      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoom + rightHeight)
-      // ctx.lineTo((c[0]-mapCenterY)*zoomFactor + width/2, -(c[0]-mapCenterY)*zoomFactor + width/2)
+      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight)
+      // ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
     }
 
     ctx.stroke()
