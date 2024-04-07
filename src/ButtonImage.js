@@ -232,7 +232,6 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
-    console.log('TODO construct this function')
     const elementChosen = document.getElementById(alt)
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
