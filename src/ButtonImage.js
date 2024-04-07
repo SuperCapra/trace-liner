@@ -28,6 +28,7 @@ function ButtonImage(props) {
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [imageSrc, setImageSrc] = useState(false);
+  const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
   // const [images, setImages] = useState([]);
   const colors = []
@@ -232,7 +233,6 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
-    console.log('TODO construct this function')
     const elementChosen = document.getElementById(alt)
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
@@ -245,7 +245,7 @@ function ButtonImage(props) {
   }
 
   const loadImage = (event) => {
-    if(event) {
+    if(event && event.target && event.target.files && event.target.length) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -255,6 +255,10 @@ function ButtonImage(props) {
         let alt = 'loaded-images-' + key
         setImageSrc(true)
         setAdditionalImages([...additionalImages, <img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/>])
+        setEnableUploading(false)
+        if(additionalImages.length > 2) {
+          setEnableUploading(false)
+        }
       };
   
       reader.readAsDataURL(file);
@@ -286,7 +290,8 @@ function ButtonImage(props) {
           <div className="wrapper-buttons">
             {returnImages()}
             {imageSrc && additionalImages}
-            <div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>
+            {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
+            
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>

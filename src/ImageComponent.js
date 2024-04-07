@@ -116,7 +116,10 @@ function ImageComponent(props) {
     console.log('data:', data)
     if(data.type === 'share') handleDownloadClick()
     else if(data.type === 'changing-color') handleColorChange(data.color)
-    else if(data.type === 'rectangle' || data.type === 'square') handleCrop(data.type === 'square' ? '1:1' : '9:16')
+    else if(data.type === 'rectangle' || data.type === 'square') {
+      setRatio(data.type === 'square' ? '1:1' : '9:16')
+      handleCrop(data.type === 'square' ? '1:1' : '9:16')
+    }
     else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
@@ -146,78 +149,94 @@ function ImageComponent(props) {
     drawLine(color)
   }
 
-  const handleCrop = useCallback((ratioText) => {
-    const imageReference = new Image()
-    imageReference.src = image.src
-    let imageReferenceWidth = imageReference.width
-    let imageReferenceHeight = imageReference.height
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    if(ratioText === '1:1') {
-      let min = Math.min(imageReferenceWidth, imageReferenceHeight)
-      setXCrop(imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2)
-      setYCrop(imageReferenceWidth === imageReferenceHeight || imageReferenceWidth > imageReferenceHeight ? 0 : (imageReferenceHeight - min) / 2)
-      setCanvasWidth(min)
-      setCanvasHeight(min)
-      image.onload = () => {
-        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(drawingColor)
-        drawFilter()
+  const handleCrop = useCallback((ratioText, imageSrc) => {
+    if(ratioText && (imageSrc || image.src)) {
+      const imageReference = new Image()
+      if(!imageSrc) {
+        imageReference.src = image.src
+      } else if(imageSrc) {
+        imageReference.src = imageSrc
       }
-    } else {
-      let ratioSplitted = ratioText.split(':')
-      let ratioCalculated = ratioSplitted[0]/ratioSplitted[1]
-      let min = Math.min(imageReferenceWidth, imageReferenceHeight * ratioCalculated)
-      let widthRationalized = (imageReferenceWidth === min) ? imageReferenceWidth : imageReferenceHeight * ratioCalculated
-      let heightRationalized = (imageReferenceHeight * ratioCalculated === min) ? imageReferenceHeight : imageReferenceWidth / ratioCalculated
-      setXCrop(widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - widthRationalized) / 2)
-      setYCrop(widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - heightRationalized) / 2)
-      setCanvasWidth(widthRationalized)
-      setCanvasHeight(heightRationalized)
-      image.onload = () => {
-        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(drawingColor)
-        drawFilter()
+      let imageReferenceWidth = imageReference.width
+      let imageReferenceHeight = imageReference.height
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      if(ratioText === '1:1') {
+        let min = Math.min(imageReferenceWidth, imageReferenceHeight)
+        let xCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2
+        let yCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth > imageReferenceHeight ? 0 : (imageReferenceHeight - min) / 2
+        setXCrop(xCropTemp)
+        setYCrop(yCropTemp)
+        setCanvasWidth(min)
+        setCanvasHeight(min)
+        imageReference.onload = () => {
+          ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
+          drawLine(drawingColor)
+          drawFilter()
+        }
+      } else {
+        let ratioSplitted = ratioText.split(':')
+        let ratioCalculated = ratioSplitted[0]/ratioSplitted[1]
+        let min = Math.min(imageReferenceWidth, imageReferenceHeight * ratioCalculated)
+        let widthRationalized = (imageReferenceWidth === min) ? imageReferenceWidth : imageReferenceHeight * ratioCalculated
+        let heightRationalized = (imageReferenceHeight * ratioCalculated === min) ? imageReferenceHeight : imageReferenceWidth / ratioCalculated
+        let xCropTemp = widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - widthRationalized) / 2
+        let yCropTemp = widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - heightRationalized) / 2
+        setXCrop(xCropTemp)
+        setYCrop(yCropTemp)
+        setCanvasWidth(widthRationalized)
+        setCanvasHeight(heightRationalized)
+        imageReference.onload = () => {
+          ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
+          drawLine(drawingColor)
+          drawFilter()
+        }
       }
+      setRatio(ratioText)
+      setIsCropped(true);
     }
-    setRatio(ratioText)
-    setIsCropped(true);
-  }, [canvasHeight, canvasWidth, drawFilter, drawLine, image, xCrop, yCrop, drawingColor])
+  }, [drawFilter, drawLine, image, drawingColor])
 
   const setImage = (imageSrc) => {
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
+    // const canvas = canvasRef.current
+    // const ctx = canvas.getContext('2d')
     setImageSrc(imageSrc)
-    // image.src = imageSrc
-    // image.src = props.image
+    // const imageReference = new Image()
+    // imageReference.src = image.src
+    handleCrop(ratio, imageSrc)
+    // console.log('canvasWidth: ', canvasWidth)
+    // console.log('canvasHeight: ', canvasHeight)
+    // console.log('imageSrc: ', imageSrc)
+    // // image.src = imageSrc
+    // // image.src = props.image
 
-    if (canvas && canvasWidth && canvasHeight) {
-      image.onload = () => {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(drawingColor)
-        drawFilter()
-      }
-    } else if(!canvasWidth && !canvasHeight) {
-      handleCrop(ratio)
-    }
+    // if (canvas && canvasWidth && canvasHeight) {
+    //   image.onload = () => {
+    //     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    //     ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+    //     drawLine(drawingColor)
+    //     drawFilter()
+    //   }
+    // } else if(!canvasWidth && !canvasHeight) {
+    //   handleCrop(ratio)
+    // }
   }
 
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-
-    if (canvas && canvasWidth && canvasHeight) {
-      image.onload = () => {
-        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawLine(drawingColor)
-        drawFilter()
-      }
-    } else if(!canvasWidth && !canvasHeight) {
-      handleCrop(ratio)
-    }
+    // const canvas = canvasRef.current
+    // const ctx = canvas.getContext('2d')
+    handleCrop(ratio)
+    // if (canvas && canvasWidth && canvasHeight) {
+    //   image.onload = () => {
+    //     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    //     ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+    //     drawLine(drawingColor)
+    //     drawFilter()
+    //   }
+    // } else if(!canvasWidth && !canvasHeight) {
+    //   handleCrop(ratio)
+    // }
   }, [
       drawLine,
       drawFilter,
