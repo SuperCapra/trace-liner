@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
 import logoNamaSVG from './logoNama.png'
 import html2canvas from 'html2canvas';
@@ -12,7 +12,6 @@ function ImageComponent(props) {
   const [isCropped, setIsCropped] = useState(false);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor, setFilterColor] = useState('white');
-  const [thickness, setThickness] = useState(null);
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
@@ -23,9 +22,23 @@ function ImageComponent(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [imageSrc, setImageSrc] = useState(null);
   const canvasRef = useRef(null)
+  const action = useRef('setInitialImage')
 
-  const image = new Image()
+  const calculateMemoImage = useCallback((action) => {
+    let result = new Image()
+    console.log('eccolo con imageSrc:', imageSrc)
+    if(action.current === 'setInitialImage') {
+      setImageSrc(props.activity.photoUrl)
+      action.current = undefined
+    }
+    console.log('eccolo con imageSrc:', imageSrc)
+    result.src = imageSrc
+    return result
+  }, [imageSrc, props.activity.photoUrl])
+
+  const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
   const styleText = {
     color: drawingColor
@@ -45,18 +58,21 @@ function ImageComponent(props) {
     });
   }
 
-  const drawLine = (coodinates, width, height) => {
+  const drawLine = useCallback((color) => {
+    let coordinates = props.activity.coordinates
+    let width = Math.min(canvasHeight, canvasWidth)
+    let height = Math.min(canvasHeight, canvasWidth)
     let canvasSketch = document.getElementById('canvasSketch')
     let ctx = canvasSketch.getContext('2d')
     console.log('width: ', width)
     console.log('height: ', height)
     // let border = width*0.2
-    setThickness(width*0.01)
+    // setThickness(width*0.01)
 
-    let minX = Math.min(...coodinates.map(x => x[0]))
-    let maxX = Math.max(...coodinates.map(x => x[0]))
-    let minY = Math.min(...coodinates.map(x => x[1]))
-    let maxY = Math.max(...coodinates.map(x => x[1]))
+    let minX = Math.min(...coordinates.map(x => x[0]))
+    let maxX = Math.max(...coordinates.map(x => x[0]))
+    let minY = Math.min(...coordinates.map(x => x[1]))
+    let maxY = Math.max(...coordinates.map(x => x[1]))
     
     let mapWidth = maxX - minX
     let mapHeight = maxY - minY
@@ -66,15 +82,14 @@ function ImageComponent(props) {
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
     console.log('zoomFactor:', zoomFactor)
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-    ctx.strokeStyle = drawingColor
-    ctx.fillStyle = drawingColor
-    ctx.lineWidth = thickness
-
+    ctx.strokeStyle = color
+    ctx.lineWidth = width*0.01
     ctx.beginPath()
-
-    for(let i = 0; i < coodinates.length; i++) {
-      let c = coodinates[i]
+  
+    for(let i = 0; i < coordinates.length; i++) {
+      let c = coordinates[i]
       let rightHeight = height/2
       let rightZoomY = zoomFactor
       if(ratio !== '1:1') {
@@ -86,16 +101,18 @@ function ImageComponent(props) {
     }
 
     ctx.stroke()
-  }
 
-  const drawFilter = () => {
+  },[props.activity.coordinates, ratio, canvasWidth, canvasHeight])
+
+
+  const drawFilter = useCallback(() => {
     let canvasFilter = document.getElementById('canvasFilter')
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.fillStyle = filterColor
     ctx.filter = 'opacity(50%)'
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }
+  }, [filterColor, canvasWidth, canvasHeight])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
@@ -120,15 +137,18 @@ function ImageComponent(props) {
       } else if(data.subtype === 'coordinates') {
         setShowCoordinates(data.show)
       }
+    } else if(data.type === 'image') {
+      setImage(data.image)
     }
   }
 
   const handleColorChange = (color) => {
     console.log('color to set', color)
     setDrawingColor(color)
+    drawLine(color)
   }
 
-  const handleCrop = (ratioText) => {
+  const handleCrop = useCallback((ratioText) => {
     const imageReference = new Image()
     imageReference.src = image.src
     let imageReferenceWidth = imageReference.width
@@ -143,8 +163,7 @@ function ImageComponent(props) {
       setCanvasHeight(min)
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        let minLength = Math.min(canvasWidth, canvasHeight)
-        drawLine(props.activity.coordinates, minLength, minLength)
+        drawLine(drawingColor)
         drawFilter()
       }
     } else {
@@ -159,42 +178,66 @@ function ImageComponent(props) {
       setCanvasHeight(heightRationalized)
       image.onload = () => {
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        let minLength = Math.min(canvasWidth, canvasHeight)
-        drawLine(props.activity.coordinates, minLength, minLength)
+        drawLine(drawingColor)
         drawFilter()
       }
     }
     setRatio(ratioText)
     setIsCropped(true);
+  }, [canvasHeight, canvasWidth, drawFilter, drawLine, image, xCrop, yCrop, drawingColor])
+
+  const setImage = (imageSrc) => {
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    setImageSrc(imageSrc)
+    // image.src = imageSrc
+    // image.src = props.image
+
+    if (canvas && canvasWidth && canvasHeight) {
+      image.onload = () => {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+        drawLine(drawingColor)
+        drawFilter()
+      }
+    } else if(!canvasWidth && !canvasHeight) {
+      handleCrop(ratio)
+    }
   }
 
 
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    // image.src = props.activity.photoUrl
-    image.src = props.image
+    // setImageSrc()
+    // if(action.current === 'setInitialImage') {
+      // image.src = props.activity.photoUrl
+      // image.src = props.image
+    //   action.current = undefined
+    // }
 
     if (canvas && canvasWidth && canvasHeight) {
       image.onload = () => {
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        let minLength = Math.min(canvasWidth, canvasHeight)
-        drawLine(props.activity.coordinates, minLength, minLength)
+        drawLine(drawingColor)
         drawFilter()
       }
     } else if(!canvasWidth && !canvasHeight) {
       handleCrop(ratio)
     }
   }, [
-      drawLine, 
+      drawLine,
+      drawFilter,
+      handleCrop,
       image, 
       xCrop, 
       yCrop, 
       canvasWidth, 
       canvasHeight, 
+      props.activity.photoUrl,
       props.activity.coordinates, 
       drawingColor, 
-      thickness, 
       ratio,
       showName,
       showDate,
@@ -211,7 +254,7 @@ function ImageComponent(props) {
       <div className="canvas-container" id="printingAnchor">
           <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-          <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasSketch" className={classesSketch} style={styleText} width={canvasWidth} height={canvasHeight}/>
           {showTitle && (
             <div className="text-overlay text-title">
               <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>

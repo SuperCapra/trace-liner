@@ -43,7 +43,6 @@ function ButtonImage(props) {
   }]
 
   const showModifySetImage = () => {
-    console.log('mannaggia!')
     setModifyText(false)
     setModifyImgae(!showModifyImage)
   }
@@ -227,30 +226,28 @@ function ButtonImage(props) {
     let htmlImages = []
     for(let element of images) {
       console.log(element)
-      htmlImages.push(<img src={element.photo} id={element.key} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
+      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
     }
     return(htmlImages)
   }
 
   const resetImage = (alt) => {
     console.log('TODO construct this function')
+    const elementChosen = document.getElementById(alt)
+    const src = elementChosen.getAttribute('src');
+    console.log('elementChosen: ', elementChosen)
+    handleClick({type: 'image', image: src})
   }
 
   const handleClickPlus = () => {
     const fileInput = document.getElementById('fileInput')
-    if(fileInput) {
-      fileInput.click()
-    }
+    if(fileInput) fileInput.click()
   }
 
   const loadImage = (event) => {
-    console.log('bau haus')
     if(event) {
       const file = event.target.files[0];
       const reader = new FileReader();
-
-      console.log('non capisco perchè non funzioni', file)
-  
       reader.onload = (e) => {
         const imageDataURL = e.target.result;
         returnImages(imageDataURL)
@@ -261,8 +258,6 @@ function ButtonImage(props) {
       };
   
       reader.readAsDataURL(file);
-      // let image
-      // returnImages(image)
     }
   }
 

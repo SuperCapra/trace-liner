@@ -1,4 +1,4 @@
-export default {
+const utilsFunction = {
     getJsonDate(dateUnparsed, removeZero) {
         let res = {
             year: undefined,
@@ -189,3 +189,5 @@ export default {
         return text.replaceAll('[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]','')
     }
 }
+
+export default utilsFunction
