@@ -28,12 +28,10 @@ function ImageComponent(props) {
 
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
-    console.log('eccolo con imageSrc:', imageSrc)
     if(action.current === 'setInitialImage') {
       setImageSrc(props.activity.photoUrl)
       action.current = undefined
     }
-    console.log('eccolo con imageSrc:', imageSrc)
     result.src = imageSrc
     return result
   }, [imageSrc, props.activity.photoUrl])
@@ -209,12 +207,6 @@ function ImageComponent(props) {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    // setImageSrc()
-    // if(action.current === 'setInitialImage') {
-      // image.src = props.activity.photoUrl
-      // image.src = props.image
-    //   action.current = undefined
-    // }
 
     if (canvas && canvasWidth && canvasHeight) {
       image.onload = () => {
@@ -254,7 +246,7 @@ function ImageComponent(props) {
       <div className="canvas-container" id="printingAnchor">
           <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-          <canvas id="canvasSketch" className={classesSketch} style={styleText} width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
           {showTitle && (
             <div className="text-overlay text-title">
               <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
