@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
-import logoNamaSVG from './logoNama.png'
+import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
 import image1 from './image1.jpeg'
 // import Share from 'react-native-share';
@@ -43,7 +43,8 @@ function ImageComponent(props) {
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
   const styleText = {
-    color: drawingColor
+    color: drawingColor,
+    fill: drawingColor
   }
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
@@ -322,6 +323,9 @@ function ImageComponent(props) {
           {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
           {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
           {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
+          <div className="logo-nama-wrapper">
+            <LogoNameSVG className="logo-nama-svg" style={styleText}/>
+          </div>
           {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
           {showData && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyData}</div>)}
       </div>

@@ -330,3 +330,13 @@ p {
       box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
     }
 }
+.logo-nama-wrapper{
+  position: absolute;
+  bottom: 1vw;
+  right: 5vw;
+  z-index: 4;
+}
+.logo-nama-svg{
+  width: 15vw;
+  height: 12vw
+}
