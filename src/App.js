@@ -4,8 +4,6 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import imageDefault from './image2.jpeg'
-const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
-const clientSecret = process.env.REACT_APP_STRAVA_CLIENT_SECRET
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
@@ -104,8 +102,8 @@ class Homepage extends React.Component{
     isLoading = true
     console.log('getting the access token...')
     let urlAccessToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
-      '?client_id=' + clientId + 
-      '&client_secret=' + clientSecret + 
+      '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
+      '&client_secret=' + process.env.REACT_APP_STRAVA_CLIENT_SECRET + 
       '&code=' + userCode +
       '&grant_type=authorization_code'
   
