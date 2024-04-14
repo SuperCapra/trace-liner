@@ -3,7 +3,7 @@ import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
 import logoNamaSVG from './logoNama.png'
 import html2canvas from 'html2canvas';
-import {toBlob} from 'html-to-image';
+// import Share from 'react-native-share';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -70,18 +70,15 @@ function ImageComponent(props) {
       // a.click();
       const newimage = new Image()
       newimage.src = dataURL
-      const data = {
-        files: [
-          new File([newimage], props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg', {
-            type: newimage.type,
-          }),
-        ],
-        title: 'Image',
-        text: 'image',
-      };
       try {
-        await navigator.share(data);
+        const shareOptions = {
+          title: 'Share via',
+          url: 'dataURL', // Replace this with the path to your image
+          // social: Share.Social.WHATSAPP // You can choose the app to share with
+        };
+        // await Share.open(shareOptions);
       } catch (err) {
+        window.alert('err:' + err)
         console.error(err);
       }
     });
