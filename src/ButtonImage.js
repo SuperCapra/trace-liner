@@ -22,6 +22,7 @@ function ButtonImage(props) {
   const [showName, setShowName] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
+  const [showData, setShowData] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
   const [showElevation, setShowElevation] = useState(true);
   const [showAverage, setShowAverage] = useState(true);
@@ -30,12 +31,8 @@ function ButtonImage(props) {
   const [imageSrc, setImageSrc] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
-  // const [images, setImages] = useState([]);
   const colors = []
-  const images = [{
-    photo: props.activity.photoUrl, 
-    alt: 'activity'
-  },{
+  let images = [{
     photo: image1, 
     alt: 'default-1'
   },{
@@ -66,55 +63,69 @@ function ButtonImage(props) {
   }
   const propagateShowHide = (type) => {
     if(type === 'name') {
+      handleClick({type: 'show-hide', subtype: 'name', show: !showName})
+      if(!showName) {
+        setShowDate(true)
+      } else {
+        setShowDate(false)
+      }
       setShowName(!showName)
-      handleClick({type: 'show-hide', subtype: 'name', show: showName})
-    } else if(type === 'date') {
+    } else if(type === 'date' && showName) {
+      handleClick({type: 'show-hide', subtype: 'date', show: !showDate})
       setShowDate(!showDate)
-      handleClick({type: 'show-hide', subtype: 'date', show: showDate})
     } else if(type === 'distance') {
+      handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
       setShowDistance(!showDistance)
-      handleClick({type: 'show-hide', subtype: 'distance', show: showDistance})
     } else if(type === 'duration') {
+      handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
       setShowDuration(!showDuration)
-      handleClick({type: 'show-hide', subtype: 'duration', show: showDuration})
     } else if(type === 'elevation') {
+      handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
       setShowElevation(!showDuration)
-      handleClick({type: 'show-hide', subtype: 'elevation', show: showElevation})
     } else if(type === 'average') {
+      handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
       setShowAverage(!showAverage)
-      handleClick({type: 'show-hide', subtype: 'average', show: showAverage})
     } else if(type === 'power') {
+      handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
       setShowPower(!showPower)
-      handleClick({type: 'show-hide', subtype: 'power', show: showPower}) 
     } else if(type === 'coordinates') {
+      handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
+      if(showData && !showCoordinates) {
+        setShowData(false)
+      }
       setShowCoordinates(!showCoordinates)
-      handleClick({type: 'show-hide', subtype: 'coordinates', show: showCoordinates})
+    } else if(type === 'data') {
+      handleClick({type: 'show-hide', subtype: 'data', show: !showData})
+      if(showCoordinates && !showData) {
+        setShowCoordinates(false)
+      }
+      setShowData(!showData)
     }
   }
 
   const shareStyle = {
     fill: brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const modifyStyle = {
     fill: showModifyImage ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const textStyle = {
     fill: showModifyText ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const squareStyle = {
     fill: square ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const rectangleStyle = {
     fill: rectangle ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const eyeStyle = {
     fill: brandingPalette.pink,
-    transform: 'scale(0.5)'
+    transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
 
   const returnsColors = () => {
@@ -141,7 +152,7 @@ function ButtonImage(props) {
           {showName && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
           {!showName && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
         </div>
-        <p>NAME: {activity.beautyName}</p>
+        <p>TITLE: {activity.beautyName}</p>
       </div>
     )
   }
@@ -222,12 +233,29 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const dataController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showData && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
+          {!showData && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
+        </div>
+        <p>DATA: {activity.beautyData}</p>
+      </div>
+    )
+  }
 
   const returnImages = () => {
+    if(props.activity.photoUrl) {
+      images = [{
+        photo: props.activity.photoUrl, 
+        alt: 'activity'
+      },...images]
+    }
     let htmlImages = []
     for(let element of images) {
       console.log(element)
-      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
+      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/>)
     }
     return(htmlImages)
   }
@@ -291,7 +319,6 @@ function ButtonImage(props) {
             {returnImages()}
             {imageSrc && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>
@@ -300,11 +327,12 @@ function ButtonImage(props) {
         <div>
           {nameController()}
           {dateController()}
-          {distanceController()}
+          {dataController()}
+          {/* {distanceController()}
           {durationController()}
           {elevationController()}
           {averageController()}
-          {powerController()}
+          {powerController()} */}
           {coordinatesController()}
         </div>
       )}

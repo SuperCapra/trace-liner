@@ -1,9 +1,10 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
-import logoNamaSVG from './logoNama.png'
+import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
-import {toBlob} from 'html-to-image';
+import image1 from './image1.jpeg'
+// import Share from 'react-native-share';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -16,6 +17,7 @@ function ImageComponent(props) {
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
+  const [showData, setShowData] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -31,7 +33,7 @@ function ImageComponent(props) {
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
     if(action.current === 'setInitialImage') {
-      setImageSrc(props.activity.photoUrl)
+      setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
       action.current = undefined
     }
     result.src = imageSrc
@@ -41,7 +43,8 @@ function ImageComponent(props) {
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
   const styleText = {
-    color: drawingColor
+    color: drawingColor,
+    fill: drawingColor
   }
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
@@ -60,30 +63,26 @@ function ImageComponent(props) {
   }
 
   const handleShare = async () => {
-    console.log('ma passi di qua?')
     // const newFile = await toBlob(imageRef.current);
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       const dataURL = canvas.toDataURL('image/jpeg');
-      // const a = document.createElement('a');
-      // a.href = dataURL;
-      // a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-      // a.click();
-      const newimage = new Image()
-      newimage.src = dataURL
-      const data = {
-        files: [
-          new File([newimage], props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg', {
-            type: newimage.type,
-          }),
-        ],
-        title: 'Image',
-        text: 'image',
-      };
-      try {
-        await navigator.share(data);
-      } catch (err) {
-        console.error(err);
-      }
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+      a.click();
+      // const newimage = new Image()
+      // newimage.src = dataURL
+      // try {
+      //   const shareOptions = {
+      //     title: 'Share via',
+      //     url: 'dataURL', // Replace this with the path to your image
+      //     // social: Share.Social.WHATSAPP // You can choose the app to share with
+      //   };
+      //   // await Share.open(shareOptions);
+      // } catch (err) {
+      //   window.alert('err:' + err)
+      //   console.error(err);
+      // }
     });
 
 }
@@ -155,6 +154,11 @@ function ImageComponent(props) {
     else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
+        if(data.show) {
+          setShowDate(true)
+        } else {
+          setShowDate(false)
+        }
       } else if(data.subtype === 'date') {
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
@@ -169,6 +173,14 @@ function ImageComponent(props) {
         setShowPower(data.show)
       } else if(data.subtype === 'coordinates') {
         setShowCoordinates(data.show)
+        if(data.show) {
+          setShowData(false)
+        }
+      } else if(data.subtype === 'data') {
+        setShowData(data.show)
+        if(data.show) {
+          setShowCoordinates(false)
+        }
       }
     } else if(data.type === 'image') {
       setImage(data.image)
@@ -301,7 +313,7 @@ function ImageComponent(props) {
           {showTitle && (
             <div className="text-overlay text-title">
               <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
-              <div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>
+              {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
             </div>
           )}
           {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
@@ -311,7 +323,11 @@ function ImageComponent(props) {
           {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
           {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
           {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
+          <div className="logo-nama-wrapper">
+            <LogoNameSVG className="logo-nama-svg" style={styleText}/>
+          </div>
           {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
+          {showData && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyData}</div>)}
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
