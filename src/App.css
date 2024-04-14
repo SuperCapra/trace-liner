@@ -343,3 +343,6 @@ p {
 .indexed-height{
   z-index: 100;
 }
+.beauty-border{
+  border-radius: 10px;
+}
