@@ -45,8 +45,16 @@ function ImageComponent(props) {
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
   const styleText = {
-    color: drawingColor,
+    color: drawingColor
+  }
+  const styleLogoNama = {
+    width: (ratio === '1:1') ? '10vw' : '15vw',
+    height: (ratio === '1:1') ? '8vw' : '12vw',
     fill: drawingColor
+  }
+  const styleTextUnderSketch = {
+    top: (ratio === '1:1') ? '82%' : '82%',
+    color: drawingColor
   }
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
@@ -197,6 +205,7 @@ function ImageComponent(props) {
 
   const handleCrop = useCallback((ratioText, imageSrc) => {
     if(ratioText && (imageSrc || image.src)) {
+      console.log('handleCrop:', handleCrop)
       const imageReference = new Image()
       if(!imageSrc) {
         imageReference.src = image.src
@@ -205,6 +214,10 @@ function ImageComponent(props) {
       }
       let imageReferenceWidth = imageReference.width
       let imageReferenceHeight = imageReference.height
+      if(imageReferenceWidth === 0) {
+        imageReferenceWidth = window.innerWidth * 80
+        imageReferenceHeight = (window.innerWidth * 80) * (ratioText.split(':')[1]/ratioText.split(':')[0])
+      }
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if(ratioText === '1:1') {
@@ -309,28 +322,30 @@ function ImageComponent(props) {
   
   return (
     <div className="width-80">
-      <div ref={imageRef} className="canvas-container" id="printingAnchor">
-          <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-          <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-          <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
-          {showTitle && (
-            <div className="text-overlay text-title">
-              <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
-              {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
+      <div className="beauty-border">
+        <div ref={imageRef} className="canvas-container" id="printingAnchor">
+            <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
+            {showTitle && (
+              <div className="text-overlay text-title">
+                <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
+                {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
+              </div>
+            )}
+            {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
+            {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
+            {showDistance && (<div className="text-overlay text-distance">{props.activity.beautyDistance}</div>)}
+            {showDuration && (<div className="text-overlay text-duration">{props.activity.beautyDuration}</div>)}
+            {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
+            {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
+            {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
+            <div className="logo-nama-wrapper">
+              <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>
-          )}
-          {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
-          {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
-          {showDistance && (<div className="text-overlay text-distance">{props.activity.beautyDistance}</div>)}
-          {showDuration && (<div className="text-overlay text-duration">{props.activity.beautyDuration}</div>)}
-          {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
-          {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
-          {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
-          <div className="logo-nama-wrapper">
-            <LogoNameSVG className="logo-nama-svg" style={styleText}/>
-          </div>
-          {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
-          {showData && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyData}</div>)}
+            {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
+            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
+        </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
