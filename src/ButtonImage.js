@@ -10,6 +10,8 @@ import {ReactComponent as HideSVG} from './hide.svg'
 import brandingPalette from './brandingPalette';
 import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
@@ -31,6 +33,7 @@ function ButtonImage(props) {
   const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
+  const [valueFilter, setValueFilter] = useState(0);
   const colors = []
   let images = [{
     photo: image1, 
@@ -143,6 +146,11 @@ function ButtonImage(props) {
       console.log('colors', colors)
     }
     return (colors)
+  }
+
+  const handleChangeValueFilter = (value) => {
+    setValueFilter(value);
+    handleClick({type: 'filterSlider', value: value})
   }
 
   const nameController = () => {
@@ -309,6 +317,9 @@ function ButtonImage(props) {
           <div className="wrapper-buttons">
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
+          </div>
+          <div className="wrapper-buttons slider-width">
+            <Slider value={valueFilter} onChange={handleChangeValueFilter} />
           </div>
           <div className="wrapper-buttons colors-background">
             {returnsColors()}

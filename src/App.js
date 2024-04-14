@@ -2,7 +2,6 @@ import './App.css';
 import React from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
-// import ButtonImage from './ButtonImage.js'
 import ImageComponent from './ImageComponent.js'
 import imageDefault from './image2.jpeg'
 const clientId = process.env.REACT_APP_STRAVA_CLIENT_ID
@@ -12,8 +11,7 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
-// const image = new Image()
-
+let metricUnit = true
 let called = false 
 let athleteData = {}
 let activities = []
@@ -129,9 +127,36 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         console.log('athleteData: ', athleteData)
+        //TODO here i need to retrieve the pereferences of the athlete ;)
         if(accessToken) this.getActivities()
+        // if(accessToken) this.getAthleDataComplete()
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+  }
+
+  getAthleDataComplete() {
+    console.log('getting all the athlete data...')
+    let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
+    '?access_token=' + accessToken
+
+    fetch(urlAthleteData, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Length': '0'
+      },
+    }).then(response => response.json())
+      .then(res => {
+        console.log('res: ', res)
+        if(res) {
+          console.log('Athlete data: ', res)
+          metricUnit = res.measurement_preference === 'meters'
+          this.getActivities()
+        }
+      })
+      .catch(e => console.log('Fatal Error: ', e))
   }
   
   getActivities() {

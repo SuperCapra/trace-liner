@@ -28,6 +28,7 @@ function ImageComponent(props) {
   const [imageSrc, setImageSrc] = useState(null);
   const canvasRef = useRef(null)
   const imageRef = useRef(null)
+  const [valueFilter, setValueFilter] = useState(0);
   const action = useRef('setInitialImage')
 
   const calculateMemoImage = useCallback((action) => {
@@ -149,13 +150,14 @@ function ImageComponent(props) {
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.fillStyle = filterColor
-    ctx.filter = 'opacity(50%)'
+    ctx.filter = 'opacity(' + valueFilter + '%)'
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }, [filterColor, canvasWidth, canvasHeight])
+  }, [valueFilter, filterColor, canvasWidth, canvasHeight])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
-    if(data.type === 'share') handleDownloadClick()
+    if(data.type === 'filterSlider') setValueFilter(data.value)
+    else if(data.type === 'share') handleDownloadClick()
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
@@ -204,8 +206,8 @@ function ImageComponent(props) {
   }
 
   const handleCrop = useCallback((ratioText, imageSrc) => {
-    if(ratioText && (imageSrc || image.src)) {
-      console.log('handleCrop:', handleCrop)
+    if(ratioText) {
+      console.log('ratioText:', ratioText)
       const imageReference = new Image()
       if(!imageSrc) {
         imageReference.src = image.src
