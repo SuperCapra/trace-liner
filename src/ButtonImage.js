@@ -33,9 +33,6 @@ function ButtonImage(props) {
   // const [images, setImages] = useState([]);
   const colors = []
   const images = [{
-    photo: props.activity.photoUrl, 
-    alt: 'activity'
-  },{
     photo: image1, 
     alt: 'default-1'
   },{
@@ -224,6 +221,12 @@ function ButtonImage(props) {
   }
 
   const returnImages = () => {
+    if(props.activity.photoUrl) {
+      images = [{
+        photo: props.activity.photoUrl, 
+        alt: 'activity'
+      },...images]
+    }
     let htmlImages = []
     for(let element of images) {
       console.log(element)
