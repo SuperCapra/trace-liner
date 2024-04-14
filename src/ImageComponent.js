@@ -3,6 +3,7 @@ import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
 import logoNamaSVG from './logoNama.png'
 import html2canvas from 'html2canvas';
+import image1 from './image1.jpeg'
 // import Share from 'react-native-share';
 
 function ImageComponent(props) {
@@ -31,7 +32,7 @@ function ImageComponent(props) {
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
     if(action.current === 'setInitialImage') {
-      setImageSrc(props.activity.photoUrl)
+      setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
       action.current = undefined
     }
     result.src = imageSrc
@@ -60,27 +61,26 @@ function ImageComponent(props) {
   }
 
   const handleShare = async () => {
-    console.log('ma passi di qua?')
     // const newFile = await toBlob(imageRef.current);
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       const dataURL = canvas.toDataURL('image/jpeg');
-      // const a = document.createElement('a');
-      // a.href = dataURL;
-      // a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-      // a.click();
-      const newimage = new Image()
-      newimage.src = dataURL
-      try {
-        const shareOptions = {
-          title: 'Share via',
-          url: 'dataURL', // Replace this with the path to your image
-          // social: Share.Social.WHATSAPP // You can choose the app to share with
-        };
-        // await Share.open(shareOptions);
-      } catch (err) {
-        window.alert('err:' + err)
-        console.error(err);
-      }
+      const a = document.createElement('a');
+      a.href = dataURL;
+      a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+      a.click();
+      // const newimage = new Image()
+      // newimage.src = dataURL
+      // try {
+      //   const shareOptions = {
+      //     title: 'Share via',
+      //     url: 'dataURL', // Replace this with the path to your image
+      //     // social: Share.Social.WHATSAPP // You can choose the app to share with
+      //   };
+      //   // await Share.open(shareOptions);
+      // } catch (err) {
+      //   window.alert('err:' + err)
+      //   console.error(err);
+      // }
     });
 
 }

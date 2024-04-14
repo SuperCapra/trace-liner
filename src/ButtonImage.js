@@ -63,29 +63,29 @@ function ButtonImage(props) {
   }
   const propagateShowHide = (type) => {
     if(type === 'name') {
+      handleClick({type: 'show-hide', subtype: 'name', show: !showName})
       setShowName(!showName)
-      handleClick({type: 'show-hide', subtype: 'name', show: showName})
     } else if(type === 'date') {
+      handleClick({type: 'show-hide', subtype: 'date', show: !showDate})
       setShowDate(!showDate)
-      handleClick({type: 'show-hide', subtype: 'date', show: showDate})
     } else if(type === 'distance') {
+      handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
       setShowDistance(!showDistance)
-      handleClick({type: 'show-hide', subtype: 'distance', show: showDistance})
     } else if(type === 'duration') {
+      handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
       setShowDuration(!showDuration)
-      handleClick({type: 'show-hide', subtype: 'duration', show: showDuration})
     } else if(type === 'elevation') {
+      handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
       setShowElevation(!showDuration)
-      handleClick({type: 'show-hide', subtype: 'elevation', show: showElevation})
     } else if(type === 'average') {
+      handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
       setShowAverage(!showAverage)
-      handleClick({type: 'show-hide', subtype: 'average', show: showAverage})
     } else if(type === 'power') {
+      handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
       setShowPower(!showPower)
-      handleClick({type: 'show-hide', subtype: 'power', show: showPower}) 
     } else if(type === 'coordinates') {
+      handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
       setShowCoordinates(!showCoordinates)
-      handleClick({type: 'show-hide', subtype: 'coordinates', show: showCoordinates})
     }
   }
 

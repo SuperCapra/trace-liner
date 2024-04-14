@@ -106,10 +106,13 @@ p {
   justify-content: center;
 }
 .wrapper-buttons-left{
+  font-size: 12px;
+  height: 30px;
   display:flex;
   flex-direction: row;
   align-items: center;
   justify-content: left;
+  text-align: left;
 }
 .back{
   color: var(--palette-background);
@@ -151,10 +154,10 @@ p {
   top: 0
 }
 .canvas-sketch{
-  width: 49vw;
-  height: 49vw !important;
+  width: 46vw;
+  height: 46vw !important;
   position: absolute;
-  margin: 15.5vw 15.5vw
+  margin: 17vw 17vw
 }
 .canvas-sketch-rect{
   width: 68vw;
