@@ -122,6 +122,10 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         console.log('res: ', res)
+        if(res && res.errors && res.errors.length) {
+          window.history.pushState({}, document.title, window.location.pathname);
+          window.location.reload();
+        }
         accessToken = res.access_token
         athleteData = res.athlete
         console.log('athleteData: ', athleteData)

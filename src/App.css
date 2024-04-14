@@ -206,7 +206,7 @@ p {
   font-weight: 100;
 }
 .text-coordinates-props{
-  font-size: 20px;
+  font-size: calc(4vw);
   width: 100%;
   top:88%;
   left:50%;
@@ -339,4 +339,7 @@ p {
 .logo-nama-svg{
   width: 15vw;
   height: 12vw
+}
+.indexed-height{
+  z-index: 100;
 }
