@@ -152,6 +152,11 @@ function ImageComponent(props) {
     else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
+        if(data.show) {
+          setShowDate(true)
+        } else {
+          setShowDate(false)
+        }
       } else if(data.subtype === 'date') {
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
@@ -298,7 +303,7 @@ function ImageComponent(props) {
           {showTitle && (
             <div className="text-overlay text-title">
               <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
-              <div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>
+              {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
             </div>
           )}
           {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}

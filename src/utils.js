@@ -187,6 +187,10 @@ const utilsFunction = {
 
     removeEmoji(text) {
         return text.replaceAll('[^\\p{L}\\p{M}\\p{N}\\p{P}\\p{Z}\\p{Cf}\\p{Cs}\\s]','')
+    },
+
+    getAverageSpeedMetric(distance, duration) {
+        return Number(((distance / duration) * 3.6).toFixed(2))
     }
 }
 

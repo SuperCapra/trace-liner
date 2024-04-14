@@ -30,9 +30,8 @@ function ButtonImage(props) {
   const [imageSrc, setImageSrc] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
-  // const [images, setImages] = useState([]);
   const colors = []
-  const images = [{
+  let images = [{
     photo: image1, 
     alt: 'default-1'
   },{
@@ -64,8 +63,13 @@ function ButtonImage(props) {
   const propagateShowHide = (type) => {
     if(type === 'name') {
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
+      if(!showName) {
+        setShowDate(true)
+      } else {
+        setShowDate(false)
+      }
       setShowName(!showName)
-    } else if(type === 'date') {
+    } else if(type === 'date' && showName) {
       handleClick({type: 'show-hide', subtype: 'date', show: !showDate})
       setShowDate(!showDate)
     } else if(type === 'distance') {
@@ -138,7 +142,7 @@ function ButtonImage(props) {
           {showName && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
           {!showName && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
         </div>
-        <p>NAME: {activity.beautyName}</p>
+        <p>TITLE: {activity.beautyName}</p>
       </div>
     )
   }
@@ -230,7 +234,7 @@ function ButtonImage(props) {
     let htmlImages = []
     for(let element of images) {
       console.log(element)
-      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt} width="40px" height="40px"/>)
+      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/>)
     }
     return(htmlImages)
   }
@@ -294,7 +298,6 @@ function ButtonImage(props) {
             {returnImages()}
             {imageSrc && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>

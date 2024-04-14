@@ -181,7 +181,7 @@ p {
   position: absolute;
   font-family: 'Helvetica';
   text-align: left;
-  font-size: 16px;
+  font-size: calc(4vw);
   font-weight: bold;
   color: white;
 }
@@ -202,7 +202,7 @@ p {
   font-weight: 900;
 }
 .text-date-props{
-  font-size: 12px;
+  font-size: calc(3vw);
   font-weight: 100;
 }
 .text-coordinates-props{
@@ -265,24 +265,25 @@ p {
 }
 .image-props{
   margin: 1vw;
-  border-radius: 5px
-
+  border-radius: 5px;
+  width: 11vw;
+  height: 11vw;
 }
 .image-container {
   margin: 1vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 11vw;
+  height: 11vw;
 }
 
 .image-square {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 11vw;
+  height: 11vw;
   border-radius: 5px;
   background-color: var(--palette-yellow); 
 }
