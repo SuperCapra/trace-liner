@@ -214,6 +214,7 @@ function ImageComponent(props) {
         setCanvasWidth(min)
         setCanvasHeight(min)
         imageReference.onload = () => {
+          ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
           drawLine(drawingColor)
           drawFilter()
