@@ -216,7 +216,7 @@ function ImageComponent(props) {
       let imageReferenceHeight = imageReference.height
       if(imageReferenceWidth === 0) {
         imageReferenceWidth = window.innerWidth * 80
-        imageReferenceHeight = (window.innerWidth * 80) * (ratioText.split(':')[1]*ratioText.split(':')[0])
+        imageReferenceHeight = (window.innerWidth * 80) * (ratioText.split(':')[1]/ratioText.split(':')[0])
       }
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
