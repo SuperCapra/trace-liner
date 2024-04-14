@@ -33,14 +33,14 @@ function ImageComponent(props) {
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
     if(action.current === 'setInitialImage') {
-      console.log('props.activity.photoUrl', props.activity.photoUrl)
-      console.log('(props.activity.photoUrl) ? props.activity.photoUrl', (props.activity.photoUrl) ? 'ok' : 'mannaggia')
       setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
+      result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
       action.current = undefined
+      return result
     }
-    result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
+    result.src = imageSrc
     return result
-  }, [props.activity.photoUrl])
+  }, [imageSrc, props.activity.photoUrl])
 
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 

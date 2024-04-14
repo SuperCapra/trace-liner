@@ -28,7 +28,7 @@ function ButtonImage(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [imageSrc, setImageSrc] = useState(false);
+  const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
   const colors = []
@@ -273,7 +273,7 @@ function ButtonImage(props) {
   }
 
   const loadImage = (event) => {
-    if(event && event.target && event.target.files && event.target.length) {
+    if(event && event.target && event.target.files && event.target.files.length) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -281,14 +281,12 @@ function ButtonImage(props) {
         returnImages(imageDataURL)
         let key = additionalImages.length + 1
         let alt = 'loaded-images-' + key
-        setImageSrc(true)
+        setImageLoading(true)
         setAdditionalImages([...additionalImages, <img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/>])
-        setEnableUploading(false)
         if(additionalImages.length > 2) {
           setEnableUploading(false)
         }
       };
-  
       reader.readAsDataURL(file);
     }
   }
@@ -317,7 +315,7 @@ function ButtonImage(props) {
           </div>
           <div className="wrapper-buttons">
             {returnImages()}
-            {imageSrc && additionalImages}
+            {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
