@@ -38,9 +38,9 @@ function ImageComponent(props) {
       setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
       action.current = undefined
     }
-    result.src = imageSrc
+    result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
     return result
-  }, [imageSrc, props.activity.photoUrl])
+  }, [props.activity.photoUrl])
 
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
