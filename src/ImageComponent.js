@@ -329,7 +329,7 @@ function ImageComponent(props) {
           {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
           {showData && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyData}</div>)}
       </div>
-      <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
+      <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
   );
 }
