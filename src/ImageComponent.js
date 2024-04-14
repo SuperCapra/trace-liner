@@ -17,6 +17,7 @@ function ImageComponent(props) {
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
+  const [showData, setShowData] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -171,6 +172,14 @@ function ImageComponent(props) {
         setShowPower(data.show)
       } else if(data.subtype === 'coordinates') {
         setShowCoordinates(data.show)
+        if(data.show) {
+          setShowData(false)
+        }
+      } else if(data.subtype === 'data') {
+        setShowData(data.show)
+        if(data.show) {
+          setShowCoordinates(false)
+        }
       }
     } else if(data.type === 'image') {
       setImage(data.image)
@@ -314,6 +323,7 @@ function ImageComponent(props) {
           {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
           {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
           {showCoordinates && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
+          {showData && (<div id="canvasText" style={styleText} className={classesCoordinates}>{props.activity.beautyData}</div>)}
       </div>
       <ButtonImage activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>

@@ -184,6 +184,7 @@ class Homepage extends React.Component{
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
             t.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
+            t.beautyData = t.beautyDistance + ' x ' + t.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }
