@@ -148,10 +148,10 @@ function ButtonImage(props) {
     return (colors)
   }
 
-  const handleChangeValueFilter = (value) => {
-    setValueFilter(value);
-    handleClick({type: 'filterSlider', value: value})
-  }
+  // const handleChangeValueFilter = (value) => {
+  //   setValueFilter(value);
+  //   handleClick({type: 'filterSlider', value: value})
+  // }
 
   const nameController = () => {
     return(
@@ -318,9 +318,9 @@ function ButtonImage(props) {
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
           </div>
-          <div className="wrapper-buttons slider-width">
+          {/* <div className="wrapper-buttons slider-width">
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />
-          </div>
+          </div> */}
           <div className="wrapper-buttons colors-background">
             {returnsColors()}
           </div>

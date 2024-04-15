@@ -57,6 +57,9 @@ function ImageComponent(props) {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor
   }
+  // const styleFilter = {
+  //   opacity: valueFilter
+  // }
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
@@ -145,14 +148,14 @@ function ImageComponent(props) {
   },[props.activity.coordinates, ratio, canvasWidth, canvasHeight])
 
 
-  const drawFilter = useCallback(() => {
-    let canvasFilter = document.getElementById('canvasFilter')
-    let ctx = canvasFilter.getContext('2d')
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-    ctx.fillStyle = filterColor
-    ctx.filter = 'opacity(' + valueFilter + '%)'
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }, [valueFilter, filterColor, canvasWidth, canvasHeight])
+  // const drawFilter = useCallback(() => {
+  //   let canvasFilter = document.getElementById('canvasFilter')
+  //   let ctx = canvasFilter.getContext('2d')
+  //   ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+  //   ctx.fillStyle = filterColor
+  //   ctx.filter = 'opacity(0%)'
+  //   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+  // }, [filterColor, canvasWidth, canvasHeight])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
@@ -231,10 +234,10 @@ function ImageComponent(props) {
         setCanvasWidth(min)
         setCanvasHeight(min)
         imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
+          // ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
           drawLine(drawingColor)
-          drawFilter()
+          // drawFilter()
         }
       } else {
         let ratioSplitted = ratioText.split(':')
@@ -251,13 +254,17 @@ function ImageComponent(props) {
         imageReference.onload = () => {
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
           drawLine(drawingColor)
-          drawFilter()
+          // drawFilter()
         }
       }
       setRatio(ratioText)
       setIsCropped(true);
     }
-  }, [drawFilter, drawLine, image, drawingColor])
+  }, [
+    // drawFilter,
+    drawLine, 
+    image, 
+    drawingColor])
 
   const setImage = (imageSrc) => {
     // const canvas = canvasRef.current
@@ -301,7 +308,7 @@ function ImageComponent(props) {
     // }
   }, [
       drawLine,
-      drawFilter,
+      // drawFilter,
       handleCrop,
       image, 
       xCrop, 
@@ -327,7 +334,7 @@ function ImageComponent(props) {
       <div className="beauty-border">
         <div ref={imageRef} className="canvas-container" id="printingAnchor">
             <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
+            {/* <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/> */}
             <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
             {showTitle && (
               <div className="text-overlay text-title">
