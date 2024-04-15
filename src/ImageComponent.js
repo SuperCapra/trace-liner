@@ -57,6 +57,10 @@ function ImageComponent(props) {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor
   }
+  // const styleFilter = {
+  //   opacity: valueFilter / 100,
+  //   backgroundColor: filterColor
+  // }
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
@@ -145,18 +149,26 @@ function ImageComponent(props) {
   },[props.activity.coordinates, ratio, canvasWidth, canvasHeight])
 
 
-  const drawFilter = useCallback(() => {
+  const drawFilter = useCallback((v) => {
+    if(!v) v = 0
     let canvasFilter = document.getElementById('canvasFilter')
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.fillStyle = filterColor
     ctx.filter = 'opacity(' + valueFilter + '%)'
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  }, [valueFilter, filterColor, canvasWidth, canvasHeight])
+  }, [
+    valueFilter,
+    filterColor, 
+    canvasWidth, 
+    canvasHeight])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
-    if(data.type === 'filterSlider') setValueFilter(data.value)
+    if(data.type === 'filterSlider') {
+      setValueFilter(data.value)
+      drawFilter(data.value)
+    }
     else if(data.type === 'share') handleDownloadClick()
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
@@ -231,7 +243,7 @@ function ImageComponent(props) {
         setCanvasWidth(min)
         setCanvasHeight(min)
         imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
+          // ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
           drawLine(drawingColor)
           drawFilter()
@@ -257,31 +269,15 @@ function ImageComponent(props) {
       setRatio(ratioText)
       setIsCropped(true);
     }
-  }, [drawFilter, drawLine, image, drawingColor])
+  }, [
+    drawFilter,
+    drawLine, 
+    image, 
+    drawingColor])
 
   const setImage = (imageSrc) => {
-    // const canvas = canvasRef.current
-    // const ctx = canvas.getContext('2d')
     setImageSrc(imageSrc)
-    // const imageReference = new Image()
-    // imageReference.src = image.src
     handleCrop(ratio, imageSrc)
-    // console.log('canvasWidth: ', canvasWidth)
-    // console.log('canvasHeight: ', canvasHeight)
-    // console.log('imageSrc: ', imageSrc)
-    // // image.src = imageSrc
-    // // image.src = props.image
-
-    // if (canvas && canvasWidth && canvasHeight) {
-    //   image.onload = () => {
-    //     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //     ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-    //     drawLine(drawingColor)
-    //     drawFilter()
-    //   }
-    // } else if(!canvasWidth && !canvasHeight) {
-    //   handleCrop(ratio)
-    // }
   }
 
 
