@@ -36,14 +36,19 @@ function ImageComponent(props) {
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
     if(action.current === 'setInitialImage') {
-      setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
-      result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
+      // setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
+      // result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
+      setImageSrc(image1)
+      result.src = image1
       action.current = undefined
       return result
     }
     result.src = imageSrc
     return result
-  }, [imageSrc, props.activity.photoUrl])
+  }, [
+    imageSrc, 
+    // props.activity.photoUrl
+  ])
 
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
@@ -76,6 +81,8 @@ function ImageComponent(props) {
   const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       const dataURL = canvas.toDataURL('image/jpeg');
+      console.log('navigator.canShare', navigator.share)
+      console.log('navigator.canShare', navigator)
       if(navigator.share) {
         try {
           await navigator.share({
@@ -95,7 +102,6 @@ function ImageComponent(props) {
     });
 
 }
-
   const drawLine = useCallback((color) => {
     let coordinates = props.activity.coordinates
     let width = Math.min(canvasHeight, canvasWidth)
