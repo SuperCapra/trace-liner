@@ -73,11 +73,7 @@ function ImageComponent(props) {
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
 
-  const handleDownloadClick = () => {
-    getDataUrlAndShare()
-  }
-
-  const getDataUrlAndShare = async () => {
+  const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       const dataURL = canvas.toDataURL('image/jpeg');
       if(navigator.share) {
