@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
 import ButtonImage from './ButtonImage.js'
+import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
 import image1 from './image1.jpeg'
@@ -17,7 +18,8 @@ function ImageComponent(props) {
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
-  const [showData, setShowData] = useState(true);
+  const [showData, setShowData] = useState(false);
+  const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -65,39 +67,31 @@ function ImageComponent(props) {
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = ratio === '1:1' ? 'canvas-filter canvas-sketch' : 'canvas-filter canvas-sketch-rect'
+  const classesDataWrapper2Lines = ratio === '1:1' ? 'wrapper-data-2-lines' : 'wrapper-data-2-lines-rect'
+  const classesDataWrapperLine = 'wrapper-data-line'
+  const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
+  const classesDataPLittle = 'data-p-little'
+  const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
 
-  const handleDownloadClick = () => {
-    handleShare()
-    // html2canvas(document.getElementById('printingAnchor')).then(canvas => {
-    //   const dataURL = canvas.toDataURL('image/jpeg');
-    //   const a = document.createElement('a');
-    //   a.href = dataURL;
-    //   a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-    //   a.click();
-    // });
-  }
-
-  const handleShare = async () => {
-    // const newFile = await toBlob(imageRef.current);
+  const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       const dataURL = canvas.toDataURL('image/jpeg');
-      const a = document.createElement('a');
-      a.href = dataURL;
-      a.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-      a.click();
-      // const newimage = new Image()
-      // newimage.src = dataURL
-      // try {
-      //   const shareOptions = {
-      //     title: 'Share via',
-      //     url: 'dataURL', // Replace this with the path to your image
-      //     // social: Share.Social.WHATSAPP // You can choose the app to share with
-      //   };
-      //   // await Share.open(shareOptions);
-      // } catch (err) {
-      //   window.alert('err:' + err)
-      //   console.error(err);
-      // }
+      if(navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Share Image',
+            text: 'Check out this image!',
+            url: dataURL,
+          });
+        } catch (error) {
+          console.error('Error sharing image:', error);
+        }
+      } else {
+        const temp = document.createElement('a');
+        temp.href = dataURL;
+        temp.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
+        temp.click();
+      }
     });
 
 }
@@ -200,10 +194,24 @@ function ImageComponent(props) {
         if(data.show) {
           setShowData(false)
         }
+        if(data.show) {
+          setShowDataUnique(false)
+        }
       } else if(data.subtype === 'data') {
         setShowData(data.show)
         if(data.show) {
           setShowCoordinates(false)
+        }
+        if(data.show) {
+          setShowDataUnique(false)
+        }
+      } else if(data.subtype === 'dataunique') {
+        setShowDataUnique(data.show)
+        if(data.show) {
+          setShowCoordinates(false)
+        }
+        if(data.show) {
+          setShowData(false)
         }
       }
     } else if(data.type === 'image') {
@@ -243,7 +251,7 @@ function ImageComponent(props) {
         setCanvasWidth(min)
         setCanvasHeight(min)
         imageReference.onload = () => {
-          // ctx.rect(0,0,min, min);
+          ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
           drawLine(drawingColor)
           drawFilter()
@@ -261,6 +269,7 @@ function ImageComponent(props) {
         setCanvasWidth(widthRationalized)
         setCanvasHeight(heightRationalized)
         imageReference.onload = () => {
+          ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
           drawLine(drawingColor)
           drawFilter()
@@ -278,6 +287,24 @@ function ImageComponent(props) {
   const setImage = (imageSrc) => {
     setImageSrc(imageSrc)
     handleCrop(ratio, imageSrc)
+  }
+
+  const returnBeautyData = () => {
+    let line1 = []
+    let line2 = []
+    if(showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity.beautyDistance}</p></div>)
+    if(showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity.beautyElevation}</p></div>)
+    if(showDuration) line1.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
+    if(showPower) line2.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
+    if(showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity.beautyAverage}</p></div>)
+    return(<div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>
+      <div className={classesDataWrapperLine}>
+        {line1}
+      </div>
+      <div className={classesDataWrapperLine}>
+        {line2}
+      </div>
+    </div>)
   }
 
 
@@ -338,13 +365,15 @@ function ImageComponent(props) {
             {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
             {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
             {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
-            <div className="logo-nama-wrapper">
+            <div className={classesLogoNama}>
               <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
+            {showDataUnique && returnBeautyData()}
             {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
         </div>
       </div>
+      {/* <CachedImage photoUrl={props.activity.photoUrl}/> */}
       <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
   );

@@ -3,7 +3,6 @@ import React from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
-import imageDefault from './image2.jpeg'
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
@@ -54,16 +53,6 @@ class Homepage extends React.Component{
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let code = queryParameters.get('code')
-    // activity.coordinates = [[0,0],[100,100],[150,100]]
-    // activity.beautyName = 'ciccio pasticcio il pusillanime che porta con se un pollo sotto il braccios'
-    // activity.beautyDuration = '4h 36m'
-    // activity.beautyDate = 'March 31, 19:37'
-    // activity.beautyDistance = '123.34km'
-    // activity.beautyPower = '203W'
-    // activity.beautyCoordinates = utils.getBeautyCoordinates([45.15,10.2]).beautyCoordinatesTextTime
-    // activity.beautyCoordinatesComplete = utils.getBeautyCoordinates([45.15,10.2])
-    // activity.beautyAverage = '27.56km/h'
-    // activity.beautyElevation = '3290m'
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -91,7 +80,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} image={imageDefault}/>
+              <ImageComponent activity={activity}/>
           </div>
         )
       }
