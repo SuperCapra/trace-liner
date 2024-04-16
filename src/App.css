@@ -335,6 +335,12 @@ p {
 }
 .logo-nama-wrapper{
   position: absolute;
+  top: 17vw;
+  right: 2vw;
+  z-index: 4;
+}
+.logo-nama-wrapper-rect{
+  position: absolute;
   bottom: 1vw;
   right: 2vw;
   z-index: 4;
@@ -349,7 +355,7 @@ p {
 .beauty-border{
   border-radius: 10px;
 }
-.wrapper-data-2-lines{
+.wrapper-data-2-lines-rect{
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -357,6 +363,17 @@ p {
   font-size: calc(4vw);
   font-weight: 900;
   font-family: 'Helvetica';
+  bottom: 15vw
+}
+.wrapper-data-2-lines{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  min-width: 80vw;
+  font-size: calc(3.5vw);
+  font-weight: 900;
+  font-family: 'Helvetica';
+  bottom: 1vw
 }
 .wrapper-data-line{
   display: flex;
@@ -364,6 +381,9 @@ p {
   width: 100%;
 }
 .wrapper-data-element{
+  margin: 0.5vw 4.5vw;
+}
+.wrapper-data-element-rect{
   margin: 1vw 5vw;
 }
 .data-p-little{

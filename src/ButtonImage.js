@@ -337,11 +337,11 @@ function ButtonImage(props) {
           {nameController()}
           {dateController()}
           {dataController()}
-          {/* {distanceController()}
+          {distanceController()}
           {durationController()}
           {elevationController()}
           {averageController()}
-          {powerController()} */}
+          {powerController()}
           {coordinatesController()}
         </div>
       )}

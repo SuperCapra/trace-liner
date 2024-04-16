@@ -65,6 +65,11 @@ function ImageComponent(props) {
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = ratio === '1:1' ? 'canvas-filter canvas-sketch' : 'canvas-filter canvas-sketch-rect'
+  const classesDataWrapper2Lines = ratio === '1:1' ? 'wrapper-data-2-lines' : 'wrapper-data-2-lines-rect'
+  const classesDataWrapperLine = 'wrapper-data-line'
+  const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
+  const classesDataPLittle = 'data-p-little'
+  const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
 
   const handleDownloadClick = () => {
     handleShare()
@@ -283,16 +288,16 @@ function ImageComponent(props) {
   const returnBeautyData = () => {
     let line1 = []
     let line2 = []
-    if(showDistance) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Distance</p><p>{props.activity.beautyDistance}</p></div>)
-    if(showElevation) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Elevation</p><p>{props.activity.beautyElevation}</p></div>)
-    if(showDuration) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Duration</p><p>{props.activity.beautyDuration}</p></div>)
-    if(showPower) line2.push(<div className="wrapper-data-element"><p className="data-p-little">Power</p><p>{props.activity.beautyPower}</p></div>)
-    if(showAverage) line2.push(<div className="wrapper-data-element"><p className="data-p-little">Average</p><p>{props.activity.beautyAverage}</p></div>)
-    return(<div id="canvasText" style={styleText} className="wrapper-data-2-lines">
-      <div className="wrapper-data-line">
+    if(showDistance) line1.push(<div className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity.beautyDistance}</p></div>)
+    if(showElevation) line1.push(<div className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity.beautyElevation}</p></div>)
+    if(showDuration) line1.push(<div className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
+    if(showPower) line2.push(<div className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
+    if(showAverage) line2.push(<div className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity.beautyAverage}</p></div>)
+    return(<div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>
+      <div className={classesDataWrapperLine}>
         {line1}
       </div>
-      <div className="wrapper-data-line">
+      <div className={classesDataWrapperLine}>
         {line2}
       </div>
     </div>)
@@ -356,7 +361,7 @@ function ImageComponent(props) {
             {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
             {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
             {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
-            <div className="logo-nama-wrapper">
+            <div className={classesLogoNama}>
               <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
