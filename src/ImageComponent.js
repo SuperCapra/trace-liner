@@ -280,6 +280,24 @@ function ImageComponent(props) {
     handleCrop(ratio, imageSrc)
   }
 
+  const returnBeautyData = () => {
+    let line1 = []
+    let line2 = []
+    if(showDistance) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Distance</p><p>{props.activity.beautyDistance}</p></div>)
+    if(showElevation) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Elevation</p><p>{props.activity.beautyElevation}</p></div>)
+    if(showDuration) line1.push(<div className="wrapper-data-element"><p className="data-p-little">Duration</p><p>{props.activity.beautyDuration}</p></div>)
+    if(showPower) line2.push(<div className="wrapper-data-element"><p className="data-p-little">Power</p><p>{props.activity.beautyPower}</p></div>)
+    if(showAverage) line2.push(<div className="wrapper-data-element"><p className="data-p-little">Average</p><p>{props.activity.beautyAverage}</p></div>)
+    return(<div id="canvasText" style={styleText} className="wrapper-data-2-lines">
+      <div className="wrapper-data-line">
+        {line1}
+      </div>
+      <div className="wrapper-data-line">
+        {line2}
+      </div>
+    </div>)
+  }
+
 
   useEffect(() => {
     // const canvas = canvasRef.current
@@ -342,7 +360,8 @@ function ImageComponent(props) {
               <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
-            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
+            {returnBeautyData()}
+            {/* {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)} */}
         </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
