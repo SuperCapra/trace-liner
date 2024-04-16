@@ -18,6 +18,7 @@ function ImageComponent(props) {
   const [showTitle, setShowTitle] = useState(true);
   const [showName, setShowName] = useState(true);
   const [showData, setShowData] = useState(true);
+  const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -205,10 +206,24 @@ function ImageComponent(props) {
         if(data.show) {
           setShowData(false)
         }
+        if(data.show) {
+          setShowDataUnique(false)
+        }
       } else if(data.subtype === 'data') {
         setShowData(data.show)
         if(data.show) {
           setShowCoordinates(false)
+        }
+        if(data.show) {
+          setShowDataUnique(false)
+        }
+      } else if(data.subtype === 'dataunique') {
+        setShowDataUnique(data.show)
+        if(data.show) {
+          setShowCoordinates(false)
+        }
+        if(data.show) {
+          setShowData(false)
         }
       }
     } else if(data.type === 'image') {
@@ -365,8 +380,8 @@ function ImageComponent(props) {
               <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
-            {returnBeautyData()}
-            {/* {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)} */}
+            {showDataUnique && returnBeautyData()}
+            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
         </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>

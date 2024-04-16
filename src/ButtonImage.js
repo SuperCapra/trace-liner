@@ -24,7 +24,8 @@ function ButtonImage(props) {
   const [showName, setShowName] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
-  const [showData, setShowData] = useState(true);
+  const [showData, setShowData] = useState(false);
+  const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
   const [showElevation, setShowElevation] = useState(true);
   const [showAverage, setShowAverage] = useState(true);
@@ -96,13 +97,28 @@ function ButtonImage(props) {
       if(showData && !showCoordinates) {
         setShowData(false)
       }
+      if(showDataUnique && !showCoordinates) {
+        setShowDataUnique(false)
+      }
       setShowCoordinates(!showCoordinates)
     } else if(type === 'data') {
       handleClick({type: 'show-hide', subtype: 'data', show: !showData})
       if(showCoordinates && !showData) {
         setShowCoordinates(false)
       }
+      if(showDataUnique && !showData) {
+        setShowDataUnique(false)
+      }
       setShowData(!showData)
+    } else if(type === 'dataunique') {
+      handleClick({type: 'show-hide', subtype: 'dataunique', show: !showDataUnique})
+      if(showCoordinates && !showDataUnique) {
+        setShowCoordinates(false)
+      }
+      if(showData && !showDataUnique) {
+        setShowData(false)
+      }
+      setShowDataUnique(!showDataUnique)
     }
   }
 
@@ -252,6 +268,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const dataUniqueController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showDataUnique && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('dataunique')} />)}
+          {!showDataUnique && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('dataunique')} />)}
+        </div>
+        <p>DIST/ELEV/DUR/POW/AVG</p>
+      </div>
+    )
+  }
 
   const returnImages = () => {
     if(props.activity.photoUrl) {
@@ -337,11 +364,12 @@ function ButtonImage(props) {
           {nameController()}
           {dateController()}
           {dataController()}
+          {dataUniqueController()}
           {distanceController()}
-          {durationController()}
           {elevationController()}
-          {averageController()}
+          {durationController()}
           {powerController()}
+          {averageController()}
           {coordinatesController()}
         </div>
       )}
