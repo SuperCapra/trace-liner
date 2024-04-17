@@ -213,17 +213,33 @@ class Homepage extends React.Component{
       })
   }
 
-  deauthorize(code) {
-    let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
-    '?access_token=' + code
+  // deauthorize(code) {
+  //   let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
+  //   '?access_token=' + code
 
-    fetch(urlDeauthorize, {
-      method: 'POST',
+  //   fetch(urlDeauthorize, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': '*/*',
+  //       'Accept-Encoding': 'gzip, deflate, br',
+  //       'Content-Length': '0'
+  //     },
+  //   }).then(response => response.json())
+  //     .then(res => {
+  //       console.log('res', res)
+  //     })
+  //     .catch(e => console.log('Fatal Error: ', e))
+  // }
+
+  getImage(photoUrl) {
+    fetch(photoUrl, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'mode': 'no-cors',
         'Accept': '*/*',
         'Accept-Encoding': 'gzip, deflate, br',
-        'Content-Length': '0'
+        'Connection': 'keep-alive'
       },
     }).then(response => response.json())
       .then(res => {
@@ -258,13 +274,14 @@ class Homepage extends React.Component{
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
           console.log(activity)
+          this.getImage(activity.photoUrl)
         }
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         isLoading = false
         // this is needed otherwise everytime goes in 403 beacuse i do not have enought user licences
-        this.deauthorize(accessToken)
+        // this.deauthorize(accessToken)
         this.changeStage({stage:'ShowingActivity'})
         console.log('activity: ', activity)
       })

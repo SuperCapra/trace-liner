@@ -271,8 +271,8 @@ function ImageComponent(props) {
         let min = Math.min(imageReferenceWidth, imageReferenceHeight * ratioCalculated)
         let widthRationalized = (imageReferenceWidth === min) ? imageReferenceWidth : imageReferenceHeight * ratioCalculated
         let heightRationalized = (imageReferenceHeight * ratioCalculated === min) ? imageReferenceHeight : imageReferenceWidth / ratioCalculated
-        let xCropTemp = widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - widthRationalized) / 2
-        let yCropTemp = widthRationalized === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - heightRationalized) / 2
+        let xCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - (widthRationalized * ratioCalculated)) / 2
+        let yCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - (widthRationalized * ratioCalculated)) / 2
         setXCrop(xCropTemp)
         setYCrop(yCropTemp)
         setCanvasWidth(widthRationalized)
