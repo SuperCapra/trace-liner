@@ -213,6 +213,25 @@ class Homepage extends React.Component{
       })
   }
 
+  deauthorize(code) {
+    let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
+    '?access_token=' + code
+
+    fetch(urlDeauthorize, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Content-Length': '0'
+      },
+    }).then(response => response.json())
+      .then(res => {
+        console.log('res', res)
+      })
+      .catch(e => console.log('Fatal Error: ', e))
+  }
+
   getActivity(activityId) {
     isLoading = false
     this.changeStage({stage:'FetchingActivity'})
@@ -244,6 +263,7 @@ class Homepage extends React.Component{
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         isLoading = false
+        this.deauthorize(accessToken)
         this.changeStage({stage:'ShowingActivity'})
         console.log('activity: ', activity)
       })
