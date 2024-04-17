@@ -36,18 +36,21 @@ function ImageComponent(props) {
   const calculateMemoImage = useCallback((action) => {
     let result = new Image()
     if(action.current === 'setInitialImage') {
-      // setImageSrc((props.activity.photoUrl) ? props.activity.photoUrl : image1)
-      // result.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
-      setImageSrc(image1)
-      result.src = image1
+      const tempImg = document.createElement('img');
+      tempImg.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
+      setImageSrc(tempImg.src)
+      result.src = tempImg.src
+      // setImageSrc(image1)
+      // result.src = image1
       action.current = undefined
       return result
+    } else {
+      result.src = imageSrc
     }
-    result.src = imageSrc
     return result
   }, [
     imageSrc, 
-    // props.activity.photoUrl
+    props.activity.photoUrl
   ])
 
   const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
@@ -354,7 +357,8 @@ function ImageComponent(props) {
   return (
     <div className="width-80">
       <div className="beauty-border">
-        <div ref={imageRef} className="canvas-container" id="printingAnchor">
+        <div className="canvas-container" id="printingAnchor">
+            {/* <img alt="chached" src={props.activity.photoUrl} width={canvasWidth} height={canvasHeight}></img> */}
             <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
