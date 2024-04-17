@@ -263,6 +263,7 @@ class Homepage extends React.Component{
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         isLoading = false
+        // this is needed otherwise everytime goes in 403 beacuse i do not have enought user licences
         this.deauthorize(accessToken)
         this.changeStage({stage:'ShowingActivity'})
         console.log('activity: ', activity)
