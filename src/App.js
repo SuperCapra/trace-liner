@@ -232,21 +232,21 @@ class Homepage extends React.Component{
   //     .catch(e => console.log('Fatal Error: ', e))
   // }
 
-  getImage(photoUrl) {
-    fetch(photoUrl, {
-      method: 'GET',
-      headers: {
-        'mode': 'no-cors',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Connection': 'keep-alive'
-      },
-    }).then(response => response.json())
-      .then(res => {
-        console.log('res', res)
-      })
-      .catch(e => console.log('Fatal Error: ', e))
-  }
+  // getImage(photoUrl) {
+  //   fetch(photoUrl, {
+  //     method: 'GET',
+  //     headers: {
+  //       'mode': 'no-cors',
+  //       'Accept': '*/*',
+  //       'Accept-Encoding': 'gzip, deflate, br',
+  //       'Connection': 'keep-alive'
+  //     },
+  //   }).then(response => response.json())
+  //     .then(res => {
+  //       console.log('res', res)
+  //     })
+  //     .catch(e => console.log('Fatal Error: ', e))
+  // }
 
   getActivity(activityId) {
     isLoading = false
@@ -274,7 +274,7 @@ class Homepage extends React.Component{
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
           console.log(activity)
-          this.getImage(activity.photoUrl)
+          // this.getImage(activity.photoUrl)
         }
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))

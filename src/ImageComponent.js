@@ -368,13 +368,6 @@ function ImageComponent(props) {
                 {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
               </div>
             )}
-            {/* {showName && (<div id="canvasText" style={styleText} className="text-overlay text-name">{props.activity.beautyName}</div>)}
-            {showDate && (<div className="text-overlay text-date">{props.activity.beautyDate}</div>)}
-            {showDistance && (<div className="text-overlay text-distance">{props.activity.beautyDistance}</div>)}
-            {showDuration && (<div className="text-overlay text-duration">{props.activity.beautyDuration}</div>)}
-            {showElevation && (<div className="text-overlay text-elevation">{props.activity.beautyElevation}</div>)}
-            {showAverage && (<div className="text-overlay text-average">{props.activity.beautyAverage}</div>)}
-            {showPower && (<div className="text-overlay text-power">{props.activity.beautyAverage}</div>)} */}
             <div className={classesLogoNama}>
               <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
             </div>

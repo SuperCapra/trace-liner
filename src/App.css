@@ -27,7 +27,7 @@ p {
 .App {
   padding: 3%;
   background-color: var(--palette-background);
-  font-size: calc(10px + 2vmin);
+  font-size: calc(4vmin);
   text-align: center;
   font-family: 'SourceCodePro';
 }
@@ -75,7 +75,7 @@ p {
 .p-login{
   padding: 1vh 3vw 1vh 3vw;
   font-family: 'SourceCodePro';
-  font-size: 18px;
+  font-size: calc(4vmin);
   color: var(--palette-background);
 }
 .button-activity {
@@ -92,14 +92,14 @@ p {
 .title-activity {
   padding: 1vh 3vw 0.25vh 3vw;
   font-family: 'SourceCodePro';
-  font-size: 14px;
+  font-size: calc(3.5vmin);
   font-weight: bold;
   color: var(--palette-background);
 }
 .subtitle-activity {
   padding: 0vh 3vw 1vh 3vw;
   font-family: 'SourceCodePro';
-  font-size: 10px;
+  font-size: calc(2.5vmin);
   color: var(--palette-background);
 }
 .wrapper-buttons{
@@ -109,7 +109,7 @@ p {
   justify-content: center;
 }
 .wrapper-buttons-left{
-  font-size: 12px;
+  font-size: calc(3vmin);
   height: 30px;
   display:flex;
   flex-direction: row;
@@ -184,7 +184,7 @@ p {
   position: absolute;
   font-family: 'Helvetica';
   text-align: left;
-  font-size: calc(4vw);
+  font-size: calc(4vmin);
   font-weight: bold;
   color: white;
 }
@@ -205,11 +205,11 @@ p {
   font-weight: 900;
 }
 .text-date-props{
-  font-size: calc(3vw);
+  font-size: calc(3vmin);
   font-weight: 100;
 }
 .text-coordinates-props{
-  font-size: calc(4vw);
+  font-size: calc(4vmin);
   width: 100%;
   top:88%;
   left:50%;
@@ -224,40 +224,6 @@ p {
 }
 .text-coordinates-props-rect{
   top:84%;
-}
-.text-name{
-  top: 5%;
-  left: 5%;
-  flex: 1;
-}
-.text-date{
-  top: 5%;
-  left: 5%;
-  flex: 1;
-}
-.text-duration{
-  top: 5%;
-  left: 5%;
-}
-.text-distance{
-  top: 5%;
-  left: 5%;
-}
-.text-elevation{
-  top: 5%;
-  left: 5%;
-}
-.text-average{
-  top: 5%;
-  left: 5%;
-}
-.text-power{
-  top: 5%;
-  left: 5%;
-}
-.text-coordinates{
-  top: 80%;
-  left: 5%;
 }
 .padding-horizontal{
   padding-bottom: 1rem;
@@ -295,7 +261,7 @@ p {
 }
 
 .image-square p {
-  font-size: 28px;
+  font-size: calc(4vmin);
   color: var(--palette-background);
 }
 .dot-typing {
@@ -360,7 +326,7 @@ p {
   display: flex;
   flex-direction: column;
   min-width: 80vw;
-  font-size: calc(4vw);
+  font-size: calc(4vmin);
   font-weight: 900;
   font-family: 'Helvetica';
   bottom: 15vw
@@ -370,7 +336,7 @@ p {
   display: flex;
   flex-direction: column;
   min-width: 80vw;
-  font-size: calc(3.5vw);
+  font-size: calc(3.5vmin);
   font-weight: 900;
   font-family: 'Helvetica';
   bottom: 1vw
@@ -388,5 +354,5 @@ p {
 }
 .data-p-little{
   font-weight: 100;
-  font-size: calc(2vw);
+  font-size: calc(2vmin);
 }
