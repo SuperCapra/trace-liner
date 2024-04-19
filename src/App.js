@@ -8,7 +8,7 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
-let metricUnit = true
+// let metricUnit = true
 let called = false 
 let athleteData = {}
 let activities = []
@@ -139,7 +139,7 @@ class Homepage extends React.Component{
         console.log('res: ', res)
         if(res) {
           console.log('Athlete data: ', res)
-          metricUnit = res.measurement_preference === 'meters'
+          // metricUnit = res.measurement_preference === 'meters'
           this.getActivities()
         }
       })
@@ -224,22 +224,6 @@ class Homepage extends React.Component{
   //       'Accept': '*/*',
   //       'Accept-Encoding': 'gzip, deflate, br',
   //       'Content-Length': '0'
-  //     },
-  //   }).then(response => response.json())
-  //     .then(res => {
-  //       console.log('res', res)
-  //     })
-  //     .catch(e => console.log('Fatal Error: ', e))
-  // }
-
-  // getImage(photoUrl) {
-  //   fetch(photoUrl, {
-  //     method: 'GET',
-  //     headers: {
-  //       'mode': 'no-cors',
-  //       'Accept': '*/*',
-  //       'Accept-Encoding': 'gzip, deflate, br',
-  //       'Connection': 'keep-alive'
   //     },
   //   }).then(response => response.json())
   //     .then(res => {

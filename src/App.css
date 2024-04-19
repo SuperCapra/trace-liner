@@ -5,6 +5,7 @@
   --palette-lightblue: #00bbf9;
   --palette-watergreen: #00f5d4;
   --palette-background: #282c34;
+  --palette-background-complementary: #343028;
   --palette-white: #edf6f9;
 }
 
@@ -143,9 +144,17 @@ p {
 .canvas-image{
   width: 80vw;
 }
-.canvas-container {
+.canvas-container-general{
+  background-color: var(--palette-background-complementary);
   position: relative;
-  width: 80vw
+  min-width: 80vw;
+  border-radius: 5px;
+}
+.canvas-container-square {
+  min-height: 80vw;
+}
+.canvas-container-rect {
+  aspect-ratio: 9/16;
 }
 .canvas-container canvas {
   display: block;

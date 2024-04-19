@@ -1,23 +1,20 @@
 import './App.css';
-import React, {useState, useRef, useEffect, useCallback, useMemo} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
-import CachedImage from './CachedImage.js'
+// import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
-import image1 from './image1.jpeg'
-// import Share from 'react-native-share';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
   const [canvasHeight, setCanvasHeight] = useState(null); // Initial height
   const [xCrop, setXCrop] = useState(null); // Initial width
   const [yCrop, setYCrop] = useState(null); // Initial height
-  const [isCropped, setIsCropped] = useState(false);
   const [drawingColor, setDrawingColor] = useState('white');
-  const [filterColor, setFilterColor] = useState('white');
+  const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
-  const [showName, setShowName] = useState(true);
+  const [showName] = useState(true);
   const [showData, setShowData] = useState(false);
   const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
@@ -27,33 +24,9 @@ function ImageComponent(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
+  const [imageSrc, setImageSrc] = useState(undefined);
   const canvasRef = useRef(null)
-  const imageRef = useRef(null)
   const [valueFilter, setValueFilter] = useState(0);
-  const action = useRef('setInitialImage')
-
-  const calculateMemoImage = useCallback((action) => {
-    let result = new Image()
-    if(action.current === 'setInitialImage') {
-      const tempImg = document.createElement('img');
-      tempImg.src = (props.activity.photoUrl) ? props.activity.photoUrl : image1
-      setImageSrc(tempImg.src)
-      result.src = tempImg.src
-      // setImageSrc(image1)
-      // result.src = image1
-      action.current = undefined
-      return result
-    } else {
-      result.src = imageSrc
-    }
-    return result
-  }, [
-    imageSrc, 
-    props.activity.photoUrl
-  ])
-
-  const image = useMemo(() => calculateMemoImage(action), [action, calculateMemoImage])
 
   const styleText = {
     color: drawingColor
@@ -67,10 +40,7 @@ function ImageComponent(props) {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor
   }
-  // const styleFilter = {
-  //   opacity: valueFilter / 100,
-  //   backgroundColor: filterColor
-  // }
+  const classesCanvasContainer = ratio === '1:1' ? 'canvas-container-general canvas-container-square' : 'canvas-container-general canvas-container-rect'
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
@@ -80,6 +50,29 @@ function ImageComponent(props) {
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
+
+  const fetchAndSetImage = async (url) => {
+    console.log('fetching image')
+    try {
+      const response = await fetch(url, { mode: 'no-cors' }); // Consider handling CORS appropriately
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        console.log('fetching onloadend')
+        const base64data = reader.result;
+        setImageSrc(base64data); // This will trigger a re-render
+        const img = new Image();
+        img.onload = () => {
+          // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
+          console.log('Image is loaded and ready to be used');
+        };
+        img.src = base64data;
+      };
+      reader.readAsDataURL(blob);
+    } catch (e) {
+      console.error('Error loading image: ', e);
+    }
+  };
 
   const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
@@ -176,7 +169,7 @@ function ImageComponent(props) {
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
-      handleCrop(data.type === 'square' ? '1:1' : '9:16')
+      handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
     }
     else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
@@ -224,6 +217,7 @@ function ImageComponent(props) {
         }
       }
     } else if(data.type === 'image') {
+      console.log('data', data)
       setImage(data.image)
     }
   }
@@ -234,15 +228,11 @@ function ImageComponent(props) {
     drawLine(color)
   }
 
-  const handleCrop = useCallback((ratioText, imageSrc) => {
+  const handleCrop = useCallback((ratioText, imgSrc) => {
     if(ratioText) {
       console.log('ratioText:', ratioText)
       const imageReference = new Image()
-      if(!imageSrc) {
-        imageReference.src = image.src
-      } else if(imageSrc) {
-        imageReference.src = imageSrc
-      }
+      imageReference.src = imgSrc
       let imageReferenceWidth = imageReference.width
       let imageReferenceHeight = imageReference.height
       if(imageReferenceWidth === 0) {
@@ -251,6 +241,7 @@ function ImageComponent(props) {
       }
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
+      console.log('imageReference', imgSrc)
       if(ratioText === '1:1') {
         let min = Math.min(imageReferenceWidth, imageReferenceHeight)
         let xCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2
@@ -259,9 +250,15 @@ function ImageComponent(props) {
         setYCrop(yCropTemp)
         setCanvasWidth(min)
         setCanvasHeight(min)
-        imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
-          ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
+        if(imgSrc) {
+          imageReference.onload = () => {
+            ctx.rect(0,0,min, min);
+            ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
+            drawLine(drawingColor)
+            drawFilter()
+          }
+        } else {
+          console.log('min', min)
           drawLine(drawingColor)
           drawFilter()
         }
@@ -285,12 +282,11 @@ function ImageComponent(props) {
         }
       }
       setRatio(ratioText)
-      setIsCropped(true);
     }
   }, [
     drawFilter,
     drawLine, 
-    image, 
+    // image, 
     drawingColor])
 
   const setImage = (imageSrc) => {
@@ -318,24 +314,17 @@ function ImageComponent(props) {
 
 
   useEffect(() => {
-    // const canvas = canvasRef.current
-    // const ctx = canvas.getContext('2d')
-    handleCrop(ratio)
-    // if (canvas && canvasWidth && canvasHeight) {
-    //   image.onload = () => {
-    //     ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-    //     ctx.drawImage(image, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-    //     drawLine(drawingColor)
-    //     drawFilter()
-    //   }
-    // } else if(!canvasWidth && !canvasHeight) {
-    //   handleCrop(ratio)
-    // }
+    if (props.activity.photoUrl && !imageSrc) {
+      console.log('first if', imageSrc)
+      fetchAndSetImage(props.activity.photoUrl);
+    } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
+      console.log('second if', imageSrc)
+      handleCrop(ratio, imageSrc)
+    }
   }, [
       drawLine,
       drawFilter,
       handleCrop,
-      image, 
       xCrop, 
       yCrop, 
       canvasWidth, 
@@ -351,14 +340,14 @@ function ImageComponent(props) {
       showPower,
       showElevation,
       showAverage,
-      showCoordinates
+      showCoordinates,
+      imageSrc
     ])
   
   return (
     <div className="width-80">
       <div className="beauty-border">
-        <div className="canvas-container" id="printingAnchor">
-            {/* <img alt="chached" src={props.activity.photoUrl} width={canvasWidth} height={canvasHeight}></img> */}
+        <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
@@ -376,7 +365,6 @@ function ImageComponent(props) {
             {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
         </div>
       </div>
-      {/* <CachedImage photoUrl={props.activity.photoUrl}/> */}
       <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
     </div>
   );
