@@ -84,8 +84,10 @@ const utilsFunction = {
         result.latMin = Math.floor((tempLatSec - result.latSec) / 60)
         result.longMin = Math.floor((tempLongSec - result.longSec) / 60)
 
-        result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'' + result.latSec + '\'\'' + latPolarDirection)
-        result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'' + result.longSec + '\'\'' + longPolarDirection)
+        result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'\'' + latPolarDirection)
+        // result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'' + result.latSec + '\'\'' + latPolarDirection)
+        result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'\'' + longPolarDirection)
+        // result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'' + result.longSec + '\'\'' + longPolarDirection)
         
         result.beautyCoordinatesTextTime = result.beautyCoordinates[0] + ' | ' + result.beautyCoordinates[1]
         result.beautyCoordinatesTextDecimal = Math.abs(result.coordinates[0]).toFixed(5) + '°' + latPolarDirection + ' | ' + Math.abs(result.coordinates[1]).toFixed(5) + '°' + longPolarDirection
@@ -101,8 +103,9 @@ const utilsFunction = {
     },
 
     getBeautyDatetime(dateUnparsed) {
+        let parsedDateZero = this.getJsonDate(dateUnparsed, false)
         let parsedDate = this.getJsonDate(dateUnparsed, true)
-        return parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDate.hours + ':' + parsedDate.minutes
+        return parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDateZero.hours + ':' + parsedDateZero.minutes
     },
 
     getJsonDuration(durationInSec) {
@@ -119,7 +122,8 @@ const utilsFunction = {
 
     getBeautyDuration(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
+        return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm'
+        // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },
 
     labelize(value) {
@@ -190,7 +194,11 @@ const utilsFunction = {
     },
 
     getAverageSpeedMetric(distance, duration) {
-        return Number(((distance / duration) * 3.6).toFixed(2))
+        return Number(((distance / duration) * 3.6).toFixed(0))
+    },
+
+    getAverageSpeedImperial(distance, duration) {
+        return Number((((distance / duration) * 3.6) * 0.621371).toFixed(0))
     }
 }
 
