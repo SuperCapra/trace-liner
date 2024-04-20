@@ -29,7 +29,7 @@
     "start:server": "node ./src/api/callback.js",
     "start:client": "react-scripts start",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "build": "cd client && npm install && npm run build",
+    "build": "npm install && npm run build",
     "heroku-postbuild": "npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
