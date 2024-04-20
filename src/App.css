@@ -163,7 +163,8 @@ p {
 .canvas-filter{
   width: 80vw;
   position: absolute;
-  top: 0
+  top: 0;
+  left: 0;
 }
 .canvas-sketch{
   width: 46vw;

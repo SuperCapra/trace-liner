@@ -73,7 +73,7 @@ class Homepage extends React.Component{
         let activitiesButton = activities.map(element => 
           <div key={element.id} className="button-activity justify-center-column" onClick={() => this.getActivity(element.id)}>
             <p className="title-activity">{element.name}</p>
-            <p className="subtitle-activity">{element.subtitle}</p>
+            <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
           </div>)
         return (
           activitiesButton
@@ -171,14 +171,14 @@ class Homepage extends React.Component{
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
-                beautyDistance: (e.distance / 1000).toFixed(2) + 'km',
-                distance: Number((e.distance / 1000).toFixed(2)),
+                beautyDistance: (e.distance / 1000).toFixed(0) + 'km',
+                distance: Number((e.distance / 1000).toFixed(0)),
               },
               imperial: {
                 beautyAverage: utils.getAverageSpeedImperial(e.distance, e.moving_time) + 'mi/h',
                 beautyElevation: (e.total_elevation_gain * 3.28084).toFixed(0) + 'ft',
-                beautyDistance: (e.distance / 1000).toFixed(2) + 'mi',
-                distance: Number(((e.distance / 1000) * 0.621371).toFixed(2)),
+                beautyDistance: ((e.distance / 1000) * 0.621371).toFixed(0) + 'mi',
+                distance: Number(((e.distance / 1000) * 0.621371).toFixed(0)),
               },
               beautyCoordinates: undefined,
               beautyEndCoordinates: undefined,
@@ -209,9 +209,9 @@ class Homepage extends React.Component{
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-            t.metric.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.metric.distance + ' | ' + t.beautyDuration
+            t.metric.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.metric.beautyDistance + ' | ' + t.beautyDuration
             t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
-            t.imperial.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.imperial.distance + ' | ' + t.beautyDuration
+            t.imperial.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.imperial.beautyDistance + ' | ' + t.beautyDuration
             t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })

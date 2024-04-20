@@ -23,6 +23,7 @@ function ImageComponent(props) {
   const [showElevation, setShowElevation] = useState(true);
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
+  const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [imageSrc, setImageSrc] = useState(undefined);
   const canvasRef = useRef(null)
@@ -248,6 +249,8 @@ function ImageComponent(props) {
     } else if(data.type === 'image') {
       console.log('data', data)
       setImage(data.image)
+    }else if(data.type === 'unit') {
+      setUnitMeasureSelected(data.unit)
     }
   }
 
@@ -326,11 +329,11 @@ function ImageComponent(props) {
   const returnBeautyData = () => {
     let line1 = []
     let line2 = []
-    if(showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity.beautyDistance}</p></div>)
-    if(showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity.beautyElevation}</p></div>)
+    if(showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
     if(showDuration) line1.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
     if(showPower) line2.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
-    if(showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity.beautyAverage}</p></div>)
+    if(showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
     return(<div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>
       <div className={classesDataWrapperLine}>
         {line1}
@@ -341,14 +344,10 @@ function ImageComponent(props) {
     </div>)
   }
 
-
   useEffect(() => {
     if (props.activity.photoUrl && !imageSrc) {
-      console.log('first if', imageSrc)
       fetchAndSetImage(props.activity.photoUrl);
     } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
-      console.log('second if', imageSrc)
-      handleCrop(ratio, imageSrc)
     }
   }, [
       drawLine,
@@ -394,7 +393,7 @@ function ImageComponent(props) {
             {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
         </div>
       </div>
-      <ButtonImage className="indexed-height" activity={props.activity} handleClickButton={handleClickDispatcher}/>
+      <ButtonImage className="indexed-height" activity={props.activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
     </div>
   );
 }

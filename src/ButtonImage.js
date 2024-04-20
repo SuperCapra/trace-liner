@@ -7,6 +7,7 @@ import {ReactComponent as RectangleSVG} from './rectangle.svg'
 import {ReactComponent as SquareSVG} from './square.svg'
 import {ReactComponent as ViewSVG} from './view.svg'
 import {ReactComponent as HideSVG} from './hide.svg'
+import {ReactComponent as UnitMeasureSVG} from './unitMeasure.svg'
 import brandingPalette from './brandingPalette';
 import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
@@ -15,7 +16,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, handleClickButton } = props
+  const { activity, unitMeasure, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -198,7 +199,7 @@ function ButtonImage(props) {
           {showDistance && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
           {!showDistance && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
         </div>
-        <p>DISTANCE: {activity.beautyDistance}</p>
+        <p>DISTANCE: {activity[unitMeasure].beautyDistance}</p>
       </div>
     )
   }
@@ -209,7 +210,7 @@ function ButtonImage(props) {
           {showDuration && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
           {!showDuration && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
-        <p>DURATION: {activity.beautyDuration}</p>
+        <p>DURATION: {activity[unitMeasure].beautyDuration}</p>
       </div>
     )
   }
@@ -220,7 +221,7 @@ function ButtonImage(props) {
           {showElevation && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
           {!showElevation && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
         </div>
-        <p>ELEVATION: {activity.beautyElevation}</p>
+        <p>ELEVATION: {activity[unitMeasure].beautyElevation}</p>
       </div>
     )
   }
@@ -231,7 +232,7 @@ function ButtonImage(props) {
           {showAverage && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
           {!showAverage && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
         </div>
-        <p>AVERAGE: {activity.beautyAverage}</p>
+        <p>AVERAGE: {activity[unitMeasure].beautyAverage}</p>
       </div>
     )
   }
@@ -307,6 +308,10 @@ function ButtonImage(props) {
     if(fileInput) fileInput.click()
   }
 
+  const propagateUnitMeasure = () => {
+    handleClick({type: 'unit', unit: unitMeasure === 'metric' ? 'imperial' : 'metric'})
+  }
+
   const loadImage = (event) => {
     if(event && event.target && event.target.files && event.target.files.length) {
       const file = event.target.files[0];
@@ -329,6 +334,9 @@ function ButtonImage(props) {
   return (
     <div>
       <div className="wrapper-buttons">
+        <div style={textStyle} onClick={() => propagateUnitMeasure()}>
+          <UnitMeasureSVG />
+        </div>
         <div style={textStyle} onClick={() => showModifySetText()}>
           <TextSVG />
         </div>
