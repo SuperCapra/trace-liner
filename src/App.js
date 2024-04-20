@@ -9,7 +9,7 @@ const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
   '/&response_type=code&scope=activity:read_all'
 
-// let metricUnit = true
+let unitMeasure = 'metric'
 let called = false 
 let athleteData = {}
 let activities = []
@@ -115,7 +115,7 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         console.log('athleteData: ', athleteData)
-        //TODO here i need to retrieve the pereferences of the athlete ;)
+        //TODO apparently the data are returned only in meters so we need to convert it
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
@@ -140,7 +140,7 @@ class Homepage extends React.Component{
         console.log('res: ', res)
         if(res) {
           console.log('Athlete data: ', res)
-          // metricUnit = res.measurement_preference === 'meters'
+          unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
           this.getActivities()
         }
       })
@@ -168,21 +168,29 @@ class Homepage extends React.Component{
             console.log('Activity: ', e)
             let t = {
               average: utils.getAverageSpeedMetric(e.distance, e.moving_time),
-              beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
+              metric: {
+                beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
+                beautyElevation: e.total_elevation_gain + 'm',
+                beautyDistance: (e.distance / 1000).toFixed(2) + 'km',
+                distance: Number((e.distance / 1000).toFixed(2)),
+              },
+              imperial: {
+                beautyAverage: utils.getAverageSpeedImperial(e.distance, e.moving_time) + 'mi/h',
+                beautyElevation: (e.total_elevation_gain * 3.28084).toFixed(0) + 'ft',
+                beautyDistance: (e.distance / 1000).toFixed(2) + 'mi',
+                distance: Number(((e.distance / 1000) * 0.621371).toFixed(2)),
+              },
               beautyCoordinates: undefined,
               beautyEndCoordinates: undefined,
-              beautyElevation: e.total_elevation_gain + 'm',
-              beautyDistance: (e.distance / 1000).toFixed(2) + 'km',
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: utils.removeEmoji(e.name),
               beautyPower: e.average_watts + 'W',
               beautyDate: utils.getBeautyDatetime(e.start_date_local),
-              distance: e.distance,
-              distanceKm: Number((e.distance / 1000).toFixed(2)),
               durationMoving: e.moving_time,
               durationElapsed: e.elapsed_time,
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
               endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
+              distance: e.distance,
               elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
@@ -194,14 +202,17 @@ class Homepage extends React.Component{
               startDate: e.start_date,
               startDateLocal: e.start_date_local,
               startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
-              startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined
+              startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined,
+              unitMeasure: unitMeasure
             }
             t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-            t.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.distanceKm + ' | ' + t.beautyDuration
-            t.beautyData = t.beautyDistance + ' x ' + t.beautyElevation + ' x ' + t.beautyDuration
+            t.metric.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.metric.distance + ' | ' + t.beautyDuration
+            t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
+            t.imperial.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.imperial.distance + ' | ' + t.beautyDuration
+            t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }
