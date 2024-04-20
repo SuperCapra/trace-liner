@@ -52,23 +52,52 @@ function ImageComponent(props) {
   const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
 
   const fetchAndSetImage = async (url) => {
-    console.log('fetching image')
+    console.log('fetching image', url)
     try {
-      const response = await fetch(url, { mode: 'no-cors' }); // Consider handling CORS appropriately
-      const blob = await response.blob();
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        console.log('fetching onloadend')
-        const base64data = reader.result;
-        setImageSrc(base64data); // This will trigger a re-render
-        const img = new Image();
-        img.onload = () => {
-          // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
-          console.log('Image is loaded and ready to be used');
-        };
-        img.src = base64data;
-      };
-      reader.readAsDataURL(blob);
+      fetch(url, { 
+        method: 'GET',
+        mode: 'no-cors',
+        headers : {
+          'Content-Type': 'image/jpeg', 
+          'Accept': '*/*',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'Connection': 'keep-alive'
+        }
+      })
+        .then(res => {
+          console.log('res', res)
+          res.blob()
+        })
+        .then(resParsed => {
+          console.log('resParsed', resParsed)
+        })
+      // const response = await fetch(url, { 
+      //   method: 'GET',
+      //   mode: 'no-cors',
+      //   headers : {
+      //     'Content-Type': 'image/jpeg', 
+      //     'Accept': '*/*',
+      //     'Accept-Encoding': 'gzip, deflate, br',
+      //     'Connection': 'keep-alive'
+      //   }
+      // }); // Consider handling CORS appropriately
+      // console.log('response', response)
+      // const blob = await response.blob();
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   console.log('fetching onloadend', reader.result)
+      //   console.log('blob', blob)
+      //   const base64data = reader.result;
+      //   setImageSrc(base64data); // This will trigger a re-render
+      //   const img = new Image();
+      //   console.log('base64data', base64data)
+      //   img.onload = () => {
+      //     // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
+      //     console.log('Image is loaded and ready to be used');
+      //   };
+      //   img.src = base64data;
+      // };
+      // reader.readAsDataURL(blob);
     } catch (e) {
       console.error('Error loading image: ', e);
     }

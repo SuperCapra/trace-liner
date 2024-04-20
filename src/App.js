@@ -3,6 +3,7 @@ import React from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
+
 const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
   '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
