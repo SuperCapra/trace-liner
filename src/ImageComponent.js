@@ -136,11 +136,11 @@ function ImageComponent(props) {
       console.log('anch.width', anch.getBoundingClientRect().width)
       console.log('anch.width', anch.getBoundingClientRect().height)
     }
-    setDrawingHeight(anch.getBoundingClientRect().width)
-    setDrawingWidth(anch.getBoundingClientRect().height)
+    setDrawingHeight(anch.getBoundingClientRect().width * 20)
+    setDrawingWidth(anch.getBoundingClientRect().height * 20)
     let coordinates = props.activity.coordinates
-    let width = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().width)
-    let height = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().height)
+    let width = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().width) * 20
+    let height = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().height) * 20
     let canvasSketch = document.getElementById('canvasSketch')
     let ctx = canvasSketch.getContext('2d')
     console.log('width: ', width)
