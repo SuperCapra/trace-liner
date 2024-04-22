@@ -131,17 +131,14 @@ function ImageComponent(props) {
 
 }
   const drawLine = useCallback((color) => {
-    const anch = document.getElementById('canvasSketch')
-    if(anch) {
-      console.log('anch.width', anch.getBoundingClientRect().width)
-      console.log('anch.width', anch.getBoundingClientRect().height)
-    }
-    setDrawingHeight(anch.getBoundingClientRect().width * 20)
-    setDrawingWidth(anch.getBoundingClientRect().height * 20)
-    let coordinates = props.activity.coordinates
-    let width = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().width) * 20
-    let height = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().height) * 20
     let canvasSketch = document.getElementById('canvasSketch')
+    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 20
+    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 20
+    setDrawingHeight(canvasSketchWidth)
+    setDrawingWidth(canvasSketchHeight)
+    let coordinates = props.activity.coordinates
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+    let height = Math.min(canvasSketchHeight, canvasSketchWidth)
     let ctx = canvasSketch.getContext('2d')
     console.log('width: ', width)
     console.log('height: ', height)
