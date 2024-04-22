@@ -8,6 +8,8 @@ import html2canvas from 'html2canvas';
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
   const [canvasHeight, setCanvasHeight] = useState(null); // Initial height
+  const [drawingHeight, setDrawingHeight] = useState(null); // Initial height
+  const [drawingWidth, setDrawingWidth] = useState(null); // Initial height
   const [xCrop, setXCrop] = useState(null); // Initial width
   const [yCrop, setYCrop] = useState(null); // Initial height
   const [drawingColor, setDrawingColor] = useState('white');
@@ -45,7 +47,7 @@ function ImageComponent(props) {
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
-  const classesSketch = ratio === '1:1' ? 'canvas-filter canvas-sketch' : 'canvas-filter canvas-sketch-rect'
+  const classesSketch = ratio === '1:1' ? 'canvas-position canvas-filter canvas-sketch' : 'canvas-position canvas-filter canvas-sketch-rect'
   const classesDataWrapper2Lines = ratio === '1:1' ? 'wrapper-data-2-lines' : 'wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
@@ -129,9 +131,16 @@ function ImageComponent(props) {
 
 }
   const drawLine = useCallback((color) => {
+    const anch = document.getElementById('canvasSketch')
+    if(anch) {
+      console.log('anch.width', anch.getBoundingClientRect().width)
+      console.log('anch.width', anch.getBoundingClientRect().height)
+    }
+    setDrawingHeight(anch.getBoundingClientRect().width)
+    setDrawingWidth(anch.getBoundingClientRect().height)
     let coordinates = props.activity.coordinates
-    let width = Math.min(canvasHeight, canvasWidth)
-    let height = Math.min(canvasHeight, canvasWidth)
+    let width = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().width)
+    let height = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().height)
     let canvasSketch = document.getElementById('canvasSketch')
     let ctx = canvasSketch.getContext('2d')
     console.log('width: ', width)
@@ -152,27 +161,32 @@ function ImageComponent(props) {
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
     console.log('zoomFactor:', zoomFactor)
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = color
-    ctx.lineWidth = width*0.01
+    ctx.lineWidth = width * 0.01
     ctx.beginPath()
   
     for(let i = 0; i < coordinates.length; i++) {
       let c = coordinates[i]
       let rightHeight = height/2
       let rightZoomY = zoomFactor
-      if(ratio !== '1:1') {
-        rightHeight = rightHeight*1.77
-        rightZoomY = zoomFactor*1.77
-      }
+      // if(ratio !== '1:1') {
+      //   rightHeight = rightHeight*1.77
+      //   rightZoomY = zoomFactor*1.77
+      // }
       ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight)
       // ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
     }
 
     ctx.stroke()
 
-  },[props.activity.coordinates, ratio, canvasWidth, canvasHeight])
+  },[
+    props.activity.coordinates, 
+    // ratio, 
+    // canvasWidth, 
+    // canvasHeight
+  ])
 
 
   const drawFilter = useCallback((v) => {
@@ -199,6 +213,7 @@ function ImageComponent(props) {
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
+      drawLine(drawingColor)
       handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
     }
     else if(data.type === 'show-hide') {
@@ -286,12 +301,10 @@ function ImageComponent(props) {
           imageReference.onload = () => {
             ctx.rect(0,0,min, min);
             ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
-            drawLine(drawingColor)
             drawFilter()
           }
         } else {
           console.log('min', min)
-          drawLine(drawingColor)
           drawFilter()
         }
       } else {
@@ -309,7 +322,6 @@ function ImageComponent(props) {
         imageReference.onload = () => {
           ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
-          drawLine(drawingColor)
           drawFilter()
         }
       }
@@ -317,9 +329,10 @@ function ImageComponent(props) {
     }
   }, [
     drawFilter,
-    drawLine, 
+    // drawLine, 
     // image, 
-    drawingColor])
+    // drawingColor
+  ])
 
   const setImage = (imageSrc) => {
     setImageSrc(imageSrc)
@@ -345,6 +358,7 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
+    drawLine(drawingColor)
     if (props.activity.photoUrl && !imageSrc) {
       fetchAndSetImage(props.activity.photoUrl);
     } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
@@ -376,9 +390,9 @@ function ImageComponent(props) {
     <div className="width-80">
       <div className="beauty-border">
         <div className={classesCanvasContainer} id="printingAnchor">
-            <canvas id="canvasImage" className="canvas-image" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="canvas-filter" width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasSketch" className={classesSketch} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasImage" className="canvas-image canvas-position" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="canvas-filter canvas-position" width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight}/>
             {showTitle && (
               <div className="text-overlay text-title">
                 <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
