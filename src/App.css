@@ -143,6 +143,9 @@ p {
 }
 .canvas-image{
   width: 80vw;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 .canvas-container-general{
   background-color: var(--palette-background-complementary);
@@ -160,23 +163,25 @@ p {
   display: block;
   height: auto;
 }
-.canvas-filter{
-  width: 80vw;
+.canvas-position{
   position: absolute;
   top: 0;
   left: 0;
 }
+.canvas-filter{
+  width: 80vw;
+}
 .canvas-sketch{
   width: 46vw;
   height: 46vw !important;
-  position: absolute;
-  margin: 17vw 17vw
+  top: 17vw;
+  left: 17vw;
 }
 .canvas-sketch-rect{
   width: 68vw;
   height: 68vw !important;
-  position: absolute;
-  margin: 37vw 6vw
+  top: 37vw;
+  left: 6vw;
 }
 #canvasImage {
   z-index: 1;
