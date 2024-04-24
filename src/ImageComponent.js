@@ -16,7 +16,6 @@ function ImageComponent(props) {
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
-  const [showName] = useState(true);
   const [showData, setShowData] = useState(false);
   const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
