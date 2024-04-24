@@ -348,7 +348,6 @@ function ImageComponent(props) {
 
   useEffect(() => {
     // drawLine(drawingColor)
-    console.log('mannaggia!')
     handleCrop(ratio, imageSrc)
     // if (props.activity.photoUrl && !imageSrc) {
     //   fetchAndSetImage(props.activity.photoUrl);
