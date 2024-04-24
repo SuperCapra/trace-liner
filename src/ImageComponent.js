@@ -212,7 +212,6 @@ function ImageComponent(props) {
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
-      drawLine(drawingColor)
       handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
     }
     else if(data.type === 'show-hide') {
@@ -279,59 +278,58 @@ function ImageComponent(props) {
     if(ratioText) {
       console.log('ratioText:', ratioText)
       const imageReference = new Image()
-      imageReference.src = imgSrc
-      let imageReferenceWidth = imageReference.width
-      let imageReferenceHeight = imageReference.height
-      if(imageReferenceWidth === 0) {
-        imageReferenceWidth = window.innerWidth * 80
-        imageReferenceHeight = (window.innerWidth * 80) * (ratioText.split(':')[1]/ratioText.split(':')[0])
-      }
-      const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
-      console.log('imageReference', imgSrc)
-      if(ratioText === '1:1') {
-        let min = Math.min(imageReferenceWidth, imageReferenceHeight)
-        let xCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2
-        let yCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth > imageReferenceHeight ? 0 : (imageReferenceHeight - min) / 2
-        setXCrop(xCropTemp)
-        setYCrop(yCropTemp)
-        setCanvasWidth(min)
-        setCanvasHeight(min)
-        imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
-          ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
-          drawFilter(min,min)
+      imageReference.onload = () => {
+        let imageReferenceWidth = imageReference.width
+        let imageReferenceHeight = imageReference.height
+  
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        
+        console.log('imageReference', imgSrc)
+  
+        let ratioParts = ratioText.split(':')
+        const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
+  
+        let canvasWidth, canvasHeight, xCrop, yCrop
+        
+        if (imageReferenceWidth / imageReferenceHeight > aspectRatio) {
+          // Image is wider than the target ratio
+          canvasHeight = imageReferenceHeight;
+          canvasWidth = canvasHeight * aspectRatio;
+          xCrop = (imageReferenceWidth - canvasWidth) / 2;
+          yCrop = 0;
+        } else {
+          // Image is taller than the target ratio
+          canvasWidth = imageReferenceWidth;
+          canvasHeight = canvasWidth / aspectRatio;
+          xCrop = 0;
+          yCrop = (imageReferenceHeight - canvasHeight) / 2;
         }
-      } else {
-        let ratioSplitted = ratioText.split(':')
-        let ratioCalculated = ratioSplitted[0]/ratioSplitted[1]
-        let min = Math.min(imageReferenceWidth, imageReferenceHeight * ratioCalculated)
-        let widthRationalized = (imageReferenceWidth === min) ? imageReferenceWidth : imageReferenceHeight * ratioCalculated
-        let heightRationalized = (imageReferenceHeight * ratioCalculated === min) ? imageReferenceHeight : imageReferenceWidth / ratioCalculated
-        let xCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - (widthRationalized * ratioCalculated)) / 2
-        let yCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - (widthRationalized * ratioCalculated)) / 2
-        setXCrop(xCropTemp)
-        setYCrop(yCropTemp)
-        setCanvasWidth(widthRationalized)
-        setCanvasHeight(heightRationalized)
-        imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
-          ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
-          drawFilter(widthRationalized, heightRationalized)
-        }
-      }
+  
+        setXCrop(xCrop);
+        setYCrop(yCrop);
+        setCanvasWidth(canvasWidth);
+        setCanvasHeight(canvasHeight);
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+        drawFilter(canvasWidth, canvasHeight)
+        drawLine(drawingColor)
+      };
+  
+      // Important: Set src after defining onload to ensure it is loaded before drawing
+      imageReference.src = imgSrc;
       setRatio(ratioText)
     }
   }, [
     drawFilter,
-    // drawLine, 
-    // image, 
-    // drawingColor
+    drawingColor,
+    drawLine
   ])
 
-  const setImage = (imageSrc) => {
-    setImageSrc(imageSrc)
-    handleCrop(ratio, imageSrc)
+  const setImage = (newImage) => {
+    setImageSrc(newImage)
+    handleCrop(ratio, newImage)
   }
 
   const returnBeautyData = () => {
@@ -359,26 +357,9 @@ function ImageComponent(props) {
     // } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
     // }
   }, [
-      drawLine,
-      drawFilter,
-      handleCrop,
-      xCrop, 
-      yCrop, 
-      canvasWidth, 
-      canvasHeight, 
-      props.activity.photoUrl,
-      props.activity.coordinates, 
-      drawingColor, 
       ratio,
-      showName,
-      showDate,
-      showDistance,
-      showDuration,
-      showPower,
-      showElevation,
-      showAverage,
-      showCoordinates,
-      imageSrc
+      drawingColor,
+      drawLine
     ])
   
   return (
