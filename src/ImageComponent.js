@@ -128,8 +128,8 @@ function ImageComponent(props) {
         temp.click();
       }
     });
+  }
 
-}
   const drawLine = useCallback((color) => {
     let canvasSketch = document.getElementById('canvasSketch')
     let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 20
@@ -275,52 +275,48 @@ function ImageComponent(props) {
   }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
-    if(ratioText) {
-      console.log('ratioText:', ratioText)
-      const imageReference = new Image()
-      imageReference.onload = () => {
-        let imageReferenceWidth = imageReference.width
-        let imageReferenceHeight = imageReference.height
-  
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
-        
-        console.log('imageReference', imgSrc)
-  
-        let ratioParts = ratioText.split(':')
-        const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
-  
-        let canvasWidth, canvasHeight, xCrop, yCrop
-        
-        if (imageReferenceWidth / imageReferenceHeight > aspectRatio) {
-          // Image is wider than the target ratio
-          canvasHeight = imageReferenceHeight;
-          canvasWidth = canvasHeight * aspectRatio;
-          xCrop = (imageReferenceWidth - canvasWidth) / 2;
-          yCrop = 0;
-        } else {
-          // Image is taller than the target ratio
-          canvasWidth = imageReferenceWidth;
-          canvasHeight = canvasWidth / aspectRatio;
-          xCrop = 0;
-          yCrop = (imageReferenceHeight - canvasHeight) / 2;
-        }
-  
-        setXCrop(xCrop);
-        setYCrop(yCrop);
-        setCanvasWidth(canvasWidth);
-        setCanvasHeight(canvasHeight);
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-        drawFilter(canvasWidth, canvasHeight)
-        drawLine(drawingColor)
-      };
-  
-      // Important: Set src after defining onload to ensure it is loaded before drawing
-      imageReference.src = imgSrc;
-      setRatio(ratioText)
-    }
+    console.log('ratioText:', ratioText)
+    const imageReference = new Image()
+    imageReference.onload = () => {
+      let imageReferenceWidth = imageReference.width
+      let imageReferenceHeight = imageReference.height
+
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      
+      console.log('imageReference', imgSrc)
+
+      let ratioParts = ratioText.split(':')
+      const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
+      let canvasWidth, canvasHeight, xCrop, yCrop
+      
+      if (imageReferenceWidth / imageReferenceHeight > aspectRatio) {
+        // Image is wider than the target ratio
+        canvasHeight = imageReferenceHeight;
+        canvasWidth = canvasHeight * aspectRatio;
+        xCrop = (imageReferenceWidth - canvasWidth) / 2;
+        yCrop = 0;
+      } else {
+        // Image is taller than the target ratio
+        canvasWidth = imageReferenceWidth;
+        canvasHeight = canvasWidth / aspectRatio;
+        xCrop = 0;
+        yCrop = (imageReferenceHeight - canvasHeight) / 2;
+      }
+
+      setXCrop(xCrop);
+      setYCrop(yCrop);
+      setCanvasWidth(canvasWidth);
+      setCanvasHeight(canvasHeight);
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+      drawFilter(canvasWidth, canvasHeight)
+      drawLine(drawingColor)
+    };
+
+    // Important: Set src after defining onload to ensure it is loaded before drawing
+    imageReference.src = imgSrc;
   }, [
     drawFilter,
     drawingColor,
@@ -351,15 +347,19 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    drawLine(drawingColor)
+    // drawLine(drawingColor)
+    console.log('mannaggia!')
+    handleCrop(ratio, imageSrc)
     // if (props.activity.photoUrl && !imageSrc) {
     //   fetchAndSetImage(props.activity.photoUrl);
     // } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
     // }
   }, [
       ratio,
-      drawingColor,
-      drawLine
+      canvasHeight,
+      canvasWidth,
+      handleCrop,
+      imageSrc
     ])
   
   return (
