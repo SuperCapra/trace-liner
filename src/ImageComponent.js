@@ -186,25 +186,27 @@ function ImageComponent(props) {
   ])
 
 
-  const drawFilter = useCallback((v) => {
-    if(!v) v = 0
+  const drawFilter = useCallback((width, height) => {
+    let widthToUse = width ? width : canvasWidth
+    let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
     let ctx = canvasFilter.getContext('2d')
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+    ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.filter = 'opacity(' + valueFilter + '%)'
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillRect(0, 0, widthToUse, heightToUse);
   }, [
     valueFilter,
     filterColor, 
     canvasWidth, 
-    canvasHeight])
+    canvasHeight
+  ])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
     if(data.type === 'filterSlider') {
       setValueFilter(data.value)
-      drawFilter(data.value)
+      drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
     else if(data.type === 'changing-color') handleColorChange(data.color)
@@ -295,15 +297,10 @@ function ImageComponent(props) {
         setYCrop(yCropTemp)
         setCanvasWidth(min)
         setCanvasHeight(min)
-        if(imgSrc) {
-          imageReference.onload = () => {
-            ctx.rect(0,0,min, min);
-            ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
-            drawFilter()
-          }
-        } else {
-          console.log('min', min)
-          drawFilter()
+        imageReference.onload = () => {
+          ctx.rect(0,0,min, min);
+          ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
+          drawFilter(min,min)
         }
       } else {
         let ratioSplitted = ratioText.split(':')
@@ -320,7 +317,7 @@ function ImageComponent(props) {
         imageReference.onload = () => {
           ctx.rect(0,0,min, min);
           ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
-          drawFilter()
+          drawFilter(widthRationalized, heightRationalized)
         }
       }
       setRatio(ratioText)
