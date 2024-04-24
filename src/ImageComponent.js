@@ -270,6 +270,7 @@ function ImageComponent(props) {
     console.log('color to set', color)
     setDrawingColor(color)
     drawLine(color)
+    drawFilter()
   }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
@@ -356,10 +357,10 @@ function ImageComponent(props) {
 
   useEffect(() => {
     drawLine(drawingColor)
-    if (props.activity.photoUrl && !imageSrc) {
-      fetchAndSetImage(props.activity.photoUrl);
-    } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
-    }
+    // if (props.activity.photoUrl && !imageSrc) {
+    //   fetchAndSetImage(props.activity.photoUrl);
+    // } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
+    // }
   }, [
       drawLine,
       drawFilter,
@@ -401,7 +402,7 @@ function ImageComponent(props) {
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
             {showDataUnique && returnBeautyData()}
-            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
+            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity[unitMeasureSelected].beautyData}</div>)}
         </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
