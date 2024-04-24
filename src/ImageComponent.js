@@ -128,20 +128,17 @@ function ImageComponent(props) {
         temp.click();
       }
     });
+  }
 
-}
   const drawLine = useCallback((color) => {
-    const anch = document.getElementById('canvasSketch')
-    if(anch) {
-      console.log('anch.width', anch.getBoundingClientRect().width)
-      console.log('anch.width', anch.getBoundingClientRect().height)
-    }
-    setDrawingHeight(anch.getBoundingClientRect().width)
-    setDrawingWidth(anch.getBoundingClientRect().height)
-    let coordinates = props.activity.coordinates
-    let width = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().width)
-    let height = Math.min(anch.getBoundingClientRect().height, anch.getBoundingClientRect().height)
     let canvasSketch = document.getElementById('canvasSketch')
+    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 20
+    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 20
+    setDrawingHeight(canvasSketchWidth)
+    setDrawingWidth(canvasSketchHeight)
+    let coordinates = props.activity.coordinates
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+    let height = Math.min(canvasSketchHeight, canvasSketchWidth)
     let ctx = canvasSketch.getContext('2d')
     console.log('width: ', width)
     console.log('height: ', height)
@@ -189,31 +186,32 @@ function ImageComponent(props) {
   ])
 
 
-  const drawFilter = useCallback((v) => {
-    if(!v) v = 0
+  const drawFilter = useCallback((width, height) => {
+    let widthToUse = width ? width : canvasWidth
+    let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
     let ctx = canvasFilter.getContext('2d')
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight)
+    ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.filter = 'opacity(' + valueFilter + '%)'
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillRect(0, 0, widthToUse, heightToUse);
   }, [
     valueFilter,
     filterColor, 
     canvasWidth, 
-    canvasHeight])
+    canvasHeight
+  ])
 
   const handleClickDispatcher = (data) => {
     console.log('data:', data)
     if(data.type === 'filterSlider') {
       setValueFilter(data.value)
-      drawFilter(data.value)
+      drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
-      drawLine(drawingColor)
       handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
     }
     else if(data.type === 'show-hide') {
@@ -273,70 +271,61 @@ function ImageComponent(props) {
     console.log('color to set', color)
     setDrawingColor(color)
     drawLine(color)
+    drawFilter()
   }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
-    if(ratioText) {
-      console.log('ratioText:', ratioText)
-      const imageReference = new Image()
-      imageReference.src = imgSrc
+    console.log('ratioText:', ratioText)
+    const imageReference = new Image()
+    imageReference.onload = () => {
       let imageReferenceWidth = imageReference.width
       let imageReferenceHeight = imageReference.height
-      if(imageReferenceWidth === 0) {
-        imageReferenceWidth = window.innerWidth * 80
-        imageReferenceHeight = (window.innerWidth * 80) * (ratioText.split(':')[1]/ratioText.split(':')[0])
-      }
+
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
+      
       console.log('imageReference', imgSrc)
-      if(ratioText === '1:1') {
-        let min = Math.min(imageReferenceWidth, imageReferenceHeight)
-        let xCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth < imageReferenceHeight ? 0 : (imageReferenceWidth - min) / 2
-        let yCropTemp = imageReferenceWidth === imageReferenceHeight || imageReferenceWidth > imageReferenceHeight ? 0 : (imageReferenceHeight - min) / 2
-        setXCrop(xCropTemp)
-        setYCrop(yCropTemp)
-        setCanvasWidth(min)
-        setCanvasHeight(min)
-        if(imgSrc) {
-          imageReference.onload = () => {
-            ctx.rect(0,0,min, min);
-            ctx.drawImage(imageReference, xCropTemp, yCropTemp, min, min, 0, 0, min, min)
-            drawFilter()
-          }
-        } else {
-          console.log('min', min)
-          drawFilter()
-        }
+
+      let ratioParts = ratioText.split(':')
+      const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
+      let canvasWidth, canvasHeight, xCrop, yCrop
+      
+      if (imageReferenceWidth / imageReferenceHeight > aspectRatio) {
+        // Image is wider than the target ratio
+        canvasHeight = imageReferenceHeight;
+        canvasWidth = canvasHeight * aspectRatio;
+        xCrop = (imageReferenceWidth - canvasWidth) / 2;
+        yCrop = 0;
       } else {
-        let ratioSplitted = ratioText.split(':')
-        let ratioCalculated = ratioSplitted[0]/ratioSplitted[1]
-        let min = Math.min(imageReferenceWidth, imageReferenceHeight * ratioCalculated)
-        let widthRationalized = (imageReferenceWidth === min) ? imageReferenceWidth : imageReferenceHeight * ratioCalculated
-        let heightRationalized = (imageReferenceHeight * ratioCalculated === min) ? imageReferenceHeight : imageReferenceWidth / ratioCalculated
-        let xCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth < imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceWidth - (widthRationalized * ratioCalculated)) / 2
-        let yCropTemp = imageReferenceWidth === imageReferenceHeight * ratioCalculated || imageReferenceWidth > imageReferenceHeight * ratioCalculated ? 0 : (imageReferenceHeight - (widthRationalized * ratioCalculated)) / 2
-        setXCrop(xCropTemp)
-        setYCrop(yCropTemp)
-        setCanvasWidth(widthRationalized)
-        setCanvasHeight(heightRationalized)
-        imageReference.onload = () => {
-          ctx.rect(0,0,min, min);
-          ctx.drawImage(imageReference, xCropTemp, yCropTemp, widthRationalized, heightRationalized, 0, 0, heightRationalized, heightRationalized)
-          drawFilter()
-        }
+        // Image is taller than the target ratio
+        canvasWidth = imageReferenceWidth;
+        canvasHeight = canvasWidth / aspectRatio;
+        xCrop = 0;
+        yCrop = (imageReferenceHeight - canvasHeight) / 2;
       }
-      setRatio(ratioText)
-    }
+
+      setXCrop(xCrop);
+      setYCrop(yCrop);
+      setCanvasWidth(canvasWidth);
+      setCanvasHeight(canvasHeight);
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
+      drawFilter(canvasWidth, canvasHeight)
+      drawLine(drawingColor)
+    };
+
+    // Important: Set src after defining onload to ensure it is loaded before drawing
+    imageReference.src = imgSrc;
   }, [
     drawFilter,
-    // drawLine, 
-    // image, 
-    // drawingColor
+    drawingColor,
+    drawLine
   ])
 
-  const setImage = (imageSrc) => {
-    setImageSrc(imageSrc)
-    handleCrop(ratio, imageSrc)
+  const setImage = (newImage) => {
+    setImageSrc(newImage)
+    handleCrop(ratio, newImage)
   }
 
   const returnBeautyData = () => {
@@ -358,31 +347,17 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    drawLine(drawingColor)
-    if (props.activity.photoUrl && !imageSrc) {
-      fetchAndSetImage(props.activity.photoUrl);
-    } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
-    }
+    // drawLine(drawingColor)
+    handleCrop(ratio, imageSrc)
+    // if (props.activity.photoUrl && !imageSrc) {
+    //   fetchAndSetImage(props.activity.photoUrl);
+    // } else if(!props.activity.photoUrl || (props.activity.photoUrl && imageSrc)) {
+    // }
   }, [
-      drawLine,
-      drawFilter,
-      handleCrop,
-      xCrop, 
-      yCrop, 
-      canvasWidth, 
-      canvasHeight, 
-      props.activity.photoUrl,
-      props.activity.coordinates, 
-      drawingColor, 
       ratio,
-      showName,
-      showDate,
-      showDistance,
-      showDuration,
-      showPower,
-      showElevation,
-      showAverage,
-      showCoordinates,
+      canvasHeight,
+      canvasWidth,
+      handleCrop,
       imageSrc
     ])
   
@@ -404,7 +379,7 @@ function ImageComponent(props) {
             </div>
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
             {showDataUnique && returnBeautyData()}
-            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyData}</div>)}
+            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity[unitMeasureSelected].beautyData}</div>)}
         </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>

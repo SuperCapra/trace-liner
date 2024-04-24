@@ -210,7 +210,7 @@ function ButtonImage(props) {
           {showDuration && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
           {!showDuration && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
-        <p>DURATION: {activity[unitMeasure].beautyDuration}</p>
+        <p>DURATION: {activity.beautyDuration}</p>
       </div>
     )
   }
@@ -265,7 +265,7 @@ function ButtonImage(props) {
           {showData && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
           {!showData && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
         </div>
-        <p>DATA: {activity.beautyData}</p>
+        <p>DATA: {activity[unitMeasure].beautyData}</p>
       </div>
     )
   }
