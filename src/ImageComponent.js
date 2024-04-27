@@ -110,25 +110,26 @@ function ImageComponent(props) {
 
   const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
-      const dataURL = canvas.toDataURL('image/jpeg');
-      console.log('navigator.canShare', navigator.share)
-      console.log('navigator.canShare', navigator)
-      if(navigator.share) {
-        try {
-          await navigator.share({
-            title: 'Share Image',
-            text: 'Check out this image!',
-            url: dataURL,
-          });
-        } catch (error) {
-          console.error('Error sharing image:', error);
+      canvas.toBlob(async function(blob) {
+        if (navigator.share) {
+            try {
+                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                await navigator.share({
+                    title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
+                    files: [file],
+                });
+            } catch (error) {
+                console.error('Error sharing image:', error);
+            }
+        } else {
+            const url = URL.createObjectURL(blob);
+            const temp = document.createElement('a');
+            temp.href = url;
+            temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
+            temp.click();
+            URL.revokeObjectURL(url); // Clean up URL object after use
         }
-      } else {
-        const temp = document.createElement('a');
-        temp.href = dataURL;
-        temp.download = props.activity.beautyName.replaceAll(' ','_').toLowerCase() + '.jpeg'
-        temp.click();
-      }
+    }, 'image/jpeg');
     });
   }
 
