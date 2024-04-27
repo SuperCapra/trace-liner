@@ -84,9 +84,9 @@ const utilsFunction = {
         result.latMin = Math.floor((tempLatSec - result.latSec) / 60)
         result.longMin = Math.floor((tempLongSec - result.longSec) / 60)
 
-        result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'\'' + latPolarDirection)
+        result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'' + latPolarDirection)
         // result.beautyCoordinates.push(result.latDeg + '°' + result.latMin + '\'' + result.latSec + '\'\'' + latPolarDirection)
-        result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'\'' + longPolarDirection)
+        result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'' + longPolarDirection)
         // result.beautyCoordinates.push(result.longDeg + '°' + result.longMin + '\'' + result.longSec + '\'\'' + longPolarDirection)
         
         result.beautyCoordinatesTextTime = result.beautyCoordinates[0] + ' | ' + result.beautyCoordinates[1]

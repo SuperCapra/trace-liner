@@ -26,7 +26,6 @@ p {
 }
 
 .App {
-  padding: 3%;
   background-color: var(--palette-background);
   font-size: calc(4vmin);
   text-align: center;
@@ -39,7 +38,8 @@ p {
 }
 
 .App-header {
-  min-height: 100vh;
+  padding: 2vh;
+  min-height: 96vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,9 +81,9 @@ p {
 }
 .button-activity {
   text-align: left;
-  width: 90vw;
-  height: 6.5vh;
-  margin: 1.5vmin;
+  width: 90vmin;
+  min-height: 6.5vh;
+  margin: 1.5vw;
   background-color: var(--palette-yellow);
   border-radius: 5px;
 }
