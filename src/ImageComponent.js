@@ -111,6 +111,8 @@ function ImageComponent(props) {
   const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       canvas.toBlob(async function(blob) {
+        console.log('try to share..., navigator.share', navigator.share)
+        console.log('try to share..., navigator.canShare', navigator.canShare)
         if (navigator.share) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
