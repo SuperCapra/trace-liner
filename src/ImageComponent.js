@@ -304,10 +304,10 @@ function ImageComponent(props) {
       }
 
         // Scale the canvas and cropping dimensions by half
-        canvasWidth *= 0.25;
-        canvasHeight *= 0.25;
-        xCrop *= 0.25;
-        yCrop *= 0.25;
+        canvasWidth *= 0.125;
+        canvasHeight *= 0.125;
+        xCrop *= 0.125;
+        yCrop *= 0.125;
 
         setXCrop(xCrop);
         setYCrop(yCrop);
@@ -316,7 +316,7 @@ function ImageComponent(props) {
 
         // Clear the canvas and draw the image scaled down
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * 4, canvasHeight * 4, 0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * 8, canvasHeight * 8, 0, 0, canvasWidth, canvasHeight);
         drawFilter(canvasWidth, canvasHeight);
         drawLine(drawingColor);
     };
