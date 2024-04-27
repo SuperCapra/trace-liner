@@ -303,7 +303,6 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
-    window.alert('eccolo dal resetImage')
     const elementChosen = document.getElementById(alt)
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
