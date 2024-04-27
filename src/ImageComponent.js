@@ -4,7 +4,6 @@ import ButtonImage from './ButtonImage.js'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
-import { opacity } from 'html2canvas/dist/types/css/property-descriptors/opacity.js';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
