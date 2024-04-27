@@ -125,27 +125,33 @@ function ButtonImage(props) {
 
   const shareStyle = {
     fill: brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const modifyStyle = {
     fill: showModifyImage ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const textStyle = {
     fill: showModifyText ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const squareStyle = {
     fill: square ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const rectangleStyle = {
     fill: rectangle ? brandingPalette.yellow : brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const eyeStyle = {
     fill: brandingPalette.pink,
-    transform: 'scale(' + (window.innerWidth / 700) + ')'
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
 
   const returnsColors = () => {
@@ -297,6 +303,7 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
+    window.alert('eccolo dal resetImage')
     const elementChosen = document.getElementById(alt)
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
