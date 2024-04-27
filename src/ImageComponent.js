@@ -4,6 +4,7 @@ import ButtonImage from './ButtonImage.js'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
+import { opacity } from 'html2canvas/dist/types/css/property-descriptors/opacity.js';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -32,6 +33,9 @@ function ImageComponent(props) {
 
   const styleText = {
     color: drawingColor
+  }
+  const filterStyle = {
+    opacity: valueFilter/100
   }
   const styleLogoNama = {
     width: (ratio === '1:1') ? '10vw' : '15vw',
@@ -192,10 +196,10 @@ function ImageComponent(props) {
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
-    ctx.filter = 'opacity(' + valueFilter + '%)'
+    // ctx.filter = 'opacity(' + valueFilter + '%)'
     ctx.fillRect(0, 0, widthToUse, heightToUse);
   }, [
-    valueFilter,
+    // valueFilter,
     filterColor, 
     canvasWidth, 
     canvasHeight
@@ -304,10 +308,10 @@ function ImageComponent(props) {
       }
 
         // Scale the canvas and cropping dimensions by half
-        canvasWidth *= 0.125;
-        canvasHeight *= 0.125;
-        xCrop *= 0.125;
-        yCrop *= 0.125;
+        // canvasWidth *= 0.5;
+        // canvasHeight *= 0.5;
+        // xCrop *= 0.5;
+        // yCrop *= 0.125;
 
         setXCrop(xCrop);
         setYCrop(yCrop);
@@ -316,7 +320,7 @@ function ImageComponent(props) {
 
         // Clear the canvas and draw the image scaled down
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * 8, canvasHeight * 8, 0, 0, canvasWidth, canvasHeight);
+        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight);
         drawFilter(canvasWidth, canvasHeight);
         drawLine(drawingColor);
     };
@@ -372,7 +376,7 @@ function ImageComponent(props) {
       <div className="beauty-border">
         <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="canvas-image canvas-position" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="canvas-filter canvas-position" width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="canvas-filter canvas-position" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight}/>
             {showTitle && (
               <div className="text-overlay text-title">
