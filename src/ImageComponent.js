@@ -291,6 +291,10 @@ function ImageComponent(props) {
       
       console.log('imageReference', imgSrc)
 
+      // Setup line properties to avoid spikes
+      ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
+      ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
+
       let ratioParts = ratioText.split(':')
       const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
       let canvasWidth, canvasHeight, xCrop, yCrop
