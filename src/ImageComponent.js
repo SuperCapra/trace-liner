@@ -303,15 +303,22 @@ function ImageComponent(props) {
         yCrop = (imageReferenceHeight - canvasHeight) / 2;
       }
 
-      setXCrop(xCrop);
-      setYCrop(yCrop);
-      setCanvasWidth(canvasWidth / 2);
-      setCanvasHeight(canvasHeight / 2);
-      
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
-      drawFilter(canvasWidth, canvasHeight)
-      drawLine(drawingColor)
+        // Scale the canvas and cropping dimensions by half
+        canvasWidth *= 0.5;
+        canvasHeight *= 0.5;
+        xCrop *= 0.5;
+        yCrop *= 0.5;
+
+        setXCrop(xCrop);
+        setYCrop(yCrop);
+        setCanvasWidth(canvasWidth);
+        setCanvasHeight(canvasHeight);
+
+        // Clear the canvas and draw the image scaled down
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * 2, canvasHeight * 2, 0, 0, canvasWidth, canvasHeight);
+        drawFilter(canvasWidth, canvasHeight);
+        drawLine(drawingColor);
     };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
