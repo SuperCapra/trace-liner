@@ -131,8 +131,8 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 20
-    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 20
+    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 5
+    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 5
     setDrawingHeight(canvasSketchWidth)
     setDrawingWidth(canvasSketchHeight)
     let coordinates = props.activity.coordinates
@@ -305,8 +305,8 @@ function ImageComponent(props) {
 
       setXCrop(xCrop);
       setYCrop(yCrop);
-      setCanvasWidth(canvasWidth);
-      setCanvasHeight(canvasHeight);
+      setCanvasWidth(canvasWidth / 2);
+      setCanvasHeight(canvasHeight / 2);
       
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth, canvasHeight, 0, 0, canvasWidth, canvasHeight)
