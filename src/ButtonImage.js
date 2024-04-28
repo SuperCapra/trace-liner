@@ -11,6 +11,8 @@ import {ReactComponent as UnitMeasureSVG} from './unitMeasure.svg'
 import brandingPalette from './brandingPalette';
 import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
+import image3 from './image3.jpeg'
+import image4 from './image4.jpeg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -43,6 +45,12 @@ function ButtonImage(props) {
   },{
     photo: image2, 
     alt: 'default-2'
+  },{
+    photo: image3, 
+    alt: 'default-3'
+  },{
+    photo: image4, 
+    alt: 'default-4'
   }]
 
   const showModifySetImage = () => {
@@ -123,6 +131,11 @@ function ButtonImage(props) {
     }
   }
 
+  const unitMeasureStyle = {
+    fill: brandingPalette.pink,
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
+  }
   const shareStyle = {
     fill: brandingPalette.pink,
     transform: 'scale(0.55)'
@@ -288,12 +301,12 @@ function ButtonImage(props) {
   }
 
   const returnImages = () => {
-    if(props.activity.photoUrl) {
-      images = [{
-        photo: props.photoSrc, 
-        alt: 'activity'
-      },...images]
-    }
+    // if(props.activity.photoUrl) {
+    //   images = [{
+    //     photo: props.activity.photoUrl, 
+    //     alt: 'activity'
+    //   },...images]
+    // }
     let htmlImages = []
     for(let element of images) {
       console.log(element)
@@ -340,7 +353,7 @@ function ButtonImage(props) {
   return (
     <div>
       <div className="wrapper-buttons">
-        <div style={textStyle} onClick={() => propagateUnitMeasure()}>
+        <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
           <UnitMeasureSVG />
         </div>
         <div style={textStyle} onClick={() => showModifySetText()}>
