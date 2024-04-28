@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
+import image1 from './image1.jpeg'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNameSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
@@ -111,8 +112,8 @@ function ImageComponent(props) {
   const handleDownloadClick = async () => {
     html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
       canvas.toBlob(async function(blob) {
-        console.log('try to share..., navigator.share', navigator.share)
-        console.log('try to share..., navigator.canShare', navigator.canShare)
+        // console.log('try to share..., navigator.share', navigator.share)
+        // console.log('try to share..., navigator.canShare', navigator.canShare)
         if (navigator.share) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
@@ -281,6 +282,7 @@ function ImageComponent(props) {
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
     console.log('ratioText:', ratioText)
+    if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
     imageReference.onload = () => {
       let imageReferenceWidth = imageReference.width
