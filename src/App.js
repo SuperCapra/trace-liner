@@ -4,10 +4,10 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 
-const stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
+let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
-  '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI + 
-  '/&response_type=code&scope=activity:read_all'
+  '&response_type=code&scope=activity:read_all' +
+  '&redirect_uri=' + process.env.REACT_APP_REDIRECT_URI
 
 let unitMeasure = 'metric'
 let called = false 
@@ -53,7 +53,14 @@ class Homepage extends React.Component{
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
+    let urlCurrent = window.location.href
+    console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
+    let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
+    if(urlCurrent.includes('/nama-crew')) {
+      console.log('clubName: ', clubName)
+      stravaAuthorizeUrl += '/' + clubName
+    }
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -81,7 +88,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity}/>
+              <ImageComponent activity={activity} clubname={clubName}/>
           </div>
         )
       }

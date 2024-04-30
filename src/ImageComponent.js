@@ -3,7 +3,7 @@ import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
 import image1 from './image1.jpeg'
 // import CachedImage from './CachedImage.js'
-import {ReactComponent as LogoNameSVG} from './logoNama.svg'
+import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
@@ -403,9 +403,11 @@ function ImageComponent(props) {
                 {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
               </div>
             )}
-            <div className={classesLogoNama}>
-              <LogoNameSVG className="logo-nama-svg" style={styleLogoNama}/>
-            </div>
+            {props.clubname === 'nama-crew' &&
+              <div className={classesLogoNama}>
+                <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
+              </div>
+            }
             {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
             {showDataUnique && returnBeautyData()}
             {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity[unitMeasureSelected].beautyData}</div>)}
