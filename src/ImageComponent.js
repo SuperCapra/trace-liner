@@ -46,16 +46,16 @@ function ImageComponent(props) {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor
   }
-  const classesCanvasContainer = ratio === '1:1' ? 'canvas-container-general canvas-container-square' : 'canvas-container-general canvas-container-rect'
+  const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square' : 'canvas-container-general canvas-container-rect'
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = ratio === '1:1' ? 'canvas-position canvas-filter canvas-sketch' : 'canvas-position canvas-filter canvas-sketch-rect'
-  const classesDataWrapper2Lines = ratio === '1:1' ? 'wrapper-data-2-lines' : 'wrapper-data-2-lines-rect'
-  const classesDataWrapperLine = 'wrapper-data-line'
+  const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
+  const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
-  const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
+  const classesLogoNama = ratio === '1:1' ? 'width-general widtlogo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
 
   const fetchAndSetImage = async (url) => {
     console.log('fetching image', url)
@@ -146,6 +146,9 @@ function ImageComponent(props) {
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
     let ctx = canvasSketch.getContext('2d')
+    // Setup line properties to avoid spikes
+    ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
+    ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
     console.log('width: ', width)
     console.log('height: ', height)
     // let border = width*0.2
@@ -293,10 +296,6 @@ function ImageComponent(props) {
       
       console.log('imageReference', imgSrc)
 
-      // Setup line properties to avoid spikes
-      ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
-      ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
-
       let ratioParts = ratioText.split(':')
       const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
       let canvasWidth, canvasHeight, xCrop, yCrop
@@ -361,18 +360,18 @@ function ImageComponent(props) {
   const returnBeautyData = () => {
     let line1 = []
     let line2 = []
-    if(showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(showDuration) line1.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
-    if(showPower) line2.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
-    if(showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyDistance && showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyElevation && showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(props.activity.beautyDuration && showDuration) line1.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
+    if(props.activity.beautyPower && showPower) line2.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyAverage && showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
     return(<div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>
-      <div className={classesDataWrapperLine}>
+      {line1.length && <div className={classesDataWrapperLine}>
         {line1}
-      </div>
-      <div className={classesDataWrapperLine}>
+      </div>}
+      {line2.length && <div className={classesDataWrapperLine}>
         {line2}
-      </div>
+      </div>}
     </div>)
   }
 
@@ -392,14 +391,14 @@ function ImageComponent(props) {
     ])
   
   return (
-    <div className="width-80">
+    <div className="width-wrapper-main">
       <div className="beauty-border">
         <div className={classesCanvasContainer} id="printingAnchor">
-            <canvas id="canvasImage" className="canvas-image canvas-position" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="canvas-filter canvas-position" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasImage" className="width-general canvas-image canvas-position" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight}/>
             {showTitle && (
-              <div className="text-overlay text-title">
+              <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
                 {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{props.activity.beautyDate}</div>)}
               </div>
