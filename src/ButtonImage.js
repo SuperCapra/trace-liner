@@ -367,18 +367,18 @@ function ButtonImage(props) {
         </div>
       </div>
       {showModifyImage && (
-        <div>
-          <div className="wrapper-buttons">
+        <div className="wrapper-controller">
+          <div className="wrapper-sub-buttons">
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
           </div>
-          <div className="wrapper-buttons slider-width">
+          <div className="wrapper-sub-buttons slider-width">
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />
           </div>
-          <div className="wrapper-buttons colors-background">
+          <div className="wrapper-sub-buttons colors-background">
             {returnsColors()}
           </div>
-          <div className="wrapper-buttons">
+          <div className="wrapper-sub-buttons">
             {returnImages()}
             {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
@@ -390,14 +390,14 @@ function ButtonImage(props) {
         <div>
           {nameController()}
           {dateController()}
-          {dataController()}
+          {activity[unitMeasure].beautyData && dataController()}
           {dataUniqueController()}
-          {distanceController()}
-          {elevationController()}
-          {durationController()}
-          {powerController()}
-          {averageController()}
-          {coordinatesController()}
+          {activity[unitMeasure].beautyDistance && distanceController()}
+          {activity[unitMeasure].beautyElevation && elevationController()}
+          {activity.beautyDuration && durationController()}
+          {activity.beautyPower && powerController()}
+          {activity[unitMeasure].beautyAverage && averageController()}
+          {activity.beautyCoordinates && coordinatesController()}
         </div>
       )}
     </div>

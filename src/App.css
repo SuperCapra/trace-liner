@@ -109,6 +109,12 @@ p {
   align-items: center;
   justify-content: center;
 }
+.wrapper-sub-buttons{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
 .wrapper-buttons-left{
   font-size: calc(3vmin);
   height: 30px;
@@ -137,7 +143,9 @@ p {
 .camouflage{
   color: var(--palette-background);
 }
-.width-80{
+.width-wrapper-main{
+  display: flex;
+  flex-direction: column;
   width: 80vw;
   margin: 5vh 0vh
 }
@@ -371,3 +379,88 @@ p {
   font-weight: 100;
   font-size: calc(2vmin);
 }
+.display-center{
+  display: flex;
+
+}
+
+/* @media print, screen and (min-width: 550px) {
+  .width-wrapper-main{
+    display: flex;
+    flex-direction: row;
+    width: 60vw;
+    margin: 5vh 0vh
+  }
+  .width-general{
+    width: 60vw;
+  }
+  .App-header {
+    align-items: flex-start;
+  }
+  .canvas-sketch-rect{
+    width: 50vw;
+    height: 50vw !important;
+    left: 4.5vw;
+    top: 28vw;
+  }
+  .text-title{
+    width: 54vw;
+  }
+  .text-overlay{
+    font-size: calc(3vw);
+    top: 6vw;
+    left: 3vw;
+  }
+  .text-date-props{
+    font-size: calc(2.25vw);
+  }
+  .text-title-props-rect:first-child{
+    bottom:-12vw
+  }
+  .text-title-props-rect:last-child{
+    top:10.5vw
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: calc(3vw);
+    min-width: 60vw;
+    bottom: 11.25;
+  }
+  .wrapper-data-2-lines{
+    font-size: calc(2.625vw);
+    min-width: 60vw;
+    bottom: 11.25;
+  }
+  .canvas-container-general{
+    min-width: 60vw;
+  }
+  .logo-nama-wrapper-rect{
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper{
+    transform: scale(0.75);
+  }
+  .wrapper-buttons{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .wrapper-sub-buttons{
+    flex-direction: column;
+    align-items: center;
+  }
+  .wrapper-controller{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .wrapper-sub-controller{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .slider-width{
+    margin: 1vw;
+    transform: rotate(90deg);
+    width: 10vw;
+    height: 10vw;
+  }
+} */
