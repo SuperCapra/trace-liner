@@ -89,18 +89,23 @@ function ButtonImage(props) {
       setShowDate(!showDate)
     } else if(type === 'distance') {
       handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
+      if(!showDistance) setShowCoordinates(false)
       setShowDistance(!showDistance)
     } else if(type === 'duration') {
       handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
+      if(!showDuration) setShowCoordinates(false)
       setShowDuration(!showDuration)
     } else if(type === 'elevation') {
       handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
+      if(!showElevation) setShowCoordinates(false)
       setShowElevation(!showElevation)
     } else if(type === 'average') {
       handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
+      if(!showAverage) setShowCoordinates(false)
       setShowAverage(!showAverage)
     } else if(type === 'power') {
       handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
+      if(!showPower) setShowCoordinates(false)
       setShowPower(!showPower)
     } else if(type === 'coordinates') {
       handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})

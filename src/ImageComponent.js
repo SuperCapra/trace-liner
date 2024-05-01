@@ -238,14 +238,19 @@ function ImageComponent(props) {
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
         setShowDistance(data.show)
+        if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'duration') {
         setShowDuration(data.show)
+        if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'elevation') {
         setShowElevation(data.show)
+        if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'average') {
         setShowAverage(data.show)
+        if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'power') {
         setShowPower(data.show)
+        if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'coordinates') {
         setShowCoordinates(data.show)
         if(data.show) {
@@ -280,6 +285,10 @@ function ImageComponent(props) {
     } else if(data.type === 'unit') {
       setUnitMeasureSelected(data.unit)
     }
+  }
+
+  const checkCoordinates = () => {
+    if(showCoordinates) setShowCoordinates(false)
   }
 
   const enableMode1 = (bool, isStart) => {
