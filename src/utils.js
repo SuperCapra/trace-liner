@@ -99,13 +99,15 @@ const utilsFunction = {
 
     getBeautyDate(dateUnparsed) {
         let parsedDate = this.getJsonDate(dateUnparsed, true)
-        return parsedDate.monthText + ' ' + parsedDate.day
+        let result = (parsedDate && parsedDate.monthText && parsedDate.day) ? (parsedDate.monthText + ' ' + parsedDate.day) : undefined
+        return result
     },
 
     getBeautyDatetime(dateUnparsed) {
         let parsedDateZero = this.getJsonDate(dateUnparsed, false)
         let parsedDate = this.getJsonDate(dateUnparsed, true)
-        return parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDateZero.hours + ':' + parsedDateZero.minutes
+        let result = (parsedDate && parsedDateZero && parsedDate.monthText && parsedDate.day && parsedDate.hours && parsedDateZero.minutes) ? (parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDateZero.hours + ':' + parsedDateZero.minutes) : undefined
+        return result
     },
 
     getJsonDuration(durationInSec) {
@@ -122,7 +124,8 @@ const utilsFunction = {
 
     getBeautyDuration(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm'
+        let result = (parsedDuration && parsedDuration.hours && parsedDuration.minutes) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
+        return result
         // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },
 

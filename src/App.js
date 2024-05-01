@@ -190,7 +190,7 @@ class Homepage extends React.Component{
               beautyEndCoordinates: undefined,
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: utils.removeEmoji(e.name),
-              beautyPower: e.average_watts + 'W',
+              beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
               beautyDate: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
               durationElapsed: e.elapsed_time,
