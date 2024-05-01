@@ -202,6 +202,15 @@ const utilsFunction = {
 
     getAverageSpeedImperial(distance, duration) {
         return Number((((distance / duration) * 3.6) * 0.621371).toFixed(0))
+    },
+
+    getSubTitle(element, unitOfMeasure) {
+        let result = ''
+        if(element.beautyDate) result += element.beautyDate 
+        if(element.sportType) result += (result.length ? ' | ' : '') + element.sportType 
+        if(element[unitOfMeasure].beautyDistance) result += (result.length ? ' | ' : '') + element[unitOfMeasure].beautyDistance 
+        if(element.beautyDuration) result += (result.length ? ' | ' : '') + element.beautyDuration
+        return result
     }
 }
 
