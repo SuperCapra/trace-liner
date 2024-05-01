@@ -200,6 +200,11 @@ function ButtonImage(props) {
     transform: 'scale(0.55)'
     // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
+  const subEyeStyle = {
+    fill: brandingPalette.lightblue,
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
+  }
 
   const returnsColors = () => {
     if(!colors.length) {
@@ -227,8 +232,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showName && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
-          {!showName && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
+          {showName && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
+          {!showName && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
         </div>
         <p>TITLE: {activity.beautyName}</p>
       </div>
@@ -238,8 +243,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDate && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('date')} />)}
-          {!showDate && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('date')} />)}
+          {showDate && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
+          {!showDate && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
         </div>
         <p>DATE: {activity.beautyDate}</p>
       </div>
@@ -249,8 +254,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDistance && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
+          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
+          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
         </div>
         <p>DISTANCE: {activity[unitMeasure].beautyDistance}</p>
       </div>
@@ -260,8 +265,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDuration && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
+          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
+          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
         <p>DURATION: {activity.beautyDuration}</p>
       </div>
@@ -271,8 +276,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showElevation && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
         </div>
         <p>ELEVATION: {activity[unitMeasure].beautyElevation}</p>
       </div>
@@ -282,8 +287,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showAverage && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
+          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
+          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
         </div>
         <p>AVERAGE: {activity[unitMeasure].beautyAverage}</p>
       </div>
@@ -293,8 +298,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showPower && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('power')} />)}
+          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
+          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
         </div>
         <p>POWER: {activity.beautyPower}</p>
       </div>
@@ -304,8 +309,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showCoordinates && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-          {!showCoordinates && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
+          {showCoordinates && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
+          {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
         </div>
         <p>COORDINATES: {activity.beautyCoordinates}</p>
       </div>
