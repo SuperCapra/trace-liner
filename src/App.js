@@ -122,7 +122,6 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         console.log('athleteData: ', athleteData)
-        //TODO apparently the data are returned only in meters so we need to convert it
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
@@ -217,9 +216,9 @@ class Homepage extends React.Component{
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
             t.metric.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.metric.beautyDistance + ' | ' + t.beautyDuration
-            t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
+            // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
             t.imperial.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.imperial.beautyDistance + ' | ' + t.beautyDuration
-            t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
+            // t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }

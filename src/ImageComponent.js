@@ -17,8 +17,8 @@ function ImageComponent(props) {
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
-  const [showData, setShowData] = useState(false);
-  const [showDataUnique, setShowDataUnique] = useState(true);
+  // const [showData, setShowData] = useState(false);
+  // const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -30,6 +30,9 @@ function ImageComponent(props) {
   const [imageSrc, setImageSrc] = useState(undefined);
   const canvasRef = useRef(null)
   const [valueFilter, setValueFilter] = useState(0);
+  const [showMode1, setShowMode1] = useState(true);
+  const [showMode2, setShowMode2] = useState(false);
+  const [showMode3, setShowMode3] = useState(false);
 
   const styleText = {
     color: drawingColor
@@ -246,34 +249,62 @@ function ImageComponent(props) {
       } else if(data.subtype === 'coordinates') {
         setShowCoordinates(data.show)
         if(data.show) {
-          setShowData(false)
+          enableMode1(false, false)
         }
+      } else if(data.subtype === 'mode1') {
+        setShowMode1(data.show)
         if(data.show) {
-          setShowDataUnique(false)
+          setShowMode2(!data.show)
+          setShowMode3(!data.show)
+          enableMode1(data.show, true)
         }
-      } else if(data.subtype === 'data') {
-        setShowData(data.show)
+        if(data.show) enableMode1(true)
+      } else if(data.subtype === 'mode2') {
+        setShowMode2(data.show)
         if(data.show) {
-          setShowCoordinates(false)
+          setShowMode1(!data.show)
+          setShowMode3(!data.show)
+          enableMode2()
         }
+      }  else if(data.subtype === 'mode3') {
+        setShowMode3(data.show)
         if(data.show) {
-          setShowDataUnique(false)
-        }
-      } else if(data.subtype === 'dataunique') {
-        setShowDataUnique(data.show)
-        if(data.show) {
-          setShowCoordinates(false)
-        }
-        if(data.show) {
-          setShowData(false)
+          setShowMode1(!data.show)
+          setShowMode2(!data.show)
+          enableMode3()
         }
       }
     } else if(data.type === 'image') {
       console.log('data', data)
       setImage(data.image)
-    }else if(data.type === 'unit') {
+    } else if(data.type === 'unit') {
       setUnitMeasureSelected(data.unit)
     }
+  }
+
+  const enableMode1 = (bool, isStart) => {
+    if(isStart) {
+      setShowTitle(bool)
+      setShowDate(bool)
+    }
+    setShowDistance(bool)
+    setShowElevation(bool)
+    setShowDuration(bool)
+    setShowPower(bool)
+    setShowAverage(bool)
+    setShowCoordinates(!bool)
+  }
+
+  const enableMode2 = () => {
+    setShowTitle(true)
+    setShowDate(true)
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+  }
+
+  const enableMode3 = () => {
+    //TODO define what is showing with mode3
   }
 
   const handleColorChange = (color) => {
@@ -357,22 +388,41 @@ function ImageComponent(props) {
     handleCrop(ratio, newImage)
   }
 
-  const returnBeautyData = () => {
+  const returnMode1Disposition = () => {
     let line1 = []
     let line2 = []
-    if(props.activity[unitMeasureSelected].beautyDistance && showDistance) line1.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(props.activity[unitMeasureSelected].beautyElevation && showElevation) line1.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(props.activity.beautyDuration && showDuration) line1.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
-    if(props.activity.beautyPower && showPower) line2.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
-    if(props.activity[unitMeasureSelected].beautyAverage && showAverage) line2.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
-    return(<div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>
-      {line1.length && <div className={classesDataWrapperLine}>
-        {line1}
-      </div>}
-      {line2.length && <div className={classesDataWrapperLine}>
-        {line2}
-      </div>}
-    </div>)
+    let dataShowing = []
+    if(props.activity[unitMeasureSelected].beautyDistance && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(props.activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{props.activity.beautyDuration}</p></div>)
+    if(props.activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{props.activity.beautyPower}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if(dataShowing.length <= 3) {
+      line1.push(...dataShowing)
+    } else if(dataShowing.length === 4) {
+      line1.push(...dataShowing.slice(0,2))
+      line2.push(...dataShowing.slice(1,3))
+    } else {
+      line1.push(...dataShowing.slice(0,3))
+      line2.push(...dataShowing.slice(3))
+    }
+    let elementToDisplayNormal = !line1.length ? <div></div> : (line2.length) ? <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}{line2.length && <div className={classesDataWrapperLine}>{line2}</div>}</div> : <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}</div>
+    let elementToDisplayCoord = <div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>
+    let elementToReturn = showCoordinates ? elementToDisplayCoord : elementToDisplayNormal
+    return(<div>{elementToReturn}</div>)
+  }
+
+  const returnMode2Disposition = () => {
+    let dataToDisplay = ''
+    if(props.activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay += props.activity[unitMeasureSelected].beautyDistance
+    if(props.activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + props.activity[unitMeasureSelected].beautyElevation
+    if(props.activity.beautyDuration && showDuration) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + props.activity.beautyDuration
+    return(<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{dataToDisplay}</div>)
+  }
+
+  const returnMode3Disposition = () => {
+    //TODO decide what mode 3 will display
+    return (<div>NOT READY</div>)
   }
 
   useEffect(() => {
@@ -408,9 +458,9 @@ function ImageComponent(props) {
                 <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
               </div>
             }
-            {showCoordinates && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>)}
-            {showDataUnique && returnBeautyData()}
-            {showData && (<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity[unitMeasureSelected].beautyData}</div>)}
+            {showMode1 && returnMode1Disposition()}
+            {showMode2 && returnMode2Disposition()}
+            {showMode3 && returnMode3Disposition()}
         </div>
       </div>
       <ButtonImage className="indexed-height" activity={props.activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
