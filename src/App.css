@@ -342,7 +342,7 @@ p {
   z-index: 100;
 }
 .beauty-border{
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .wrapper-data-2-lines-rect{
   position: absolute;
@@ -396,6 +396,9 @@ p {
   font-size: calc(4vmin);
   font-weight: bold;
   color: white;
+}
+.round-corner{
+  border-radius: 5px;
 }
 
 /* @media print, screen and (min-width: 550px) {

@@ -114,7 +114,17 @@ function ImageComponent(props) {
   };
 
   const handleDownloadClick = async () => {
-    html2canvas(document.getElementById('printingAnchor')).then(async function(canvas) {
+    html2canvas(document.getElementById('printingAnchor'), {
+      useCORS: true,
+      onclone: function(doc) {
+        console.log('cloning...', doc.getElementById('canvasFilter').classList)
+        doc.getElementById('canvasImage').classList.remove('round-corner')
+        doc.getElementById('canvasFilter').classList.remove('round-corner')
+        console.log('cloning...', doc.getElementById('canvasFilter').classList)
+        console.log('document', document)
+      }
+    }).then(async function(canvas) {
+      console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         // console.log('try to share..., navigator.share', navigator.share)
         // console.log('try to share..., navigator.canShare', navigator.canShare)
@@ -463,8 +473,8 @@ function ImageComponent(props) {
     <div className="width-wrapper-main">
       <div className="beauty-border">
         <div className={classesCanvasContainer} id="printingAnchor">
-            <canvas id="canvasImage" className="width-general canvas-image canvas-position" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight}/>
             {showTitle && (
               <div className="width-general text-overlay text-title">
