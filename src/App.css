@@ -383,6 +383,20 @@ p {
   display: flex;
 
 }
+.position-mode-3{
+
+}
+.element-mode-3{
+
+}
+.text-overlay-mode-3{
+  position: absolute;
+  font-family: 'Helvetica';
+  text-align: right;
+  font-size: calc(4vmin);
+  font-weight: bold;
+  color: white;
+}
 
 /* @media print, screen and (min-width: 550px) {
   .width-wrapper-main{

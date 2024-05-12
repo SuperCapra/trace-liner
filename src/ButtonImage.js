@@ -130,7 +130,7 @@ function ButtonImage(props) {
       }
       enableMode2()
     } else if(type === 'mode3') {
-      handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode3})
+      handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
       setShowMode3(!showMode3)
       if(!showMode3) {
         setShowMode1(false)
@@ -162,7 +162,12 @@ function ButtonImage(props) {
   }
 
   const enableMode3 = () => {
-    //TODO define what is showing with mode3
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    setShowCoordinates(true)
   }
 
   const unitMeasureStyle = {
@@ -382,12 +387,12 @@ function ButtonImage(props) {
           <p>MODE 2</p>
         </div>
         {showMode2 && displayMode2()}
-        {/* <div className="wrapper-buttons-left">
+        <div className="wrapper-buttons-left">
           {showMode3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
           {!showMode3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
           <p>MODE 3</p>
         </div>
-        {showMode3 && displayMode3()} */}
+        {showMode3 && displayMode3()}
       </div>
     )
   }
@@ -419,10 +424,15 @@ function ButtonImage(props) {
     )
   }
   //TODO define the mode3 data 
-  const displayMode3 = () => {
+  const displayMode3 = () => {    
     return (
       <div>
-        
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {activity.beautyPower && powerController()}
+        {activity[unitMeasure].beautyAverage && averageController()}
+        {activity.beautyCoordinates && coordinatesController()}
       </div>
     )
   }

@@ -52,13 +52,14 @@ function ImageComponent(props) {
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square' : 'canvas-container-general canvas-container-rect'
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
-  const classesCoordinates = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
+  const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = ratio === '1:1' ? 'canvas-position canvas-filter canvas-sketch' : 'canvas-position canvas-filter canvas-sketch-rect'
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
-  const classesLogoNama = ratio === '1:1' ? 'width-general widtlogo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
+  const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
+  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3' : 'position-mode-3-rect text-overlay-mode-3'
 
   const fetchAndSetImage = async (url) => {
     console.log('fetching image', url)
@@ -168,7 +169,7 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
 
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-    let zoomFactor = Math.min(width / mapWidth, height / mapHeight)
+    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.98
     console.log('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
 
@@ -287,10 +288,6 @@ function ImageComponent(props) {
     }
   }
 
-  const checkCoordinates = () => {
-    if(showCoordinates) setShowCoordinates(false)
-  }
-
   const enableMode1 = (bool, isStart) => {
     if(isStart) {
       setShowTitle(bool)
@@ -313,7 +310,14 @@ function ImageComponent(props) {
   }
 
   const enableMode3 = () => {
-    //TODO define what is showing with mode3
+    setShowTitle(false)
+    setShowDate(false)
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    setShowCoordinates(true)
   }
 
   const handleColorChange = (color) => {
@@ -416,8 +420,8 @@ function ImageComponent(props) {
       line2.push(...dataShowing.slice(3))
     }
     let elementToDisplayNormal = !line1.length ? <div></div> : (line2.length) ? <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}{line2.length && <div className={classesDataWrapperLine}>{line2}</div>}</div> : <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}</div>
-    let elementToDisplayCoord = <div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{props.activity.beautyCoordinates}</div>
-    let elementToReturn = showCoordinates ? elementToDisplayCoord : elementToDisplayNormal
+    let elementToDisplayCoord = <div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{props.activity.beautyCoordinates}</div>
+    let elementToReturn = (props.activity.beautyCoordinates && showCoordinates) ? elementToDisplayCoord : elementToDisplayNormal
     return(<div>{elementToReturn}</div>)
   }
 
@@ -426,12 +430,18 @@ function ImageComponent(props) {
     if(props.activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay += props.activity[unitMeasureSelected].beautyDistance
     if(props.activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + props.activity[unitMeasureSelected].beautyElevation
     if(props.activity.beautyDuration && showDuration) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + props.activity.beautyDuration
-    return(<div id="canvasText" style={styleTextUnderSketch} className={classesCoordinates}>{dataToDisplay}</div>)
+    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataToDisplay}</div>)
   }
 
   const returnMode3Disposition = () => {
-    //TODO decide what mode 3 will display
-    return (<div>NOT READY</div>)
+    let dataToDisplay = []
+    if(props.activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-3"><p>{props.activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-3"><p>{props.activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(props.activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-3"><p>{props.activity.beautyDuration}</p></div>)
+    if(props.activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-3"><p>{props.activity.beautyPower}</p></div>)
+    if(props.activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-3"><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if(props.activity.beautyCoordinates && showCoordinates) dataToDisplay.push(<div key="coordinates" className="element-mode-3"><p>{props.activity.beautyCoordinates}</p></div>)
+    return (<div id="canvasText" className={styleMode3}>{dataToDisplay}</div>)
   }
 
   useEffect(() => {
