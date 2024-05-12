@@ -49,7 +49,7 @@ function ImageComponent(props) {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor
   }
-  const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square' : 'canvas-container-general canvas-container-rect'
+  const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
@@ -114,15 +114,18 @@ function ImageComponent(props) {
   };
 
   const handleDownloadClick = async () => {
+    document.getElementById('canvasImage').classList.remove('round-corner')
+    document.getElementById('canvasFilter').classList.remove('round-corner')
+    document.getElementById('printingAnchor').classList.remove('round-corner')
     html2canvas(document.getElementById('printingAnchor'), {
       useCORS: true,
-      onclone: function(doc) {
-        console.log('cloning...', doc.getElementById('canvasFilter').classList)
-        doc.getElementById('canvasImage').classList.remove('round-corner')
-        doc.getElementById('canvasFilter').classList.remove('round-corner')
-        console.log('cloning...', doc.getElementById('canvasFilter').classList)
-        console.log('document', document)
-      }
+      // onclone: function(doc) {
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   doc.getElementById('canvasImage').classList.remove('round-corner')
+      //   doc.getElementById('canvasFilter').classList.remove('round-corner')
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   console.log('document', document)
+      // }
     }).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
@@ -147,7 +150,11 @@ function ImageComponent(props) {
             URL.revokeObjectURL(url); // Clean up URL object after use
         }
     }, 'image/jpeg');
-    });
+    }).finally(() => {
+      document.getElementById('canvasImage').classList.add('round-corner')
+      document.getElementById('canvasFilter').classList.add('round-corner')
+      document.getElementById('printingAnchor').classList.add('round-corner')
+    })
   }
 
   const drawLine = useCallback((color) => {

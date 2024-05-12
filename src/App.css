@@ -159,7 +159,6 @@ p {
   background-color: var(--palette-background-complementary);
   position: relative;
   min-width: 80vw;
-  border-radius: 5px;
 }
 .canvas-container-square {
   min-height: 80vw;
