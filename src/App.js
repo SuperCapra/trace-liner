@@ -1,8 +1,10 @@
 import './App.css';
-import React from 'react';
+import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
+import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
+import brandingPalette from './brandingPalette';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -11,6 +13,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+
 let athleteData = {}
 let activities = []
 let activity = {}
@@ -21,8 +24,20 @@ let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
 
 function App() {
+  const [displayStyle, setDisplayStyle] = useState({  
+    display: 'block',
+    rotate: '0deg',
+    transition: 'rotate 1s',
+  })
+
+  const changeDisplayStyle = (sty) => {
+    setDisplayStyle(sty)
+  }
+
   return (
-    <Homepage />
+    <div>
+      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} />
+    </div>
   );
 }
 
@@ -34,6 +49,7 @@ class Homepage extends React.Component{
       stageHistory : stageHistory,
     }
   }
+
 
   changeStage(value) {
     if(value.stage) {
@@ -57,7 +73,7 @@ class Homepage extends React.Component{
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    if(urlCurrent.includes('/nama-crew')) {
+    if(urlCurrent.includes('/nama-crew') && !stravaAuthorizeUrl.includes('/nama-crew')) {
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
     }
@@ -77,13 +93,23 @@ class Homepage extends React.Component{
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
+        let arrowDownStyle = {
+          fill: brandingPalette.background
+        }
         let activitiesButton = activities.map(element => 
-          <div key={element.id} className="button-activity justify-center-column" onClick={() => this.getActivity(element.id)}>
+          <div key={element.id} className="button-activity justify-center-column" onClick={() => {
+              this.getActivity(element.id)
+            }}>
             <p className="title-activity">{element.name}</p>
             <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
           </div>)
         return (
-          activitiesButton
+          <div>
+            {activitiesButton}
+            <div className="arrow-down" style={this.props.displayStyle} onClick={() => this.scroll()}>
+              <ArrowDown style={arrowDownStyle}/>
+            </div>
+          </div>
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
@@ -93,6 +119,18 @@ class Homepage extends React.Component{
         )
       }
     }
+  }
+
+  scroll() {
+    window.scrollTo({
+      top: (window.innerHeight + window.scrollY >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+    this.props.onChangeDisplayStyle({
+      display: document.body.scrollHeight > window.innerHeight ? 'block' : 'none',
+      rotate: (window.innerHeight + window.scrollY >= document.body.scrollHeight ? 0 : 180) + 'deg',
+      transition: 'rotate 1s',
+    })
   }
 
   getAccessTokenAndActivities(userCode) {
@@ -288,7 +326,6 @@ class Homepage extends React.Component{
         console.log('activity: ', activity)
       })
   }
-
 
   render() {
     return (   

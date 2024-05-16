@@ -413,8 +413,21 @@ p {
   width:75vw;
   margin: 1vw 2.5vw;
 }
-
-@media print, screen and (min-width: 500px) {
+.arrow-down{
+  padding: 8px;
+  background-color: var(--palette-pink);
+  width: 45px;
+  height: 45px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transform: scale(0.8);
+  border-radius: 5px;
+}
+.arrow-down:hover{
+  cursor: pointer;
+}
+@media print, screen and (min-width: 450px) {
   .width-wrapper-main{
     display: flex;
     flex-direction: column;
