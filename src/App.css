@@ -55,8 +55,11 @@ p {
   text-align: center;
 }
 .slider-width{
-  width: 55vw;
-  margin: 0 12.5vw;
+  position: relative;
+  left: 50%;
+  translate: -50%;
+  width: 260px;
+  /* margin: 0 12.5vw; */
 }
 .button-login {
   display: flex;
@@ -134,10 +137,13 @@ p {
   background: var(--palette-pink);
 }
 .colors-background{
+  position: relative;
   background-color: var(--palette-white);
-  border-radius: 5vw;
-  max-width: 60vw;
-  margin: 2vw 10vw;
+  border-radius: 25px;
+  width: 280px;
+  margin: 10px 0px;
+  left: 50%;
+  translate: -50%;
 }
 
 .camouflage{
@@ -146,6 +152,7 @@ p {
 .width-wrapper-main{
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 80vw;
   margin: 5vh 0vh
 }
@@ -252,29 +259,29 @@ p {
   padding-top: 3rem;
 }
 .colors{
-  margin: 1vw;
+  margin: 4px;
 }
 .image-props{
-  margin: 1vw;
+  margin: 5px;
   border-radius: 5px;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
 }
 .image-container {
-  margin: 1vw;
+  margin: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
 }
 
 .image-square {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
   border-radius: 5px;
   background-color: var(--palette-yellow); 
 }
@@ -400,18 +407,21 @@ p {
   border-radius: 5px;
 }
 
-/* @media print, screen and (min-width: 550px) {
+@media print, screen and (min-width: 550px) {
   .width-wrapper-main{
     display: flex;
-    flex-direction: row;
-    width: 60vw;
+    flex-direction: column;
+    width: 80vw;
     margin: 5vh 0vh
+  }
+  .beauty-border{
+    width: 60vw;
   }
   .width-general{
     width: 60vw;
   }
   .App-header {
-    align-items: flex-start;
+    align-items: center;
   }
   .canvas-sketch-rect{
     width: 50vw;
@@ -455,9 +465,9 @@ p {
   .logo-nama-wrapper{
     transform: scale(0.75);
   }
-  .wrapper-buttons{
+  /* .wrapper-buttons{
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
   .wrapper-sub-buttons{
     flex-direction: column;
@@ -478,5 +488,5 @@ p {
     transform: rotate(90deg);
     width: 10vw;
     height: 10vw;
-  }
-} */
+  } */
+}

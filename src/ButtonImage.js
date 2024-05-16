@@ -216,10 +216,10 @@ function ButtonImage(props) {
       for(let color in brandingPalette) {
         let styleColor = {
           backgroundColor: brandingPalette[color],
-          width: '4vw',
-          height: '4vw',
-          borderRadius: '4vw',
-          border: '0.5vw solid ' + brandingPalette['background']
+          width: '20px',
+          height: '20px',
+          borderRadius: '20px',
+          border: '2px solid ' + brandingPalette['background']
         }
         colors.push(<div className="colors" key={color} style={styleColor} onClick={() => handleClick({type: 'changing-color', color: brandingPalette[color]})}/>)
       }

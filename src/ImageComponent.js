@@ -118,7 +118,7 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
     html2canvas(document.getElementById('printingAnchor'), {
-      useCORS: true,
+      useCORS: true
       // onclone: function(doc) {
       //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
       //   doc.getElementById('canvasImage').classList.remove('round-corner')
