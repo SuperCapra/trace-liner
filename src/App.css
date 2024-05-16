@@ -430,6 +430,15 @@ p {
   .App-header {
     align-items: center;
   }
+  .canvas-container-square{
+    min-height: 60vw;
+  }
+  .canvas-sketch {
+    width: 35vw;
+    height: 35vw !important;
+    top: 12.5vw;
+    left: 12.5vw;
+}
   .canvas-sketch-rect{
     width: 50vw;
     height: 50vw !important;
@@ -438,11 +447,11 @@ p {
   }
   .text-title{
     width: 54vw;
+    top: 6vw;
+    left: 3vw;
   }
   .text-overlay{
     font-size: calc(3vw);
-    top: 6vw;
-    left: 3vw;
   }
   .text-date-props{
     font-size: calc(2.25vw);
@@ -451,7 +460,7 @@ p {
     bottom:-12vw
   }
   .text-title-props-rect:last-child{
-    top:10.5vw
+    top:12.5vw
   }
   .wrapper-data-2-lines-rect{
     font-size: calc(3vw);
