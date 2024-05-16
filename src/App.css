@@ -389,12 +389,12 @@ p {
   display: flex;
 
 }
-.position-mode-3{
+/* .position-mode-3{
 
 }
 .element-mode-3{
 
-}
+} */
 .text-overlay-mode-3{
   position: absolute;
   font-family: 'Helvetica';
@@ -596,7 +596,7 @@ p {
   .logo-nama-wrapper{
     bottom: -2vw;
     right: -1vw;
-    transform: scale(0.5);
+    transform: scale(0.57);
   }
   .logo-nama-wrapper-rect{
     bottom: -3vw;
@@ -611,6 +611,115 @@ p {
   }
   .data-p-little{
     font-size: calc(1vw);
+  }
+  /* .wrapper-buttons{
+    flex-direction: column;
+    align-items: center;
+  }
+  .wrapper-sub-buttons{
+    flex-direction: column;
+    align-items: center;
+  }
+  .wrapper-controller{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .wrapper-sub-controller{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .slider-width{
+    margin: 1vw;
+    transform: rotate(90deg);
+    width: 10vw;
+    height: 10vw;
+  } */
+}
+@media print, screen and (min-width: 800px) {
+  .width-wrapper-main{
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    margin: 5vh 0vh
+  }
+  .beauty-border{
+    width: 320px;
+  }
+  .width-general{
+    width: 320px;
+  }
+  .App-header {
+    align-items: center;
+  }
+  .canvas-container-square{
+    min-height: 320px;
+  }
+  .canvas-sketch{
+    width: 184px;
+    height: 184px !important;
+    top: 68px;
+    left: 68px;
+  }
+  .canvas-sketch-rect{
+    width: 272px;
+    height: 272px !important;
+    left: 24px;
+    top: 148px;
+  }
+  .text-title{
+    width: 288px;
+    top: 32px;
+    left: 16px;
+  }
+  .text-overlay{
+    font-size: 16px;
+  }
+  .text-date-props{
+    font-size: 12px;
+  }
+  .text-title-props-rect:first-child{
+    bottom:-64px
+  }
+  .text-title-props-rect:last-child{
+    top:68px
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: 16px;
+    min-width: 320px;
+    bottom: 60px;
+  }
+  .wrapper-data-2-lines{
+    font-size: 14px;
+    min-width: 320px;
+    bottom: 4px;
+  }
+  .canvas-container-general{
+    min-width: 320px;
+  }
+  .logo-nama-wrapper{
+    bottom: -10px;
+    right: 2px;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-rect{
+    bottom: -2px;
+    right: 14px;
+    transform: unset;
+  }
+  .logo-nama-svg{
+    width: 60px !important;
+    height: 48px !important;
+  }
+  .wrapper-data-element{
+    margin: 2px 18px;
+  }
+  .wrapper-data-element-rect{
+    margin: 4px 20px;
+  }
+  .data-p-little{
+    font-size: 8px;
   }
   /* .wrapper-buttons{
     flex-direction: column;
