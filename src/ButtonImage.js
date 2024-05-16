@@ -399,7 +399,7 @@ function ButtonImage(props) {
 
   const displayMode1 = () => {
     return (
-      <div>
+      <div className="width-mode-sub">
         {nameController()}
         {dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
@@ -414,7 +414,7 @@ function ButtonImage(props) {
 
   const displayMode2 = () => {
     return (
-      <div>
+      <div className="width-mode-sub">
         {nameController()}
         {dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
@@ -426,7 +426,7 @@ function ButtonImage(props) {
   //TODO define the mode3 data 
   const displayMode3 = () => {    
     return (
-      <div>
+      <div className="width-mode-sub">
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
@@ -474,7 +474,7 @@ function ButtonImage(props) {
         </div>
       )}
       {showModifyText && (
-        <div>
+        <div className="width-mode">
           {modeController()}
         </div>
       )}

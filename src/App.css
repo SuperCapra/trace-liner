@@ -406,8 +406,15 @@ p {
 .round-corner{
   border-radius: 5px;
 }
+.width-mode{
+  width: 80vw;
+}
+.width-mode-sub{
+  width:75vw;
+  margin: 1vw 2.5vw;
+}
 
-@media print, screen and (min-width: 550px) {
+@media print, screen and (min-width: 500px) {
   .width-wrapper-main{
     display: flex;
     flex-direction: column;
