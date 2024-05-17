@@ -105,6 +105,9 @@ class Homepage extends React.Component{
           </div>)
         return (
           <div>
+            <div>
+              <p className="p-select">SELECT AN ACTIVITY</p>
+            </div>
             {activitiesButton}
             <div className="arrow-down" style={this.props.displayStyle} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}/>

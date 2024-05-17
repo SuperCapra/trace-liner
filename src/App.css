@@ -426,7 +426,15 @@ p {
 .arrow-down:hover{
   cursor: pointer;
 }
+.p-select{
+  font-size: calc(5vw);
+  color: var(--palette-pink);
+  font-family: 'SourceCodePro';
+}
 @media print, screen and (min-width: 450px) {
+  .p-select{
+    font-size: calc(3.75vw);
+  }
   .image-square p{
     font-size: calc(4vw);
   }
@@ -532,6 +540,9 @@ p {
   }
 }
 @media print, screen and (min-width: 600px) {
+  .p-select{
+    font-size: calc(2.5vw);
+  }
   .image-square p{
     font-size: calc(4vw);
   }
@@ -636,6 +647,9 @@ p {
   }
 }
 @media print, screen and (min-width: 800px) {
+  .p-select{
+    font-size: 40px;
+  }
   .image-square p{
     font-size: 32px;
   }
