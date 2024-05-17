@@ -272,27 +272,8 @@ class Homepage extends React.Component{
       })
   }
 
-  // deauthorize(code) {
-  //   let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
-  //   '?access_token=' + code
-
-  //   fetch(urlDeauthorize, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': '*/*',
-  //       'Accept-Encoding': 'gzip, deflate, br',
-  //       'Content-Length': '0'
-  //     },
-  //   }).then(response => response.json())
-  //     .then(res => {
-  //       console.log('res', res)
-  //     })
-  //     .catch(e => console.log('Fatal Error: ', e))
-  // }
-
   getActivity(activityId) {
-    isLoading = false
+    let indexActivity = activities.findIndex(x => x.id === activityId)
     this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
@@ -311,7 +292,6 @@ class Homepage extends React.Component{
       .then(res => {
         console.log('res: ', res)
         if(res) {
-          let indexActivity = activities.findIndex(x => x.id === activityId)
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
           activity = activities[indexActivity]
@@ -322,9 +302,27 @@ class Homepage extends React.Component{
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
+        // isLoading = false
+        this.getAltitideStream(activityId, indexActivity)
+      })
+  }
+
+  getAltitideStream(activityId, indexActivity) {
+    console.log('getting the altitude stream')
+    let urlStreamsAltitude = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STREAMS_DIRECTORY.replace('{id}',activityId) +
+      '?access_token=' + accessToken +
+      '&keys=altitude&key_by_type=true'
+  
+    fetch(urlStreamsAltitude, {
+      method: 'GET',
+    }).then(response => response.json())
+      .then(res => {
+        console.log('Result altitude stream: ', res)
+        activities[indexActivity]['altitudeArray'] = res.altitude.data
+      })
+      .catch(e => console.log('Fatal Error: ', e))
+      .finally(() => {
         isLoading = false
-        // this is needed otherwise everytime goes in 403 beacuse i do not have enought user licences
-        // this.deauthorize(accessToken)
         this.changeStage({stage:'ShowingActivity'})
         console.log('activity: ', activity)
       })
