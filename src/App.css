@@ -427,6 +427,9 @@ p {
   cursor: pointer;
 }
 @media print, screen and (min-width: 450px) {
+  .image-square p{
+    font-size: calc(4vw);
+  }
   .title-activity {
     padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
     font-size: calc(2.625vmin);
@@ -438,7 +441,7 @@ p {
   }
   .button-activity {
     width: 67.6vmin;
-    min-height: 4.6875vh;
+    min-height: 4.6875vmin;
     margin: 1.125vw;
   }
   .button-login {
@@ -527,32 +530,11 @@ p {
   .data-p-little{
     font-size: calc(1.5vw);
   }
-  /* .wrapper-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-sub-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-controller{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-  .wrapper-sub-controller{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .slider-width{
-    margin: 1vw;
-    transform: rotate(90deg);
-    width: 10vw;
-    height: 10vw;
-  } */
 }
 @media print, screen and (min-width: 600px) {
+  .image-square p{
+    font-size: calc(4vw);
+  }
   .title-activity {
     padding: 0.5vh 1.5vw 0.125vh 1.5vw;
     font-size: calc(1.75vmin);
@@ -563,7 +545,7 @@ p {
   }
   .button-activity {
     width: 45vmin;
-    min-height: 3.25vh;
+    min-height: 3.25vmin;
     margin: 0.75vw;
   }
   .button-login {
@@ -652,32 +634,11 @@ p {
   .data-p-little{
     font-size: calc(1vw);
   }
-  /* .wrapper-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-sub-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-controller{
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-  }
-  .wrapper-sub-controller{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .slider-width{
-    margin: 1vw;
-    transform: rotate(90deg);
-    width: 10vw;
-    height: 10vw;
-  } */
 }
 @media print, screen and (min-width: 800px) {
+  .image-square p{
+    font-size: 32px;
+  }
   .title-activity {
     padding: 8px 24px 2px 24px;
     font-size: 16px;
@@ -699,12 +660,6 @@ p {
   .p-login{
     padding: 8px 32px 8px 32px;
     font-size: 32px;
-  }
-  .width-wrapper-main{
-    display: flex;
-    flex-direction: column;
-    width: 80vw;
-    margin: 5vh 0vh
   }
   .beauty-border{
     width: 320px;
@@ -783,28 +738,123 @@ p {
   .data-p-little{
     font-size: 8px;
   }
-  /* .wrapper-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-sub-buttons{
-    flex-direction: column;
-    align-items: center;
-  }
-  .wrapper-controller{
-    display: flex;
+  .width-wrapper-main{
+    width: 740px;
+    margin: 40px 0px;
     flex-direction: row;
     align-items: flex-start;
   }
-  .wrapper-sub-controller{
+  .diplay-buttons{
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin: 0 10px;
   }
-  .slider-width{
-    margin: 1vw;
-    transform: rotate(90deg);
-    width: 10vw;
-    height: 10vw;
-  } */
+  .width-mode{
+    width: 400px;
+  }
+  .wrapper-buttons-left{
+    font-size: 16px;
+  }
+  .width-mode-sub{
+    width: 350px;
+    margin: 8px 20px
+  }
+}
+@media print, screen and (min-width: 1100px) {
+  .beauty-border{
+    width: 400px;
+  }
+  .width-general{
+    width: 400px;
+  }
+  .App-header {
+    align-items: center;
+  }
+  .canvas-container-square{
+    min-height: 400px;
+  }
+  .canvas-sketch{
+    width: 230px;
+    height: 230px !important;
+    top: 85px;
+    left: 85px;
+  }
+  .canvas-sketch-rect{
+    width: 340px;
+    height: 340px !important;
+    left: 30px;
+    top: 185px;
+  }
+  .text-title{
+    width: 360px;
+    top: 40px;
+    left: 20px;
+  }
+  .text-overlay{
+    font-size: 20px;
+  }
+  .text-date-props{
+    font-size: 15px;
+  }
+  .text-title-props-rect:first-child{
+    bottom:-80px
+  }
+  .text-title-props-rect:last-child{
+    top:85px
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: 20px;
+    min-width: 400px;
+    bottom: 75px;
+  }
+  .wrapper-data-2-lines{
+    font-size: 17.5px;
+    min-width: 400px;
+    bottom: 5px;
+  }
+  .canvas-container-general{
+    min-width: 400px;
+  }
+  .logo-nama-wrapper{
+    bottom: -10px;
+    right: 2px;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-rect{
+    bottom: -2px;
+    right: 14px;
+    transform: unset;
+  }
+  .logo-nama-svg{
+    width: 75px !important;
+    height: 60px !important;
+  }
+  .wrapper-data-element{
+    margin: 2.5px 22.5px;
+  }
+  .wrapper-data-element-rect{
+    margin: 5px 25px;
+  }
+  .data-p-little{
+    font-size: 10px;
+  }
+  .width-wrapper-main{
+    width: 920px;
+    margin: 40px 0px;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .width-mode{
+    width: 500px;
+  }
+  .width-mode-sub{
+    width: 450px;
+    margin: 8px 20px
+  }
+}
+@media print, screen and (min-width: 1250px) {
+  .arrow-down{
+    align-content: center;
+  }
 }
