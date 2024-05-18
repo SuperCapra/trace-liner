@@ -13,6 +13,9 @@ import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
 import image3 from './image3.jpeg'
 import image4 from './image4.jpeg'
+import image5 from './image5.jpg'
+import image6 from './image6.jpeg'
+import image7 from './image7.jpeg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -52,6 +55,15 @@ function ButtonImage(props) {
   },{
     photo: image4, 
     alt: 'default-4'
+  },{
+    photo: image5, 
+    alt: 'default-5'
+  },{
+    photo: image6, 
+    alt: 'default-6'
+  },{
+    photo: image7, 
+    alt: 'default-7'
   }]
 
   const showModifySetImage = () => {
@@ -465,7 +477,7 @@ function ButtonImage(props) {
           <div className="wrapper-sub-buttons colors-background">
             {returnsColors()}
           </div>
-          <div className="wrapper-sub-buttons">
+          <div className="wrapper-sub-buttons wrapper-images">
             {returnImages()}
             {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
