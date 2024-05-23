@@ -372,7 +372,7 @@ p {
   font-size: calc(3.5vmin);
   font-weight: 900;
   font-family: 'Helvetica';
-  bottom: 1vw
+  top: 64vw
 }
 .wrapper-data-line{
   display: flex;
@@ -519,7 +519,7 @@ p {
   .wrapper-data-2-lines{
     font-size: calc(2.625vw);
     min-width: 60vw;
-    bottom: 0.75vw;
+    top: 48vw;
   }
   .canvas-container-general{
     min-width: 60vw;
@@ -612,6 +612,12 @@ p {
   .text-date-props{
     font-size: calc(1.5vw);
   }
+  .text-title-props:first-child{
+    bottom: -2vw
+  }
+  .text-title-props:last-child{
+    top:2.2vw
+  }
   .text-title-props-rect:first-child{
     bottom:-8vw
   }
@@ -626,7 +632,7 @@ p {
   .wrapper-data-2-lines{
     font-size: calc(1.75vw);
     min-width: 40vw;
-    bottom: 0.5vw;
+    top: 32vw;
   }
   .canvas-container-general{
     min-width: 40vw;
@@ -729,7 +735,7 @@ p {
   .wrapper-data-2-lines{
     font-size: 14px;
     min-width: 320px;
-    bottom: 4px;
+    top: 256px;
   }
   .canvas-container-general{
     min-width: 320px;
