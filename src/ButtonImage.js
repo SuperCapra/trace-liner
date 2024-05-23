@@ -335,12 +335,12 @@ function ButtonImage(props) {
   }
 
   const returnImages = () => {
-    if(props.activity.photoUrl) {
-      images = [{
-        photo: props.activity.photoUrl, 
-        alt: 'activity'
-      },...images]
-    }
+    // if(props.activity.photoUrl) {
+    //   images = [{
+    //     photo: props.activity.photoUrl, 
+    //     alt: 'activity'
+    //   },...images]
+    // }
     let htmlImages = []
     for(let element of images) {
       console.log(element)
