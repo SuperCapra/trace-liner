@@ -1,8 +1,10 @@
 import './App.css';
-import React from 'react';
+import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
+import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
+import brandingPalette from './brandingPalette';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -11,6 +13,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+
 let athleteData = {}
 let activities = []
 let activity = {}
@@ -21,8 +24,20 @@ let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
 
 function App() {
+  const [displayStyle, setDisplayStyle] = useState({  
+    display: 'block',
+    rotate: '0deg',
+    transition: 'rotate 1s',
+  })
+
+  const changeDisplayStyle = (sty) => {
+    setDisplayStyle(sty)
+  }
+
   return (
-    <Homepage />
+    <div>
+      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} />
+    </div>
   );
 }
 
@@ -34,6 +49,7 @@ class Homepage extends React.Component{
       stageHistory : stageHistory,
     }
   }
+
 
   changeStage(value) {
     if(value.stage) {
@@ -57,7 +73,7 @@ class Homepage extends React.Component{
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    if(urlCurrent.includes('/nama-crew')) {
+    if(urlCurrent.includes('/nama-crew') && !stravaAuthorizeUrl.includes('/nama-crew')) {
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
     }
@@ -77,13 +93,26 @@ class Homepage extends React.Component{
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
+        let arrowDownStyle = {
+          fill: brandingPalette.background
+        }
         let activitiesButton = activities.map(element => 
-          <div key={element.id} className="button-activity justify-center-column" onClick={() => this.getActivity(element.id)}>
+          <div key={element.id} className="button-activity justify-center-column" onClick={() => {
+              this.getActivity(element.id)
+            }}>
             <p className="title-activity">{element.name}</p>
             <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
           </div>)
         return (
-          activitiesButton
+          <div>
+            <div>
+              <p className="p-select">SELECT AN ACTIVITY</p>
+            </div>
+            {activitiesButton}
+            <div className="arrow-down" style={this.props.displayStyle} onClick={() => this.scroll()}>
+              <ArrowDown style={arrowDownStyle}/>
+            </div>
+          </div>
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
@@ -93,6 +122,18 @@ class Homepage extends React.Component{
         )
       }
     }
+  }
+
+  scroll() {
+    window.scrollTo({
+      top: (window.innerHeight + window.scrollY >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+    this.props.onChangeDisplayStyle({
+      display: document.body.scrollHeight > window.innerHeight ? 'block' : 'none',
+      rotate: (window.innerHeight + window.scrollY >= document.body.scrollHeight ? 0 : 180) + 'deg',
+      transition: 'rotate 1s',
+    })
   }
 
   getAccessTokenAndActivities(userCode) {
@@ -122,7 +163,6 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         console.log('athleteData: ', athleteData)
-        //TODO apparently the data are returned only in meters so we need to convert it
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
@@ -191,7 +231,7 @@ class Homepage extends React.Component{
               beautyEndCoordinates: undefined,
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: utils.removeEmoji(e.name),
-              beautyPower: e.average_watts + 'W',
+              beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
               beautyDate: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
               durationElapsed: e.elapsed_time,
@@ -216,10 +256,10 @@ class Homepage extends React.Component{
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
             t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
             t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-            t.metric.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.metric.beautyDistance + ' | ' + t.beautyDuration
-            t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
-            t.imperial.subtitle = t.beautyDate + ' | ' + t.sportType + ' | ' + t.imperial.beautyDistance + ' | ' + t.beautyDuration
-            t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
+            t.metric.subtitle = utils.getSubTitle(t, 'metric')
+            // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
+            t.imperial.subtitle = utils.getSubTitle(t, 'imperial')
+            // t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }
@@ -232,27 +272,8 @@ class Homepage extends React.Component{
       })
   }
 
-  // deauthorize(code) {
-  //   let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
-  //   '?access_token=' + code
-
-  //   fetch(urlDeauthorize, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       'Accept': '*/*',
-  //       'Accept-Encoding': 'gzip, deflate, br',
-  //       'Content-Length': '0'
-  //     },
-  //   }).then(response => response.json())
-  //     .then(res => {
-  //       console.log('res', res)
-  //     })
-  //     .catch(e => console.log('Fatal Error: ', e))
-  // }
-
   getActivity(activityId) {
-    isLoading = false
+    let indexActivity = activities.findIndex(x => x.id === activityId)
     this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
@@ -271,7 +292,6 @@ class Homepage extends React.Component{
       .then(res => {
         console.log('res: ', res)
         if(res) {
-          let indexActivity = activities.findIndex(x => x.id === activityId)
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
           activity = activities[indexActivity]
@@ -282,14 +302,31 @@ class Homepage extends React.Component{
       })
       .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
+        // isLoading = false
+        this.getAltitideStream(activityId, indexActivity)
+      })
+  }
+
+  getAltitideStream(activityId, indexActivity) {
+    console.log('getting the altitude stream')
+    let urlStreamsAltitude = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STREAMS_DIRECTORY.replace('{id}',activityId) +
+      '?access_token=' + accessToken +
+      '&keys=altitude&key_by_type=true'
+  
+    fetch(urlStreamsAltitude, {
+      method: 'GET',
+    }).then(response => response.json())
+      .then(res => {
+        console.log('Result altitude stream: ', res)
+        activities[indexActivity]['altitudeArray'] = res.altitude.data
+      })
+      .catch(e => console.log('Fatal Error: ', e))
+      .finally(() => {
         isLoading = false
-        // this is needed otherwise everytime goes in 403 beacuse i do not have enought user licences
-        // this.deauthorize(accessToken)
         this.changeStage({stage:'ShowingActivity'})
         console.log('activity: ', activity)
       })
   }
-
 
   render() {
     return (   

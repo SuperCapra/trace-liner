@@ -13,6 +13,9 @@ import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
 import image3 from './image3.jpeg'
 import image4 from './image4.jpeg'
+import image5 from './image5.jpg'
+import image6 from './image6.jpeg'
+import image7 from './image7.jpeg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -27,8 +30,6 @@ function ButtonImage(props) {
   const [showName, setShowName] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
-  const [showData, setShowData] = useState(false);
-  const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
   const [showElevation, setShowElevation] = useState(true);
   const [showAverage, setShowAverage] = useState(true);
@@ -38,6 +39,12 @@ function ButtonImage(props) {
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
   const [valueFilter, setValueFilter] = useState(0);
+  const [showMode1, setShowMode1] = useState(true);
+  const [showMode2, setShowMode2] = useState(false);
+  const [showMode3, setShowMode3] = useState(false);
+  const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
+  const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
+  const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
   const colors = []
   let images = [{
     photo: image1, 
@@ -51,6 +58,15 @@ function ButtonImage(props) {
   },{
     photo: image4, 
     alt: 'default-4'
+  },{
+    photo: image5, 
+    alt: 'default-5'
+  },{
+    photo: image6, 
+    alt: 'default-6'
+  },{
+    photo: image7, 
+    alt: 'default-7'
   }]
 
   const showModifySetImage = () => {
@@ -74,6 +90,12 @@ function ButtonImage(props) {
     setRectangle(true)
     handleClick({type: 'rectangle'})
   }
+  const propagateBlendMode = (blendModeSetting) => {
+    handleClick({type: 'blend-mode', blendMode: blendModeSetting})
+    setSelectedUnsetBlendMode(blendModeSetting === 'unset' ? true : false)
+    setSelectedDifferenceBlendMode(blendModeSetting === 'difference' ? true : false)
+    setSelectedExclusionBlendMode(blendModeSetting === 'exclusion' ? true : false)
+  }
   const propagateShowHide = (type) => {
     if(type === 'name') {
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
@@ -88,47 +110,85 @@ function ButtonImage(props) {
       setShowDate(!showDate)
     } else if(type === 'distance') {
       handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
+      if(!showDistance) setShowCoordinates(false)
       setShowDistance(!showDistance)
     } else if(type === 'duration') {
       handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
+      if(!showDuration) setShowCoordinates(false)
       setShowDuration(!showDuration)
     } else if(type === 'elevation') {
       handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
-      setShowElevation(!showDuration)
+      if(!showElevation) setShowCoordinates(false)
+      setShowElevation(!showElevation)
     } else if(type === 'average') {
       handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
+      if(!showAverage) setShowCoordinates(false)
       setShowAverage(!showAverage)
     } else if(type === 'power') {
       handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
+      if(!showPower) setShowCoordinates(false)
       setShowPower(!showPower)
     } else if(type === 'coordinates') {
       handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
-      if(showData && !showCoordinates) {
-        setShowData(false)
-      }
-      if(showDataUnique && !showCoordinates) {
-        setShowDataUnique(false)
+      if(showCoordinates) {
+        enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
-    } else if(type === 'data') {
-      handleClick({type: 'show-hide', subtype: 'data', show: !showData})
-      if(showCoordinates && !showData) {
-        setShowCoordinates(false)
+    } else if(type === 'mode1') {
+      handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
+      setShowMode1(!showMode1)
+      if(!showMode1) {
+        setShowMode2(false)
+        setShowMode3(false)
       }
-      if(showDataUnique && !showData) {
-        setShowDataUnique(false)
+      enableMode1(true, true)
+    } else if(type === 'mode2') {
+      handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
+      setShowMode2(!showMode2)
+      if(!showMode2) {
+        setShowMode1(false)
+        setShowMode3(false)
       }
-      setShowData(!showData)
-    } else if(type === 'dataunique') {
-      handleClick({type: 'show-hide', subtype: 'dataunique', show: !showDataUnique})
-      if(showCoordinates && !showDataUnique) {
-        setShowCoordinates(false)
+      enableMode2()
+    } else if(type === 'mode3') {
+      handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
+      setShowMode3(!showMode3)
+      if(!showMode3) {
+        setShowMode1(false)
+        setShowMode2(false)
       }
-      if(showData && !showDataUnique) {
-        setShowData(false)
-      }
-      setShowDataUnique(!showDataUnique)
+      enableMode3()
     }
+  }
+
+  const enableMode1 = (bool, isStart) => {
+    if(isStart) {
+      setShowName(bool)
+      setShowDate(bool)
+    }
+    setShowDistance(bool)
+    setShowElevation(bool)
+    setShowDuration(bool)
+    setShowPower(bool)
+    setShowAverage(bool)
+    setShowCoordinates(!bool)
+  }
+
+  const enableMode2 = () => {
+    setShowName(true)
+    setShowDate(true)
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+  }
+
+  const enableMode3 = () => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    // setShowCoordinates(true)
   }
 
   const unitMeasureStyle = {
@@ -166,16 +226,46 @@ function ButtonImage(props) {
     transform: 'scale(0.55)'
     // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
+  const subEyeStyle = {
+    fill: brandingPalette.lightblue,
+    transform: 'scale(0.55)'
+    // transform: 'scale(' + (window.innerWidth / 700) + ')'
+  }
+  const unsetBlendModeStyle = {
+    color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedUnsetBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
+
+  const differenceBlendModeStyle = {
+    color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedDifferenceBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
+
+  const exclusionBlendModeStyle = {
+    color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedExclusionBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
 
   const returnsColors = () => {
     if(!colors.length) {
       for(let color in brandingPalette) {
+        if(!selectedUnsetBlendMode && color === 'black') continue
+        if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
         let styleColor = {
           backgroundColor: brandingPalette[color],
-          width: '4vw',
-          height: '4vw',
-          borderRadius: '4vw',
-          border: '0.5vw solid ' + brandingPalette['background']
+          width: '20px',
+          height: '20px',
+          borderRadius: '20px',
+          border: '2px solid ' + brandingPalette['background']
         }
         colors.push(<div className="colors" key={color} style={styleColor} onClick={() => handleClick({type: 'changing-color', color: brandingPalette[color]})}/>)
       }
@@ -193,8 +283,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showName && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
-          {!showName && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('name')} />)}
+          {showName && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
+          {!showName && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
         </div>
         <p>TITLE: {activity.beautyName}</p>
       </div>
@@ -204,8 +294,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDate && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('date')} />)}
-          {!showDate && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('date')} />)}
+          {showDate && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
+          {!showDate && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
         </div>
         <p>DATE: {activity.beautyDate}</p>
       </div>
@@ -215,8 +305,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDistance && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('distance')} />)}
+          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
+          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
         </div>
         <p>DISTANCE: {activity[unitMeasure].beautyDistance}</p>
       </div>
@@ -226,8 +316,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDuration && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('duration')} />)}
+          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
+          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
         <p>DURATION: {activity.beautyDuration}</p>
       </div>
@@ -237,8 +327,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showElevation && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
         </div>
         <p>ELEVATION: {activity[unitMeasure].beautyElevation}</p>
       </div>
@@ -248,8 +338,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showAverage && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('average')} />)}
+          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
+          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
         </div>
         <p>AVERAGE: {activity[unitMeasure].beautyAverage}</p>
       </div>
@@ -259,8 +349,8 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showPower && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('power')} />)}
+          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
+          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
         </div>
         <p>POWER: {activity.beautyPower}</p>
       </div>
@@ -270,32 +360,10 @@ function ButtonImage(props) {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showCoordinates && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-          {!showCoordinates && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
+          {showCoordinates && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
+          {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
         </div>
         <p>COORDINATES: {activity.beautyCoordinates}</p>
-      </div>
-    )
-  }
-  const dataController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showData && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
-          {!showData && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('data')} />)}
-        </div>
-        <p>DATA: {activity[unitMeasure].beautyData}</p>
-      </div>
-    )
-  }
-  const dataUniqueController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDataUnique && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('dataunique')} />)}
-          {!showDataUnique && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('dataunique')} />)}
-        </div>
-        <p>DIST/ELEV/DUR/POW/AVG</p>
       </div>
     )
   }
@@ -350,8 +418,73 @@ function ButtonImage(props) {
     }
   }
 
+  const modeController = () => {
+    return (
+      <div>
+        <div className="wrapper-buttons-left">
+          {showMode1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
+          {!showMode1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
+          <p>MODE 1</p>
+        </div>
+        {showMode1 && displayMode1()}
+        <div className="wrapper-buttons-left">
+          {showMode2 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
+          {!showMode2 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
+          <p>MODE 2</p>
+        </div>
+        {showMode2 && displayMode2()}
+        <div className="wrapper-buttons-left">
+          {showMode3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
+          {!showMode3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
+          <p>MODE 3</p>
+        </div>
+        {showMode3 && displayMode3()}
+      </div>
+    )
+  }
+
+  const displayMode1 = () => {
+    return (
+      <div className="width-mode-sub">
+        {nameController()}
+        {dateController()}
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {activity.beautyPower && powerController()}
+        {activity[unitMeasure].beautyAverage && averageController()}
+        {activity.beautyCoordinates && coordinatesController()}
+      </div>
+    )
+  }
+
+  const displayMode2 = () => {
+    return (
+      <div className="width-mode-sub">
+        {nameController()}
+        {dateController()}
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+      </div>
+    )
+  }
+  //TODO define the mode3 data 
+  const displayMode3 = () => {    
+    return (
+      <div className="width-mode-sub">
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {activity.beautyPower && powerController()}
+        {activity[unitMeasure].beautyAverage && averageController()}
+        {/* {activity.beautyCoordinates && coordinatesController()} */}
+      </div>
+    )
+  }
+
   return (
-    <div>
+    <div className="diplay-buttons">
       <div className="wrapper-buttons">
         <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
           <UnitMeasureSVG />
@@ -372,13 +505,19 @@ function ButtonImage(props) {
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
           </div>
+          <div className="wrapper-sub-buttons">
+            <p className="blend-title blend-text">BLEND:</p>
+            <p className="blend-mode blend-text" style={unsetBlendModeStyle} onClick={() => propagateBlendMode('unset')}>none</p>
+            <p className="blend-mode blend-text" style={differenceBlendModeStyle} onClick={() => propagateBlendMode('difference')}>diff.</p>
+            <p className="blend-mode blend-text" style={exclusionBlendModeStyle} onClick={() => propagateBlendMode('exclusion')}>excl.</p>
+          </div>
           <div className="wrapper-sub-buttons slider-width">
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />
           </div>
           <div className="wrapper-sub-buttons colors-background">
             {returnsColors()}
           </div>
-          <div className="wrapper-sub-buttons">
+          <div className="wrapper-sub-buttons wrapper-images">
             {returnImages()}
             {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
@@ -387,17 +526,8 @@ function ButtonImage(props) {
         </div>
       )}
       {showModifyText && (
-        <div>
-          {nameController()}
-          {dateController()}
-          {activity[unitMeasure].beautyData && dataController()}
-          {dataUniqueController()}
-          {activity[unitMeasure].beautyDistance && distanceController()}
-          {activity[unitMeasure].beautyElevation && elevationController()}
-          {activity.beautyDuration && durationController()}
-          {activity.beautyPower && powerController()}
-          {activity[unitMeasure].beautyAverage && averageController()}
-          {activity.beautyCoordinates && coordinatesController()}
+        <div className="width-mode">
+          {modeController()}
         </div>
       )}
     </div>

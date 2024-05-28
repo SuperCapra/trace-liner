@@ -55,13 +55,15 @@ p {
   text-align: center;
 }
 .slider-width{
-  width: 55vw;
-  margin: 0 12.5vw;
+  position: relative;
+  left: 50%;
+  translate: -50%;
+  width: 260px;
+  /* margin: 0 12.5vw; */
 }
 .button-login {
   display: flex;
-  height: 5vh;
-  margin: 1vmin;
+  padding: 1vw;
   background-color: var(--palette-pink);
   border-radius: 5px;
 }
@@ -115,6 +117,11 @@ p {
   align-items: center;
   justify-content: center;
 }
+.wrapper-images{
+  width: 80%;
+  flex-wrap: wrap;
+  margin: 0 10%;
+}
 .wrapper-buttons-left{
   font-size: calc(3vmin);
   height: 30px;
@@ -134,10 +141,13 @@ p {
   background: var(--palette-pink);
 }
 .colors-background{
+  position: relative;
   background-color: var(--palette-white);
-  border-radius: 5vw;
-  max-width: 60vw;
-  margin: 2vw 10vw;
+  border-radius: 25px;
+  width: 280px;
+  margin: 10px 0px;
+  left: 50%;
+  translate: -50%;
 }
 
 .camouflage{
@@ -146,6 +156,7 @@ p {
 .width-wrapper-main{
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 80vw;
   margin: 5vh 0vh
 }
@@ -159,7 +170,6 @@ p {
   background-color: var(--palette-background-complementary);
   position: relative;
   min-width: 80vw;
-  border-radius: 5px;
 }
 .canvas-container-square {
   min-height: 80vw;
@@ -180,16 +190,26 @@ p {
   width: 80vw;
 }
 .canvas-sketch{
-  width: 46vw;
-  height: 46vw !important;
-  top: 17vw;
-  left: 17vw;
+  width: 57.5%;
+  height: 57.5% !important;
+  top: 21.25%;
+  left: 21.25%;
 }
 .canvas-sketch-rect{
-  width: 68vw;
-  height: 68vw !important;
-  top: 37vw;
-  left: 6vw;
+  width: 85%;
+  top: 24%;
+  left: 7.5%;
+}
+.canvas-sketch-mode3{
+  width: 57.5%;
+  height: 57.5% !important;
+  top: 35%;
+  left: 10%;
+}
+.canvas-sketch-mode3-rect{
+  width: 85%;
+  top: 35%;
+  left: 7.5%;
 }
 #canvasImage {
   z-index: 1;
@@ -253,29 +273,29 @@ p {
   padding-top: 3rem;
 }
 .colors{
-  margin: 1vw;
+  margin: 4px;
 }
 .image-props{
-  margin: 1vw;
+  margin: 5px;
   border-radius: 5px;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
 }
 .image-container {
-  margin: 1vw;
+  margin: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
 }
 
 .image-square {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 11vw;
-  height: 11vw;
+  width: 50px;
+  height: 50px;
   border-radius: 5px;
   background-color: var(--palette-yellow); 
 }
@@ -324,7 +344,7 @@ p {
 }
 .logo-nama-wrapper{
   position: absolute;
-  top: 17vw;
+  bottom: 1vw;
   right: 2vw;
   z-index: 4;
 }
@@ -342,7 +362,7 @@ p {
   z-index: 100;
 }
 .beauty-border{
-  border-radius: 10px;
+  border-radius: 5px;
 }
 .wrapper-data-2-lines-rect{
   position: absolute;
@@ -362,7 +382,7 @@ p {
   font-size: calc(3.5vmin);
   font-weight: 900;
   font-family: 'Helvetica';
-  bottom: 1vw
+  top: 64vw
 }
 .wrapper-data-line{
   display: flex;
@@ -383,33 +403,117 @@ p {
   display: flex;
 
 }
-
-/* @media print, screen and (min-width: 550px) {
+.element-mode-3{
+ background-color: var(--palette-background);
+ padding: 2%;
+ margin: 3%;
+}
+.text-overlay-mode-3{
+  position: absolute;
+  font-family: 'Helvetica';
+  text-align: right;
+  font-size: calc(4vmin);
+  color: transparent;
+  font-weight: bold;
+}
+.mode-3-text{
+  right: 0;
+  top: 5%;
+  width: 45%;
+}
+.mode-3-text-rect{
+  right: 0;
+  top: 15%;
+  width: 50%;
+}
+.round-corner{
+  border-radius: 5px;
+}
+.width-mode{
+  width: 80vw;
+}
+.width-mode-sub{
+  width:75vw;
+  margin: 1vw 2.5vw;
+}
+.arrow-down{
+  padding: 8px;
+  background-color: var(--palette-pink);
+  width: 45px;
+  height: 45px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  transform: scale(0.8);
+  border-radius: 5px;
+}
+.arrow-down:hover{
+  cursor: pointer;
+}
+.p-select{
+  font-size: calc(5vw);
+  color: var(--palette-pink);
+  font-family: 'SourceCodePro';
+}
+.blend-text{
+  color: var(--palette-pink)
+}
+.blend-mode:hover{
+  cursor: pointer;
+}
+@media print, screen and (min-width: 450px) {
+  .p-select{
+    font-size: calc(3.75vw);
+  }
+  .image-square p{
+    font-size: calc(4vw);
+  }
+  .title-activity {
+    padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
+    font-size: calc(2.625vmin);
+  }
+  .subtitle-activity {
+    padding: 0vh 2.25vw 0.75vh 2.25vw;
+    font-family: 'SourceCodePro';
+    font-size: calc(1.875vmin);
+  }
+  .button-activity {
+    width: 67.6vmin;
+    min-height: 4.6875vmin;
+    margin: 1.125vw;
+  }
+  .button-login {
+    padding: 0.75vw;
+  }
+  .p-login{
+    padding: 0.75vh 2.25vw 0.75vh 2.25vw;
+    font-size: calc(3vmin);
+  }
   .width-wrapper-main{
     display: flex;
-    flex-direction: row;
-    width: 60vw;
+    flex-direction: column;
+    width: 80vw;
     margin: 5vh 0vh
+  }
+  .beauty-border{
+    width: 60vw;
   }
   .width-general{
     width: 60vw;
   }
   .App-header {
-    align-items: flex-start;
+    align-items: center;
   }
-  .canvas-sketch-rect{
-    width: 50vw;
-    height: 50vw !important;
-    left: 4.5vw;
-    top: 28vw;
+  .canvas-container-square{
+    min-height: 60vw;
   }
   .text-title{
     width: 54vw;
+    top: 6vw;
+    left: 3vw;
   }
   .text-overlay{
     font-size: calc(3vw);
-    top: 6vw;
-    left: 3vw;
   }
   .text-date-props{
     font-size: calc(2.25vw);
@@ -418,49 +522,362 @@ p {
     bottom:-12vw
   }
   .text-title-props-rect:last-child{
-    top:10.5vw
+    top:12.5vw
   }
   .wrapper-data-2-lines-rect{
     font-size: calc(3vw);
     min-width: 60vw;
-    bottom: 11.25;
+    bottom: 11.25vw;
   }
   .wrapper-data-2-lines{
     font-size: calc(2.625vw);
     min-width: 60vw;
-    bottom: 11.25;
+    top: 48vw;
   }
   .canvas-container-general{
     min-width: 60vw;
   }
-  .logo-nama-wrapper-rect{
-    transform: scale(0.75);
-  }
   .logo-nama-wrapper{
+    bottom: 0.75vw;
+    right: 1.5vw;
     transform: scale(0.75);
   }
-  .wrapper-buttons{
-    flex-direction: column;
-    align-items: flex-start;
+  .logo-nama-wrapper-rect{
+    bottom: 0.75vw;
+    right: 1.5vw;
+    transform: scale(0.75);
   }
-  .wrapper-sub-buttons{
+  .wrapper-data-element{
+    margin: 0.5vw 3.375vw;
+  }
+  .wrapper-data-element-rect{
+    margin: 0.75vw 3.75vw;
+  }
+  .data-p-little{
+    font-size: calc(1.5vw);
+  }
+  .blend-text{
+    font-size: calc(3vw);
+  }
+}
+@media print, screen and (min-width: 600px) {
+  .p-select{
+    font-size: calc(2.5vw);
+  }
+  .image-square p{
+    font-size: calc(4vw);
+  }
+  .title-activity {
+    padding: 0.5vh 1.5vw 0.125vh 1.5vw;
+    font-size: calc(1.75vmin);
+  }
+  .subtitle-activity {
+    padding: 0vh 1.5vw 0.5vh 1.5vw;
+    font-size: calc(1.25vmin);
+  }
+  .button-activity {
+    width: 45vmin;
+    min-height: 3.25vmin;
+    margin: 0.75vw;
+  }
+  .button-login {
+    padding: 0.5vw;
+  }
+  .p-login{
+    padding: 0.5vh 1.5vw 0.5vh 1.5vw;
+    font-size: calc(2vmin);
+  }
+  .width-wrapper-main{
+    display: flex;
     flex-direction: column;
+    width: 80vw;
+    margin: 5vh 0vh
+  }
+  .beauty-border{
+    width: 40vw;
+  }
+  .width-general{
+    width: 40vw;
+  }
+  .App-header {
     align-items: center;
   }
-  .wrapper-controller{
-    display: flex;
+  .canvas-container-square{
+    min-height: 40vw;
+  }
+  .text-title{
+    width: 36vw;
+    top: 4vw;
+    left: 2vw;
+  }
+  .text-overlay{
+    font-size: calc(2vw);
+  }
+  .text-date-props{
+    font-size: calc(1.5vw);
+  }
+  .text-title-props:first-child{
+    bottom: -2vw
+  }
+  .text-title-props:last-child{
+    top:2.2vw
+  }
+  .text-title-props-rect:first-child{
+    bottom:-8vw
+  }
+  .text-title-props-rect:last-child{
+    top:8.5vw
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: calc(2vw);
+    min-width: 40vw;
+    bottom: 7.5vw;
+  }
+  .wrapper-data-2-lines{
+    font-size: calc(1.75vw);
+    min-width: 40vw;
+    top: 32vw;
+  }
+  .canvas-container-general{
+    min-width: 40vw;
+  }
+  .logo-nama-wrapper{
+    bottom: -2vw;
+    right: -1vw;
+    transform: scale(0.57);
+  }
+  .logo-nama-wrapper-rect{
+    bottom: -3vw;
+    right: -2vw;
+    transform: scale(0.5);
+  }
+  .wrapper-data-element{
+    margin: 0.25vw 2.25vw;
+  }
+  .wrapper-data-element-rect{
+    margin: 0.5vw 2.5vw;
+  }
+  .data-p-little{
+    font-size: calc(1vw);
+  }
+  .blend-text{
+    font-size: calc(2vw);
+  }
+  .text-overlay-mode-3{
+    font-size: calc(3vw);
+  }
+}
+@media print, screen and (min-width: 800px) {
+  .p-select{
+    font-size: 40px;
+  }
+  .image-square p{
+    font-size: 32px;
+  }
+  .title-activity {
+    padding: 8px 24px 2px 24px;
+    font-size: 16px;
+  }
+  .subtitle-activity {
+    padding: 0px 24px 8px 24px;
+    font-family: 'SourceCodePro';
+    font-size: 12px;
+  }
+  .button-activity {
+    text-align: left;
+    width: 500px;
+    min-height: 52px;
+    margin: 12px;
+  }
+  .button-login {
+    padding: 8px;
+  }
+  .p-login{
+    padding: 8px 32px 8px 32px;
+    font-size: 32px;
+  }
+  .beauty-border{
+    width: 320px;
+  }
+  .width-general{
+    width: 320px;
+  }
+  .App-header {
+    align-items: center;
+  }
+  .canvas-container-square{
+    min-height: 320px;
+  }
+  .text-title{
+    width: 288px;
+    top: 32px;
+    left: 16px;
+  }
+  .text-overlay{
+    font-size: 16px;
+  }
+  .text-date-props{
+    font-size: 12px;
+  }
+  .text-title-props-rect:first-child{
+    bottom:-64px
+  }
+  .text-title-props-rect:last-child{
+    top:68px
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: 16px;
+    min-width: 320px;
+    bottom: 60px;
+  }
+  .wrapper-data-2-lines{
+    font-size: 14px;
+    min-width: 320px;
+    top: 256px;
+  }
+  .canvas-container-general{
+    min-width: 320px;
+  }
+  .logo-nama-wrapper{
+    bottom: -10px;
+    right: 2px;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-rect{
+    bottom: -2px;
+    right: 14px;
+    transform: unset;
+  }
+  .logo-nama-svg{
+    width: 60px !important;
+    height: 48px !important;
+  }
+  .wrapper-data-element{
+    margin: 2px 18px;
+  }
+  .wrapper-data-element-rect{
+    margin: 4px 20px;
+  }
+  .data-p-little{
+    font-size: 8px;
+  }
+  .width-wrapper-main{
+    width: 740px;
+    margin: 40px 0px;
     flex-direction: row;
     align-items: flex-start;
   }
-  .wrapper-sub-controller{
+  .diplay-buttons{
     display: flex;
     flex-direction: column;
+    /* align-items: flex-start; */
+    margin: 0 10px;
+  }
+  .width-mode{
+    width: 400px;
+  }
+  .wrapper-buttons-left{
+    font-size: 16px;
+  }
+  .width-mode-sub{
+    width: 350px;
+    margin: 8px 20px
+  }
+  .blend-text{
+    font-size: calc(2vw);
+  }
+  .text-overlay-mode-3{
+    font-size: calc(2vw);
+  }
+}
+@media print, screen and (min-width: 1100px) {
+  .beauty-border{
+    width: 400px;
+  }
+  .width-general{
+    width: 400px;
+  }
+  .App-header {
+    align-items: center;
+  }
+  .canvas-container-square{
+    min-height: 400px;
+  }
+  .text-title{
+    width: 360px;
+    top: 40px;
+    left: 20px;
+  }
+  .text-overlay{
+    font-size: 20px;
+  }
+  .text-date-props{
+    font-size: 15px;
+  }
+  .text-title-props-rect:first-child{
+    bottom:-80px
+  }
+  .text-title-props-rect:last-child{
+    top:85px
+  }
+  .wrapper-data-2-lines-rect{
+    font-size: 20px;
+    min-width: 400px;
+    bottom: 75px;
+  }
+  .wrapper-data-2-lines{
+    font-size: 17.5px;
+    min-width: 400px;
+    top: 320px;
+  }
+  .canvas-container-general{
+    min-width: 400px;
+  }
+  .logo-nama-wrapper{
+    bottom: -10px;
+    right: 2px;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-rect{
+    bottom: -2px;
+    right: 14px;
+    transform: unset;
+  }
+  .logo-nama-svg{
+    width: 75px !important;
+    height: 60px !important;
+  }
+  .wrapper-data-element{
+    margin: 2.5px 22.5px;
+  }
+  .wrapper-data-element-rect{
+    margin: 5px 25px;
+  }
+  .data-p-little{
+    font-size: 10px;
+  }
+  .width-wrapper-main{
+    width: 920px;
+    margin: 40px 0px;
+    flex-direction: row;
     align-items: flex-start;
   }
-  .slider-width{
-    margin: 1vw;
-    transform: rotate(90deg);
-    width: 10vw;
-    height: 10vw;
+  .width-mode{
+    width: 500px;
   }
-} */
+  .width-mode-sub{
+    width: 450px;
+    margin: 8px 20px
+  }
+  .blend-text{
+    font-size: 16px;
+  }
+  .text-overlay-mode-3{
+    font-size: 16px;
+  }
+}
+@media print, screen and (min-width: 1250px) {
+  .arrow-down{
+    align-content: center;
+  }
+}
