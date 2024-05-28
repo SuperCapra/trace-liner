@@ -4,7 +4,10 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './image1.jpeg'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-import html2canvas from 'html2canvas';
+// import LogoNama from './LogoNama.js'
+// import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
+import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
@@ -33,9 +36,11 @@ function ImageComponent(props) {
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
+  const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
-    color: drawingColor
+    color: drawingColor,
+    mixBlendMode: blendMode,
   }
   const filterStyle = {
     opacity: valueFilter/100
@@ -43,114 +48,143 @@ function ImageComponent(props) {
   const styleLogoNama = {
     width: (ratio === '1:1') ? '10vw' : '15vw',
     height: (ratio === '1:1') ? '8vw' : '12vw',
-    fill: drawingColor
+    fill: drawingColor,
+    mixBlendMode: blendMode
   }
   const styleTextUnderSketch = {
     top: (ratio === '1:1') ? '82%' : '82%',
-    color: drawingColor
+    color: drawingColor,
+    mixBlendMode: blendMode
+  }
+  const classesForSketch = () => {
+    if(showMode3) {
+      if(ratio === '1:1') return ('canvas-position canvas-filter canvas-sketch-mode3')
+      else return ('canvas-position canvas-filter canvas-sketch-mode3-rect')
+    } else {
+      if(ratio === '1:1') return ('canvas-position canvas-filter canvas-sketch')
+      else return ('canvas-position canvas-filter canvas-sketch-rect')
+    }
   }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
-  const classesSketch = ratio === '1:1' ? 'canvas-position canvas-filter canvas-sketch' : 'canvas-position canvas-filter canvas-sketch-rect'
+  const classesSketch = classesForSketch()
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'logo-nama-wrapper' : 'logo-nama-wrapper-rect'
-  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3' : 'position-mode-3-rect text-overlay-mode-3'
+  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 mode-3-text-rect'
 
-  const fetchAndSetImage = async (url) => {
-    console.log('fetching image', url)
-    try {
-      fetch(url, { 
-        method: 'GET',
-        mode: 'no-cors',
-        headers : {
-          'Content-Type': 'image/jpeg', 
-          'Accept': '*/*',
-          'Accept-Encoding': 'gzip, deflate, br',
-          'Connection': 'keep-alive'
-        }
-      })
-        .then(res => {
-          console.log('res', res)
-          res.blob()
-        })
-        .then(resParsed => {
-          console.log('resParsed', resParsed)
-        })
-      // const response = await fetch(url, { 
-      //   method: 'GET',
-      //   mode: 'no-cors',
-      //   headers : {
-      //     'Content-Type': 'image/jpeg', 
-      //     'Accept': '*/*',
-      //     'Accept-Encoding': 'gzip, deflate, br',
-      //     'Connection': 'keep-alive'
-      //   }
-      // }); // Consider handling CORS appropriately
-      // console.log('response', response)
-      // const blob = await response.blob();
-      // const reader = new FileReader();
-      // reader.onloadend = () => {
-      //   console.log('fetching onloadend', reader.result)
-      //   console.log('blob', blob)
-      //   const base64data = reader.result;
-      //   setImageSrc(base64data); // This will trigger a re-render
-      //   const img = new Image();
-      //   console.log('base64data', base64data)
-      //   img.onload = () => {
-      //     // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
-      //     console.log('Image is loaded and ready to be used');
-      //   };
-      //   img.src = base64data;
-      // };
-      // reader.readAsDataURL(blob);
-    } catch (e) {
-      console.error('Error loading image: ', e);
-    }
-  };
+
+  // const fetchAndSetImage = async (url) => {
+  //   console.log('fetching image', url)
+  //   try {
+  //     fetch(url, { 
+  //       method: 'GET',
+  //       mode: 'no-cors',
+  //       headers : {
+  //         'Content-Type': 'image/jpeg', 
+  //         'Accept': '*/*',
+  //         'Accept-Encoding': 'gzip, deflate, br',
+  //         'Connection': 'keep-alive'
+  //       }
+  //     })
+  //       .then(res => {
+  //         console.log('res', res)
+  //         res.blob()
+  //       })
+  //       .then(resParsed => {
+  //         console.log('resParsed', resParsed)
+  //       })
+  //     // const response = await fetch(url, { 
+  //     //   method: 'GET',
+  //     //   mode: 'no-cors',
+  //     //   headers : {
+  //     //     'Content-Type': 'image/jpeg', 
+  //     //     'Accept': '*/*',
+  //     //     'Accept-Encoding': 'gzip, deflate, br',
+  //     //     'Connection': 'keep-alive'
+  //     //   }
+  //     // }); // Consider handling CORS appropriately
+  //     // console.log('response', response)
+  //     // const blob = await response.blob();
+  //     // const reader = new FileReader();
+  //     // reader.onloadend = () => {
+  //     //   console.log('fetching onloadend', reader.result)
+  //     //   console.log('blob', blob)
+  //     //   const base64data = reader.result;
+  //     //   setImageSrc(base64data); // This will trigger a re-render
+  //     //   const img = new Image();
+  //     //   console.log('base64data', base64data)
+  //     //   img.onload = () => {
+  //     //     // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
+  //     //     console.log('Image is loaded and ready to be used');
+  //     //   };
+  //     //   img.src = base64data;
+  //     // };
+  //     // reader.readAsDataURL(blob);
+  //   } catch (e) {
+  //     console.error('Error loading image: ', e);
+  //   }
+  // };
 
   const handleDownloadClick = async () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
-    html2canvas(document.getElementById('printingAnchor'), {
-      useCORS: true
-      // onclone: function(doc) {
-      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-      //   doc.getElementById('canvasImage').classList.remove('round-corner')
-      //   doc.getElementById('canvasFilter').classList.remove('round-corner')
-      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-      //   console.log('document', document)
-      // }
-    }).then(async function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(async function(blob) {
-        // console.log('try to share..., navigator.share', navigator.share)
-        // console.log('try to share..., navigator.canShare', navigator.canShare)
-        if (navigator.share) {
-            try {
-                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
-                await navigator.share({
-                    title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
-                    files: [file],
-                });
-            } catch (error) {
-                console.error('Error sharing image:', error);
-            }
-        } else {
-            const url = URL.createObjectURL(blob);
-            const temp = document.createElement('a');
-            temp.href = url;
-            temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
-            temp.click();
-            URL.revokeObjectURL(url); // Clean up URL object after use
-        }
-    }, 'image/jpeg');
-    }).finally(() => {
+
+    toPng(document.getElementById('printingAnchor'))
+      .then((dataUrl) => {
+        const img = new Image();
+        img.src = dataUrl;
+        document.body.appendChild(img);
+
+        // Create a link element to trigger the download
+        const link = document.createElement('a');
+        link.download = 'canvas-image.png';
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error('oops, something went wrong!', error);
+      })
+    // html2canvas(document.getElementById('printingAnchor'), {
+    //   useCORS: true
+    //   // onclone: function(doc) {
+    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+    //   //   doc.getElementById('canvasImage').classList.remove('round-corner')
+    //   //   doc.getElementById('canvasFilter').classList.remove('round-corner')
+    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+    //   //   console.log('document', document)
+    //   // }
+    // }).then(async function(canvas) {
+    //   console.log('canvas: ', canvas)
+    //   canvas.toBlob(async function(blob) {
+    //     // console.log('try to share..., navigator.share', navigator.share)
+    //     // console.log('try to share..., navigator.canShare', navigator.canShare)
+    //     if (navigator.share) {
+    //         try {
+    //             const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+    //             await navigator.share({
+    //                 title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
+    //                 files: [file],
+    //             });
+    //         } catch (error) {
+    //             console.error('Error sharing image:', error);
+    //         }
+    //     } else {
+    //         const url = URL.createObjectURL(blob);
+    //         const temp = document.createElement('a');
+    //         temp.href = url;
+    //         temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
+    //         temp.click();
+    //         URL.revokeObjectURL(url); // Clean up URL object after use
+    //     }
+    // }, 'image/jpeg');
+    // })
+    .finally(() => {
       document.getElementById('canvasImage').classList.add('round-corner')
       document.getElementById('canvasFilter').classList.add('round-corner')
       document.getElementById('printingAnchor').classList.add('round-corner')
@@ -239,6 +273,7 @@ function ImageComponent(props) {
       drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
+    else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
@@ -338,10 +373,21 @@ function ImageComponent(props) {
   }
 
   const handleColorChange = (color) => {
-    console.log('color to set', color)
+    console.log('color to set:', color)
     setDrawingColor(color)
     drawLine(color)
     drawFilter()
+  }
+
+  const handleBlendMode = (blendModeSetting) => {
+    console.log('Blend mode to set:', blendModeSetting)
+    if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
+      handleColorChange(brandingPalette.pink)
+    } else {
+      drawLine(drawingColor)
+      drawFilter()
+    }
+    setBlendMode(blendModeSetting)
   }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
@@ -457,8 +503,8 @@ function ImageComponent(props) {
     if(props.activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-3"><p>{props.activity.beautyDuration}</p></div>)
     if(props.activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-3"><p>{props.activity.beautyPower}</p></div>)
     if(props.activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-3"><p>{props.activity[unitMeasureSelected].beautyAverage}</p></div>)
-    if(props.activity.beautyCoordinates && showCoordinates) dataToDisplay.push(<div key="coordinates" className="element-mode-3"><p>{props.activity.beautyCoordinates}</p></div>)
-    return (<div id="canvasText" className={styleMode3}>{dataToDisplay}</div>)
+    // if(props.activity.beautyCoordinates && showCoordinates) dataToDisplay.push(<div key="coordinates" className="element-mode-3"><p>{props.activity.beautyCoordinates}</p></div>)
+    return (<div id="canvasText" className={styleMode3} style={styleText}>{dataToDisplay}</div>)
   }
 
   useEffect(() => {
@@ -482,7 +528,7 @@ function ImageComponent(props) {
         <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight}/>
+            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
             {showTitle && (
               <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleText} className={classesName}>{props.activity.beautyName}</div>
@@ -491,6 +537,7 @@ function ImageComponent(props) {
             )}
             {props.clubname === 'nama-crew' &&
               <div className={classesLogoNama}>
+                {/* <LogoNama className="logo-nama-svg" style={styleLogoNama} blending-style={styleText}/> */}
                 <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
               </div>
             }

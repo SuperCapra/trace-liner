@@ -42,6 +42,9 @@ function ButtonImage(props) {
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
+  const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
+  const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
+  const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
   const colors = []
   let images = [{
     photo: image1, 
@@ -86,6 +89,12 @@ function ButtonImage(props) {
     if(square) setSquare(false)
     setRectangle(true)
     handleClick({type: 'rectangle'})
+  }
+  const propagateBlendMode = (blendModeSetting) => {
+    handleClick({type: 'blend-mode', blendMode: blendModeSetting})
+    setSelectedUnsetBlendMode(blendModeSetting === 'unset' ? true : false)
+    setSelectedDifferenceBlendMode(blendModeSetting === 'difference' ? true : false)
+    setSelectedExclusionBlendMode(blendModeSetting === 'exclusion' ? true : false)
   }
   const propagateShowHide = (type) => {
     if(type === 'name') {
@@ -179,7 +188,7 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    setShowCoordinates(true)
+    // setShowCoordinates(true)
   }
 
   const unitMeasureStyle = {
@@ -222,10 +231,35 @@ function ButtonImage(props) {
     transform: 'scale(0.55)'
     // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
+  const unsetBlendModeStyle = {
+    color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedUnsetBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
+
+  const differenceBlendModeStyle = {
+    color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedDifferenceBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
+
+  const exclusionBlendModeStyle = {
+    color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.pink,
+    backgroundColor: selectedExclusionBlendMode ? brandingPalette.yellow : 'unset',
+    margin: '2%',
+    padding: '1%',
+    borderRadius: '5px'
+  }
 
   const returnsColors = () => {
     if(!colors.length) {
       for(let color in brandingPalette) {
+        if(!selectedUnsetBlendMode && color === 'black') continue
+        if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
         let styleColor = {
           backgroundColor: brandingPalette[color],
           width: '20px',
@@ -444,7 +478,7 @@ function ButtonImage(props) {
         {activity.beautyDuration && durationController()}
         {activity.beautyPower && powerController()}
         {activity[unitMeasure].beautyAverage && averageController()}
-        {activity.beautyCoordinates && coordinatesController()}
+        {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )
   }
@@ -470,6 +504,12 @@ function ButtonImage(props) {
           <div className="wrapper-sub-buttons">
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
+          </div>
+          <div className="wrapper-sub-buttons">
+            <p className="blend-title blend-text">BLEND:</p>
+            <p className="blend-mode blend-text" style={unsetBlendModeStyle} onClick={() => propagateBlendMode('unset')}>none</p>
+            <p className="blend-mode blend-text" style={differenceBlendModeStyle} onClick={() => propagateBlendMode('difference')}>diff.</p>
+            <p className="blend-mode blend-text" style={exclusionBlendModeStyle} onClick={() => propagateBlendMode('exclusion')}>excl.</p>
           </div>
           <div className="wrapper-sub-buttons slider-width">
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />

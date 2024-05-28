@@ -190,16 +190,26 @@ p {
   width: 80vw;
 }
 .canvas-sketch{
-  width: 46vw;
-  height: 46vw !important;
-  top: 17vw;
-  left: 17vw;
+  width: 57.5%;
+  height: 57.5% !important;
+  top: 21.25%;
+  left: 21.25%;
 }
 .canvas-sketch-rect{
-  width: 68vw;
-  height: 68vw !important;
-  top: 37vw;
-  left: 6vw;
+  width: 85%;
+  top: 24%;
+  left: 7.5%;
+}
+.canvas-sketch-mode3{
+  width: 57.5%;
+  height: 57.5% !important;
+  top: 35%;
+  left: 10%;
+}
+.canvas-sketch-mode3-rect{
+  width: 85%;
+  top: 35%;
+  left: 7.5%;
 }
 #canvasImage {
   z-index: 1;
@@ -393,19 +403,28 @@ p {
   display: flex;
 
 }
-/* .position-mode-3{
-
-}
 .element-mode-3{
-
-} */
+ background-color: var(--palette-background);
+ padding: 2%;
+ margin: 3%;
+}
 .text-overlay-mode-3{
   position: absolute;
   font-family: 'Helvetica';
   text-align: right;
   font-size: calc(4vmin);
+  color: transparent;
   font-weight: bold;
-  color: white;
+}
+.mode-3-text{
+  right: 0;
+  top: 5%;
+  width: 45%;
+}
+.mode-3-text-rect{
+  right: 0;
+  top: 15%;
+  width: 50%;
 }
 .round-corner{
   border-radius: 5px;
@@ -435,6 +454,12 @@ p {
   font-size: calc(5vw);
   color: var(--palette-pink);
   font-family: 'SourceCodePro';
+}
+.blend-text{
+  color: var(--palette-pink)
+}
+.blend-mode:hover{
+  cursor: pointer;
 }
 @media print, screen and (min-width: 450px) {
   .p-select{
@@ -481,18 +506,6 @@ p {
   }
   .canvas-container-square{
     min-height: 60vw;
-  }
-  .canvas-sketch {
-    width: 35vw;
-    height: 35vw !important;
-    top: 12.5vw;
-    left: 12.5vw;
-  }
-  .canvas-sketch-rect{
-    width: 50vw;
-    height: 50vw !important;
-    left: 4.5vw;
-    top: 28vw;
   }
   .text-title{
     width: 54vw;
@@ -543,6 +556,9 @@ p {
   .data-p-little{
     font-size: calc(1.5vw);
   }
+  .blend-text{
+    font-size: calc(3vw);
+  }
 }
 @media print, screen and (min-width: 600px) {
   .p-select{
@@ -588,18 +604,6 @@ p {
   }
   .canvas-container-square{
     min-height: 40vw;
-  }
-  .canvas-sketch {
-    width: 23vw;
-    height: 23vw !important;
-    top: 8.5vw;
-    left: 8.5vw;
-  }
-  .canvas-sketch-rect{
-    width: 34vw;
-    height: 34vw !important;
-    left: 3vw;
-    top: 18.5vw;
   }
   .text-title{
     width: 36vw;
@@ -656,6 +660,12 @@ p {
   .data-p-little{
     font-size: calc(1vw);
   }
+  .blend-text{
+    font-size: calc(2vw);
+  }
+  .text-overlay-mode-3{
+    font-size: calc(3vw);
+  }
 }
 @media print, screen and (min-width: 800px) {
   .p-select{
@@ -697,18 +707,6 @@ p {
   }
   .canvas-container-square{
     min-height: 320px;
-  }
-  .canvas-sketch{
-    width: 184px;
-    height: 184px !important;
-    top: 68px;
-    left: 68px;
-  }
-  .canvas-sketch-rect{
-    width: 272px;
-    height: 272px !important;
-    left: 24px;
-    top: 148px;
   }
   .text-title{
     width: 288px;
@@ -785,6 +783,12 @@ p {
     width: 350px;
     margin: 8px 20px
   }
+  .blend-text{
+    font-size: calc(2vw);
+  }
+  .text-overlay-mode-3{
+    font-size: calc(2vw);
+  }
 }
 @media print, screen and (min-width: 1100px) {
   .beauty-border{
@@ -798,18 +802,6 @@ p {
   }
   .canvas-container-square{
     min-height: 400px;
-  }
-  .canvas-sketch{
-    width: 230px;
-    height: 230px !important;
-    top: 85px;
-    left: 85px;
-  }
-  .canvas-sketch-rect{
-    width: 340px;
-    height: 340px !important;
-    left: 30px;
-    top: 185px;
   }
   .text-title{
     width: 360px;
@@ -836,7 +828,7 @@ p {
   .wrapper-data-2-lines{
     font-size: 17.5px;
     min-width: 400px;
-    bottom: 5px;
+    top: 320px;
   }
   .canvas-container-general{
     min-width: 400px;
@@ -876,6 +868,12 @@ p {
   .width-mode-sub{
     width: 450px;
     margin: 8px 20px
+  }
+  .blend-text{
+    font-size: 16px;
+  }
+  .text-overlay-mode-3{
+    font-size: 16px;
   }
 }
 @media print, screen and (min-width: 1250px) {
