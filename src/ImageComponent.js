@@ -6,7 +6,7 @@ import image1 from './image1.jpeg'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
 // import html2canvas from 'html2canvas';
-import { toPng } from 'html-to-image';
+import { toPng,toJpeg } from 'html-to-image';
 import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
@@ -134,7 +134,7 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
 
-    toPng(document.getElementById('printingAnchor'),{ cacheBust: true, backgroundColor: null })
+    toJpeg(document.getElementById('printingAnchor'))
       .then((dataUrl) => {
         const img = new Image();
         img.src = dataUrl;
