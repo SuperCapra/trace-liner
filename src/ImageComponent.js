@@ -5,8 +5,8 @@ import image1 from './image1.jpeg'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
-// import html2canvas from 'html2canvas';
-import { toPng,toJpeg } from 'html-to-image';
+import html2canvas from 'html2canvas';
+// import { toPng,toJpeg } from 'html-to-image';
 import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
@@ -134,55 +134,55 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
 
-    toJpeg(document.getElementById('printingAnchor'))
-      .then((dataUrl) => {
-        // const img = new Image();
-        // img.src = dataUrl;
-        // document.body.appendChild(img);
+    // toJpeg(document.getElementById('printingAnchor'))
+    //   .then((dataUrl) => {
+    //     // const img = new Image();
+    //     // img.src = dataUrl;
+    //     // document.body.appendChild(img);
 
-        // Create a link element to trigger the download
-        const link = document.createElement('a');
-        link.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase();
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((error) => {
-        console.error('oops, something went wrong!', error);
-      })
-    // html2canvas(document.getElementById('printingAnchor'), {
-    //   useCORS: true
-    //   // onclone: function(doc) {
-    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-    //   //   doc.getElementById('canvasImage').classList.remove('round-corner')
-    //   //   doc.getElementById('canvasFilter').classList.remove('round-corner')
-    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-    //   //   console.log('document', document)
-    //   // }
-    // }).then(async function(canvas) {
-    //   console.log('canvas: ', canvas)
-    //   canvas.toBlob(async function(blob) {
-    //     // console.log('try to share..., navigator.share', navigator.share)
-    //     // console.log('try to share..., navigator.canShare', navigator.canShare)
-    //     if (navigator.share) {
-    //         try {
-    //             const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
-    //             await navigator.share({
-    //                 title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
-    //                 files: [file],
-    //             });
-    //         } catch (error) {
-    //             console.error('Error sharing image:', error);
-    //         }
-    //     } else {
-    //         const url = URL.createObjectURL(blob);
-    //         const temp = document.createElement('a');
-    //         temp.href = url;
-    //         temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
-    //         temp.click();
-    //         URL.revokeObjectURL(url); // Clean up URL object after use
-    //     }
-    // }, 'image/jpeg');
-    // })
+    //     // Create a link element to trigger the download
+    //     const link = document.createElement('a');
+    //     link.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase();
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch((error) => {
+    //     console.error('oops, something went wrong!', error);
+    //   })
+    html2canvas(document.getElementById('printingAnchor'), {
+      useCORS: true
+      // onclone: function(doc) {
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   doc.getElementById('canvasImage').classList.remove('round-corner')
+      //   doc.getElementById('canvasFilter').classList.remove('round-corner')
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   console.log('document', document)
+      // }
+    }).then(async function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(async function(blob) {
+        // console.log('try to share..., navigator.share', navigator.share)
+        // console.log('try to share..., navigator.canShare', navigator.canShare)
+        if (navigator.share) {
+            try {
+                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                await navigator.share({
+                    title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
+                    files: [file],
+                });
+            } catch (error) {
+                console.error('Error sharing image:', error);
+            }
+        } else {
+            const url = URL.createObjectURL(blob);
+            const temp = document.createElement('a');
+            temp.href = url;
+            temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
+            temp.click();
+            URL.revokeObjectURL(url); // Clean up URL object after use
+        }
+    }, 'image/jpeg');
+    })
     .finally(() => {
       document.getElementById('canvasImage').classList.add('round-corner')
       document.getElementById('canvasFilter').classList.add('round-corner')
