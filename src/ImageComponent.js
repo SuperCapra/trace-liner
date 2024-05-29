@@ -10,12 +10,12 @@ import { toPng } from 'html-to-image';
 import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
-  const [canvasWidth, setCanvasWidth] = useState(null); // Initial width
-  const [canvasHeight, setCanvasHeight] = useState(null); // Initial height
-  const [drawingHeight, setDrawingHeight] = useState(null); // Initial height
-  const [drawingWidth, setDrawingWidth] = useState(null); // Initial height
-  const [xCrop, setXCrop] = useState(null); // Initial width
-  const [yCrop, setYCrop] = useState(null); // Initial height
+  const [canvasWidth, setCanvasWidth] = useState(0);
+  const [canvasHeight, setCanvasHeight] = useState(0);
+  const [drawingHeight, setDrawingHeight] = useState(0);
+  const [drawingWidth, setDrawingWidth] = useState(0);
+  const [xCrop, setXCrop] = useState(0);
+  const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
@@ -134,7 +134,7 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
 
-    toPng(document.getElementById('printingAnchor'))
+    toPng(document.getElementById('printingAnchor'),{ cacheBust: true, backgroundColor: null })
       .then((dataUrl) => {
         const img = new Image();
         img.src = dataUrl;
@@ -192,6 +192,7 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    console.log('drawLine:', canvasSketch)
     let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 5
     let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 5
     setDrawingHeight(canvasSketchWidth)
