@@ -136,9 +136,9 @@ function ImageComponent(props) {
 
     toJpeg(document.getElementById('printingAnchor'))
       .then((dataUrl) => {
-        const img = new Image();
-        img.src = dataUrl;
-        document.body.appendChild(img);
+        // const img = new Image();
+        // img.src = dataUrl;
+        // document.body.appendChild(img);
 
         // Create a link element to trigger the download
         const link = document.createElement('a');
