@@ -142,7 +142,7 @@ function ImageComponent(props) {
 
         // Create a link element to trigger the download
         const link = document.createElement('a');
-        link.download = 'canvas-image.png';
+        link.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase();
         link.href = dataUrl;
         link.click();
       })
