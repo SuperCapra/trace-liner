@@ -477,7 +477,7 @@ function ImageComponent(props) {
       line1.push(...dataShowing)
     } else if(dataShowing.length === 4) {
       line1.push(...dataShowing.slice(0,2))
-      line2.push(...dataShowing.slice(1,3))
+      line2.push(...dataShowing.slice(2,4))
     } else {
       line1.push(...dataShowing.slice(0,3))
       line2.push(...dataShowing.slice(3))
