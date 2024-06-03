@@ -83,12 +83,14 @@ class Homepage extends React.Component{
     }
     if(isLoading || this.state.stage === 'FetchingActivities') {
       return (
-        <Loader/>
+        <div className="translate-y">
+          <Loader/>
+        </div>
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
         return (
-          <div className="button-login justify-center-column" onClick={() => {
+          <div className="button-login justify-center-column translate-y" onClick={() => {
             window.location.href = stravaAuthorizeUrl
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
@@ -103,13 +105,22 @@ class Homepage extends React.Component{
             <p className="title-activity">{element.name}</p>
             <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
           </div>)
+        let styleSelectActivity = {
+          display: activitiesButton.length ? 'block' : 'none'
+        }
+        let styleArrow = !activitiesButton.length ? { display : 'none' } : this.props.displayStyle
         return (
           <div>
-            <div>
+            <div style={styleSelectActivity}>
               <p className="p-select">SELECT AN ACTIVITY</p>
             </div>
-            {activitiesButton}
-            <div className="arrow-down" style={this.props.displayStyle} onClick={() => this.scroll()}>
+            {activitiesButton.length > 0 && activitiesButton}
+            {(activitiesButton.length === 0 || !activitiesButton.length) && (
+              <div>
+                <p className="p-select">BEFORE YOU CAN START YOU HAVE TO LOAD SOME ACTIVITIES</p>
+              </div>
+            )}
+            <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}/>
             </div>
           </div>
