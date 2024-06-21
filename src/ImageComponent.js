@@ -8,6 +8,7 @@ import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
 // import { toPng,toJpeg } from 'html-to-image';
 import brandingPalette from './brandingPalette.js';
+let firstTime = true
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(0);
@@ -18,7 +19,7 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
-  const [ratio, setRatio] = useState('9:16');
+  const [ratio, setRatio] = useState('1:1');
   const [showTitle, setShowTitle] = useState(true);
   // const [showData, setShowData] = useState(false);
   // const [showDataUnique, setShowDataUnique] = useState(true);
@@ -242,8 +243,15 @@ function ImageComponent(props) {
 
     ctx.stroke()
 
+    if(firstTime) {
+      firstTime = false
+      setRatio('9:16')
+      handleCrop('9:16')
+    }
+
   },[
     props.activity.coordinates, 
+    setRatio
     // ratio, 
     // canvasWidth, 
     // canvasHeight
