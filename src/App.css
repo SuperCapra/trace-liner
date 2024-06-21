@@ -62,7 +62,6 @@ p {
   /* margin: 0 12.5vw; */
 }
 .button-login {
-  display: flex;
   padding: 1vw;
   background-color: var(--palette-pink);
   border-radius: 5px;
@@ -74,6 +73,9 @@ p {
   display: flex;
   justify-content: center;
   flex-direction: column;
+}
+.translate-y{
+  transform: translateY(-5vh);
 }
 .p-login{
   padding: 1vh 3vw 1vh 3vw;
