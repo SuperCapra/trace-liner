@@ -81,7 +81,7 @@ class Homepage extends React.Component{
       called = true
       this.getAccessTokenAndActivities(code)
     }
-    if(isLoading || this.state.stage === 'FetchingActivities') {
+    if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
         <div className="translate-y">
           <Loader/>
@@ -285,6 +285,7 @@ class Homepage extends React.Component{
 
   getActivity(activityId) {
     let indexActivity = activities.findIndex(x => x.id === activityId)
+    isLoading = true
     this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
