@@ -135,8 +135,9 @@ function ImageComponent(props) {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
+    let anchor = document.getElementById('printingAnchor')
 
-    toJpeg(document.getElementById('printingAnchor'))
+    toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
       .then((dataUrl) => {
         // const img = new Image();
         // img.src = dataUrl;
