@@ -6,8 +6,8 @@ import utils from './utils.js'
 // import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
-// import html2canvas from 'html2canvas';
-import { toJpeg } from 'html-to-image';
+import html2canvas from 'html2canvas';
+// import { toJpeg } from 'html-to-image';
 import brandingPalette from './brandingPalette.js';
 let firstTime = true
 
@@ -135,57 +135,57 @@ function ImageComponent(props) {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
-    let anchor = document.getElementById('printingAnchor')
+    // let anchor = document.getElementById('printingAnchor')
 
-    toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
-      .then((dataUrl) => {
-        // const img = new Image();
-        // img.src = dataUrl;
-        // document.body.appendChild(img);
+    // toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
+    //   .then((dataUrl) => {
+    //     // const img = new Image();
+    //     // img.src = dataUrl;
+    //     // document.body.appendChild(img);
 
-        // Create a link element to trigger the download
-        const link = document.createElement('a');
-        link.download = utils.removeEmoji(props.activity.beautyName.replaceAll(' ', '_')).toLowerCase();
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((error) => {
-        console.error('oops, something went wrong!', error);
-      })
-    // html2canvas(document.getElementById('printingAnchor'), {
-    //   useCORS: true
-    //   // onclone: function(doc) {
-    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-    //   //   doc.getElementById('canvasImage').classList.remove('round-corner')
-    //   //   doc.getElementById('canvasFilter').classList.remove('round-corner')
-    //   //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-    //   //   console.log('document', document)
-    //   // }
-    // }).then(async function(canvas) {
-    //   console.log('canvas: ', canvas)
-    //   canvas.toBlob(async function(blob) {
-    //     // console.log('try to share..., navigator.share', navigator.share)
-    //     // console.log('try to share..., navigator.canShare', navigator.canShare)
-    //     if (navigator.share) {
-    //         try {
-    //             const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
-    //             await navigator.share({
-    //                 title: props.activity.beautyName.replaceAll(' ', '_').toLowerCase(),
-    //                 files: [file],
-    //             });
-    //         } catch (error) {
-    //             console.error('Error sharing image:', error);
-    //         }
-    //     } else {
-    //         const url = URL.createObjectURL(blob);
-    //         const temp = document.createElement('a');
-    //         temp.href = url;
-    //         temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
-    //         temp.click();
-    //         URL.revokeObjectURL(url); // Clean up URL object after use
-    //     }
-    // }, 'image/jpeg');
-    // })
+    //     // Create a link element to trigger the download
+    //     const link = document.createElement('a');
+    //     link.download = utils.removeEmoji(props.activity.beautyName.replaceAll(' ', '_')).toLowerCase();
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch((error) => {
+    //     console.error('oops, something went wrong!', error);
+    //   })
+    html2canvas(document.getElementById('printingAnchor'), {
+      useCORS: true
+      // onclone: function(doc) {
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   doc.getElementById('canvasImage').classList.remove('round-corner')
+      //   doc.getElementById('canvasFilter').classList.remove('round-corner')
+      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
+      //   console.log('document', document)
+      // }
+    }).then(async function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(async function(blob) {
+        // console.log('try to share..., navigator.share', navigator.share)
+        // console.log('try to share..., navigator.canShare', navigator.canShare)
+        if (navigator.share) {
+            try {
+                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                await navigator.share({
+                    title: utils.removeEmoji(props.activity.beautyName.replaceAll(' ', '_')).toLowerCase(),
+                    files: [file],
+                });
+            } catch (error) {
+                console.error('Error sharing image:', error);
+            }
+        } else {
+            const url = URL.createObjectURL(blob);
+            const temp = document.createElement('a');
+            temp.href = url;
+            temp.download = props.activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
+            temp.click();
+            URL.revokeObjectURL(url); // Clean up URL object after use
+        }
+    }, 'image/jpeg');
+    })
     .finally(() => {
       document.getElementById('canvasImage').classList.add('round-corner')
       document.getElementById('canvasFilter').classList.add('round-corner')
@@ -248,7 +248,7 @@ function ImageComponent(props) {
     if(firstTime) {
       firstTime = false
       setRatio('9:16')
-      handleCrop('9:16')
+      setTimeout(handleCrop('9:16'), 500)
     }
 
   },[
