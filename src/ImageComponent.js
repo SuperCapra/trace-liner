@@ -166,8 +166,7 @@ function ImageComponent(props) {
       canvas.toBlob(async function(blob) {
         // console.log('try to share..., navigator.share', navigator.share)
         // console.log('try to share..., navigator.canShare', navigator.canShare)
-        console.log('navigator.canShare()', navigator)
-        window.alert('navigator.share: ' + navigator.share)
+        console.log('navigator.share', navigator.share)
         if(navigator.share) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
@@ -226,12 +225,14 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
 
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.98
+    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.96
     console.log('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
 
-    ctx.strokeStyle = color
+    ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
+    // let lengthCoordinates = coordinates.length
+    // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
   
     for(let i = 0; i < coordinates.length; i++) {
@@ -389,7 +390,7 @@ function ImageComponent(props) {
   const handleColorChange = (color) => {
     console.log('color to set:', color)
     setDrawingColor(color)
-    drawLine(color)
+    drawLine(drawingColor, canvasWidth, canvasHeight)
     drawFilter()
   }
 
