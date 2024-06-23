@@ -166,8 +166,7 @@ function ImageComponent(props) {
       canvas.toBlob(async function(blob) {
         // console.log('try to share..., navigator.share', navigator.share)
         // console.log('try to share..., navigator.canShare', navigator.canShare)
-        console.log('navigator.canShare()', navigator)
-        window.alert('navigator.share: ' + navigator.share)
+        console.log('navigator.share', navigator.share)
         if(navigator.share) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
