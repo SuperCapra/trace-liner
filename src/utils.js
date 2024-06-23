@@ -224,6 +224,13 @@ const utilsFunction = {
         if(element[unitOfMeasure].beautyDistance) result += (result.length ? ' | ' : '') + element[unitOfMeasure].beautyDistance 
         if(element.beautyDuration) result += (result.length ? ' | ' : '') + element.beautyDuration
         return result
+    },
+    elevate2(x,y) {
+        return (x-y)*(x-y)
+    },
+    
+    quadraticFunction(a,b) {
+    return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
     }
 }
 

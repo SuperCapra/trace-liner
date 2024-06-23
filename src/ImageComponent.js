@@ -225,45 +225,48 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
 
     // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
-    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.96
+    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
     console.log('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
-    // let lengthCoordinates = coordinates.length
+    let lengthCoordinates = coordinates.length
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
+    let dimentionCircle = width * 0.02
   
+    let rightHeight = height/2
+    let rightZoomY = zoomFactor
+    let endCoordinates = [(coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight]
+    // let coordinatesDrawing = []
+    // coordinatesDrawing = coordinates.map((x) => ([(x[0]-mapCenterX)*zoomFactor + width/2,-(x[1]-mapCenterY)*rightZoomY + rightHeight]))
     for(let i = 0; i < coordinates.length; i++) {
       let c = coordinates[i]
-      let rightHeight = height/2
-      let rightZoomY = zoomFactor
-      // if(ratio !== '1:1') {
-      //   rightHeight = rightHeight*1.77
-      //   rightZoomY = zoomFactor*1.77
-      // }
-      ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight)
-      // ctx.lineTo((c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*zoomFactor + height/2)
+      let cd = [(c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight]
+
+      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle)) ctx.lineTo(cd[0],cd[1])
+      // ctx.lineTo(cd[0],cd[1])
     }
-
+    // ctx.strokeStyle = pattern
+    // ctx.fill()
+    
     ctx.stroke()
-
-    // if(firstTime) {
-    //   firstTime = false
-    //   setRatio('9:16')
-    //   setTimeout(handleCrop('9:16'), 500)
-    // }
+    ctx.beginPath()
+    ctx.arc((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
+    ctx.stroke()
+    // const finishPatternPNGRef = new Image()
+    // finishPatternPNGRef.src = finishPatternPNG
+    // console.log('finishPatternPNGRef.width', finishPatternPNGRef.width)
+    // ctx.drawImage(finishPatternPNGRef, (coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2 - 40, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - 40)
 
   },[
-    props.activity.coordinates, 
-    
+    props.activity.coordinates,
     // setRatio
     // ratio, 
     // canvasWidth, 
     // canvasHeight
   ])
-
 
   const drawFilter = useCallback((width, height) => {
     let widthToUse = width ? width : canvasWidth
@@ -420,20 +423,20 @@ function ImageComponent(props) {
 
       let ratioParts = ratioText.split(':')
       const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
-      let canvasWidth, canvasHeight, xCrop, yCrop
+      let canvasWidth, canvasHeight, xCropTemp, yCropTemp
       
       if (imageReferenceWidth / imageReferenceHeight > aspectRatio) {
         // Image is wider than the target ratio
         canvasHeight = imageReferenceHeight;
         canvasWidth = canvasHeight * aspectRatio;
-        xCrop = (imageReferenceWidth - canvasWidth) / 2;
-        yCrop = 0;
+        xCropTemp = (imageReferenceWidth - canvasWidth) / 2;
+        yCropTemp = 0;
       } else {
         // Image is taller than the target ratio
         canvasWidth = imageReferenceWidth;
         canvasHeight = canvasWidth / aspectRatio;
-        xCrop = 0;
-        yCrop = (imageReferenceHeight - canvasHeight) / 2;
+        xCropTemp = 0;
+        yCropTemp = (imageReferenceHeight - canvasHeight) / 2;
       }
       
       console.log('canvasWidth1', canvasWidth)
@@ -453,13 +456,13 @@ function ImageComponent(props) {
 
       canvasWidth *= 1 / scaleFactorWidth;
       canvasHeight *= 1 / scaleFactorHeight;
-      xCrop *= 1 / scaleFactorWidth;
-      yCrop *= 1 / scaleFactorHeight;
+      xCropTemp *= 1 / scaleFactorWidth;
+      yCropTemp *= 1 / scaleFactorHeight;
 
       console.log('canvasWidth2', canvasWidth)
       console.log('canvasHeight2', canvasHeight)
-      setXCrop(xCrop);
-      setYCrop(yCrop);
+      setXCrop(xCropTemp);
+      setYCrop(yCropTemp);
       setCanvasWidth(canvasWidth);
       setCanvasHeight(canvasHeight);
 
@@ -477,7 +480,9 @@ function ImageComponent(props) {
   }, [
     drawFilter,
     drawingColor,
-    drawLine
+    drawLine,
+    xCrop,
+    yCrop
   ])
 
   const setImage = (newImage) => {
