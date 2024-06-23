@@ -227,6 +227,7 @@ class Homepage extends React.Component{
             console.log('Activity: ', e)
             let t = {
               average: utils.getAverageSpeedMetric(e.distance, e.moving_time),
+              altitudeStream: [],
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
@@ -250,6 +251,7 @@ class Homepage extends React.Component{
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
               endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
               distance: e.distance,
+              distanceStream: [],
               elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
@@ -341,6 +343,7 @@ class Homepage extends React.Component{
       .then(res => {
         console.log('Result altitude stream: ', res)
         activities[indexActivity].altitudeStream = res.altitude.data
+        activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length
       })
       .catch(e => console.log('Fatal Error: ', e))

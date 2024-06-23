@@ -8,10 +8,7 @@ import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
 import html2canvas from 'html2canvas';
-import brandingPalette from './brandingPalette.js';
 // import { toJpeg } from 'html-to-image';
-// import brandingPalette from './brandingPalette.js';
-// let firstTime = true
 
 function ImageComponent(props) {
 
@@ -83,10 +80,6 @@ function ImageComponent(props) {
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 mode-3-text-rect'
-  const styleArrow = {
-    fill: brandingPalette.pink,
-    transform: 'rotate(90deg)'
-  }
 
   // const fetchAndSetImage = async (url) => {
   //   console.log('fetching image', url)
@@ -285,6 +278,55 @@ function ImageComponent(props) {
     // canvasHeight
   ])
 
+  const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
+    let canvasSketch = document.getElementById('canvasSketch')
+    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let altitudeStream = activity.altitudeStream
+    let distanceStream = activity.distanceStream
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+    let height = canvasSketchHeight
+    setDrawingHeight(canvasSketchHeight)
+    setDrawingWidth(width)
+    console.log('height:', height)
+    console.log('altitudeStream:', altitudeStream)
+    let ctx = canvasSketch.getContext('2d')
+    // Setup line properties to avoid spikes
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    // let border = width*0.2
+    // setThickness(width*0.01)
+
+    let maxAltitude = Math.max(...altitudeStream)
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.01
+    let lengthDistance = distanceStream.length
+    ctx.beginPath()
+  
+    let zoomFactorY = (height/2)/maxAltitude
+    let zoomFactorX = width/distanceStream[lengthDistance - 1]
+    console.log('zoomFactorY:', zoomFactorY)
+    console.log('zoomFactorX:', zoomFactorX)
+    for(let i = 0; i < altitudeStream.length; i++) {
+      let aY = height - (altitudeStream[i] * zoomFactorY)
+      let aX = distanceStream[i] * zoomFactorX
+      ctx.lineTo(aX,aY)
+    }
+    ctx.lineTo(width,height)
+    ctx.lineTo(0,height)
+    ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
+    ctx.fillStyle = color
+    ctx.closePath()
+    ctx.fill()
+    
+  },[
+    activity.altitudeStream,
+    activity.distanceStream,
+  ])
+
   const drawFilter = useCallback((width, height) => {
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
@@ -376,6 +418,7 @@ function ImageComponent(props) {
   }
 
   const enableMode1 = (bool, isStart) => {
+    drawLine(drawingColor, canvasWidth, canvasHeight)
     if(isStart) {
       setShowTitle(bool)
       setShowDate(bool)
@@ -389,6 +432,7 @@ function ImageComponent(props) {
   }
 
   const enableMode2 = () => {
+    drawLine(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(true)
     setShowDate(true)
     setShowDistance(true)
@@ -397,6 +441,7 @@ function ImageComponent(props) {
   }
 
   const enableMode3 = () => {
+    drawElevation(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(false)
     setShowDate(false)
     setShowDistance(true)
@@ -410,7 +455,8 @@ function ImageComponent(props) {
   const handleColorChange = (color) => {
     console.log('color to set:', color)
     setDrawingColor(color)
-    drawLine(drawingColor, canvasWidth, canvasHeight)
+    if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+    else drawLine(drawingColor, canvasWidth, canvasHeight)
     drawFilter()
   }
 
@@ -489,7 +535,8 @@ function ImageComponent(props) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
-      drawLine(drawingColor, canvasWidth, canvasHeight);
+      if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+      else drawLine(drawingColor, canvasWidth, canvasHeight);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
@@ -498,6 +545,8 @@ function ImageComponent(props) {
     drawFilter,
     drawingColor,
     drawLine,
+    drawElevation,
+    showMode3,
     xCrop,
     yCrop
   ])
