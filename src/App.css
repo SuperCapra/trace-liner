@@ -54,18 +54,20 @@ p {
   display: flex;
   flex-direction: row;
   align-items: center;
-  position: absolute;
-  top: 0
+  transform: translateX(-20px);
 }
 .back-button:hover{
   cursor: pointer;
 }
 .back-image{
-  margin: 0 10px
+  margin: 0 10px;
+  fill: var(--palette-pink);
+  transform: rotate(90deg) scale(0.6);
 }
 .p-back{
   color: var(--palette-pink);
   justify-content: left;
+  font-size: 24px;
 }
 .wrapper-image{
   text-align: center;
@@ -176,7 +178,7 @@ p {
   flex-direction: column;
   align-items: center;
   width: 80vw;
-  margin: 5vh 0vh
+  margin: 1vh 0vh 5vh
 }
 .canvas-image{
   width: 80vw;
@@ -480,6 +482,9 @@ p {
   cursor: pointer;
 }
 @media print, screen and (min-width: 450px) {
+  .back-button{
+    transform: translateX(30px);
+  }
   .p-select{
     font-size: calc(3.75vw);
   }
@@ -511,7 +516,6 @@ p {
     display: flex;
     flex-direction: column;
     width: 80vw;
-    margin: 5vh 0vh
   }
   .beauty-border{
     width: 60vw;
@@ -578,7 +582,16 @@ p {
     font-size: calc(3vw);
   }
 }
+@media print, screen and (min-width: 525px) {
+  .back-button{
+    transform: translateX(40px);
+  }
+}
 @media print, screen and (min-width: 600px) {
+  .back-button{
+    transform: translateX(110px);
+    width: 120px
+  }
   .p-select{
     font-size: calc(2.5vw);
   }
@@ -609,7 +622,6 @@ p {
     display: flex;
     flex-direction: column;
     width: 80vw;
-    margin: 5vh 0vh
   }
   .beauty-border{
     width: 40vw;
@@ -685,7 +697,25 @@ p {
     font-size: calc(3vw);
   }
 }
+@media print, screen and (min-width: 650px) {
+  .back-button{
+    transform: translateX(120px);
+  }
+}
+@media print, screen and (min-width: 700px) {
+  .back-button{
+    transform: translateX(130px);
+  }
+}
+@media print, screen and (min-width: 750px) {
+  .back-button{
+    transform: translateX(140px);
+  }
+}
 @media print, screen and (min-width: 800px) {
+  .back-button{
+    transform: translateX(-20px);
+  }
   .p-select{
     font-size: 40px;
   }
@@ -781,7 +811,7 @@ p {
   }
   .width-wrapper-main{
     width: 740px;
-    margin: 40px 0px;
+    margin: 10px 0px 40px;
     flex-direction: row;
     align-items: flex-start;
   }
@@ -876,7 +906,7 @@ p {
   }
   .width-wrapper-main{
     width: 920px;
-    margin: 40px 0px;
+    margin: 10px 0px 40px;
     flex-direction: row;
     align-items: flex-start;
   }

@@ -241,6 +241,7 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
+    let drawing = true
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
     let dimentionCircle = width * 0.02
@@ -253,8 +254,19 @@ function ImageComponent(props) {
     for(let i = 0; i < coordinates.length; i++) {
       let c = coordinates[i]
       let cd = [(c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight]
+      if(drawing) {
 
-      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle)) ctx.lineTo(cd[0],cd[1])
+      }
+      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle)) {
+        if(!drawing) {
+          drawing = true
+          ctx.beginPath()
+        }
+        ctx.lineTo(cd[0],cd[1])
+      } else {
+        if(drawing) ctx.stroke()
+        drawing = false
+      }
       // ctx.lineTo(cd[0],cd[1])
     }
     // ctx.strokeStyle = pattern
@@ -558,34 +570,36 @@ function ImageComponent(props) {
     ])
   
   return (
-    <div className="width-wrapper-main">
+    <div className="wrapper-main">
       <div className="back-button" onClick={() => handleBack()}>
-        <ArrowDown className="back-image" style={styleArrow}/>
+        <ArrowDown className="back-image"/>
         <p className="p-back">BACK</p>
       </div>
-      <div className="beauty-border">
-        <div className={classesCanvasContainer} id="printingAnchor">
-            <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
-            {showTitle && (
-              <div className="width-general text-overlay text-title">
-                <div id="canvasText" style={styleText} className={classesName}>{activity.beautyName}</div>
-                {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{activity.beautyDate}</div>)}
-              </div>
-            )}
-            {clubname === 'nama-crew' &&
-              <div className={classesLogoNama}>
-                {/* <LogoNama className="logo-nama-svg" style={styleLogoNama} blending-style={styleText}/> */}
-                <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
-              </div>
-            }
-            {showMode1 && returnMode1Disposition()}
-            {showMode2 && returnMode2Disposition()}
-            {showMode3 && returnMode3Disposition()}
+      <div className="width-wrapper-main">
+        <div className="beauty-border">
+          <div className={classesCanvasContainer} id="printingAnchor">
+              <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+              <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
+              <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
+              {showTitle && (
+                <div className="width-general text-overlay text-title">
+                  <div id="canvasText" style={styleText} className={classesName}>{activity.beautyName}</div>
+                  {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{activity.beautyDate}</div>)}
+                </div>
+              )}
+              {clubname === 'nama-crew' &&
+                <div className={classesLogoNama}>
+                  {/* <LogoNama className="logo-nama-svg" style={styleLogoNama} blending-style={styleText}/> */}
+                  <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
+                </div>
+              }
+              {showMode1 && returnMode1Disposition()}
+              {showMode2 && returnMode2Disposition()}
+              {showMode3 && returnMode3Disposition()}
+          </div>
         </div>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
       </div>
-      <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
     </div>
   );
 }
