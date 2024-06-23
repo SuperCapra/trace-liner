@@ -50,7 +50,23 @@ p {
 .App-link {
   color: var(--palette-watergreen);
 }
-
+.back-button{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  top: 0
+}
+.back-button:hover{
+  cursor: pointer;
+}
+.back-image{
+  margin: 0 10px
+}
+.p-back{
+  color: var(--palette-pink);
+  justify-content: left;
+}
 .wrapper-image{
   text-align: center;
 }

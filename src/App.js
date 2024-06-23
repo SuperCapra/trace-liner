@@ -95,6 +95,7 @@ class Homepage extends React.Component{
           }}><p className="p-login">LOGIN TO STRAVA</p></div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
+        console.log(activities)
         let arrowDownStyle = {
           fill: brandingPalette.background
         }
@@ -128,7 +129,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName}/>
+              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage:'ShowingActivities'})}/>
           </div>
         )
       }
@@ -261,7 +262,9 @@ class Homepage extends React.Component{
               startDateLocal: e.start_date_local,
               startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
               startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined,
-              unitMeasure: unitMeasure
+              unitMeasure: unitMeasure,
+              hasAltitudeStream: false,
+              hasCoordinates: false
             }
             t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
@@ -288,6 +291,12 @@ class Homepage extends React.Component{
     isLoading = true
     this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
+    if(activities[indexActivity].hasCoordinates && activities[indexActivity].hasAltitudeStream) {
+      isLoading = false
+      this.changeStage({stage:'ShowingActivity'})
+    } else if(activities[indexActivity].hasCoordinates && !activities[indexActivity].hasAltitudeStream) {
+      this.getAltitideStream(activityId, indexActivity)
+    }
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
       '/' + activityId +
       '?access_token=' + accessToken
@@ -306,6 +315,7 @@ class Homepage extends React.Component{
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
+          activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
           console.log(activity)
@@ -330,7 +340,8 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         console.log('Result altitude stream: ', res)
-        activities[indexActivity]['altitudeArray'] = res.altitude.data
+        activities[indexActivity].altitudeStream = res.altitude.data
+        activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length
       })
       .catch(e => console.log('Fatal Error: ', e))
       .finally(() => {
