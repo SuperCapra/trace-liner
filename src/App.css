@@ -619,10 +619,10 @@ p {
     font-size: calc(1.5vw);
   }
   .text-title-props:first-child{
-    bottom: -2vw
+    bottom: -1vw
   }
   .text-title-props:last-child{
-    top:2.2vw
+    top:1.2vw
   }
   .text-title-props-rect:first-child{
     bottom:-8vw

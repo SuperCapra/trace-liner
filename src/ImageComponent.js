@@ -8,8 +8,8 @@ import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
 import html2canvas from 'html2canvas';
 // import { toJpeg } from 'html-to-image';
-import brandingPalette from './brandingPalette.js';
-let firstTime = true
+// import brandingPalette from './brandingPalette.js';
+// let firstTime = true
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(0);
@@ -20,7 +20,7 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
-  const [ratio, setRatio] = useState('1:1');
+  const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   // const [showData, setShowData] = useState(false);
   // const [showDataUnique, setShowDataUnique] = useState(true);
@@ -32,17 +32,17 @@ function ImageComponent(props) {
   const [showPower, setShowPower] = useState(true);
   const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [imageSrc, setImageSrc] = useState(undefined);
+  const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
   const [valueFilter, setValueFilter] = useState(0);
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
-  const [blendMode, setBlendMode] = useState('unset');
+  // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
     color: drawingColor,
-    mixBlendMode: blendMode,
+    // mixBlendMode: blendMode,
   }
   const filterStyle = {
     opacity: valueFilter/100
@@ -51,12 +51,12 @@ function ImageComponent(props) {
     width: (ratio === '1:1') ? '10vw' : '15vw',
     height: (ratio === '1:1') ? '8vw' : '12vw',
     fill: drawingColor,
-    mixBlendMode: blendMode
+    // mixBlendMode: blendMode
   }
   const styleTextUnderSketch = {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor,
-    mixBlendMode: blendMode
+    // mixBlendMode: blendMode
   }
   const classesForSketch = () => {
     if(showMode3) {
@@ -193,16 +193,17 @@ function ImageComponent(props) {
     })
   }
 
-  const drawLine = useCallback((color) => {
+  const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
     console.log('drawLine:', canvasSketch)
-    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 5
-    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 5
-    setDrawingHeight(canvasSketchWidth)
-    setDrawingWidth(canvasSketchHeight)
+    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let coordinates = props.activity.coordinates
+    console.log('coordinates:', coordinates)
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
+    setDrawingHeight(width)
+    setDrawingWidth(height)
     let ctx = canvasSketch.getContext('2d')
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
@@ -245,15 +246,16 @@ function ImageComponent(props) {
 
     ctx.stroke()
 
-    if(firstTime) {
-      firstTime = false
-      setRatio('9:16')
-      setTimeout(handleCrop('9:16'), 500)
-    }
+    // if(firstTime) {
+    //   firstTime = false
+    //   setRatio('9:16')
+    //   setTimeout(handleCrop('9:16'), 500)
+    // }
 
   },[
     props.activity.coordinates, 
-    setRatio
+    
+    // setRatio
     // ratio, 
     // canvasWidth, 
     // canvasHeight
@@ -283,7 +285,7 @@ function ImageComponent(props) {
       drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
-    else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
+    // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
@@ -389,16 +391,16 @@ function ImageComponent(props) {
     drawFilter()
   }
 
-  const handleBlendMode = (blendModeSetting) => {
-    console.log('Blend mode to set:', blendModeSetting)
-    if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
-      handleColorChange(brandingPalette.pink)
-    } else {
-      drawLine(drawingColor)
-      drawFilter()
-    }
-    setBlendMode(blendModeSetting)
-  }
+  // const handleBlendMode = (blendModeSetting) => {
+  //   console.log('Blend mode to set:', blendModeSetting)
+  //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
+  //     handleColorChange(brandingPalette.pink)
+  //   } else {
+  //     drawLine(drawingColor)
+  //     drawFilter()
+  //   }
+  //   setBlendMode(blendModeSetting)
+  // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
     console.log('ratioText:', ratioText)
@@ -430,7 +432,9 @@ function ImageComponent(props) {
         xCrop = 0;
         yCrop = (imageReferenceHeight - canvasHeight) / 2;
       }
-
+      
+      console.log('canvasWidth1', canvasWidth)
+      console.log('canvasHeight1', canvasHeight)
       let scaleFactorWidth = 1
       let scaleFactorHeight = 1
       // Scale the canvas and cropping dimensions by half
@@ -444,21 +448,25 @@ function ImageComponent(props) {
         }
       }
 
-      canvasWidth *=  1 / scaleFactorWidth;
+      canvasWidth *= 1 / scaleFactorWidth;
       canvasHeight *= 1 / scaleFactorHeight;
       xCrop *= 1 / scaleFactorWidth;
       yCrop *= 1 / scaleFactorHeight;
 
+      console.log('canvasWidth2', canvasWidth)
+      console.log('canvasHeight2', canvasHeight)
       setXCrop(xCrop);
       setYCrop(yCrop);
       setCanvasWidth(canvasWidth);
       setCanvasHeight(canvasHeight);
 
       // Clear the canvas and draw the image scaled down
+      console.log('canvas.width', canvas.width)
+      console.log('canvas.height', canvas.height)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
-      drawLine(drawingColor);
+      drawLine(drawingColor, canvasWidth, canvasHeight);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
