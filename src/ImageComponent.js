@@ -32,7 +32,7 @@ function ImageComponent(props) {
   const [showPower, setShowPower] = useState(true);
   const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
-  const [imageSrc, setImageSrc] = useState(undefined);
+  const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
   const [valueFilter, setValueFilter] = useState(0);
   const [showMode1, setShowMode1] = useState(true);
@@ -193,17 +193,17 @@ function ImageComponent(props) {
     })
   }
 
-  const drawLine = useCallback((color) => {
+  const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
     console.log('drawLine:', canvasSketch)
-    let canvasSketchWidth = canvasSketch.getBoundingClientRect().width * 5
-    let canvasSketchHeight = canvasSketch.getBoundingClientRect().height * 5
-    setDrawingHeight(canvasSketchWidth)
-    setDrawingWidth(canvasSketchHeight)
+    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let coordinates = props.activity.coordinates
     console.log('coordinates:', coordinates)
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
+    setDrawingHeight(width)
+    setDrawingWidth(height)
     let ctx = canvasSketch.getContext('2d')
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
@@ -254,6 +254,7 @@ function ImageComponent(props) {
 
   },[
     props.activity.coordinates, 
+    
     // setRatio
     // ratio, 
     // canvasWidth, 
@@ -431,7 +432,9 @@ function ImageComponent(props) {
         xCrop = 0;
         yCrop = (imageReferenceHeight - canvasHeight) / 2;
       }
-
+      
+      console.log('canvasWidth1', canvasWidth)
+      console.log('canvasHeight1', canvasHeight)
       let scaleFactorWidth = 1
       let scaleFactorHeight = 1
       // Scale the canvas and cropping dimensions by half
@@ -445,21 +448,25 @@ function ImageComponent(props) {
         }
       }
 
-      canvasWidth *=  1 / scaleFactorWidth;
+      canvasWidth *= 1 / scaleFactorWidth;
       canvasHeight *= 1 / scaleFactorHeight;
       xCrop *= 1 / scaleFactorWidth;
       yCrop *= 1 / scaleFactorHeight;
 
+      console.log('canvasWidth2', canvasWidth)
+      console.log('canvasHeight2', canvasHeight)
       setXCrop(xCrop);
       setYCrop(yCrop);
       setCanvasWidth(canvasWidth);
       setCanvasHeight(canvasHeight);
 
       // Clear the canvas and draw the image scaled down
+      console.log('canvas.width', canvas.width)
+      console.log('canvas.height', canvas.height)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
-      drawLine(drawingColor);
+      drawLine(drawingColor, canvasWidth, canvasHeight);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
