@@ -8,8 +8,8 @@ import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 // import LogoNama from './LogoNama.js'
 import html2canvas from 'html2canvas';
 // import { toJpeg } from 'html-to-image';
-import brandingPalette from './brandingPalette.js';
-let firstTime = true
+// import brandingPalette from './brandingPalette.js';
+// let firstTime = true
 
 function ImageComponent(props) {
   const [canvasWidth, setCanvasWidth] = useState(0);
@@ -20,7 +20,7 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
-  const [ratio, setRatio] = useState('1:1');
+  const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   // const [showData, setShowData] = useState(false);
   // const [showDataUnique, setShowDataUnique] = useState(true);
@@ -38,11 +38,11 @@ function ImageComponent(props) {
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
-  const [blendMode, setBlendMode] = useState('unset');
+  // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
     color: drawingColor,
-    mixBlendMode: blendMode,
+    // mixBlendMode: blendMode,
   }
   const filterStyle = {
     opacity: valueFilter/100
@@ -51,12 +51,12 @@ function ImageComponent(props) {
     width: (ratio === '1:1') ? '10vw' : '15vw',
     height: (ratio === '1:1') ? '8vw' : '12vw',
     fill: drawingColor,
-    mixBlendMode: blendMode
+    // mixBlendMode: blendMode
   }
   const styleTextUnderSketch = {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor,
-    mixBlendMode: blendMode
+    // mixBlendMode: blendMode
   }
   const classesForSketch = () => {
     if(showMode3) {
@@ -201,6 +201,7 @@ function ImageComponent(props) {
     setDrawingHeight(canvasSketchWidth)
     setDrawingWidth(canvasSketchHeight)
     let coordinates = props.activity.coordinates
+    console.log('coordinates:', coordinates)
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
     let ctx = canvasSketch.getContext('2d')
@@ -245,15 +246,15 @@ function ImageComponent(props) {
 
     ctx.stroke()
 
-    if(firstTime) {
-      firstTime = false
-      setRatio('9:16')
-      setTimeout(handleCrop('9:16'), 500)
-    }
+    // if(firstTime) {
+    //   firstTime = false
+    //   setRatio('9:16')
+    //   setTimeout(handleCrop('9:16'), 500)
+    // }
 
   },[
     props.activity.coordinates, 
-    setRatio
+    // setRatio
     // ratio, 
     // canvasWidth, 
     // canvasHeight
@@ -283,7 +284,7 @@ function ImageComponent(props) {
       drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
-    else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
+    // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
@@ -389,16 +390,16 @@ function ImageComponent(props) {
     drawFilter()
   }
 
-  const handleBlendMode = (blendModeSetting) => {
-    console.log('Blend mode to set:', blendModeSetting)
-    if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
-      handleColorChange(brandingPalette.pink)
-    } else {
-      drawLine(drawingColor)
-      drawFilter()
-    }
-    setBlendMode(blendModeSetting)
-  }
+  // const handleBlendMode = (blendModeSetting) => {
+  //   console.log('Blend mode to set:', blendModeSetting)
+  //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
+  //     handleColorChange(brandingPalette.pink)
+  //   } else {
+  //     drawLine(drawingColor)
+  //     drawFilter()
+  //   }
+  //   setBlendMode(blendModeSetting)
+  // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
     console.log('ratioText:', ratioText)
