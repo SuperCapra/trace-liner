@@ -205,11 +205,9 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    console.log('drawLine:', canvasSketch)
     let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let coordinates = activity.coordinates
-    console.log('coordinates:', coordinates)
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
     setDrawingHeight(width)
@@ -218,8 +216,6 @@ function ImageComponent(props) {
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
     ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
-    console.log('width: ', width)
-    console.log('height: ', height)
     // let border = width*0.2
     // setThickness(width*0.01)
 
