@@ -62,11 +62,11 @@ function ImageComponent(props) {
   }
   const classesForSketch = () => {
     if(showMode3) {
-      if(ratio === '1:1') return ('canvas-position canvas-filter canvas-sketch-mode3')
-      else return ('canvas-position canvas-filter canvas-sketch-mode3-rect')
+      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch-mode3')
+      else return ('round-corner canvas-position canvas-filter canvas-sketch-mode3-rect')
     } else {
-      if(ratio === '1:1') return ('canvas-position canvas-filter canvas-sketch')
-      else return ('canvas-position canvas-filter canvas-sketch-rect')
+      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch')
+      else return ('round-corner canvas-position canvas-filter canvas-sketch-rect')
     }
   }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
@@ -136,6 +136,7 @@ function ImageComponent(props) {
   const handleDownloadClick = async () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')
+    document.getElementById('canvasSketch').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
     // let anchor = document.getElementById('printingAnchor')
 
@@ -173,7 +174,7 @@ function ImageComponent(props) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
                 await navigator.share({
-                    title: utils.removeEmoji(activity.beautyName.replaceAll(' ', '_')).toLowerCase(),
+                    title: utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase(),
                     files: [file],
                 });
             } catch (error) {
@@ -183,7 +184,7 @@ function ImageComponent(props) {
             const url = URL.createObjectURL(blob);
             const temp = document.createElement('a');
             temp.href = url;
-            temp.download = activity.beautyName.replaceAll(' ', '_').toLowerCase() + '.jpeg';
+            temp.download = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase() + '.jpeg';
             temp.click();
             URL.revokeObjectURL(url); // Clean up URL object after use
         }
@@ -192,6 +193,7 @@ function ImageComponent(props) {
     .finally(() => {
       document.getElementById('canvasImage').classList.add('round-corner')
       document.getElementById('canvasFilter').classList.add('round-corner')
+      document.getElementById('canvasSketch').classList.add('round-corner')
       document.getElementById('printingAnchor').classList.add('round-corner')
     })
   }
@@ -298,6 +300,9 @@ function ImageComponent(props) {
     // setThickness(width*0.01)
 
     let maxAltitude = Math.max(...altitudeStream)
+    let minAltitude = Math.min(...altitudeStream)
+
+    let altitudeGap = maxAltitude - (minAltitude < 0 ? minAltitude : 0)
 
     ctx.clearRect(0, 0, width, height);
 
@@ -306,12 +311,12 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
     ctx.beginPath()
   
-    let zoomFactorY = (height/2)/maxAltitude
+    let zoomFactorY = (height/2)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
     console.log('zoomFactorY:', zoomFactorY)
     console.log('zoomFactorX:', zoomFactorX)
     for(let i = 0; i < altitudeStream.length; i++) {
-      let aY = height - (altitudeStream[i] * zoomFactorY)
+      let aY = (height * 0.95) - (altitudeStream[i] * zoomFactorY)
       let aX = distanceStream[i] * zoomFactorX
       ctx.lineTo(aX,aY)
     }
