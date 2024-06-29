@@ -79,6 +79,9 @@ p {
   width: 260px;
   /* margin: 0 12.5vw; */
 }
+.margin-or{
+  margin: 20px;
+}
 .button-login {
   padding: 1vw;
   background-color: var(--palette-pink);
@@ -97,9 +100,14 @@ p {
 }
 .p-login{
   padding: 1vh 3vw 1vh 3vw;
+  color: var(--palette-background);
+}
+.p-or{
+  color: var(--palette-pink);
+}
+.p-login-or-size{
   font-family: 'SourceCodePro';
   font-size: calc(4vmin);
-  color: var(--palette-background);
 }
 .button-activity {
   text-align: left;
@@ -513,6 +521,8 @@ p {
   }
   .p-login{
     padding: 0.75vh 2.25vw 0.75vh 2.25vw;
+  }
+  .p-login-or-size{
     font-size: calc(3vmin);
   }
   .width-wrapper-main{
@@ -619,7 +629,9 @@ p {
   }
   .p-login{
     padding: 0.5vh 1.5vw 0.5vh 1.5vw;
-    font-size: calc(2vmin);
+  }
+  .p-login-or-size{
+    font-size: (2vmin);
   }
   .width-wrapper-main{
     display: flex;
@@ -745,6 +757,8 @@ p {
   }
   .p-login{
     padding: 8px 32px 8px 32px;
+  }
+  .p-login-or-size{
     font-size: 32px;
   }
   .beauty-border{

@@ -5,6 +5,7 @@ import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import brandingPalette from './brandingPalette';
+import GPXParser from 'gpxparser';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -66,6 +67,34 @@ class Homepage extends React.Component{
     })
   }
 
+  loadGPX() {
+    const gpxInput = document.getElementById('gpxInput')
+    if(gpxInput) gpxInput.click()
+  }
+
+  processGPX(event) {
+    if(event && event.target && event.target.files && event.target.files.length) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        let gpxFile = e.target.result
+        const gpx = new GPXParser()
+        gpx.parse(gpxFile)
+        const tracks = gpx.tracks.map(track => ({
+          name: track.name,
+          segments: track.points.map(segment => ({
+            lat: segment.lat,
+            lon: segment.lon,
+            ele: segment.ele,
+            time: segment.time,
+          }))
+        }))
+        console.log('tracks: ', tracks)
+      };
+      reader.readAsText(file);
+    }
+  }
+
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -90,9 +119,18 @@ class Homepage extends React.Component{
     } else {
       if(this.state.stage === 'RequestedLogin') {
         return (
-          <div className="button-login justify-center-column translate-y" onClick={() => {
-            window.location.href = stravaAuthorizeUrl
-          }}><p className="p-login">LOGIN TO STRAVA</p></div>
+          <div className="translate-y">
+            <div className="button-login justify-center-column" onClick={() => {
+              window.location.href = stravaAuthorizeUrl
+            }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
+            <div className="margin-or">
+              <p className="p-or p-login-or-size">OR</p>
+            </div>
+            <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
+              <p className="p-login p-login-or-size">LOAD A GPX</p>
+              <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+            </div>
+          </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
         console.log(activities)

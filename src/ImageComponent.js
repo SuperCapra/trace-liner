@@ -527,8 +527,6 @@ function ImageComponent(props) {
       xCropTemp *= 1 / scaleFactorWidth;
       yCropTemp *= 1 / scaleFactorHeight;
 
-      console.log('canvasWidth2', canvasWidth)
-      console.log('canvasHeight2', canvasHeight)
       setXCrop(xCropTemp);
       setYCrop(yCropTemp);
       setCanvasWidth(canvasWidth);
