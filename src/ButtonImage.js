@@ -194,42 +194,34 @@ function ButtonImage(props) {
   const unitMeasureStyle = {
     fill: brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const shareStyle = {
     fill: brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const modifyStyle = {
     fill: showModifyImage ? brandingPalette.yellow : brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const textStyle = {
     fill: showModifyText ? brandingPalette.yellow : brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const squareStyle = {
     fill: square ? brandingPalette.yellow : brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const rectangleStyle = {
     fill: rectangle ? brandingPalette.yellow : brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const eyeStyle = {
     fill: brandingPalette.pink,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   const subEyeStyle = {
     fill: brandingPalette.lightblue,
     transform: 'scale(0.55)'
-    // transform: 'scale(' + (window.innerWidth / 700) + ')'
   }
   // const unsetBlendModeStyle = {
   //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.pink,

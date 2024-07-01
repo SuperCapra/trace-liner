@@ -143,6 +143,8 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let canvasSketchWidth = 500
     let canvasSketchHeight = 500
     canvasSketchWidth = 500
@@ -220,16 +222,17 @@ function ImageComponent(props) {
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    canvasSketchWidth = 500
-    canvasSketchHeight = 500
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = ratio.split(':')[0]/ratio.split(':')[1] * 500
+    let canvasSketchHeight = 500
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = canvasSketchHeight
-    setDrawingHeight(canvasSketchHeight)
     setDrawingWidth(width)
+    setDrawingHeight(canvasSketchHeight)
+    console.log('width:', width)
     console.log('height:', height)
     console.log('altitudeStream:', altitudeStream)
     let ctx = canvasSketch.getContext('2d')
@@ -240,7 +243,10 @@ function ImageComponent(props) {
     let maxAltitude = Math.max(...altitudeStream)
     let minAltitude = Math.min(...altitudeStream)
 
-    let altitudeGap = maxAltitude - (minAltitude < 0 ? minAltitude : 0)
+    let altitudeGap = maxAltitude - minAltitude
+    console.log('maxAltitude:', maxAltitude)
+    console.log('minAltitude:', minAltitude)
+    console.log('altitudeGap:', altitudeGap)
 
     ctx.clearRect(0, 0, width, height);
 
@@ -249,25 +255,31 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
     ctx.beginPath()
   
-    let zoomFactorY = (height/2)/altitudeGap
+    let zoomFactorY = (height * 0.4)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
     console.log('zoomFactorY:', zoomFactorY)
-    console.log('zoomFactorX:', zoomFactorX)
+    console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+
     for(let i = 0; i < altitudeStream.length; i++) {
-      let aY = (height * 0.95) - (altitudeStream[i] * zoomFactorY)
-      let aX = distanceStream[i] * zoomFactorX
-      ctx.lineTo(aX,aY)
+      if(i % Math.floor(lengthDistance/100) === 0) {
+
+        let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
+        let aX = distanceStream[i] * zoomFactorX
+        ctx.lineTo(aX,aY)
+      }
     }
+    console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
     ctx.lineTo(width,height)
     ctx.lineTo(0,height)
     ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    
   },[
     activity.altitudeStream,
-    activity.distanceStream
+    activity.distanceStream,
+    ratio
   ])
 
   const drawFilter = useCallback((width, height) => {
