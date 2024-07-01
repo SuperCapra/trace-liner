@@ -514,10 +514,10 @@ function ImageComponent(props) {
       // Scale the canvas and cropping dimensions by half
       if(canvasWidth > 2000 || canvasHeight > 2000) {
         if(canvasWidth > canvasHeight) {
-          scaleFactorWidth = canvasWidth / 2000
+          scaleFactorWidth = canvasWidth / 3000
           scaleFactorHeight = scaleFactorWidth
         } else {
-          scaleFactorHeight = canvasHeight / 2000
+          scaleFactorHeight = canvasHeight / 3000
           scaleFactorWidth = scaleFactorHeight
         }
       }
