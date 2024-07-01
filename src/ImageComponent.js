@@ -202,6 +202,8 @@ function ImageComponent(props) {
     let canvasSketch = document.getElementById('canvasSketch')
     let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    canvasSketchWidth = 500
+    canvasSketchHeight = 500
     let coordinates = activity.coordinates
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)
@@ -284,6 +286,8 @@ function ImageComponent(props) {
     let canvasSketch = document.getElementById('canvasSketch')
     let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    canvasSketchWidth = 500
+    canvasSketchHeight = 500
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
