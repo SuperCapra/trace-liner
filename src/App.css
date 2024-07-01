@@ -50,7 +50,25 @@ p {
 .App-link {
   color: var(--palette-watergreen);
 }
-
+.back-button{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  transform: translateX(-20px);
+}
+.back-button:hover{
+  cursor: pointer;
+}
+.back-image{
+  margin: 0 10px;
+  fill: var(--palette-pink);
+  transform: rotate(90deg) scale(0.6);
+}
+.p-back{
+  color: var(--palette-pink);
+  justify-content: left;
+  font-size: 24px;
+}
 .wrapper-image{
   text-align: center;
 }
@@ -60,6 +78,9 @@ p {
   translate: -50%;
   width: 260px;
   /* margin: 0 12.5vw; */
+}
+.margin-or{
+  margin: 20px;
 }
 .button-login {
   padding: 1vw;
@@ -79,9 +100,14 @@ p {
 }
 .p-login{
   padding: 1vh 3vw 1vh 3vw;
+  color: var(--palette-background);
+}
+.p-or{
+  color: var(--palette-pink);
+}
+.p-login-or-size{
   font-family: 'SourceCodePro';
   font-size: calc(4vmin);
-  color: var(--palette-background);
 }
 .button-activity {
   text-align: left;
@@ -160,7 +186,7 @@ p {
   flex-direction: column;
   align-items: center;
   width: 80vw;
-  margin: 5vh 0vh
+  margin: 1vh 0vh 5vh
 }
 .canvas-image{
   width: 80vw;
@@ -203,15 +229,18 @@ p {
   left: 7.5%;
 }
 .canvas-sketch-mode3{
-  width: 57.5%;
-  height: 57.5% !important;
-  top: 35%;
-  left: 10%;
+  width: 100%;
+  height: 100% !important;
+  bottom: -1px !important;
+  top: unset !important;
+  left: 0;
 }
 .canvas-sketch-mode3-rect{
-  width: 85%;
-  top: 35%;
-  left: 7.5%;
+  width: 100%;
+  height: 100% !important;
+  bottom: -1px !important;
+  top: unset !important;
+  left: 0;
 }
 #canvasImage {
   z-index: 1;
@@ -464,6 +493,9 @@ p {
   cursor: pointer;
 }
 @media print, screen and (min-width: 450px) {
+  .back-button{
+    transform: translateX(30px);
+  }
   .p-select{
     font-size: calc(3.75vw);
   }
@@ -489,13 +521,14 @@ p {
   }
   .p-login{
     padding: 0.75vh 2.25vw 0.75vh 2.25vw;
+  }
+  .p-login-or-size{
     font-size: calc(3vmin);
   }
   .width-wrapper-main{
     display: flex;
     flex-direction: column;
     width: 80vw;
-    margin: 5vh 0vh
   }
   .beauty-border{
     width: 60vw;
@@ -562,7 +595,16 @@ p {
     font-size: calc(3vw);
   }
 }
+@media print, screen and (min-width: 525px) {
+  .back-button{
+    transform: translateX(40px);
+  }
+}
 @media print, screen and (min-width: 600px) {
+  .back-button{
+    transform: translateX(110px);
+    width: 120px
+  }
   .p-select{
     font-size: calc(2.5vw);
   }
@@ -587,13 +629,14 @@ p {
   }
   .p-login{
     padding: 0.5vh 1.5vw 0.5vh 1.5vw;
-    font-size: calc(2vmin);
+  }
+  .p-login-or-size{
+    font-size: (2vmin);
   }
   .width-wrapper-main{
     display: flex;
     flex-direction: column;
     width: 80vw;
-    margin: 5vh 0vh
   }
   .beauty-border{
     width: 40vw;
@@ -669,7 +712,25 @@ p {
     font-size: calc(3vw);
   }
 }
+@media print, screen and (min-width: 650px) {
+  .back-button{
+    transform: translateX(120px);
+  }
+}
+@media print, screen and (min-width: 700px) {
+  .back-button{
+    transform: translateX(130px);
+  }
+}
+@media print, screen and (min-width: 750px) {
+  .back-button{
+    transform: translateX(140px);
+  }
+}
 @media print, screen and (min-width: 800px) {
+  .back-button{
+    transform: translateX(-20px);
+  }
   .p-select{
     font-size: 40px;
   }
@@ -696,6 +757,8 @@ p {
   }
   .p-login{
     padding: 8px 32px 8px 32px;
+  }
+  .p-login-or-size{
     font-size: 32px;
   }
   .beauty-border{
@@ -765,7 +828,7 @@ p {
   }
   .width-wrapper-main{
     width: 740px;
-    margin: 40px 0px;
+    margin: 10px 0px 40px;
     flex-direction: row;
     align-items: flex-start;
   }
@@ -860,7 +923,7 @@ p {
   }
   .width-wrapper-main{
     width: 920px;
-    margin: 40px 0px;
+    margin: 10px 0px 40px;
     flex-direction: row;
     align-items: flex-start;
   }

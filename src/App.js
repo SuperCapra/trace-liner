@@ -5,6 +5,7 @@ import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import brandingPalette from './brandingPalette';
+import GPXParser from 'gpxparser';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -66,6 +67,94 @@ class Homepage extends React.Component{
     })
   }
 
+  loadGPX() {
+    const gpxInput = document.getElementById('gpxInput')
+    if(gpxInput) gpxInput.click()
+  }
+
+  processGPX(event) {
+    if(event && event.target && event.target.files && event.target.files.length) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        let gpxFile = e.target.result
+        const gpx = new GPXParser()
+        gpx.parse(gpxFile)
+        console.log('gpx:', gpx)
+        console.log('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
+        const tracks = gpx.tracks.map(track => ({
+          average: undefined,
+          altitudeStream: [...track.points.map(point => (point.ele))],
+          metric: {
+            beautyAverage: undefined,
+            beautyElevation: (track.elevation.pos).toFixed(0) + 'm',
+            beautyDistance: (track.distance.total / 1000).toFixed(0) + 'km',
+            distance: Number((track.distance.total / 1000).toFixed(0)),
+            subtitle: undefined
+          },
+          imperial: {
+            beautyAverage: undefined,
+            beautyElevation: (track.elevation.pos * 3.28084).toFixed(0) + 'ft',
+            beautyDistance: ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi',
+            distance: Number(((track.distance.total / 1000) * 0.621371).toFixed(0)),
+            subtitle: undefined
+          },
+          beautyCoordinates: undefined,
+          beautyEndCoordinates: undefined,
+          beautyDuration: undefined,
+          beautyName: track.name,
+          beautyPower: undefined,
+          beautyDate: undefined,
+          coordinates: track.points.map(point => ([
+            point.lon,
+            point.lon
+          ])),
+          durationMoving: undefined,
+          durationElapsed: undefined,
+          endLatitude: undefined,
+          endLongitude: undefined,
+          distance: track.distance.total,
+          distanceStream: [...track.distance.cumul],
+          elevation: track.elevation.pos,
+          locationCountry: undefined,
+          movingTime: undefined,
+          timingStreamSeconds: [...track.points.map(point => (Math.floor(point.time) / 1000))],
+          name: track.name,
+          photoUrl: undefined,
+          sportType: undefined,
+          startDate: undefined,
+          startDateLocal: undefined,
+          startLatitude: undefined,
+          startLongitude: undefined,
+          unitMeasure: unitMeasure,
+          hasAltitudeStream: false,
+          hasCoordinates: false,
+          fromGpx: true,
+        }))
+        let activityPreparing = tracks[0]
+        activityPreparing.movingTime = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
+        activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
+        activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
+        activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
+        activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
+        activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
+        activityPreparing.startLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][1] : undefined
+        activityPreparing.beautyCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.startLatitude, activityPreparing.startLongitude])
+        activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
+        activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
+        activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+        console.log('activityPreparing: ', activityPreparing)
+      }
+      reader.readAsText(file);
+    }
+  }
+
+  parseElement(element) {
+    return {
+      
+    }
+  }
+
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -90,11 +179,21 @@ class Homepage extends React.Component{
     } else {
       if(this.state.stage === 'RequestedLogin') {
         return (
-          <div className="button-login justify-center-column translate-y" onClick={() => {
-            window.location.href = stravaAuthorizeUrl
-          }}><p className="p-login">LOGIN TO STRAVA</p></div>
+          <div className="translate-y">
+            <div className="button-login justify-center-column" onClick={() => {
+              window.location.href = stravaAuthorizeUrl
+            }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
+            {/* <div className="margin-or">
+              <p className="p-or p-login-or-size">OR</p>
+            </div>
+            <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
+              <p className="p-login p-login-or-size">LOAD A GPX</p>
+              <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+            </div> */}
+          </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
+        console.log(activities)
         let arrowDownStyle = {
           fill: brandingPalette.background
         }
@@ -128,7 +227,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName}/>
+              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage:'ShowingActivities'})}/>
           </div>
         )
       }
@@ -226,6 +325,7 @@ class Homepage extends React.Component{
             console.log('Activity: ', e)
             let t = {
               average: utils.getAverageSpeedMetric(e.distance, e.moving_time),
+              altitudeStream: [],
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
@@ -249,6 +349,7 @@ class Homepage extends React.Component{
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,
               endLongitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[1] : undefined,
               distance: e.distance,
+              distanceStream: [],
               elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
@@ -261,7 +362,9 @@ class Homepage extends React.Component{
               startDateLocal: e.start_date_local,
               startLatitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[0] : undefined,
               startLongitude: e.start_latlng && e.start_latlng.length && e.start_latlng.length === 2 ? e.start_latlng[1] : undefined,
-              unitMeasure: unitMeasure
+              unitMeasure: unitMeasure,
+              hasAltitudeStream: false,
+              hasCoordinates: false
             }
             t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
             t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
@@ -288,6 +391,12 @@ class Homepage extends React.Component{
     isLoading = true
     this.changeStage({stage:'FetchingActivity'})
     console.log('getting activityId: ', activityId)
+    if(activities[indexActivity].hasCoordinates && activities[indexActivity].hasAltitudeStream) {
+      isLoading = false
+      this.changeStage({stage:'ShowingActivity'})
+    } else if(activities[indexActivity].hasCoordinates && !activities[indexActivity].hasAltitudeStream) {
+      this.getAltitideStream(activityId, indexActivity)
+    }
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY + 
       '/' + activityId +
       '?access_token=' + accessToken
@@ -306,6 +415,7 @@ class Homepage extends React.Component{
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
+          activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
           console.log(activity)
@@ -330,7 +440,9 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         console.log('Result altitude stream: ', res)
-        activities[indexActivity]['altitudeArray'] = res.altitude.data
+        activities[indexActivity].altitudeStream = res.altitude.data
+        activities[indexActivity].distanceStream = res.distance.data
+        activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length
       })
       .catch(e => console.log('Fatal Error: ', e))
       .finally(() => {
