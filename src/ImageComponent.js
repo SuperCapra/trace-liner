@@ -4,11 +4,8 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
-// import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-// import LogoNama from './LogoNama.js'
 import html2canvas from 'html2canvas';
-// import { toJpeg } from 'html-to-image';
 
 function ImageComponent(props) {
 
@@ -24,8 +21,6 @@ function ImageComponent(props) {
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
-  // const [showData, setShowData] = useState(false);
-  // const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -80,58 +75,6 @@ function ImageComponent(props) {
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 mode-3-text-rect'
-
-  // const fetchAndSetImage = async (url) => {
-  //   console.log('fetching image', url)
-  //   try {
-  //     fetch(url, { 
-  //       method: 'GET',
-  //       mode: 'no-cors',
-  //       headers : {
-  //         'Content-Type': 'image/jpeg', 
-  //         'Accept': '*/*',
-  //         'Accept-Encoding': 'gzip, deflate, br',
-  //         'Connection': 'keep-alive'
-  //       }
-  //     })
-  //       .then(res => {
-  //         console.log('res', res)
-  //         res.blob()
-  //       })
-  //       .then(resParsed => {
-  //         console.log('resParsed', resParsed)
-  //       })
-  //     // const response = await fetch(url, { 
-  //     //   method: 'GET',
-  //     //   mode: 'no-cors',
-  //     //   headers : {
-  //     //     'Content-Type': 'image/jpeg', 
-  //     //     'Accept': '*/*',
-  //     //     'Accept-Encoding': 'gzip, deflate, br',
-  //     //     'Connection': 'keep-alive'
-  //     //   }
-  //     // }); // Consider handling CORS appropriately
-  //     // console.log('response', response)
-  //     // const blob = await response.blob();
-  //     // const reader = new FileReader();
-  //     // reader.onloadend = () => {
-  //     //   console.log('fetching onloadend', reader.result)
-  //     //   console.log('blob', blob)
-  //     //   const base64data = reader.result;
-  //     //   setImageSrc(base64data); // This will trigger a re-render
-  //     //   const img = new Image();
-  //     //   console.log('base64data', base64data)
-  //     //   img.onload = () => {
-  //     //     // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
-  //     //     console.log('Image is loaded and ready to be used');
-  //     //   };
-  //     //   img.src = base64data;
-  //     // };
-  //     // reader.readAsDataURL(blob);
-  //   } catch (e) {
-  //     console.error('Error loading image: ', e);
-  //   }
-  // };
 
   const handleDownloadClick = async () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
@@ -200,8 +143,8 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = 500
+    let canvasSketchHeight = 500
     canvasSketchWidth = 500
     canvasSketchHeight = 500
     let coordinates = activity.coordinates
@@ -226,7 +169,6 @@ function ImageComponent(props) {
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
 
-    // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
     console.log('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
@@ -262,8 +204,6 @@ function ImageComponent(props) {
       }
       // ctx.lineTo(cd[0],cd[1])
     }
-    // ctx.strokeStyle = pattern
-    // ctx.fill()
     
     ctx.stroke()
     ctx.beginPath()
@@ -275,11 +215,7 @@ function ImageComponent(props) {
     // ctx.drawImage(finishPatternPNGRef, (coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2 - 40, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - 40)
 
   },[
-    activity.coordinates,
-    // setRatio
-    // ratio, 
-    // canvasWidth, 
-    // canvasHeight
+    activity.coordinates
   ])
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
@@ -300,8 +236,6 @@ function ImageComponent(props) {
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    // let border = width*0.2
-    // setThickness(width*0.01)
 
     let maxAltitude = Math.max(...altitudeStream)
     let minAltitude = Math.min(...altitudeStream)
@@ -333,7 +267,7 @@ function ImageComponent(props) {
     
   },[
     activity.altitudeStream,
-    activity.distanceStream,
+    activity.distanceStream
   ])
 
   const drawFilter = useCallback((width, height) => {
@@ -343,10 +277,8 @@ function ImageComponent(props) {
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
-    // ctx.filter = 'opacity(' + valueFilter + '%)'
     ctx.fillRect(0, 0, widthToUse, heightToUse);
   }, [
-    // valueFilter,
     filterColor, 
     canvasWidth, 
     canvasHeight
@@ -490,8 +422,6 @@ function ImageComponent(props) {
 
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
-      
-      console.log('imageReference', imgSrc)
 
       let ratioParts = ratioText.split(':')
       const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
@@ -511,8 +441,6 @@ function ImageComponent(props) {
         yCropTemp = (imageReferenceHeight - canvasHeight) / 2;
       }
       
-      console.log('canvasWidth1', canvasWidth)
-      console.log('canvasHeight1', canvasHeight)
       let scaleFactorWidth = 1
       let scaleFactorHeight = 1
       // Scale the canvas and cropping dimensions by half
@@ -607,12 +535,7 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    // drawLine(drawingColor)
     handleCrop(ratio, imageSrc)
-    // if (activity.photoUrl && !imageSrc) {
-    //   fetchAndSetImage(activity.photoUrl);
-    // } else if(!activity.photoUrl || (activity.photoUrl && imageSrc)) {
-    // }
   }, [
       ratio,
       canvasHeight,
@@ -641,7 +564,6 @@ function ImageComponent(props) {
               )}
               {clubname === 'nama-crew' &&
                 <div className={classesLogoNama}>
-                  {/* <LogoNama className="logo-nama-svg" style={styleLogoNama} blending-style={styleText}/> */}
                   <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
                 </div>
               }
