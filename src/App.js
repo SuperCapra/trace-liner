@@ -108,7 +108,7 @@ class Homepage extends React.Component{
           beautyDate: undefined,
           coordinates: track.points.map(point => ([
             point.lon,
-            point.lon
+            point.lat
           ])),
           durationMoving: undefined,
           durationElapsed: undefined,
