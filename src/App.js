@@ -49,6 +49,8 @@ class Homepage extends React.Component{
       stage : stage,
       stageHistory : stageHistory,
     }
+    this.processGPX = this.processGPX.bind(this);
+    this.changeStage = this.changeStage.bind(this);
   }
 
   changeStage(value) {
@@ -143,6 +145,8 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         console.log('activityPreparing: ', activityPreparing)
+        activity = activityPreparing
+        this.changeStage({stage: 'ShowingActivity'})
       }
       reader.readAsText(file);
     }
@@ -164,6 +168,9 @@ class Homepage extends React.Component{
     if(urlCurrent.includes('/nama-crew') && !stravaAuthorizeUrl.includes('/nama-crew')) {
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
+    }
+    if(urlCurrent.includes('/gpx-file')) {
+      this.changeStage({stage: 'ShowingActivity'})
     }
     if(code && !called) {
       called = true
@@ -232,7 +239,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage:'ShowingActivities'})}/>
+              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }
