@@ -225,8 +225,14 @@ const utilsFunction = {
         if(element.beautyDuration) result += (result.length ? ' | ' : '') + element.beautyDuration
         return result
     },
+
     elevate2(x,y) {
-        return (x-y)*(x-y)
+        return (x - y) * (x - y)
+    },
+
+    returnGradient(x,y) {
+        let cos = Math.sqrt((x ** 2) - (y ** 2))
+        return Number((y/cos).toFixed(4))
     },
     
     quadraticFunction(a,b) {

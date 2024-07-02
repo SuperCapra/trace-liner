@@ -42,6 +42,7 @@ function ButtonImage(props) {
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
+  const [showMode4, setShowMode4] = useState(false);
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
   // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
@@ -140,6 +141,7 @@ function ButtonImage(props) {
       if(!showMode1) {
         setShowMode2(false)
         setShowMode3(false)
+        setShowMode4(false)
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
@@ -148,6 +150,7 @@ function ButtonImage(props) {
       if(!showMode2) {
         setShowMode1(false)
         setShowMode3(false)
+        setShowMode4(false)
       }
       enableMode2()
     } else if(type === 'mode3') {
@@ -156,8 +159,18 @@ function ButtonImage(props) {
       if(!showMode3) {
         setShowMode1(false)
         setShowMode2(false)
+        setShowMode4(false)
       }
       enableMode3()
+    } else if(type === 'mode4') {
+      handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
+      setShowMode4(!showMode4)
+      if(!showMode4) {
+        setShowMode1(false)
+        setShowMode2(false)
+        setShowMode3(false)
+      }
+      enableMode4()
     }
   }
 
@@ -183,6 +196,15 @@ function ButtonImage(props) {
   }
 
   const enableMode3 = () => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    // setShowCoordinates(true)
+  }
+
+  const enableMode4 = () => {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
@@ -431,6 +453,12 @@ function ButtonImage(props) {
           <p>MODE 3</p>
         </div>
         {showMode3 && displayMode3()}
+        <div className="wrapper-buttons-left">
+          {showMode4 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
+          {!showMode4 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
+          <p>MODE 4</p>
+        </div>
+        {showMode4 && displayMode4()}
       </div>
     )
   }
@@ -461,7 +489,6 @@ function ButtonImage(props) {
       </div>
     )
   }
-  //TODO define the mode3 data 
   const displayMode3 = () => {    
     return (
       <div className="width-mode-sub">
@@ -471,6 +498,18 @@ function ButtonImage(props) {
         {activity.beautyPower && powerController()}
         {activity[unitMeasure].beautyAverage && averageController()}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
+      </div>
+    )
+  }
+  const displayMode4 = () => {    
+    return (
+      <div className="width-mode-sub">
+        {/* {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {activity.beautyPower && powerController()}
+        {activity[unitMeasure].beautyAverage && averageController()}
+        {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )
   }
