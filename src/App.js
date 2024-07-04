@@ -49,8 +49,9 @@ class Homepage extends React.Component{
       stage : stage,
       stageHistory : stageHistory,
     }
+    this.processGPX = this.processGPX.bind(this);
+    this.changeStage = this.changeStage.bind(this);
   }
-
 
   changeStage(value) {
     if(value.stage) {
@@ -107,7 +108,7 @@ class Homepage extends React.Component{
           beautyDate: undefined,
           coordinates: track.points.map(point => ([
             point.lon,
-            point.lon
+            point.lat
           ])),
           durationMoving: undefined,
           durationElapsed: undefined,
@@ -144,6 +145,8 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         console.log('activityPreparing: ', activityPreparing)
+        activity = activityPreparing
+        this.changeStage({stage: 'ShowingActivity'})
       }
       reader.readAsText(file);
     }
@@ -166,6 +169,9 @@ class Homepage extends React.Component{
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
     }
+    if(urlCurrent.includes('/gpx-file')) {
+      this.changeStage({stage: 'ShowingActivity'})
+    }
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
@@ -178,18 +184,20 @@ class Homepage extends React.Component{
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
+        let urlWithoutParams = window.location.pathname
+        if(urlCurrent !== urlWithoutParams) window.history.replaceState({}, '', urlWithoutParams);
         return (
           <div className="translate-y">
             <div className="button-login justify-center-column" onClick={() => {
               window.location.href = stravaAuthorizeUrl
             }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
-            {/* <div className="margin-or">
+            <div className="margin-or">
               <p className="p-or p-login-or-size">OR</p>
             </div>
             <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
               <p className="p-login p-login-or-size">LOAD A GPX</p>
               <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-            </div> */}
+            </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -210,6 +218,10 @@ class Homepage extends React.Component{
         let styleArrow = !activitiesButton.length ? { display : 'none' } : this.props.displayStyle
         return (
           <div>
+            <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
+              <ArrowDown className="back-image"/>
+              <p className="p-back">BACK</p>
+            </div>
             <div style={styleSelectActivity}>
               <p className="p-select">SELECT AN ACTIVITY</p>
             </div>
@@ -227,7 +239,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage:'ShowingActivities'})}/>
+              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }
@@ -455,8 +467,6 @@ class Homepage extends React.Component{
   render() {
     return (   
       <div className="App">
-          {/* {this.returnRadioLang()}
-          {this.returnBack()} */}
         <div className="App-header">
             {this.routesToStage()}
         </div>

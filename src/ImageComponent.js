@@ -4,11 +4,9 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
-// import CachedImage from './CachedImage.js'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-// import LogoNama from './LogoNama.js'
 import html2canvas from 'html2canvas';
-// import { toJpeg } from 'html-to-image';
+import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
 
@@ -24,8 +22,6 @@ function ImageComponent(props) {
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
-  // const [showData, setShowData] = useState(false);
-  // const [showDataUnique, setShowDataUnique] = useState(true);
   const [showDate, setShowDate] = useState(true);
   const [showDistance, setShowDistance] = useState(true);
   const [showDuration, setShowDuration] = useState(true);
@@ -40,6 +36,7 @@ function ImageComponent(props) {
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
+  const [showMode4, setShowMode4] = useState(false);
   // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
@@ -61,7 +58,7 @@ function ImageComponent(props) {
     // mixBlendMode: blendMode
   }
   const classesForSketch = () => {
-    if(showMode3) {
+    if(showMode3 || showMode4) {
       if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch-mode3')
       else return ('round-corner canvas-position canvas-filter canvas-sketch-mode3-rect')
     } else {
@@ -80,58 +77,7 @@ function ImageComponent(props) {
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 mode-3-text-rect'
-
-  // const fetchAndSetImage = async (url) => {
-  //   console.log('fetching image', url)
-  //   try {
-  //     fetch(url, { 
-  //       method: 'GET',
-  //       mode: 'no-cors',
-  //       headers : {
-  //         'Content-Type': 'image/jpeg', 
-  //         'Accept': '*/*',
-  //         'Accept-Encoding': 'gzip, deflate, br',
-  //         'Connection': 'keep-alive'
-  //       }
-  //     })
-  //       .then(res => {
-  //         console.log('res', res)
-  //         res.blob()
-  //       })
-  //       .then(resParsed => {
-  //         console.log('resParsed', resParsed)
-  //       })
-  //     // const response = await fetch(url, { 
-  //     //   method: 'GET',
-  //     //   mode: 'no-cors',
-  //     //   headers : {
-  //     //     'Content-Type': 'image/jpeg', 
-  //     //     'Accept': '*/*',
-  //     //     'Accept-Encoding': 'gzip, deflate, br',
-  //     //     'Connection': 'keep-alive'
-  //     //   }
-  //     // }); // Consider handling CORS appropriately
-  //     // console.log('response', response)
-  //     // const blob = await response.blob();
-  //     // const reader = new FileReader();
-  //     // reader.onloadend = () => {
-  //     //   console.log('fetching onloadend', reader.result)
-  //     //   console.log('blob', blob)
-  //     //   const base64data = reader.result;
-  //     //   setImageSrc(base64data); // This will trigger a re-render
-  //     //   const img = new Image();
-  //     //   console.log('base64data', base64data)
-  //     //   img.onload = () => {
-  //     //     // Ensure this image is drawn on the canvas here or make sure canvas operations happen after this point
-  //     //     console.log('Image is loaded and ready to be used');
-  //     //   };
-  //     //   img.src = base64data;
-  //     // };
-  //     // reader.readAsDataURL(blob);
-  //   } catch (e) {
-  //     console.error('Error loading image: ', e);
-  //   }
-  // };
+  const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
@@ -200,8 +146,10 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = 500
+    let canvasSketchHeight = 500
     canvasSketchWidth = 500
     canvasSketchHeight = 500
     let coordinates = activity.coordinates
@@ -226,7 +174,6 @@ function ImageComponent(props) {
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
 
-    // let zoomFactor = Math.min((width - border) / mapWidth, (height - border) / mapHeight)
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
     console.log('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
@@ -262,8 +209,6 @@ function ImageComponent(props) {
       }
       // ctx.lineTo(cd[0],cd[1])
     }
-    // ctx.strokeStyle = pattern
-    // ctx.fill()
     
     ctx.stroke()
     ctx.beginPath()
@@ -275,66 +220,228 @@ function ImageComponent(props) {
     // ctx.drawImage(finishPatternPNGRef, (coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2 - 40, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - 40)
 
   },[
-    activity.coordinates,
-    // setRatio
-    // ratio, 
-    // canvasWidth, 
-    // canvasHeight
+    activity.coordinates
   ])
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
-    let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    canvasSketchWidth = 500
-    canvasSketchHeight = 500
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = ratio.split(':')[0]/ratio.split(':')[1] * 500
+    let canvasSketchHeight = 500
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = canvasSketchHeight
-    setDrawingHeight(canvasSketchHeight)
     setDrawingWidth(width)
+    setDrawingHeight(canvasSketchHeight)
+    console.log('width:', width)
     console.log('height:', height)
     console.log('altitudeStream:', altitudeStream)
     let ctx = canvasSketch.getContext('2d')
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    // let border = width*0.2
-    // setThickness(width*0.01)
 
     let maxAltitude = Math.max(...altitudeStream)
     let minAltitude = Math.min(...altitudeStream)
 
-    let altitudeGap = maxAltitude - (minAltitude < 0 ? minAltitude : 0)
+    let altitudeGap = maxAltitude - minAltitude
+    console.log('maxAltitude:', maxAltitude)
+    console.log('minAltitude:', minAltitude)
+    console.log('altitudeGap:', altitudeGap)
 
     ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = color 
-    ctx.lineWidth = width * 0.01
+    ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
     ctx.beginPath()
   
-    let zoomFactorY = (height/2)/altitudeGap
+    let zoomFactorY = (height * 0.4)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
     console.log('zoomFactorY:', zoomFactorY)
-    console.log('zoomFactorX:', zoomFactorX)
+    console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+
     for(let i = 0; i < altitudeStream.length; i++) {
-      let aY = (height * 0.95) - (altitudeStream[i] * zoomFactorY)
-      let aX = distanceStream[i] * zoomFactorX
-      ctx.lineTo(aX,aY)
+      if(i % Math.floor(lengthDistance/100) === 0) {
+        let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
+        let aX = distanceStream[i] * zoomFactorX
+        ctx.lineTo(aX,aY)
+      }
     }
+    console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
     ctx.lineTo(width,height)
     ctx.lineTo(0,height)
     ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    
+    let climbs = returnClimbing(altitudeStream, distanceStream)
+    // for(let i = 0; i < climbs.length; i++) {
+    //   let climb = climbs[i]
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = color
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    // }
   },[
     activity.altitudeStream,
     activity.distanceStream,
+    ratio
   ])
+
+  const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
+    let canvasSketch = document.getElementById('canvasSketch')
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = ratio.split(':')[0]/ratio.split(':')[1] * 500
+    let canvasSketchHeight = 500
+    let altitudeStream = activity.altitudeStream
+    let distanceStream = activity.distanceStream
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+    let height = canvasSketchHeight
+    setDrawingWidth(width)
+    setDrawingHeight(canvasSketchHeight)
+    console.log('width:', width)
+    console.log('height:', height)
+    console.log('altitudeStream:', altitudeStream)
+    let ctx = canvasSketch.getContext('2d')
+    // Setup line properties to avoid spikes
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    let maxAltitude = Math.max(...altitudeStream)
+    let minAltitude = Math.min(...altitudeStream)
+
+    let altitudeGap = maxAltitude - minAltitude
+    console.log('maxAltitude:', maxAltitude)
+    console.log('minAltitude:', minAltitude)
+    console.log('altitudeGap:', altitudeGap)
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.005
+    let lengthDistance = distanceStream.length
+    let lengthAltitude = altitudeStream.length
+    ctx.beginPath()
+  
+    let zoomFactorY = height/distanceStream[lengthDistance - 1]
+    let zoomFactorX = (width * 0.4)/altitudeGap
+    console.log('zoomFactorY:', zoomFactorY)
+    console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+
+    for(let i = 0; i < altitudeStream.length; i++) {
+      if(i % Math.floor(lengthDistance/200) === 0) {
+        let aX = width - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorX)
+        let aY = height - distanceStream[i] * zoomFactorY
+        ctx.lineTo(aX,aY)
+      }
+    }
+    console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    ctx.lineTo(width - (altitudeStream[lengthAltitude - 1] * zoomFactorX),0)
+    ctx.lineTo(width,0)
+    ctx.lineTo(width,height)
+    ctx.lineTo(width - (altitudeStream[0] * zoomFactorX),height)
+    ctx.fillStyle = color
+    ctx.closePath()
+    ctx.fill()
+    let climbs = returnClimbing(altitudeStream, distanceStream)
+    // for(let i = 0; i < climbs.length; i++) {
+    //   let climb = climbs[i]
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = color
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    // }
+  },[
+    activity.altitudeStream,
+    activity.distanceStream,
+    ratio
+  ])
+
+  const returnClimbing = (altitudeStream, distanceStream) => {
+    let asl = altitudeStream.length
+    let dsl = distanceStream.length
+    console.log('altitudeStream:', altitudeStream)
+    altitudeStream = altitudeStream.map(x => Math.floor(x))
+    distanceStream = distanceStream.map(x => Math.floor(x))
+    console.log('altitudeStream:', altitudeStream)
+    let climbs = []
+    for(let i = 0; i < asl - 1; i++) {
+      let climb = {
+        distance: undefined,
+        gradient: undefined,
+        elevation: undefined,
+        maxElevation: undefined,
+        minElevation: undefined,
+        start: distanceStream[i],
+        finish: undefined,
+        indexStart: i,
+        indexFinish: i
+      }
+      
+      for(let j = i + 1; j < asl; j++) {
+        if(altitudeStream[j] - altitudeStream[j - 1] < 0 && distanceStream[j] - distanceStream[i] > 0) {
+          climb.distance = distanceStream[j] - distanceStream[i]
+          climb.elevation = altitudeStream[j] - altitudeStream[i]
+          climb.maxElevation = altitudeStream[j]
+          climb.minElevation = altitudeStream[i]
+          climb.gradient = utils.returnGradient(climb.distance,climb.elevation)
+          climb.finish = distanceStream[j]
+          climb.indexFinish = j
+          climbs.push(climb)
+          i = j + 1
+          break
+        }
+      }
+    }
+    console.log('climbs:', climbs)
+    console.log('(distanceStream[dsl - 1] * 0.01):', (distanceStream[dsl - 1] * 0.01))
+    climbs = climbs.filter(x => x.gradient > 0)
+    let finalClimbs = []
+    if(climbs) finalClimbs.push(climbs[0])
+    for(let i = 1; i < climbs.length; i++) {
+      let previousClimb = finalClimbs[finalClimbs.length - 1]
+      let tempClimb = climbs[i]
+      if(tempClimb.start - previousClimb.finish < tempClimb.distance * 0.1 
+        || tempClimb.start - previousClimb.finish < previousClimb.distance * 0.1) {
+          finalClimbs[finalClimbs.length - 1] = {
+            distance: tempClimb.finish - previousClimb.start,
+            gradient: undefined,
+            elevation: tempClimb.maxElevation - previousClimb.minElevation,
+            maxElevation: tempClimb.maxElevation,
+            minElevation: previousClimb.minElevation,
+            start: previousClimb.start,
+            finish: tempClimb.finish,
+            indexStart: previousClimb.indexStart,
+            indexFinish: tempClimb.indexFinish
+          }
+          finalClimbs[finalClimbs.length - 1].gradient = utils.returnGradient(finalClimbs[finalClimbs.length - 1].distance, finalClimbs[finalClimbs.length - 1].elevation)
+        } else {
+          finalClimbs.push(tempClimb)
+        }
+    }
+    console.log('finalClimbs:', finalClimbs)
+    finalClimbs = finalClimbs.filter(x => x.distance > (distanceStream[dsl - 1] * 0.01) && x.gradient > 0.03)
+    console.log('finalClimbs:', finalClimbs)
+    return finalClimbs
+  }
 
   const drawFilter = useCallback((width, height) => {
     let widthToUse = width ? width : canvasWidth
@@ -343,10 +450,8 @@ function ImageComponent(props) {
     let ctx = canvasFilter.getContext('2d')
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
-    // ctx.filter = 'opacity(' + valueFilter + '%)'
     ctx.fillRect(0, 0, widthToUse, heightToUse);
   }, [
-    // valueFilter,
     filterColor, 
     canvasWidth, 
     canvasHeight
@@ -364,15 +469,10 @@ function ImageComponent(props) {
     else if(data.type === 'rectangle' || data.type === 'square') {
       setRatio(data.type === 'square' ? '1:1' : '9:16')
       handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
-    }
-    else if(data.type === 'show-hide') {
+    } else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
-        if(data.show) {
-          setShowDate(true)
-        } else {
-          setShowDate(false)
-        }
+        setShowDate(data.show)
       } else if(data.subtype === 'date') {
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
@@ -400,6 +500,7 @@ function ImageComponent(props) {
         if(data.show) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
+          setShowMode4(!data.show)
           enableMode1(data.show, true)
         }
         if(data.show) enableMode1(true)
@@ -408,14 +509,24 @@ function ImageComponent(props) {
         if(data.show) {
           setShowMode1(!data.show)
           setShowMode3(!data.show)
+          setShowMode4(!data.show)
           enableMode2()
         }
-      }  else if(data.subtype === 'mode3') {
+      } else if(data.subtype === 'mode3') {
         setShowMode3(data.show)
         if(data.show) {
           setShowMode1(!data.show)
           setShowMode2(!data.show)
+          setShowMode4(!data.show)
           enableMode3()
+        }
+      } else if(data.subtype === 'mode4') {
+        setShowMode4(data.show)
+        if(data.show) {
+          setShowMode1(!data.show)
+          setShowMode2(!data.show)
+          setShowMode3(!data.show)
+          enableMode4()
         }
       }
     } else if(data.type === 'image') {
@@ -461,10 +572,23 @@ function ImageComponent(props) {
     setShowCoordinates(true)
   }
 
+  const enableMode4 = () => {
+    drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+    setShowTitle(false)
+    setShowDate(false)
+    // setShowDistance(true)
+    // setShowElevation(true)
+    // setShowDuration(true)
+    // setShowPower(true)
+    // setShowAverage(true)
+    // setShowCoordinates(true)
+  }
+
   const handleColorChange = (color) => {
     console.log('color to set:', color)
     setDrawingColor(color)
     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+    else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
     else drawLine(drawingColor, canvasWidth, canvasHeight)
     drawFilter()
   }
@@ -490,8 +614,6 @@ function ImageComponent(props) {
 
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
-      
-      console.log('imageReference', imgSrc)
 
       let ratioParts = ratioText.split(':')
       const aspectRatio = parseInt(ratioParts[0], 10) / parseInt(ratioParts[1], 10)
@@ -511,8 +633,6 @@ function ImageComponent(props) {
         yCropTemp = (imageReferenceHeight - canvasHeight) / 2;
       }
       
-      console.log('canvasWidth1', canvasWidth)
-      console.log('canvasHeight1', canvasHeight)
       let scaleFactorWidth = 1
       let scaleFactorHeight = 1
       // Scale the canvas and cropping dimensions by half
@@ -543,6 +663,7 @@ function ImageComponent(props) {
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
       if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+      else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
       else drawLine(drawingColor, canvasWidth, canvasHeight);
   };
 
@@ -553,7 +674,9 @@ function ImageComponent(props) {
     drawingColor,
     drawLine,
     drawElevation,
+    drawElevationVertical,
     showMode3,
+    showMode4,
     xCrop,
     yCrop
   ])
@@ -606,13 +729,18 @@ function ImageComponent(props) {
     return (<div id="canvasText" className={styleMode3} style={styleText}>{dataToDisplay}</div>)
   }
 
+  const returnMode4Disposition = () => {
+    let dataToDisplay = []
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-4"><p>{activity.beautyDuration}</p></div>)
+    // if(activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-4"><p>{activity.beautyPower}</p></div>)
+    // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
+  }
+
   useEffect(() => {
-    // drawLine(drawingColor)
     handleCrop(ratio, imageSrc)
-    // if (activity.photoUrl && !imageSrc) {
-    //   fetchAndSetImage(activity.photoUrl);
-    // } else if(!activity.photoUrl || (activity.photoUrl && imageSrc)) {
-    // }
   }, [
       ratio,
       canvasHeight,
@@ -641,13 +769,13 @@ function ImageComponent(props) {
               )}
               {clubname === 'nama-crew' &&
                 <div className={classesLogoNama}>
-                  {/* <LogoNama className="logo-nama-svg" style={styleLogoNama} blending-style={styleText}/> */}
                   <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
                 </div>
               }
               {showMode1 && returnMode1Disposition()}
               {showMode2 && returnMode2Disposition()}
               {showMode3 && returnMode3Disposition()}
+              {showMode4 && returnMode4Disposition()}
           </div>
         </div>
         <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
