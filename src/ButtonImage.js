@@ -495,7 +495,6 @@ function ButtonImage(props) {
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
         {activity[unitMeasure].beautyAverage && averageController()}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
@@ -504,12 +503,9 @@ function ButtonImage(props) {
   const displayMode4 = () => {    
     return (
       <div className="width-mode-sub">
-        {/* {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
-        {activity[unitMeasure].beautyAverage && averageController()}
-        {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )
   }
