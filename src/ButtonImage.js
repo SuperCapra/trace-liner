@@ -495,6 +495,7 @@ function ButtonImage(props) {
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
+        {activity.beautyPower && powerController()}
         {activity[unitMeasure].beautyAverage && averageController()}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
