@@ -278,19 +278,19 @@ function ImageComponent(props) {
     ctx.closePath()
     ctx.fill()
     let climbs = returnClimbing(altitudeStream, distanceStream)
-    for(let i = 0; i < climbs.length; i++) {
-      let climb = climbs[i]
-      ctx.beginPath()
-      ctx.strokeStyle = color
-      ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
-      ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
-      ctx.stroke()
-      ctx.beginPath()
-      ctx.strokeStyle = brandingPalette.yellow
-      ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
-      ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
-      ctx.stroke()
-    }
+    // for(let i = 0; i < climbs.length; i++) {
+    //   let climb = climbs[i]
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = color
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    // }
   },[
     activity.altitudeStream,
     activity.distanceStream,

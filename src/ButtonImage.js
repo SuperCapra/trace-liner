@@ -467,7 +467,7 @@ function ButtonImage(props) {
     return (
       <div className="width-mode-sub">
         {nameController()}
-        {dateController()}
+        {activity.beautyDate && dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
@@ -482,7 +482,7 @@ function ButtonImage(props) {
     return (
       <div className="width-mode-sub">
         {nameController()}
-        {dateController()}
+        {activity.beautyDate && dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
