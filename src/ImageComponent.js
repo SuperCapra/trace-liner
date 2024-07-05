@@ -76,7 +76,7 @@ function ImageComponent(props) {
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
   const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
-  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 mode-3-text-rect'
+  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
@@ -272,6 +272,7 @@ function ImageComponent(props) {
     }
     console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
     console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
     ctx.lineTo(width,height)
     ctx.lineTo(0,height)
     ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
@@ -348,7 +349,7 @@ function ImageComponent(props) {
     }
     console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
     console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
-    ctx.lineTo(width - (altitudeStream[lengthAltitude - 1] * zoomFactorX),0)
+    ctx.lineTo(width - ((altitudeStream[lengthAltitude - 1] - minAltitude * 0.9) * zoomFactorX),0)
     ctx.lineTo(width,0)
     ctx.lineTo(width,height)
     ctx.lineTo(width - (altitudeStream[0] * zoomFactorX),height)
