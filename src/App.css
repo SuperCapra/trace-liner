@@ -254,6 +254,9 @@ p {
 #canvasText {
   z-index: 4;
 }
+#canvasLogo {
+  z-index: 4;
+}
 .text-overlay {
   position: absolute;
   font-family: 'Helvetica';
@@ -375,15 +378,35 @@ p {
 }
 .logo-nama-wrapper{
   position: absolute;
-  bottom: 1vw;
-  right: 2vw;
+  bottom: 0;
+  right: 3%;
   z-index: 4;
 }
 .logo-nama-wrapper-rect{
   position: absolute;
-  bottom: 1vw;
-  right: 2vw;
+  bottom: 0;
+  right: 3%;
   z-index: 4;
+}
+.logo-nama-wrapper-mode-3{
+  position: absolute;
+  top: 6%;
+  left: 3%;
+}
+.logo-nama-wrapper-mode-3-rect{
+  position: absolute;
+  top: 16%;
+  left: 3%;
+}
+.logo-nama-wrapper-mode-4{
+  position: absolute;
+  bottom: 1%;
+  left: 3%;
+}
+.logo-nama-wrapper-mode-4-rect{
+  position: absolute;
+  bottom: 1%;
+  left: 3%;
 }
 .logo-nama-svg{
   width: 15vw;
@@ -600,6 +623,30 @@ p {
   .canvas-container-general{
     min-width: 60vw;
   }
+  .logo-nama-wrapper-mode-3{
+    position: absolute;
+    top: 4%;
+    left: 1%;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-mode-3-rect{
+    position: absolute;
+    top: 16%;
+    left: 0%;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-mode-4{
+    position: absolute;
+    bottom: -1%;
+    left: 1%;
+    transform: scale(0.75);
+  }
+  .logo-nama-wrapper-mode-4-rect{
+    position: absolute;
+    bottom: -1%;
+    left: 1%;
+    transform: scale(0.75);
+  }
   .logo-nama-wrapper{
     bottom: 0.75vw;
     right: 1.5vw;
@@ -621,6 +668,19 @@ p {
   }
   .blend-text{
     font-size: calc(3vw);
+  }
+  .text-overlay-mode-3{
+    border-right: calc(1.5vw) solid;
+  }
+  .text-overlay-mode-4{
+    border-left: calc(1.5vw) solid;
+    font-size: calc(6vw);
+  }
+  .text-overlay-mode-3-dimention{
+    font-size: calc(3vw);
+  }
+  .text-overlay-mode-3-dimention-rect{
+    font-size: calc(6vw);
   }
 }
 @media print, screen and (min-width: 525px) {
@@ -714,6 +774,30 @@ p {
   .canvas-container-general{
     min-width: 40vw;
   }
+  .logo-nama-wrapper-mode-3{
+    position: absolute;
+    top: 2%;
+    left: -2%;
+    transform: scale(0.6);
+  }
+  .logo-nama-wrapper-mode-3-rect{
+    position: absolute;
+    top: 13%;
+    left: -5%;
+    transform: scale(0.5);
+  }
+  .logo-nama-wrapper-mode-4{
+    position: absolute;
+    bottom: -4%;
+    left: -2%;
+    transform: scale(0.6);
+  }
+  .logo-nama-wrapper-mode-4-rect{
+    position: absolute;
+    bottom: -4%;
+    left: -2%;
+    transform: scale(0.6);
+  }
   .logo-nama-wrapper{
     bottom: -2vw;
     right: -1vw;
@@ -737,17 +821,17 @@ p {
     font-size: calc(2vw);
   }
   .text-overlay-mode-3{
-    border-right: calc(1.5vw) solid;
+    border-right: calc(1vw) solid;
   }
   .text-overlay-mode-4{
-    border-left: calc(1.5vw) solid;
-    font-size: calc(6vw);
+    border-left: calc(1vw) solid;
+    font-size: calc(4vw);
   }
   .text-overlay-mode-3-dimention{
-    font-size: calc(3vw);
+    font-size: calc(2vw);
   }
   .text-overlay-mode-3-dimention-rect{
-    font-size: calc(6vw);
+    font-size: calc(4vw);
   }
 }
 @media print, screen and (min-width: 650px) {
@@ -841,10 +925,34 @@ p {
   .canvas-container-general{
     min-width: 320px;
   }
+  .logo-nama-wrapper-mode-3{
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-3-rect{
+    position: absolute;
+    top: 17%;
+    left: 2%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-4{
+    position: absolute;
+    bottom: -2%;
+    left: 0%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-4-rect{
+    position: absolute;
+    bottom: -2%;
+    left: 0%;
+    transform: scale(0.85);
+  }
   .logo-nama-wrapper{
     bottom: -10px;
     right: 2px;
-    transform: scale(0.75);
+    transform: scale(0.85);
   }
   .logo-nama-wrapper-rect{
     bottom: -2px;
@@ -887,11 +995,11 @@ p {
     margin: 8px 20px
   }
   .blend-text{
-    font-size: calc(2vw);
+    font-size: calc(1vw);
   }
   .text-overlay-mode-3{
-    border-right: calc(2vw) solid;
-    font-size: calc(4vw);
+    border-right: calc(1vw) solid;
+    font-size: calc(2vw);
   }
   .text-overlay-mode-4{
     border-left: calc(2vw) solid;
@@ -946,10 +1054,34 @@ p {
   .canvas-container-general{
     min-width: 400px;
   }
+  .logo-nama-wrapper-mode-3{
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-3-rect{
+    position: absolute;
+    top: 15.5%;
+    left: 2%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-4{
+    position: absolute;
+    bottom: -2%;
+    left: 0%;
+    transform: scale(0.85);
+  }
+  .logo-nama-wrapper-mode-4-rect{
+    position: absolute;
+    bottom: -2%;
+    left: 0%;
+    transform: scale(0.85);
+  }
   .logo-nama-wrapper{
     bottom: -10px;
     right: 2px;
-    transform: scale(0.75);
+    transform: scale(0.85);
   }
   .logo-nama-wrapper-rect{
     bottom: -2px;
@@ -993,10 +1125,10 @@ p {
     font-size: 32px;
   }
   .text-overlay-mode-3-dimention{
-    font-size: calc(16px);
+    font-size: 16px;
   }
   .text-overlay-mode-3-dimention-rect{
-    font-size: calc(32px);
+    font-size: 32px;
   }
 }
 @media print, screen and (min-width: 1250px) {

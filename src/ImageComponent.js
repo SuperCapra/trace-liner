@@ -57,6 +57,22 @@ function ImageComponent(props) {
     color: drawingColor,
     // mixBlendMode: blendMode
   }
+
+  const classesForLogoNama = () => {
+    if(showMode3 || showMode4) {
+      if(showMode3) {
+        if(ratio === '1:1') return ('logo-nama-wrapper-mode-3')
+        else return ('logo-nama-wrapper-mode-3-rect')
+      } else {
+        if(ratio === '1:1') return ('logo-nama-wrapper-mode-4')
+        else return ('logo-nama-wrapper-mode-4-rect')
+      }
+    } else {
+      if(ratio === '1:1') return ('logo-nama-wrapper')
+      else return ('logo-nama-wrapper-rect')
+    }
+  }
+
   const classesForSketch = () => {
     if(showMode3 || showMode4) {
       if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch-mode3')
@@ -75,7 +91,7 @@ function ImageComponent(props) {
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
-  const classesLogoNama = ratio === '1:1' ? 'width-general logo-nama-wrapper' : 'width-general logo-nama-wrapper-rect'
+  const classesLogoNama = classesForLogoNama()
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
@@ -227,8 +243,8 @@ function ImageComponent(props) {
     let canvasSketch = document.getElementById('canvasSketch')
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = ratio.split(':')[0]/ratio.split(':')[1] * 500
-    let canvasSketchHeight = 500
+    let canvasSketchWidth = 500
+    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
@@ -303,8 +319,8 @@ function ImageComponent(props) {
     let canvasSketch = document.getElementById('canvasSketch')
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = ratio.split(':')[0]/ratio.split(':')[1] * 500
-    let canvasSketchHeight = 500
+    let canvasSketchWidth = 500
+    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
@@ -663,6 +679,8 @@ function ImageComponent(props) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
+      console.log('showMode3:', showMode3)
+      console.log('showMode4:', showMode4)
       if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
       else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
       else drawLine(drawingColor, canvasWidth, canvasHeight);
@@ -769,7 +787,7 @@ function ImageComponent(props) {
                 </div>
               )}
               {clubname === 'nama-crew' &&
-                <div className={classesLogoNama}>
+                <div id="canvasLogo" className={classesLogoNama}>
                   <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
                 </div>
               }
