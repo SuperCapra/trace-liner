@@ -6,7 +6,8 @@ import utils from './utils.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
-import brandingPalette from './brandingPalette.js';
+// import {toJpeg} from 'html-to-image';
+// import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
 
@@ -100,7 +101,7 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.remove('round-corner')
     document.getElementById('canvasSketch').classList.remove('round-corner')
     document.getElementById('printingAnchor').classList.remove('round-corner')
-    // let anchor = document.getElementById('printingAnchor')
+    let anchor = document.getElementById('printingAnchor')
 
     // toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
     //   .then((dataUrl) => {
@@ -200,11 +201,12 @@ function ImageComponent(props) {
     let drawing = true
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
-    let dimentionCircle = width * 0.02
+    let dimentionCircle = width * 0.015
   
     let rightHeight = height/2
     let rightZoomY = zoomFactor
     let endCoordinates = [(coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight]
+    let startCoordinates = [(coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight]
     // let coordinatesDrawing = []
     // coordinatesDrawing = coordinates.map((x) => ([(x[0]-mapCenterX)*zoomFactor + width/2,-(x[1]-mapCenterY)*rightZoomY + rightHeight]))
     for(let i = 0; i < coordinates.length; i++) {
@@ -213,7 +215,7 @@ function ImageComponent(props) {
       if(drawing) {
 
       }
-      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle)) {
+      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircle * dimentionCircle)) {
         if(!drawing) {
           drawing = true
           ctx.beginPath()
@@ -228,8 +230,19 @@ function ImageComponent(props) {
     
     ctx.stroke()
     ctx.beginPath()
+    ctx.arc((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
+    ctx.stroke()
+    ctx.beginPath()
     ctx.arc((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
     ctx.stroke()
+    // ctx.beginPath()
+    // ctx.lineTo((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight + dimentionCircle * 2)
+    // ctx.lineTo((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight * 1.1 + dimentionCircle * 2)
+    // ctx.stroke()
+    // ctx.beginPath()
+    // ctx.lineTo((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - dimentionCircle * 2)
+    // ctx.lineTo((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight * 0.3 - dimentionCircle * 2)
+    // ctx.stroke()
     // const finishPatternPNGRef = new Image()
     // finishPatternPNGRef.src = finishPatternPNG
     // console.log('finishPatternPNGRef.width', finishPatternPNGRef.width)
@@ -274,7 +287,7 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
     ctx.beginPath()
   
-    let zoomFactorY = (height * 0.4)/altitudeGap
+    let zoomFactorY = (height * 0.30)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
     console.log('zoomFactorY:', zoomFactorY)
     console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
@@ -483,9 +496,20 @@ function ImageComponent(props) {
     else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
-    else if(data.type === 'rectangle' || data.type === 'square') {
-      setRatio(data.type === 'square' ? '1:1' : '9:16')
-      handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
+    else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {
+      let ratioText = '9:16'
+      switch (data.type) {
+        case 'square':
+          ratioText = '1:1'
+          break
+        case 'twice':
+          ratioText = '2:1'
+          break
+        default:
+          ratioText = '9:16'
+      }
+      setRatio(ratioText)
+      handleCrop(ratioText, imageSrc)
     } else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
@@ -615,7 +639,9 @@ function ImageComponent(props) {
   //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
   //     handleColorChange(brandingPalette.pink)
   //   } else {
-  //     drawLine(drawingColor)
+  //     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+  //     else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+  //     else drawLine(drawingColor, canvasWidth, canvasHeight)
   //     drawFilter()
   //   }
   //   setBlendMode(blendModeSetting)
