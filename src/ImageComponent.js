@@ -209,9 +209,6 @@ function ImageComponent(props) {
 
     for(let i = 0; i < coordinates.length; i++) {
       let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
-      if(drawing) {
-
-      }
       if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircle * dimentionCircle)) {
         if(!drawing) {
           drawing = true
