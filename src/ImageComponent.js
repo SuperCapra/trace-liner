@@ -190,6 +190,7 @@ function ImageComponent(props) {
     let mapHeight = maxY - minY
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
+    let mapCenter = [mapCenterX, mapCenterY]
 
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
     console.log('zoomFactor:', zoomFactor)
@@ -199,19 +200,15 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
     let drawing = true
+    let dimentionCircle = width * 0.015
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
-    let dimentionCircle = width * 0.015
   
-    let rightHeight = height/2
-    let rightZoomY = zoomFactor
-    let endCoordinates = [(coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight]
-    let startCoordinates = [(coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight]
-    // let coordinatesDrawing = []
-    // coordinatesDrawing = coordinates.map((x) => ([(x[0]-mapCenterX)*zoomFactor + width/2,-(x[1]-mapCenterY)*rightZoomY + rightHeight]))
+    let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
+    let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
+
     for(let i = 0; i < coordinates.length; i++) {
-      let c = coordinates[i]
-      let cd = [(c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight]
+      let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
       if(drawing) {
 
       }
@@ -227,30 +224,25 @@ function ImageComponent(props) {
       }
       // ctx.lineTo(cd[0],cd[1])
     }
-    
+    // stroke the path
     ctx.stroke()
+    // stroke the initial circle only if the intersection it's null with the final circle
+    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircle * dimentionCircle)) {
+      ctx.beginPath()
+      ctx.arc(startCoordinates[0], startCoordinates[1], dimentionCircle, 0, Math.PI * 2);
+      ctx.stroke()
+    }
+    // stroke the final circle
     ctx.beginPath()
-    ctx.arc((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
+    ctx.arc(endCoordinates[0], endCoordinates[1], dimentionCircle, 0, Math.PI * 2);
     ctx.stroke()
-    ctx.beginPath()
-    ctx.arc((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
-    ctx.stroke()
-    // ctx.beginPath()
-    // ctx.lineTo((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight + dimentionCircle * 2)
-    // ctx.lineTo((coordinates[0][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[0][1] - mapCenterY)*zoomFactor + rightHeight * 1.1 + dimentionCircle * 2)
-    // ctx.stroke()
-    // ctx.beginPath()
-    // ctx.lineTo((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - dimentionCircle * 2)
-    // ctx.lineTo((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight * 0.3 - dimentionCircle * 2)
-    // ctx.stroke()
-    // const finishPatternPNGRef = new Image()
-    // finishPatternPNGRef.src = finishPatternPNG
-    // console.log('finishPatternPNGRef.width', finishPatternPNGRef.width)
-    // ctx.drawImage(finishPatternPNGRef, (coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2 - 40, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - 40)
-
   },[
     activity.coordinates
   ])
+
+  const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
+    return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
+  }
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
