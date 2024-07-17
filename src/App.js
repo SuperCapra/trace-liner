@@ -133,7 +133,8 @@ class Homepage extends React.Component{
           fromGpx: true,
         }))
         let activityPreparing = tracks[0]
-        activityPreparing.movingTime = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
+        activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
+        // activityPreparing.movingTime = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
         activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
         activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
         activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
@@ -144,7 +145,6 @@ class Homepage extends React.Component{
         activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-        console.log('activityPreparing: ', activityPreparing)
         console.log('tracks[0]: ', gpx.tracks[0])
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
