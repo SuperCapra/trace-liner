@@ -13,6 +13,7 @@
     "concurrently": "^8.2.2",
     "express": "^4.19.2",
     "gpxparser": "^3.0.8",
+    "he": "^1.2.0",
     "html-to-image": "^1.11.11",
     "html2canvas": "^1.4.1",
     "path": "^0.12.7",

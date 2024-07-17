@@ -6,6 +6,7 @@ import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import brandingPalette from './brandingPalette';
 import GPXParser from 'gpxparser';
+import he from 'he';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -103,7 +104,7 @@ class Homepage extends React.Component{
           beautyCoordinates: undefined,
           beautyEndCoordinates: undefined,
           beautyDuration: undefined,
-          beautyName: track.name,
+          beautyName: he.decode(track.name),
           beautyPower: undefined,
           beautyDate: undefined,
           coordinates: track.points.map(point => ([
@@ -120,7 +121,7 @@ class Homepage extends React.Component{
           locationCountry: undefined,
           movingTime: undefined,
           timingStreamSeconds: [...track.points.map(point => (Math.floor(point.time) / 1000))],
-          name: track.name,
+          name: he.decode(track.name),
           photoUrl: undefined,
           sportType: undefined,
           startDate: undefined,
@@ -146,6 +147,7 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         console.log('tracks[0]: ', gpx.tracks[0])
+        console.log('utils.decodeHtmlEntities(track.name): ', he.decode(gpx.tracks[0].name))
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
       }
