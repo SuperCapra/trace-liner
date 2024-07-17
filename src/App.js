@@ -147,7 +147,6 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         console.log('tracks[0]: ', gpx.tracks[0])
-        console.log('utils.decodeHtmlEntities(track.name): ', he.decode(gpx.tracks[0].name))
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
       }
