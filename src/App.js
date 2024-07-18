@@ -434,7 +434,7 @@ class Homepage extends React.Component{
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
-          activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length
+          activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
           console.log(activity)
@@ -461,7 +461,7 @@ class Homepage extends React.Component{
         console.log('Result altitude stream: ', res)
         activities[indexActivity].altitudeStream = res.altitude.data
         activities[indexActivity].distanceStream = res.distance.data
-        activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length
+        activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
       })
       .catch(e => console.log('Fatal Error: ', e))
       .finally(() => {
