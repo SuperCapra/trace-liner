@@ -236,7 +236,15 @@ const utilsFunction = {
     },
     
     quadraticFunction(a,b) {
-    return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
+        return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
+    },
+
+    returnDatetimeStringified(dateTimeJs) {
+        let y = dateTimeJs.getFullYear()
+        let m = (String(dateTimeJs.getMonth() + 1)).padStart(2,'0')
+        let d = String(dateTimeJs.getDate()).padStart(2,'0')
+        console.log(y + '-' + m + '-' + d)
+        return y + '-' + m + '-' + d
     }
 }
 

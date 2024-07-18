@@ -82,6 +82,9 @@ class Homepage extends React.Component{
         let gpxFile = e.target.result
         const gpx = new GPXParser()
         gpx.parse(gpxFile)
+        console.log('gpx.metadata.time: ', gpx.metadata.time)
+        let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
+        let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
         console.log('gpx:', gpx)
         console.log('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
         const tracks = gpx.tracks.map(track => ({
@@ -106,26 +109,26 @@ class Homepage extends React.Component{
           beautyDuration: undefined,
           beautyName: he.decode(track.name),
           beautyPower: undefined,
-          beautyDate: undefined,
-          coordinates: track.points.map(point => ([
+          beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+          coordinates: track.points && track.points.length ? track.points.map(point => ([
             point.lon,
             point.lat
-          ])),
+          ])) : undefined,
           durationMoving: undefined,
           durationElapsed: undefined,
           endLatitude: undefined,
           endLongitude: undefined,
           distance: track.distance.total,
-          distanceStream: [...track.distance.cumul],
+          distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
           elevation: track.elevation.pos,
           locationCountry: undefined,
           movingTime: undefined,
-          timingStreamSeconds: [...track.points.map(point => (Math.floor(point.time) / 1000))],
+          timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
           name: he.decode(track.name),
           photoUrl: undefined,
           sportType: undefined,
-          startDate: undefined,
-          startDateLocal: undefined,
+          startDate: dateTimeStringified,
+          startDateLocal: dateTimeLocalStringified,
           startLatitude: undefined,
           startLongitude: undefined,
           unitMeasure: unitMeasure,
@@ -135,7 +138,8 @@ class Homepage extends React.Component{
         }))
         let activityPreparing = tracks[0]
         activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
-        // activityPreparing.movingTime = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
+        activityPreparing.durationMoving = activityPreparing.movingTime
+        activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
         activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
         activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
         activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
@@ -146,7 +150,8 @@ class Homepage extends React.Component{
         activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-        console.log('tracks[0]: ', gpx.tracks[0])
+        activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+        console.log('activityPreparing ', activityPreparing)
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
       }
