@@ -515,7 +515,7 @@ function ButtonImage(props) {
   }
 
   return (
-    <div className="diplay-buttons">
+    <div className="display-buttons">
       <div className="wrapper-buttons">
         <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
           <UnitMeasureSVG />
