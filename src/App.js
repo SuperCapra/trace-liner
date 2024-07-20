@@ -172,7 +172,9 @@ class Homepage extends React.Component{
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    if(urlCurrent.includes('/nama-crew') && !stravaAuthorizeUrl.includes('/nama-crew')) {
+    clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : undefined
+    if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin')) 
+        && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin'))) {
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
     }

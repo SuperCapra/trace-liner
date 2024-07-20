@@ -40,7 +40,7 @@ function ImageComponent(props) {
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
   const [imageToShare, setImagetoShare] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
@@ -100,29 +100,13 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
-    // document.getElementById('canvasImage').classList.remove('round-corner')
-    // document.getElementById('canvasFilter').classList.remove('round-corner')
-    // document.getElementById('canvasSketch').classList.remove('round-corner')
-    // document.getElementById('printingAnchor').classList.remove('round-corner')
-    document.getElementById('showingImage').classList.remove('round-corner')
-    // let anchor = document.getElementById('printingAnchor')
-
-    // toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
-    //   .then((dataUrl) => {
-    //     // const img = new Image();
-    //     // img.src = dataUrl;
-    //     // document.body.appendChild(img);
-
-    //     // Create a link element to trigger the download
-    //     const link = document.createElement('a');
-    //     link.download = utils.removeEmoji(activity.beautyName.replaceAll(' ', '_')).toLowerCase();
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch((error) => {
-    //     console.error('oops, something went wrong!', error);
-    //   })
-    html2canvas(document.getElementById('showingImage'), {
+    let anchor = clubname === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    if(clubname === 'dev-admin') {
+      document.getElementById('showingImage').classList.remove('round-corner')
+    } else {
+      removeRoundCorner()
+    }
+    html2canvas(anchor, {
       useCORS: true
       // onclone: function(doc) {
       //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
@@ -158,7 +142,11 @@ function ImageComponent(props) {
     }, 'image/jpeg');
     })
     .finally(() => {
-      document.getElementById('showingImage').classList.add('round-corner')
+      if(clubname === 'dev-admin') {
+        document.getElementById('showingImage').classList.add('round-corner')
+      } else {
+        addRoundCorner()
+      }
     })
   }
 
@@ -273,9 +261,11 @@ function ImageComponent(props) {
     ctx.beginPath()
     ctx.arc(endCoordinates[0], endCoordinates[1], dimentionCircle, 0, Math.PI * 2);
     ctx.stroke()
-    returnImage()
+    if(clubname === 'dev-admin') returnImage()
   },[
-    activity.coordinates,returnImage
+    activity.coordinates,
+    clubname,
+    returnImage
   ])
 
   const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
@@ -504,7 +494,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
-    seeHiding()
+    if(clubname === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -512,12 +502,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    returnImage()
+    if(clubname === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
     canvasHeight,
-    returnImage
+    returnImage,
+    clubname
   ])
 
   const handleClickDispatcher = (data) => {
@@ -760,9 +751,11 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
-    setIsLoading(true)
+    if(clubname === 'dev-admin') {
+      setIsLoading(true)
+      seeHiding()
+    }
     setImageSrc(newImage)
-    seeHiding()
     handleCrop(ratio, newImage)
   }
 
@@ -820,15 +813,18 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    setIsLoading(true)
-    seeHiding()
+    if(clubname === 'dev-admin') {
+      setIsLoading(true)
+      seeHiding()
+    }
     handleCrop(ratio, imageSrc)
   }, [
       ratio,
       canvasHeight,
       canvasWidth,
       handleCrop,
-      imageSrc
+      imageSrc,
+      clubname
     ])
   
   return (
