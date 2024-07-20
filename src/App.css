@@ -257,6 +257,20 @@ p {
 #canvasLogo {
   z-index: 4;
 }
+#loader {
+  z-index: 5;
+}
+.background-loading{
+  background-color: var(--palette-background);
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  aspect-ratio: 9/16;
+  width: 325px;
+}
+.translate-loading{
+  transform: translate(165px, 260px);
+}
 .text-overlay {
   position: absolute;
   font-family: 'Helvetica';
@@ -457,11 +471,10 @@ p {
   display: flex;
 }
 .element-mode-3{
- /* background-color: var(--palette-background); */
  padding: 2%;
  margin: 3%;
 }
-.text-overlay-mode-3-dimention{
+/* .text-overlay-mode-3-dimention{
   font-size: calc(4vmin);
 }
 .text-overlay-mode-3-dimention-rect{
@@ -507,7 +520,7 @@ p {
   left: 0;
   top: 15%;
   width: 50%;
-}
+} */
 .round-corner{
   border-radius: 5px;
 }
@@ -543,6 +556,9 @@ p {
 .blend-mode:hover{
   cursor: pointer;
 }
+.width-general{
+  width: 80vw;
+}
 @media print, screen and (min-width: 450px) {
   .back-button{
     transform: translateX(30px);
@@ -553,7 +569,7 @@ p {
   .image-square p{
     font-size: calc(4vw);
   }
-  .title-activity {
+  /* .title-activity {
     padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
     font-size: calc(2.625vmin);
   }
@@ -561,7 +577,7 @@ p {
     padding: 0vh 2.25vw 0.75vh 2.25vw;
     font-family: 'SourceCodePro';
     font-size: calc(1.875vmin);
-  }
+  } */
   .button-activity {
     width: 67.6vmin;
     min-height: 4.6875vmin;
@@ -593,7 +609,7 @@ p {
   .canvas-container-square{
     min-height: 60vw;
   }
-  .text-title{
+  /* .text-title{
     width: 54vw;
     top: 6vw;
     left: 3vw;
@@ -665,11 +681,11 @@ p {
   }
   .data-p-little{
     font-size: calc(1.5vw);
-  }
+  } */
   .blend-text{
     font-size: calc(3vw);
   }
-  .text-overlay-mode-3{
+  /* .text-overlay-mode-3{
     border-right: calc(1.5vw) solid;
   }
   .text-overlay-mode-4{
@@ -681,7 +697,7 @@ p {
   }
   .text-overlay-mode-3-dimention-rect{
     font-size: calc(6vw);
-  }
+  } */
 }
 @media print, screen and (min-width: 525px) {
   .back-button{
@@ -699,14 +715,14 @@ p {
   .image-square p{
     font-size: calc(4vw);
   }
-  .title-activity {
+  /* .title-activity {
     padding: 0.5vh 1.5vw 0.125vh 1.5vw;
     font-size: calc(1.75vmin);
   }
   .subtitle-activity {
     padding: 0vh 1.5vw 0.5vh 1.5vw;
     font-size: calc(1.25vmin);
-  }
+  } */
   .button-activity {
     width: 45vmin;
     min-height: 3.25vmin;
@@ -738,7 +754,7 @@ p {
   .canvas-container-square{
     min-height: 40vw;
   }
-  .text-title{
+  /* .text-title{
     width: 36vw;
     top: 4vw;
     left: 2vw;
@@ -816,11 +832,11 @@ p {
   }
   .data-p-little{
     font-size: calc(1vw);
-  }
+  } */
   .blend-text{
     font-size: calc(2vw);
   }
-  .text-overlay-mode-3{
+  /* .text-overlay-mode-3{
     border-right: calc(1vw) solid;
   }
   .text-overlay-mode-4{
@@ -832,7 +848,7 @@ p {
   }
   .text-overlay-mode-3-dimention-rect{
     font-size: calc(4vw);
-  }
+  } */
 }
 @media print, screen and (min-width: 650px) {
   .back-button{
@@ -1135,4 +1151,7 @@ p {
   .arrow-down{
     align-content: center;
   }
+}
+.no-see{
+  display: none;
 }
