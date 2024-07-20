@@ -228,7 +228,8 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
     let drawing = true
-    let dimentionCircle = width * 0.02
+    let dimentionCircleStart = width * 0.005
+    let dimentionCircleFinish = width * 0.02
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
   
@@ -237,7 +238,7 @@ function ImageComponent(props) {
 
     for(let i = 0; i < coordinates.length; i++) {
       let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
-      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircle * dimentionCircle)) {
+      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
         if(!drawing) {
           drawing = true
           ctx.beginPath()
@@ -252,21 +253,29 @@ function ImageComponent(props) {
     // stroke the path
     ctx.stroke()
     // stroke the initial circle only if the intersection it's null with the final circle
-    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircle * dimentionCircle) * 2) {
-      ctx.beginPath()
-      ctx.arc(startCoordinates[0], startCoordinates[1], dimentionCircle / 4, 0, Math.PI * 2);
-      ctx.stroke()
+    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
+      drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
+    } else {
+      drawCircle(ctx, endCoordinates, dimentionCircleStart, true, color)
     }
     // stroke the final circle
-    ctx.beginPath()
-    ctx.arc(endCoordinates[0], endCoordinates[1], dimentionCircle, 0, Math.PI * 2);
-    ctx.stroke()
+    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     if(clubname === 'dev-admin') returnImage()
   },[
     activity.coordinates,
     clubname,
     returnImage
   ])
+
+  const drawCircle = (ctx, coordinates, diameter, fill, color) => {
+    ctx.beginPath()
+    ctx.arc(coordinates[0], coordinates[1], diameter, 0, Math.PI * 2);
+    ctx.stroke()
+    if(fill) {
+      ctx.fillStyle = color
+      ctx.fill()
+    }
+  }
 
   const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
     return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
