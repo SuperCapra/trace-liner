@@ -47,6 +47,11 @@ function ImageComponent(props) {
     color: drawingColor,
     // mixBlendMode: blendMode,
   }
+  const styleTextTitle = {
+    color: drawingColor,
+    width: '100%',
+    // mixBlendMode: blendMode,
+  }
   const filterStyle = {
     opacity: valueFilter/100
   }
@@ -850,8 +855,8 @@ function ImageComponent(props) {
               <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
               {showTitle && (
                 <div className="width-general text-overlay text-title">
-                  <div id="canvasText" style={styleText} className={classesName}>{activity.beautyName}</div>
-                  {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{activity.beautyDate}</div>)}
+                  <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
+                  {showDate && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDate}</p></div>)}
                 </div>
               )}
               {clubname === 'nama-crew' &&
