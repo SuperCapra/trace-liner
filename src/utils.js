@@ -119,12 +119,16 @@ const utilsFunction = {
         parsedDuration.hours = Math.floor(durationInSec / 3600)
         parsedDuration.minutes = Math.floor((durationInSec - (parsedDuration.hours * 3600)) / 60)
         parsedDuration.seconds = durationInSec - (parsedDuration.hours * 3600) - (parsedDuration.minutes * 60)
+        console.log('getJsonDuration:', parsedDuration)
         return parsedDuration
     },
 
     getBeautyDuration(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        let result = (parsedDuration && parsedDuration.hours && parsedDuration.minutes) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
+        let result = (parsedDuration 
+            && parsedDuration.hours !== undefined 
+            && parsedDuration.minutes !== undefined 
+            && parsedDuration.seconds !== undefined) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
         return result
         // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },

@@ -92,22 +92,22 @@ class Homepage extends React.Component{
           altitudeStream: [...track.points.map(point => (point.ele))],
           metric: {
             beautyAverage: undefined,
-            beautyElevation: (track.elevation.pos).toFixed(0) + 'm',
-            beautyDistance: (track.distance.total / 1000).toFixed(0) + 'km',
-            distance: Number((track.distance.total / 1000).toFixed(0)),
+            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos).toFixed(0) + 'm' : undefined,
+            beautyDistance: track.distance && track.distance.total ? (track.distance.total / 1000).toFixed(0) + 'km' : undefined,
+            distance: track.distance && track.distance.total ? Number((track.distance.total / 1000).toFixed(0)) : undefined,
             subtitle: undefined
           },
           imperial: {
             beautyAverage: undefined,
-            beautyElevation: (track.elevation.pos * 3.28084).toFixed(0) + 'ft',
-            beautyDistance: ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi',
-            distance: Number(((track.distance.total / 1000) * 0.621371).toFixed(0)),
+            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos * 3.28084).toFixed(0) + 'ft' : undefined,
+            beautyDistance: track.distance && track.distance.total ? ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi' : undefined,
+            distance: track.distance && track.distance.total ? Number(((track.distance.total / 1000) * 0.621371).toFixed(0)) : undefined,
             subtitle: undefined
           },
           beautyCoordinates: undefined,
           beautyEndCoordinates: undefined,
           beautyDuration: undefined,
-          beautyName: he.decode(track.name),
+          beautyName: track.name ? he.decode(track.name) : undefined,
           beautyPower: undefined,
           beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
           coordinates: track.points && track.points.length ? track.points.map(point => ([
@@ -118,13 +118,13 @@ class Homepage extends React.Component{
           durationElapsed: undefined,
           endLatitude: undefined,
           endLongitude: undefined,
-          distance: track.distance.total,
+          distance: track.distance && track.distance.total ? track.distance.total : undefined,
           distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
-          elevation: track.elevation.pos,
+          elevation: track.elevation && track.elevation.pos ? track.elevation.pos : undefined,
           locationCountry: undefined,
           movingTime: undefined,
           timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
-          name: he.decode(track.name),
+          name: track.name ? he.decode(track.name) : undefined,
           photoUrl: undefined,
           sportType: undefined,
           startDate: dateTimeStringified,
@@ -141,6 +141,7 @@ class Homepage extends React.Component{
         activityPreparing.durationMoving = activityPreparing.movingTime
         activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
         activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
+        activityPreparing.average = activityPreparing.metric.beautyAverage
         activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
         activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
         activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
