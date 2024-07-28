@@ -160,12 +160,6 @@ class Homepage extends React.Component{
     }
   }
 
-  parseElement(element) {
-    return {
-      
-    }
-  }
-
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
