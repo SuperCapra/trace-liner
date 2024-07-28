@@ -91,6 +91,9 @@ function ButtonImage(props) {
     setRectangle(true)
     handleClick({type: 'rectangle'})
   }
+  // const propagateTwice = () => {
+  //   handleClick({type: 'twice'})
+  // }
   // const propagateBlendMode = (blendModeSetting) => {
   //   handleClick({type: 'blend-mode', blendMode: blendModeSetting})
   //   setSelectedUnsetBlendMode(blendModeSetting === 'unset' ? true : false)
@@ -512,7 +515,7 @@ function ButtonImage(props) {
   }
 
   return (
-    <div className="diplay-buttons">
+    <div className="display-buttons">
       <div className="wrapper-buttons">
         <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
           <UnitMeasureSVG />
@@ -532,13 +535,14 @@ function ButtonImage(props) {
           <div className="wrapper-sub-buttons">
             <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
             <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
+            {/* <SquareSVG style={squareStyle} onClick={() => propagateTwice()}/> */}
           </div>
-          {/*<div className="wrapper-sub-buttons">
+          {/* <div className="wrapper-sub-buttons">
             <p className="blend-title blend-text">BLEND:</p>
             <p className="blend-mode blend-text" style={unsetBlendModeStyle} onClick={() => propagateBlendMode('unset')}>none</p>
             <p className="blend-mode blend-text" style={differenceBlendModeStyle} onClick={() => propagateBlendMode('difference')}>diff.</p>
             <p className="blend-mode blend-text" style={exclusionBlendModeStyle} onClick={() => propagateBlendMode('exclusion')}>excl.</p>
-          </div>*/}
+          </div> */}
           <div className="wrapper-sub-buttons slider-width">
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />
           </div>

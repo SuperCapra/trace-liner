@@ -112,19 +112,31 @@ const utilsFunction = {
 
     getJsonDuration(durationInSec) {
         let parsedDuration = {
+            years: undefined,
+            months: undefined,
+            days: undefined,
             hours: undefined,
             minutes: undefined,
             seconds: undefined,
         }
+        parsedDuration.years = Math.floor(durationInSec / 31536000)
+        parsedDuration.months = Math.floor(durationInSec / 2592000)
+        parsedDuration.days = Math.floor(durationInSec / 86400)
         parsedDuration.hours = Math.floor(durationInSec / 3600)
         parsedDuration.minutes = Math.floor((durationInSec - (parsedDuration.hours * 3600)) / 60)
         parsedDuration.seconds = durationInSec - (parsedDuration.hours * 3600) - (parsedDuration.minutes * 60)
+        console.log('getJsonDuration:', parsedDuration)
         return parsedDuration
     },
 
     getBeautyDuration(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        let result = (parsedDuration && parsedDuration.hours && parsedDuration.minutes) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
+        let result = (parsedDuration 
+            && parsedDuration.hours !== undefined 
+            && parsedDuration.minutes !== undefined) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
+        if(parsedDuration.days) result = parsedDuration.days + 'd ' + result
+        if(parsedDuration.months) result = parsedDuration.months + 'M ' + result
+        if(parsedDuration.years) result = parsedDuration.years + 'M ' + result
         return result
         // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },
@@ -236,7 +248,15 @@ const utilsFunction = {
     },
     
     quadraticFunction(a,b) {
-    return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
+        return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
+    },
+
+    returnDatetimeStringified(dateTimeJs) {
+        let y = dateTimeJs.getFullYear()
+        let m = (String(dateTimeJs.getMonth() + 1)).padStart(2,'0')
+        let d = String(dateTimeJs.getDate()).padStart(2,'0')
+        console.log(y + '-' + m + '-' + d)
+        return y + '-' + m + '-' + d
     }
 }
 

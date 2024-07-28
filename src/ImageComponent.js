@@ -6,7 +6,9 @@ import utils from './utils.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
 import html2canvas from 'html2canvas';
-import brandingPalette from './brandingPalette.js';
+import {toJpeg} from 'html-to-image';
+import Loader from './Loader.js'
+// import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
 
@@ -37,10 +39,17 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+  const [imageToShare, setImagetoShare] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
     color: drawingColor,
+    // mixBlendMode: blendMode,
+  }
+  const styleTextTitle = {
+    color: drawingColor,
+    width: '100%',
     // mixBlendMode: blendMode,
   }
   const filterStyle = {
@@ -96,28 +105,13 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
-    document.getElementById('canvasImage').classList.remove('round-corner')
-    document.getElementById('canvasFilter').classList.remove('round-corner')
-    document.getElementById('canvasSketch').classList.remove('round-corner')
-    document.getElementById('printingAnchor').classList.remove('round-corner')
-    // let anchor = document.getElementById('printingAnchor')
-
-    // toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
-    //   .then((dataUrl) => {
-    //     // const img = new Image();
-    //     // img.src = dataUrl;
-    //     // document.body.appendChild(img);
-
-    //     // Create a link element to trigger the download
-    //     const link = document.createElement('a');
-    //     link.download = utils.removeEmoji(activity.beautyName.replaceAll(' ', '_')).toLowerCase();
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch((error) => {
-    //     console.error('oops, something went wrong!', error);
-    //   })
-    html2canvas(document.getElementById('printingAnchor'), {
+    let anchor = clubname === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    if(clubname === 'dev-admin') {
+      document.getElementById('showingImage').classList.remove('round-corner')
+    } else {
+      removeRoundCorner()
+    }
+    html2canvas(anchor, {
       useCORS: true
       // onclone: function(doc) {
       //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
@@ -153,12 +147,52 @@ function ImageComponent(props) {
     }, 'image/jpeg');
     })
     .finally(() => {
-      document.getElementById('canvasImage').classList.add('round-corner')
-      document.getElementById('canvasFilter').classList.add('round-corner')
-      document.getElementById('canvasSketch').classList.add('round-corner')
-      document.getElementById('printingAnchor').classList.add('round-corner')
+      if(clubname === 'dev-admin') {
+        document.getElementById('showingImage').classList.add('round-corner')
+      } else {
+        addRoundCorner()
+      }
     })
   }
+
+  const seeHiding = () => {
+    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.remove('no-see')
+    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.add('no-see')
+  }
+  const seeImage = () => {
+    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
+    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
+  }
+  const removeRoundCorner = () => {
+    document.getElementById('canvasImage').classList.remove('round-corner')
+    document.getElementById('canvasFilter').classList.remove('round-corner')
+    document.getElementById('canvasSketch').classList.remove('round-corner')
+    document.getElementById('printingAnchor').classList.remove('round-corner')
+  }
+  const addRoundCorner = () => {
+    document.getElementById('canvasImage').classList.add('round-corner')
+    document.getElementById('canvasFilter').classList.add('round-corner')
+    document.getElementById('canvasSketch').classList.add('round-corner')
+    document.getElementById('printingAnchor').classList.add('round-corner')
+  }
+
+  const returnImage = useCallback(() => {
+    removeRoundCorner()
+    let anchor = document.getElementById('printingAnchor')
+
+    toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
+      .then((dataUrl) => {
+        seeImage()
+        setImagetoShare(dataUrl)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error('oops, something went wrong!', error);
+      })
+      .finally(() => {
+        addRoundCorner()
+      })
+  },[])
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
@@ -189,6 +223,7 @@ function ImageComponent(props) {
     let mapHeight = maxY - minY
     let mapCenterX = (minX + maxX) / 2
     let mapCenterY = (minY + maxY) / 2
+    let mapCenter = [mapCenterX, mapCenterY]
 
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
     console.log('zoomFactor:', zoomFactor)
@@ -198,22 +233,17 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
     let drawing = true
+    let dimentionCircleStart = width * 0.005
+    let dimentionCircleFinish = width * 0.02
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
-    let dimentionCircle = width * 0.02
   
-    let rightHeight = height/2
-    let rightZoomY = zoomFactor
-    let endCoordinates = [(coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight]
-    // let coordinatesDrawing = []
-    // coordinatesDrawing = coordinates.map((x) => ([(x[0]-mapCenterX)*zoomFactor + width/2,-(x[1]-mapCenterY)*rightZoomY + rightHeight]))
-    for(let i = 0; i < coordinates.length; i++) {
-      let c = coordinates[i]
-      let cd = [(c[0]-mapCenterX)*zoomFactor + width/2, -(c[1]-mapCenterY)*rightZoomY + rightHeight]
-      if(drawing) {
+    let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
+    let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
 
-      }
-      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircle * dimentionCircle)) {
+    for(let i = 0; i < coordinates.length; i++) {
+      let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
+      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
         if(!drawing) {
           drawing = true
           ctx.beginPath()
@@ -225,19 +255,36 @@ function ImageComponent(props) {
       }
       // ctx.lineTo(cd[0],cd[1])
     }
-    
+    // stroke the path
     ctx.stroke()
-    ctx.beginPath()
-    ctx.arc((coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight, dimentionCircle, 0, Math.PI * 2);
-    ctx.stroke()
-    // const finishPatternPNGRef = new Image()
-    // finishPatternPNGRef.src = finishPatternPNG
-    // console.log('finishPatternPNGRef.width', finishPatternPNGRef.width)
-    // ctx.drawImage(finishPatternPNGRef, (coordinates[lengthCoordinates - 1][0] - mapCenterX)*zoomFactor + width/2 - 40, -(coordinates[lengthCoordinates - 1][1] - mapCenterY)*zoomFactor + rightHeight - 40)
-
+    // stroke the initial circle only if the intersection it's null with the final circle
+    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
+      drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
+    } else {
+      drawCircle(ctx, endCoordinates, dimentionCircleStart, true, color)
+    }
+    // stroke the final circle
+    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
+    if(clubname === 'dev-admin') returnImage()
   },[
-    activity.coordinates
+    activity.coordinates,
+    clubname,
+    returnImage
   ])
+
+  const drawCircle = (ctx, coordinates, diameter, fill, color) => {
+    ctx.beginPath()
+    ctx.arc(coordinates[0], coordinates[1], diameter, 0, Math.PI * 2);
+    ctx.stroke()
+    if(fill) {
+      ctx.fillStyle = color
+      ctx.fill()
+    }
+  }
+
+  const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
+    return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
+  }
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
@@ -274,7 +321,7 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
     ctx.beginPath()
   
-    let zoomFactorY = (height * 0.4)/altitudeGap
+    let zoomFactorY = (height * 0.30)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
     console.log('zoomFactorY:', zoomFactorY)
     console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
@@ -461,6 +508,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
+    if(clubname === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -468,10 +516,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
+    if(clubname === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
-    canvasHeight
+    canvasHeight,
+    returnImage,
+    clubname
   ])
 
   const handleClickDispatcher = (data) => {
@@ -483,9 +534,20 @@ function ImageComponent(props) {
     else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
-    else if(data.type === 'rectangle' || data.type === 'square') {
-      setRatio(data.type === 'square' ? '1:1' : '9:16')
-      handleCrop(data.type === 'square' ? '1:1' : '9:16', imageSrc)
+    else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {
+      let ratioText = '9:16'
+      switch (data.type) {
+        case 'square':
+          ratioText = '1:1'
+          break
+        case 'twice':
+          ratioText = '2:1'
+          break
+        default:
+          ratioText = '9:16'
+      }
+      setRatio(ratioText)
+      handleCrop(ratioText, imageSrc)
     } else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
         setShowTitle(data.show)
@@ -615,7 +677,9 @@ function ImageComponent(props) {
   //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
   //     handleColorChange(brandingPalette.pink)
   //   } else {
-  //     drawLine(drawingColor)
+  //     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+  //     else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+  //     else drawLine(drawingColor, canvasWidth, canvasHeight)
   //     drawFilter()
   //   }
   //   setBlendMode(blendModeSetting)
@@ -701,6 +765,10 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
+    if(clubname === 'dev-admin') {
+      setIsLoading(true)
+      seeHiding()
+    }
     setImageSrc(newImage)
     handleCrop(ratio, newImage)
   }
@@ -759,13 +827,18 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
+    if(clubname === 'dev-admin') {
+      setIsLoading(true)
+      seeHiding()
+    }
     handleCrop(ratio, imageSrc)
   }, [
       ratio,
       canvasHeight,
       canvasWidth,
       handleCrop,
-      imageSrc
+      imageSrc,
+      clubname
     ])
   
   return (
@@ -775,15 +848,15 @@ function ImageComponent(props) {
         <p className="p-back">BACK</p>
       </div>
       <div className="width-wrapper-main">
-        <div className="beauty-border">
+        <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">
               <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
               <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
               <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
               {showTitle && (
                 <div className="width-general text-overlay text-title">
-                  <div id="canvasText" style={styleText} className={classesName}>{activity.beautyName}</div>
-                  {showDate && (<div id="canvasText" style={styleText} className={classesDate}>{activity.beautyDate}</div>)}
+                  <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
+                  {showDate && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDate}</p></div>)}
                 </div>
               )}
               {clubname === 'nama-crew' &&
@@ -796,6 +869,16 @@ function ImageComponent(props) {
               {showMode3 && returnMode3Disposition()}
               {showMode4 && returnMode4Disposition()}
           </div>
+        </div>
+        {isLoading && 
+          <div className="background-loading" id="loader">
+            <div className="translate-loading">
+              <Loader/>
+            </div>
+          </div>
+        }
+        <div>
+          {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
         <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
       </div>

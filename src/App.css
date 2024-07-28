@@ -257,6 +257,20 @@ p {
 #canvasLogo {
   z-index: 4;
 }
+#loader {
+  z-index: 5;
+}
+.background-loading{
+  background-color: var(--palette-background);
+  position: absolute;
+  /* top: 0;
+  left: 0; */
+  aspect-ratio: 9/16;
+  width: 325px;
+}
+.translate-loading{
+  transform: translate(165px, 260px);
+}
 .text-overlay {
   position: absolute;
   font-family: 'Helvetica';
@@ -457,7 +471,6 @@ p {
   display: flex;
 }
 .element-mode-3{
- /* background-color: var(--palette-background); */
  padding: 2%;
  margin: 3%;
 }
@@ -543,6 +556,9 @@ p {
 .blend-mode:hover{
   cursor: pointer;
 }
+.width-general{
+  width: 80vw;
+}
 @media print, screen and (min-width: 450px) {
   .back-button{
     transform: translateX(30px);
@@ -552,15 +568,6 @@ p {
   }
   .image-square p{
     font-size: calc(4vw);
-  }
-  .title-activity {
-    padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
-    font-size: calc(2.625vmin);
-  }
-  .subtitle-activity {
-    padding: 0vh 2.25vw 0.75vh 2.25vw;
-    font-family: 'SourceCodePro';
-    font-size: calc(1.875vmin);
   }
   .button-activity {
     width: 67.6vmin;
@@ -592,6 +599,19 @@ p {
   }
   .canvas-container-square{
     min-height: 60vw;
+  }
+  .blend-text{
+    font-size: calc(3vw);
+  }
+  /* to comment this when solved the fact of an unique dimention*/
+  .title-activity {
+    padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
+    font-size: calc(2.625vmin);
+  }
+  .subtitle-activity {
+    padding: 0vh 2.25vw 0.75vh 2.25vw;
+    font-family: 'SourceCodePro';
+    font-size: calc(1.875vmin);
   }
   .text-title{
     width: 54vw;
@@ -666,9 +686,6 @@ p {
   .data-p-little{
     font-size: calc(1.5vw);
   }
-  .blend-text{
-    font-size: calc(3vw);
-  }
   .text-overlay-mode-3{
     border-right: calc(1.5vw) solid;
   }
@@ -698,14 +715,6 @@ p {
   }
   .image-square p{
     font-size: calc(4vw);
-  }
-  .title-activity {
-    padding: 0.5vh 1.5vw 0.125vh 1.5vw;
-    font-size: calc(1.75vmin);
-  }
-  .subtitle-activity {
-    padding: 0vh 1.5vw 0.5vh 1.5vw;
-    font-size: calc(1.25vmin);
   }
   .button-activity {
     width: 45vmin;
@@ -737,6 +746,18 @@ p {
   }
   .canvas-container-square{
     min-height: 40vw;
+  }
+  .blend-text{
+    font-size: calc(2vw);
+  }
+  /* to comment this when solved the fact of an unique dimention*/
+  .title-activity {
+    padding: 0.5vh 1.5vw 0.125vh 1.5vw;
+    font-size: calc(1.75vmin);
+  }
+  .subtitle-activity {
+    padding: 0vh 1.5vw 0.5vh 1.5vw;
+    font-size: calc(1.25vmin);
   }
   .text-title{
     width: 36vw;
@@ -816,9 +837,6 @@ p {
   }
   .data-p-little{
     font-size: calc(1vw);
-  }
-  .blend-text{
-    font-size: calc(2vw);
   }
   .text-overlay-mode-3{
     border-right: calc(1vw) solid;
@@ -978,11 +996,12 @@ p {
     flex-direction: row;
     align-items: flex-start;
   }
-  .diplay-buttons{
+  .display-buttons{
     display: flex;
     flex-direction: column;
     /* align-items: flex-start; */
     margin: 0 10px;
+    width: 100%;
   }
   .width-mode{
     width: 400px;
@@ -1135,4 +1154,7 @@ p {
   .arrow-down{
     align-content: center;
   }
+}
+.no-see{
+  display: none;
 }
