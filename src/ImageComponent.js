@@ -5,6 +5,7 @@ import image1 from './image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
+import {ReactComponent as LogoMuraSVG} from './logoMura.svg'
 import html2canvas from 'html2canvas';
 import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
@@ -55,7 +56,7 @@ function ImageComponent(props) {
   const filterStyle = {
     opacity: valueFilter/100
   }
-  const styleLogoNama = {
+  const styleLogoClub = {
     width: (ratio === '1:1') ? '10vw' : '15vw',
     height: (ratio === '1:1') ? '8vw' : '12vw',
     fill: drawingColor,
@@ -67,18 +68,18 @@ function ImageComponent(props) {
     // mixBlendMode: blendMode
   }
 
-  const classesForLogoNama = () => {
+  const classesForLogoClub = () => {
     if(showMode3 || showMode4) {
       if(showMode3) {
-        if(ratio === '1:1') return ('logo-nama-wrapper-mode-3')
-        else return ('logo-nama-wrapper-mode-3-rect')
+        if(ratio === '1:1') return ('logo-club-wrapper-mode-3')
+        else return ('logo-club-wrapper-mode-3-rect')
       } else {
-        if(ratio === '1:1') return ('logo-nama-wrapper-mode-4')
-        else return ('logo-nama-wrapper-mode-4-rect')
+        if(ratio === '1:1') return ('logo-club-wrapper-mode-4')
+        else return ('logo-club-wrapper-mode-4-rect')
       }
     } else {
-      if(ratio === '1:1') return ('logo-nama-wrapper')
-      else return ('logo-nama-wrapper-rect')
+      if(ratio === '1:1') return ('logo-club-wrapper')
+      else return ('logo-club-wrapper-rect')
     }
   }
 
@@ -100,7 +101,7 @@ function ImageComponent(props) {
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
-  const classesLogoNama = classesForLogoNama()
+  const classesLogoClub = classesForLogoClub()
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
@@ -860,8 +861,13 @@ function ImageComponent(props) {
                 </div>
               )}
               {clubname === 'nama-crew' &&
-                <div id="canvasLogo" className={classesLogoNama}>
-                  <LogoNamaSVG className="logo-nama-svg" style={styleLogoNama}/>
+                <div id="canvasLogo" className={classesLogoClub}>
+                  <LogoNamaSVG className="logo-club-svg" style={styleLogoClub}/>
+                </div>
+              }
+              {clubname === 'mura-sunset-ride' &&
+                <div id="canvasLogo" className={classesLogoClub}>
+                  <LogoMuraSVG className="logo-club-svg" style={styleLogoClub}/>
                 </div>
               }
               {showMode1 && returnMode1Disposition()}

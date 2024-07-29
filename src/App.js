@@ -5,6 +5,7 @@ import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import brandingPalette from './brandingPalette';
+import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
 
@@ -167,9 +168,10 @@ class Homepage extends React.Component{
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : undefined
-    if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin')) 
-        && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin'))) {
+    clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName
+    clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : clubName
+    if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin') || urlCurrent.includes('/mura-sunset-ride')) 
+        && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin') || !stravaAuthorizeUrl.includes('/mura-sunset-ride'))) {
       console.log('clubName: ', clubName)
       stravaAuthorizeUrl += '/' + clubName
     }
@@ -192,6 +194,9 @@ class Homepage extends React.Component{
         if(urlCurrent !== urlWithoutParams) window.history.replaceState({}, '', urlWithoutParams);
         return (
           <div className="translate-y">
+            <div className="margin-title">
+              <p className="p-or p-login-or-size">SHARE YOUR RIDE BY</p>
+            </div>
             <div className="button-login justify-center-column" onClick={() => {
               window.location.href = stravaAuthorizeUrl
             }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
@@ -202,6 +207,14 @@ class Homepage extends React.Component{
               <p className="p-login p-login-or-size">LOAD A GPX</p>
               <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
             </div>
+            {clubName === 'mura-sunset-ride' &&
+              <div>
+                <div className="margin-x">
+                  <p className="p-or p-login-or-size">X</p>
+                </div>
+                <LogoMuraExtendedSVG/>
+              </div>
+            }
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
