@@ -82,6 +82,12 @@ p {
 .margin-or{
   margin: 20px;
 }
+.margin-title{
+  margin: 30px;
+}
+.margin-x{
+  margin: 20px;
+}
 .button-login {
   padding: 1vw;
   background-color: var(--palette-pink);
@@ -390,39 +396,39 @@ p {
       box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
     }
 }
-.logo-nama-wrapper{
+.logo-club-wrapper{
   position: absolute;
   bottom: 0;
   right: 3%;
   z-index: 4;
 }
-.logo-nama-wrapper-rect{
+.logo-club-wrapper-rect{
   position: absolute;
   bottom: 0;
   right: 3%;
   z-index: 4;
 }
-.logo-nama-wrapper-mode-3{
+.logo-club-wrapper-mode-3{
   position: absolute;
   top: 6%;
   left: 3%;
 }
-.logo-nama-wrapper-mode-3-rect{
+.logo-club-wrapper-mode-3-rect{
   position: absolute;
   top: 16%;
   left: 3%;
 }
-.logo-nama-wrapper-mode-4{
+.logo-club-wrapper-mode-4{
   position: absolute;
   bottom: 1%;
   left: 3%;
 }
-.logo-nama-wrapper-mode-4-rect{
+.logo-club-wrapper-mode-4-rect{
   position: absolute;
   bottom: 1%;
   left: 3%;
 }
-.logo-nama-svg{
+.logo-club-svg{
   width: 15vw;
   height: 12vw
 }
@@ -643,36 +649,36 @@ p {
   .canvas-container-general{
     min-width: 60vw;
   }
-  .logo-nama-wrapper-mode-3{
+  .logo-club-wrapper-mode-3{
     position: absolute;
     top: 4%;
     left: 1%;
     transform: scale(0.75);
   }
-  .logo-nama-wrapper-mode-3-rect{
+  .logo-club-wrapper-mode-3-rect{
     position: absolute;
     top: 16%;
     left: 0%;
     transform: scale(0.75);
   }
-  .logo-nama-wrapper-mode-4{
+  .logo-club-wrapper-mode-4{
     position: absolute;
     bottom: -1%;
     left: 1%;
     transform: scale(0.75);
   }
-  .logo-nama-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-4-rect{
     position: absolute;
     bottom: -1%;
     left: 1%;
     transform: scale(0.75);
   }
-  .logo-nama-wrapper{
+  .logo-club-wrapper{
     bottom: 0.75vw;
     right: 1.5vw;
     transform: scale(0.75);
   }
-  .logo-nama-wrapper-rect{
+  .logo-club-wrapper-rect{
     bottom: 0.75vw;
     right: 1.5vw;
     transform: scale(0.75);
@@ -795,36 +801,36 @@ p {
   .canvas-container-general{
     min-width: 40vw;
   }
-  .logo-nama-wrapper-mode-3{
+  .logo-club-wrapper-mode-3{
     position: absolute;
     top: 2%;
     left: -2%;
     transform: scale(0.6);
   }
-  .logo-nama-wrapper-mode-3-rect{
+  .logo-club-wrapper-mode-3-rect{
     position: absolute;
     top: 13%;
     left: -5%;
     transform: scale(0.5);
   }
-  .logo-nama-wrapper-mode-4{
+  .logo-club-wrapper-mode-4{
     position: absolute;
     bottom: -4%;
     left: -2%;
     transform: scale(0.6);
   }
-  .logo-nama-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-4-rect{
     position: absolute;
     bottom: -4%;
     left: -2%;
     transform: scale(0.6);
   }
-  .logo-nama-wrapper{
+  .logo-club-wrapper{
     bottom: -2vw;
     right: -1vw;
     transform: scale(0.57);
   }
-  .logo-nama-wrapper-rect{
+  .logo-club-wrapper-rect{
     bottom: -3vw;
     right: -2vw;
     transform: scale(0.5);
@@ -943,41 +949,41 @@ p {
   .canvas-container-general{
     min-width: 320px;
   }
-  .logo-nama-wrapper-mode-3{
+  .logo-club-wrapper-mode-3{
     position: absolute;
     top: 5%;
     left: 2%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-3-rect{
+  .logo-club-wrapper-mode-3-rect{
     position: absolute;
     top: 17%;
     left: 2%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-4{
+  .logo-club-wrapper-mode-4{
     position: absolute;
     bottom: -2%;
     left: 0%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-4-rect{
     position: absolute;
     bottom: -2%;
     left: 0%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper{
+  .logo-club-wrapper{
     bottom: -10px;
     right: 2px;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-rect{
+  .logo-club-wrapper-rect{
     bottom: -2px;
     right: 14px;
     transform: unset;
   }
-  .logo-nama-svg{
+  .logo-club-svg{
     width: 60px !important;
     height: 48px !important;
   }
@@ -1073,41 +1079,41 @@ p {
   .canvas-container-general{
     min-width: 400px;
   }
-  .logo-nama-wrapper-mode-3{
+  .logo-club-wrapper-mode-3{
     position: absolute;
     top: 5%;
     left: 2%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-3-rect{
+  .logo-club-wrapper-mode-3-rect{
     position: absolute;
     top: 15.5%;
     left: 2%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-4{
+  .logo-club-wrapper-mode-4{
     position: absolute;
     bottom: -2%;
     left: 0%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-4-rect{
     position: absolute;
     bottom: -2%;
     left: 0%;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper{
+  .logo-club-wrapper{
     bottom: -10px;
     right: 2px;
     transform: scale(0.85);
   }
-  .logo-nama-wrapper-rect{
+  .logo-club-wrapper-rect{
     bottom: -2px;
     right: 14px;
     transform: unset;
   }
-  .logo-nama-svg{
+  .logo-club-svg{
     width: 75px !important;
     height: 60px !important;
   }
