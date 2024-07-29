@@ -238,6 +238,8 @@ function ImageComponent(props) {
     let dimentionCircleFinish = width * 0.02
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
+
+    if(!coordinates.length) return
   
     let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
     let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
