@@ -197,6 +197,7 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let canvasSketchWidth = 500
@@ -238,8 +239,6 @@ function ImageComponent(props) {
     let dimentionCircleFinish = width * 0.02
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
-
-    if(!coordinates.length) return
   
     let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
     let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
@@ -291,6 +290,8 @@ function ImageComponent(props) {
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
+      (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let canvasSketchWidth = 500
@@ -345,7 +346,7 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    let climbs = returnClimbing(altitudeStream, distanceStream)
+    // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
     //   ctx.beginPath()
@@ -367,6 +368,8 @@ function ImageComponent(props) {
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
+      (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
     let canvasSketchWidth = 500
@@ -422,7 +425,7 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    let climbs = returnClimbing(altitudeStream, distanceStream)
+    // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
     //   ctx.beginPath()
