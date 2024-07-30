@@ -112,6 +112,7 @@ function ImageComponent(props) {
     } else {
       removeRoundCorner()
     }
+    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
     html2canvas(anchor, {
       useCORS: true
       // onclone: function(doc) {
@@ -131,7 +132,7 @@ function ImageComponent(props) {
             try {
                 const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
                 await navigator.share({
-                    title: utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase(),
+                    title: (title ? title : 'image' ),
                     files: [file],
                 });
             } catch (error) {
@@ -141,7 +142,7 @@ function ImageComponent(props) {
             const url = URL.createObjectURL(blob);
             const temp = document.createElement('a');
             temp.href = url;
-            temp.download = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase() + '.jpeg';
+            temp.download = (title ? title : 'image' ) + '.jpeg';
             temp.click();
             URL.revokeObjectURL(url); // Clean up URL object after use
         }
