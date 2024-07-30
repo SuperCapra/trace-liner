@@ -222,11 +222,11 @@ const utilsFunction = {
     },
 
     getAverageSpeedMetric(distance, duration) {
-        return Number(((distance / duration) * 3.6).toFixed(0))
+        return (!distance || !duration) ? undefined : Number(((distance / duration) * 3.6).toFixed(0))
     },
 
     getAverageSpeedImperial(distance, duration) {
-        return Number((((distance / duration) * 3.6) * 0.621371).toFixed(0))
+        return (!distance || !duration) ? undefined : Number((((distance / duration) * 3.6) * 0.621371).toFixed(0))
     },
 
     getSubTitle(element, unitOfMeasure) {
