@@ -261,7 +261,7 @@ function ImageComponent(props) {
     // stroke the path
     ctx.stroke()
     // stroke the initial circle only if the intersection it's null with the final circle
-    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
+    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish * dimentionCircleFinish)) {
       drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
     } else {
       drawCircle(ctx, endCoordinates, dimentionCircleStart, true, color)
