@@ -166,6 +166,12 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('window.location', window.location.href)
+    // if(!urlCurrent.startsWith(process.env.REACT_REDIRECT_URL)) {
+    //   console.log('window.location.host', window.location.host)
+    //   console.log('urlCurrent.replace(window.location.host', urlCurrent.replace(window.location.host,''))
+    //   console.log('process.env.REACT_REDIRECT_URL:', urlCurrent.replace(window.location.host,''))
+    //   window.open(process.env.REACT_REDIRECT_URL + urlCurrent.replace(window.location.host,''))
+    // }
     let code = queryParameters.get('code')
     let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
     clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName

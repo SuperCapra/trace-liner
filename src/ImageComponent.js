@@ -130,7 +130,7 @@ function ImageComponent(props) {
         console.log('navigator.share', navigator.share)
         if(navigator.share) {
             try {
-                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                const file = new File([blob], (title ? title : 'image') + '.jpeg', {type: 'image/jpeg', lastModified: new Date()});
                 await navigator.share({
                     title: (title ? title : 'image' ),
                     files: [file],
