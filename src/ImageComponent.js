@@ -130,7 +130,7 @@ function ImageComponent(props) {
         console.log('navigator.share', navigator.share)
         if(navigator.share) {
             try {
-                const file = new File([blob], 'image.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                const file = new File([blob], (title ? title : 'image') + '.jpeg', {type: 'image/jpeg', lastModified: new Date()});
                 await navigator.share({
                     title: (title ? title : 'image' ),
                     files: [file],
@@ -261,7 +261,9 @@ function ImageComponent(props) {
     // stroke the path
     ctx.stroke()
     // stroke the initial circle only if the intersection it's null with the final circle
-    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish * dimentionCircleFinish)) {
+    console.log('utils.quadraticFunction(endCoordinates, startCoordinates)', utils.quadraticFunction(endCoordinates, startCoordinates))
+    console.log('dimentionCircleFinish + dimentionCircleStart', (dimentionCircleFinish + dimentionCircleStart * 2) ** 2)
+    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2) {
       drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
     } else {
       drawCircle(ctx, endCoordinates, dimentionCircleStart, true, color)
