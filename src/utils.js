@@ -1,6 +1,9 @@
+import {vocabulary, languages, languagesRules} from "./vocabulary"
+
 const utilsFunction = {
     getJsonDate(dateUnparsed, removeZero) {
-        let res = {
+        let result = {}
+        let resForLanguage = {
             year: undefined,
             month: undefined,
             monthText: undefined,
@@ -10,38 +13,18 @@ const utilsFunction = {
             seconds: undefined,
 
         }
-        res.year = removeZero ? String(Number(dateUnparsed.substring(0,4))) : dateUnparsed.substring(0,4)
-        res.month = removeZero ? String(Number(dateUnparsed.substring(5,7))) : dateUnparsed.substring(5,7)
-        res.day = removeZero ? String(Number(dateUnparsed.substring(8,10))) : dateUnparsed.substring(8,10)
-        res.hours = removeZero ? String(Number(dateUnparsed.substring(11,13))) : dateUnparsed.substring(11,13)
-        res.minutes = removeZero ? String(Number(dateUnparsed.substring(14,16))) : dateUnparsed.substring(14,16)
-        res.seconds = removeZero ? String(Number(dateUnparsed.substring(17,19))) : dateUnparsed.substring(17,19)
-        if(Number(res.month) === 1) {
-            res.monthText = 'January'
-        } else if(Number(res.month) === 2) {
-            res.monthText = 'February'
-        } else if(Number(res.month) === 3) {
-            res.monthText = 'March'
-        } else if(Number(res.month) === 4) {
-            res.monthText = 'April'
-        } else if(Number(res.month) === 5) {
-            res.monthText = 'May'
-        } else if(Number(res.month) === 6) {
-            res.monthText = 'June'
-        } else if(Number(res.month) === 7) {
-            res.monthText = 'July'
-        } else if(Number(res.month) === 8) {
-            res.monthText = 'August'
-        } else if(Number(res.month) === 9) {
-            res.monthText = 'September'
-        } else if(Number(res.month) === 10) {
-            res.monthText = 'October'
-        } else if(Number(res.month) === 11) {
-            res.monthText = 'November'
-        } else if(Number(res.month) === 12) {
-            res.monthText = 'Dicember'
+        resForLanguage.year = removeZero ? String(Number(dateUnparsed.substring(0,4))) : dateUnparsed.substring(0,4)
+        resForLanguage.month = removeZero ? String(Number(dateUnparsed.substring(5,7))) : dateUnparsed.substring(5,7)
+        resForLanguage.day = removeZero ? String(Number(dateUnparsed.substring(8,10))) : dateUnparsed.substring(8,10)
+        resForLanguage.hours = removeZero ? String(Number(dateUnparsed.substring(11,13))) : dateUnparsed.substring(11,13)
+        resForLanguage.minutes = removeZero ? String(Number(dateUnparsed.substring(14,16))) : dateUnparsed.substring(14,16)
+        resForLanguage.seconds = removeZero ? String(Number(dateUnparsed.substring(17,19))) : dateUnparsed.substring(17,19)
+
+        for(let language of languages) {
+            result[language] = {...resForLanguage}
+            result[language]['monthText'] = vocabulary[language]['MONTH_' + Number(resForLanguage.month)]
         }
-        return res
+        return result
     },
 
     getBeautyCoordinates(coordinates) {
@@ -98,15 +81,21 @@ const utilsFunction = {
     },
 
     getBeautyDate(dateUnparsed) {
-        let parsedDate = this.getJsonDate(dateUnparsed, true)
-        let result = (parsedDate && parsedDate.monthText && parsedDate.day) ? (parsedDate.monthText + ' ' + parsedDate.day) : undefined
+        let parsedDateByLanguages = this.getJsonDate(dateUnparsed, true)
+        let result = {}
+        for(let language of languages) {
+            result[language] = (parsedDateByLanguages && parsedDateByLanguages[language] && parsedDateByLanguages[language].monthText && parsedDateByLanguages[language].day) ? (languagesRules[language].dayFirst ? (parsedDateByLanguages[language].day + ' ' + parsedDateByLanguages[language].monthText) : (parsedDateByLanguages[language].monthText + ' ' + parsedDateByLanguages[language].day)) : undefined
+        }
         return result
     },
 
     getBeautyDatetime(dateUnparsed) {
-        let parsedDateZero = this.getJsonDate(dateUnparsed, false)
-        let parsedDate = this.getJsonDate(dateUnparsed, true)
-        let result = (parsedDate && parsedDateZero && parsedDate.monthText && parsedDate.day && parsedDate.hours && parsedDateZero.minutes) ? (parsedDate.monthText + ' ' + parsedDate.day + ', ' + parsedDateZero.hours + ':' + parsedDateZero.minutes) : undefined
+        let parsedDateZeroByLanguages = this.getJsonDate(dateUnparsed, false)
+        let parsedDateByLanguages = this.getJsonDate(dateUnparsed, true)
+        let result = {}
+        for(let language of languages) {
+            result[language] = (parsedDateByLanguages && parsedDateByLanguages[language] && parsedDateZeroByLanguages && parsedDateZeroByLanguages[language] && parsedDateZeroByLanguages[language] && parsedDateByLanguages[language].monthText && parsedDateByLanguages[language].day && parsedDateByLanguages[language].hours && parsedDateZeroByLanguages[language].minutes) ? ((languagesRules[language].dayFirst ? (parsedDateByLanguages[language].day + ' ' + parsedDateByLanguages[language].monthText) : (parsedDateByLanguages[language].monthText + ' ' + parsedDateByLanguages[language].day)) + ', ' + parsedDateZeroByLanguages[language].hours + ':' + parsedDateZeroByLanguages[language].minutes) : undefined
+        }
         return result
     },
 
@@ -230,11 +219,15 @@ const utilsFunction = {
     },
 
     getSubTitle(element, unitOfMeasure) {
-        let result = ''
-        if(element.beautyDate) result += element.beautyDate 
-        if(element.sportType) result += (result.length ? ' | ' : '') + element.sportType 
-        if(element[unitOfMeasure].beautyDistance) result += (result.length ? ' | ' : '') + element[unitOfMeasure].beautyDistance 
-        if(element.beautyDuration) result += (result.length ? ' | ' : '') + element.beautyDuration
+        let result = {}
+        console.log('element', element)
+        for(let language of languages) {
+            result[language] = ''
+            if(element.beautyDatetimeLanguages[language]) result[language] += element.beautyDatetimeLanguages[language]
+            if(element.sportType) result[language] += (result[language].length ? ' | ' : '') + element.sportType 
+            if(element[unitOfMeasure].beautyDistance) result[language] += (result[language].length ? ' | ' : '') + element[unitOfMeasure].beautyDistance 
+            if(element.beautyDuration) result[language] += (result[language].length ? ' | ' : '') + element.beautyDuration
+        }
         return result
     },
 

@@ -6,7 +6,7 @@ import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
-import vocabulary from './vocabulary';
+import {vocabulary, languages} from './vocabulary';
 import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
@@ -134,7 +134,8 @@ class Homepage extends React.Component{
           beautyDuration: undefined,
           beautyName: track.name ? he.decode(track.name) : undefined,
           beautyPower: undefined,
-          beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+          // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+          beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
           coordinates: track.points && track.points.length ? track.points.map(point => ([
             point.lon,
             point.lat
@@ -265,7 +266,7 @@ class Homepage extends React.Component{
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>
-            <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
+            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[language]}</p>
           </div>)
         let styleSelectActivity = {
           display: activitiesButton.length ? 'block' : 'none'
@@ -298,7 +299,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} clubname={clubName} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }
@@ -419,7 +420,8 @@ class Homepage extends React.Component{
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: e.name,
               beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
-              beautyDate: utils.getBeautyDatetime(e.start_date_local),
+              // beautyDate: utils.getBeautyDatetime(e.start_date_local),
+              beautyDatetimeLanguages: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
               durationElapsed: e.elapsed_time,
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,

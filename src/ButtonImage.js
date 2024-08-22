@@ -9,6 +9,7 @@ import {ReactComponent as ViewSVG} from './view.svg'
 import {ReactComponent as HideSVG} from './hide.svg'
 import {ReactComponent as UnitMeasureSVG} from './unitMeasure.svg'
 import brandingPalette from './brandingPalette';
+import {vocabulary} from './vocabulary';
 import image1 from './image1.jpeg'
 import image2 from './image2.jpeg'
 import image3 from './image3.jpeg'
@@ -21,7 +22,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, handleClickButton } = props
+  const { activity, unitMeasure, language, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -303,7 +304,7 @@ function ButtonImage(props) {
           {showName && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
           {!showName && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
         </div>
-        <p>TITLE: {activity.beautyName}</p>
+        <p>{vocabulary[language].BUTTON_TITLE}: {activity.beautyName}</p>
       </div>
     )
   }
@@ -314,7 +315,7 @@ function ButtonImage(props) {
           {showDate && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
           {!showDate && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
         </div>
-        <p>DATE: {activity.beautyDate}</p>
+        <p>{vocabulary[language].BUTTON_DATE}: {activity.beautyDatetimeLanguages[language]}</p>
       </div>
     )
   }
@@ -325,7 +326,7 @@ function ButtonImage(props) {
           {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
           {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
         </div>
-        <p>DISTANCE: {activity[unitMeasure].beautyDistance}</p>
+        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistance}</p>
       </div>
     )
   }
@@ -336,7 +337,7 @@ function ButtonImage(props) {
           {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
           {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
-        <p>DURATION: {activity.beautyDuration}</p>
+        <p>{vocabulary[language].BUTTON_DURATION}: {activity.beautyDuration}</p>
       </div>
     )
   }
@@ -347,7 +348,7 @@ function ButtonImage(props) {
           {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
           {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
         </div>
-        <p>ELEVATION: {activity[unitMeasure].beautyElevation}</p>
+        <p>{vocabulary[language].BUTTON_ELEVATION}: {activity[unitMeasure].beautyElevation}</p>
       </div>
     )
   }
@@ -358,7 +359,7 @@ function ButtonImage(props) {
           {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
           {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
         </div>
-        <p>AVERAGE: {activity[unitMeasure].beautyAverage}</p>
+        <p>{vocabulary[language].BUTTON_AVERAGE}: {activity[unitMeasure].beautyAverage}</p>
       </div>
     )
   }
@@ -369,7 +370,7 @@ function ButtonImage(props) {
           {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
           {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
         </div>
-        <p>POWER: {activity.beautyPower}</p>
+        <p>{vocabulary[language].BUTTON_POWER}: {activity.beautyPower}</p>
       </div>
     )
   }
@@ -380,7 +381,7 @@ function ButtonImage(props) {
           {showCoordinates && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
           {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
         </div>
-        <p>COORDINATES: {activity.beautyCoordinates}</p>
+        <p>{vocabulary[language].BUTTON_COORDINATES}: {activity.beautyCoordinates}</p>
       </div>
     )
   }
@@ -470,7 +471,7 @@ function ButtonImage(props) {
     return (
       <div className="width-mode-sub">
         {nameController()}
-        {activity.beautyDate && dateController()}
+        {activity.beautyDatetimeLanguages[language] && dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
@@ -485,7 +486,7 @@ function ButtonImage(props) {
     return (
       <div className="width-mode-sub">
         {nameController()}
-        {activity.beautyDate && dateController()}
+        {activity.beautyDatetimeLanguages[language] && dateController()}
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
