@@ -4,7 +4,9 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
+import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
+import vocabulary from './vocabulary';
 import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
@@ -16,6 +18,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+let language = 'it'
 
 let athleteData = {}
 let activities = []
@@ -161,6 +164,14 @@ class Homepage extends React.Component{
     }
   }
 
+  displayStyleArrow() {
+    return {
+      fill: brandingPalette.background,
+      rotate: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight ? 0 : 180) + 'deg',
+      transition: 'rotate 1s',
+    }
+  }
+
   routesToStage() {
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -201,22 +212,22 @@ class Homepage extends React.Component{
         return (
           <div className="translate-y">
             <div className="margin-title">
-              <p className="p-or p-login-or-size">SHARE YOUR RIDE BY</p>
+              <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_SHARE_BY}</p>
             </div>
             <div className="button-login justify-center-column" onClick={() => {
               window.location.href = stravaAuthorizeUrl
-            }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
+            }}><p className="p-login p-login-or-size">{vocabulary[language].HOMEPAGE_LOGIN_STRAVA}</p></div>
             <div className="margin-or">
-              <p className="p-or p-login-or-size">OR</p>
+              <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_OR}</p>
             </div>
             <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
-              <p className="p-login p-login-or-size">LOAD A GPX</p>
+              <p className="p-login p-login-or-size">{vocabulary[language].HOMEPAGE_LOAD}</p>
               <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
             </div>
             {clubName === 'mura-sunset-ride' &&
               <div>
                 <div className="margin-x">
-                  <p className="p-or p-login-or-size">X</p>
+                  <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_PER}</p>
                 </div>
                 <LogoMuraExtendedSVG/>
               </div>
@@ -242,16 +253,20 @@ class Homepage extends React.Component{
         return (
           <div>
             <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
-              <ArrowDown className="back-image"/>
-              <p className="p-back">BACK</p>
+              <div className="back-arrow-container">
+                <ArrowLeft className="back-image"/>
+              </div>
+              <div className="back-text-container">
+                <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+              </div>
             </div>
             <div style={styleSelectActivity}>
-              <p className="p-select">SELECT AN ACTIVITY</p>
+              <p className="p-select">{vocabulary[language].HOMEPAGE_SELECT_ACTIVITY}</p>
             </div>
             {activitiesButton.length > 0 && activitiesButton}
             {(activitiesButton.length === 0 || !activitiesButton.length) && (
               <div>
-                <p className="p-select">BEFORE YOU CAN START YOU HAVE TO LOAD SOME ACTIVITIES</p>
+                <p className="p-select">{vocabulary[language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
@@ -270,13 +285,17 @@ class Homepage extends React.Component{
   }
 
   scroll() {
+    console.log('hey from scroll:', window.scrollY)
+    console.log('window.innerHeight:', window.innerHeight)
+    console.log('window.innerHeight + window.scrollY:', window.innerHeight + window.scrollY)
+    console.log('document.body.scrollHeight:', document.body.scrollHeight)
     window.scrollTo({
-      top: (window.innerHeight + window.scrollY >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
+      top: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
       behavior: 'smooth'
     });
     this.props.onChangeDisplayStyle({
       display: document.body.scrollHeight > window.innerHeight ? 'block' : 'none',
-      rotate: (window.innerHeight + window.scrollY >= document.body.scrollHeight ? 0 : 180) + 'deg',
+      rotate: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight ? 0 : 180) + 'deg',
       transition: 'rotate 1s',
     })
   }

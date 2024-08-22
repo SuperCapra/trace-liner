@@ -54,20 +54,22 @@ p {
   display: flex;
   flex-direction: row;
   align-items: center;
-  transform: translateX(-20px);
 }
 .back-button:hover{
   cursor: pointer;
 }
 .back-image{
-  margin: 0 10px;
   fill: var(--palette-pink);
-  transform: rotate(90deg) scale(0.6);
+  transform: scale(0.6);
 }
 .p-back{
   color: var(--palette-pink);
   justify-content: left;
-  font-size: 24px;
+  font-size: calc(4vw);
+}
+.back-arrow-container{
+  display: flex;
+  width: 40px
 }
 .wrapper-image{
   text-align: center;
@@ -92,6 +94,7 @@ p {
   padding: 1vw;
   background-color: var(--palette-pink);
   border-radius: 5px;
+  margin: 0 15%;
 }
 .button-login:hover {
   cursor: pointer
@@ -566,8 +569,8 @@ p {
   width: 80vw;
 }
 @media print, screen and (min-width: 450px) {
-  .back-button{
-    transform: translateX(30px);
+  .p-back{
+    font-size: calc(3.25vw);
   }
   .p-select{
     font-size: calc(3.75vw);
@@ -706,15 +709,9 @@ p {
     font-size: calc(6vw);
   }
 }
-@media print, screen and (min-width: 525px) {
-  .back-button{
-    transform: translateX(40px);
-  }
-}
 @media print, screen and (min-width: 600px) {
-  .back-button{
-    transform: translateX(110px);
-    width: 120px
+  .p-back{
+    font-size: calc(2vw);
   }
   .p-select{
     font-size: calc(2.5vw);
@@ -858,24 +855,9 @@ p {
     font-size: calc(4vw);
   }
 }
-@media print, screen and (min-width: 650px) {
-  .back-button{
-    transform: translateX(120px);
-  }
-}
-@media print, screen and (min-width: 700px) {
-  .back-button{
-    transform: translateX(130px);
-  }
-}
-@media print, screen and (min-width: 750px) {
-  .back-button{
-    transform: translateX(140px);
-  }
-}
 @media print, screen and (min-width: 800px) {
-  .back-button{
-    transform: translateX(-20px);
+  .p-back{
+    font-size: 24px;
   }
   .p-select{
     font-size: 40px;
