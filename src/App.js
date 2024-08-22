@@ -25,6 +25,7 @@ let activities = []
 let activity = {}
 let accessToken
 let isLoading = false
+let isAutoScrolling = false
 let stage = 'RequestedLogin'
 let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
@@ -39,6 +40,26 @@ function App() {
   const changeDisplayStyle = (sty) => {
     setDisplayStyle(sty)
   }
+  const handleScroll = () => {
+    if(!isAutoScrolling && (window.scrollY < document.body.scrollHeight * 0.1 || window.scrollY + window.innerHeight > document.body.scrollHeight * 0.9)) {
+      if(window.scrollY < document.body.scrollHeight * 0.1 && displayStyle.rotate === '180deg') {
+        setDisplayStyle({
+          display: 'block',
+          rotate: '0deg',
+          transition: 'rotate 1s',
+        })
+      }
+      if(window.scrollY + window.innerHeight > document.body.scrollHeight * 0.9 && displayStyle.rotate === '0deg') {
+        setDisplayStyle({
+          display: 'block',
+          rotate: '180deg',
+          transition: 'rotate 1s',
+        })
+      }
+    } else if(isAutoScrolling && (window.scrollY === 0 || window.scrollY === document.body.scrollHeight)) isAutoScrolling = false
+  };
+
+  window.addEventListener('scroll', handleScroll);
 
   return (
     <div>
@@ -289,6 +310,7 @@ class Homepage extends React.Component{
     console.log('window.innerHeight:', window.innerHeight)
     console.log('window.innerHeight + window.scrollY:', window.innerHeight + window.scrollY)
     console.log('document.body.scrollHeight:', document.body.scrollHeight)
+    isAutoScrolling = true
     window.scrollTo({
       top: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
       behavior: 'smooth'
