@@ -128,7 +128,7 @@ function ImageComponent(props) {
         // console.log('try to share..., navigator.share', navigator.share)
         // console.log('try to share..., navigator.canShare', navigator.canShare)
         console.log('navigator.share', navigator.share)
-        window.alert('navigator.share: ' + navigator.share)
+        // window.alert('navigator.share: ' + navigator.share)
         if(navigator.share) {
             try {
                 const file = new File([blob], (title ? title : 'image') + '.jpeg', {type: 'image/jpeg', lastModified: new Date()});
