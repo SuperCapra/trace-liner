@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
+import Dropdown from './Dropdown.js'
 import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
@@ -76,8 +77,10 @@ class Homepage extends React.Component{
       stage : stage,
       stageHistory : stageHistory,
     }
+    this.language = language
     this.processGPX = this.processGPX.bind(this);
     this.changeStage = this.changeStage.bind(this);
+    this.changeLanguage = this.changeLanguage.bind(this);
   }
 
   changeStage(value) {
@@ -195,6 +198,11 @@ class Homepage extends React.Component{
     }
   }
 
+  changeLanguage(data) {
+    this.setLanguage = data.value
+    this.routesToStage()
+  }
+
   routesToStage() {
     console.log('navigator.language:', navigator.language)
     console.log('clubs', clubs)
@@ -247,21 +255,28 @@ class Homepage extends React.Component{
         let urlWithoutParams = window.location.pathname
         if(urlCurrent !== urlWithoutParams) window.history.replaceState({}, '', urlWithoutParams);
         return (
-          <div className="translate-y">
-            <div className="margin-title">
-              <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_SHARE_BY}</p>
+          <div className="quadratic-wrapper">
+            <div className="buttons-wrapper">
+              <div className="language-selector-alone">
+                <Dropdown value={this.language} values={languages} handleChangeValue={this.changeLanguage}/>
+              </div>
             </div>
-            <div className="button-login justify-center-column" onClick={() => {
-              window.location.href = stravaAuthorizeUrl
-            }}><p className="p-login p-login-or-size">{vocabulary[language].HOMEPAGE_LOGIN_STRAVA}</p></div>
-            <div className="margin-or">
-              <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_OR}</p>
+            <div className="translate-y">
+              <div className="margin-title">
+                <p className="p-or p-login-or-size">{vocabulary[this.language].HOMEPAGE_SHARE_BY}</p>
+              </div>
+              <div className="button-login justify-center-column" onClick={() => {
+                window.location.href = stravaAuthorizeUrl
+              }}><p className="p-login p-login-or-size">{vocabulary[this.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
+              <div className="margin-or">
+                <p className="p-or p-login-or-size">{vocabulary[this.language].HOMEPAGE_OR}</p>
+              </div>
+              <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
+                <p className="p-login p-login-or-size">{vocabulary[this.language].HOMEPAGE_LOAD}</p>
+                <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+              </div>
+              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.language)}
             </div>
-            <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
-              <p className="p-login p-login-or-size">{vocabulary[language].HOMEPAGE_LOAD}</p>
-              <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-            </div>
-            {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, language)}
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -274,7 +289,7 @@ class Homepage extends React.Component{
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>
-            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[language]}</p>
+            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[this.language]}</p>
           </div>)
         let styleSelectActivity = {
           display: activitiesButton.length ? 'block' : 'none'
@@ -288,20 +303,20 @@ class Homepage extends React.Component{
                   <ArrowLeft className="back-image"/>
                 </div>
                 <div className="back-text-container">
-                  <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+                  <p className="p-back">{vocabulary[this.language].HOMEPAGE_BACK}</p>
                 </div>
               </div>
               <div className="language-selector">
-                <p>{language}</p>
+                <p className="p-back">{this.language}</p>
               </div>
             </div>
             <div style={styleSelectActivity}>
-              <p className="p-select">{vocabulary[language].HOMEPAGE_SELECT_ACTIVITY}</p>
+              <p className="p-select">{vocabulary[this.language].HOMEPAGE_SELECT_ACTIVITY}</p>
             </div>
             {activitiesButton.length > 0 && activitiesButton}
             {(activitiesButton.length === 0 || !activitiesButton.length) && (
               <div>
-                <p className="p-select">{vocabulary[language].HOMEPAGE_BEFORE_START}</p>
+                <p className="p-select">{vocabulary[this.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
@@ -312,7 +327,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} club={club} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} club={club} language={this.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }

@@ -68,6 +68,17 @@ p {
   justify-content: left;
   font-size: calc(4vw);
 }
+.p-uppercase{
+  text-transform: uppercase;
+}
+.header-wrapper{
+
+}
+.buttons-wrapper{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .back-arrow-container{
   display: flex;
   width: 40px
@@ -107,8 +118,23 @@ p {
   justify-content: center;
   flex-direction: column;
 }
+.quadratic-wrapper{
+  width: 100%;
+}
+.language-selector-alone{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: absolute;
+  top: 3%;
+  right: 6%;
+}
+.arrow-down-language-selector{
+  fill: var(--palette-primary);
+  transform: scale(0.5)
+}
 .translate-y{
-  transform: translateY(-5vh);
+  /* transform: translateY(-5vh); */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -589,6 +615,38 @@ p {
   width: 45%;
   max-width: 400px;
 }
+.dropdown-selected-value{
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+.dropdown-selected-value:hover{
+  cursor: pointer;
+}
+.dropdown-values{
+  background-color: var(--palette-secondary);
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dropdown-value{
+  color: var(--palette-background)
+}
+.dropdown-unselected-value{
+  display: flex;
+  width: 100%;
+}
+.dropdown-unselected-value:hover{
+  cursor: pointer;
+  background-color: var(--palette-primary);
+}
+.padding-5{
+  padding: 0 5px;
+}
+.display-flex-dropdown-value{
+  display: flex;
+  align-items: center;
+}
 @media print, screen and (min-width: 450px) {
   .p-back{
     font-size: calc(3.25vw);
@@ -729,6 +787,12 @@ p {
   }
   .text-overlay-mode-3-dimention-rect{
     font-size: calc(6vw);
+  }
+  .language-selector-alone{
+    right: 5%;
+  }
+  .arrow-down-language-selector{
+    transform: scale(0.55)
   }
 }
 @media print, screen and (min-width: 600px) {
@@ -876,6 +940,9 @@ p {
   }
   .text-overlay-mode-3-dimention-rect{
     font-size: calc(4vw);
+  }
+  .language-selector-alone{
+    right: 4%;
   }
 }
 @media print, screen and (min-width: 800px) {
@@ -1040,6 +1107,12 @@ p {
   .text-overlay-mode-3-dimention-rect{
     font-size: calc(4vw);
   }
+  .language-selector-alone{
+    right: 3%;
+  }
+  .arrow-down-language-selector{
+    transform: scale(0.6)
+  }
 }
 @media print, screen and (min-width: 1100px) {
   .beauty-border{
@@ -1173,5 +1246,17 @@ p {
   display: block;
 }
 .no-see-selected-image{
+  display: none;
+}
+.see-selected-language{
+  display: block;
+}
+.no-see-selected-language{
+  display: none;
+}
+.see-dropdown-values{
+  display: block;
+}
+.no-see-dropdown-values{
   display: none;
 }
