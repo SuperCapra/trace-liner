@@ -38,15 +38,25 @@ function Dropdown(props) {
         }
     }
 
+    const closeDropdown = () => {
+        const element = document.getElementById("dropdownValues")
+        if(element) {
+            if(element.classList.contains("see-dropdown-values")) {
+                element.classList.replace("see-dropdown-values", "no-see-dropdown-values")
+            }
+        }
+    }
+
     const changeValue = (valueSetting) => {
         if(valueSetting === valueSelected) return
         setValueSelected(valueSetting)
         handleChangeValue({type: 'language', value: valueSetting})
+        closeDropdown()
         // value = valueSetting
     }
 
     return(
-        <div className="p-back p-uppercase">
+        <div className="p-back p-uppercase" onBlur={closeDropdown} tabIndex={0}>
             <div className="dropdown-selected-value" onClick={hideShowDropDown}>
                 <p>{valueSelected}</p>
                 <ArrowDown className="padding-5" style={styleArrowDown20}/>
