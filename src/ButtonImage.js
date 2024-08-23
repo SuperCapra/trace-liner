@@ -227,56 +227,56 @@ function ButtonImage(props) {
   }
 
   const unitMeasureStyle = {
-    fill: brandingPalette.pink,
+    fill: brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const shareStyle = {
-    fill: brandingPalette.pink,
+    fill: brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const modifyStyle = {
-    fill: showModifyImage ? brandingPalette.yellow : brandingPalette.pink,
+    fill: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const textStyle = {
-    fill: showModifyText ? brandingPalette.yellow : brandingPalette.pink,
+    fill: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const squareStyle = {
-    fill: square ? brandingPalette.yellow : brandingPalette.pink,
+    fill: square ? brandingPalette.secondary : brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const rectangleStyle = {
-    fill: rectangle ? brandingPalette.yellow : brandingPalette.pink,
+    fill: rectangle ? brandingPalette.secondary : brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const eyeStyle = {
-    fill: brandingPalette.pink,
+    fill: brandingPalette.primary,
     transform: 'scale(0.55)'
   }
   const subEyeStyle = {
-    fill: brandingPalette.lightblue,
+    fill: brandingPalette.tertiary,
     transform: 'scale(0.55)'
   }
   // const unsetBlendModeStyle = {
-  //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.pink,
-  //   backgroundColor: selectedUnsetBlendMode ? brandingPalette.yellow : 'unset',
+  //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.primary,
+  //   backgroundColor: selectedUnsetBlendMode ? brandingPalette.secondary : 'unset',
   //   margin: '2%',
   //   padding: '1%',
   //   borderRadius: '5px'
   // }
 
   // const differenceBlendModeStyle = {
-  //   color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.pink,
-  //   backgroundColor: selectedDifferenceBlendMode ? brandingPalette.yellow : 'unset',
+  //   color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.primary,
+  //   backgroundColor: selectedDifferenceBlendMode ? brandingPalette.secondary : 'unset',
   //   margin: '2%',
   //   padding: '1%',
   //   borderRadius: '5px'
   // }
 
   // const exclusionBlendModeStyle = {
-  //   color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.pink,
-  //   backgroundColor: selectedExclusionBlendMode ? brandingPalette.yellow : 'unset',
+  //   color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.primary,
+  //   backgroundColor: selectedExclusionBlendMode ? brandingPalette.secondary : 'unset',
   //   margin: '2%',
   //   padding: '1%',
   //   borderRadius: '5px'

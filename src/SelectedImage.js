@@ -2,7 +2,7 @@ import React from 'react';
 import brandingPalette from './brandingPalette';
 function SelectedImage(props) {
     let styleRect = {
-        fill: brandingPalette.yellow,
+        fill: brandingPalette.secondary,
         strokeWidth: 7.55906,
         strokeLinecap: 'round',
         strokeLinejoin: 'round',

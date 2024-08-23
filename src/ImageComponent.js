@@ -356,7 +356,7 @@ function ImageComponent(props) {
     //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
     //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.strokeStyle = brandingPalette.secondary
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
@@ -435,7 +435,7 @@ function ImageComponent(props) {
     //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
     //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.strokeStyle = brandingPalette.secondary
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
@@ -682,7 +682,7 @@ function ImageComponent(props) {
   // const handleBlendMode = (blendModeSetting) => {
   //   console.log('Blend mode to set:', blendModeSetting)
   //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
-  //     handleColorChange(brandingPalette.pink)
+  //     handleColorChange(brandingPalette.primary)
   //   } else {
   //     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
   //     else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)

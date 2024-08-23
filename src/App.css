@@ -1,12 +1,13 @@
 :root{
-  --palette-purple: #9b5de5;
-  --palette-pink: #f15bb5;
-  --palette-yellow: #fee440;
-  --palette-lightblue: #00bbf9;
-  --palette-watergreen: #00f5d4;
+  --palette-ancestral: #9b5de5;
+  --palette-primary: #f15bb5;
+  --palette-secondary: #fee440;
+  --palette-tertiary: #00bbf9;
+  --palette-quaternary: #00f5d4;
   --palette-background: #282c34;
   --palette-background-complementary: #343028;
   --palette-white: #edf6f9;
+  --palette-black: #000000;
 }
 
 @font-face {
@@ -21,7 +22,7 @@ p {
 }
 
 .code-inactive {
-  background: var(--palette-pink); 
+  background: var(--palette-primary); 
   color: var(--palette-background);
 }
 
@@ -48,7 +49,7 @@ p {
 }
 
 .App-link {
-  color: var(--palette-watergreen);
+  color: var(--palette-quaternary);
 }
 .back-button{
   display: flex;
@@ -59,11 +60,11 @@ p {
   cursor: pointer;
 }
 .back-image{
-  fill: var(--palette-pink);
+  fill: var(--palette-primary);
   transform: scale(0.6);
 }
 .p-back{
-  color: var(--palette-pink);
+  color: var(--palette-primary);
   justify-content: left;
   font-size: calc(4vw);
 }
@@ -92,7 +93,7 @@ p {
 }
 .button-login {
   padding: 1vw;
-  background-color: var(--palette-pink);
+  background-color: var(--palette-primary);
   border-radius: 5px;
   margin: 0 15%;
   width: 60%;
@@ -119,7 +120,7 @@ p {
   color: var(--palette-background);
 }
 .p-or{
-  color: var(--palette-pink);
+  color: var(--palette-primary);
 }
 .p-login-or-size{
   font-family: 'SourceCodePro';
@@ -130,7 +131,7 @@ p {
   width: 90vmin;
   min-height: 6.5vh;
   margin: 1.5vw;
-  background-color: var(--palette-yellow);
+  background-color: var(--palette-secondary);
   border-radius: 5px;
 }
 .button-activity:hover{
@@ -177,12 +178,12 @@ p {
 }
 .back{
   color: var(--palette-background);
-  background: var(--palette-lightblue);
+  background: var(--palette-tertiary);
 }
 .back:hover{
   cursor: pointer;
   color: var(--palette-background);
-  background: var(--palette-pink);
+  background: var(--palette-primary);
 }
 .colors-background{
   position: relative;
@@ -371,7 +372,7 @@ p {
   width: 50px;
   height: 50px;
   border-radius: 5px;
-  background-color: var(--palette-yellow); 
+  background-color: var(--palette-secondary); 
 }
 .image-square:hover{
   cursor: pointer
@@ -387,32 +388,32 @@ p {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: var(--palette-pink);
-    color: var(--palette-pink);
-    box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+    background-color: var(--palette-primary);
+    color: var(--palette-primary);
+    box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     animation: dot-typing 1.5s infinite linear;
 }
 @keyframes dot-typing {
     0% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
     16.667% {
-      box-shadow: 9984px -10px 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px -10px 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
     33.333% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px -10px 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px -10px 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
     50% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px -10px 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px -10px 0 0 var(--palette-primary);
     }
     66.667% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
     83.333% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
     100% {
-      box-shadow: 9984px 0 0 0 var(--palette-pink), 9999px 0 0 0 var(--palette-pink), 10014px 0 0 0 var(--palette-pink);
+      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     }
 }
 .logo-club-wrapper{
@@ -558,7 +559,7 @@ p {
 }
 .arrow-down{
   padding: 8px;
-  background-color: var(--palette-pink);
+  background-color: var(--palette-primary);
   width: 45px;
   height: 45px;
   position: fixed;
@@ -572,11 +573,11 @@ p {
 }
 .p-select{
   font-size: calc(5vw);
-  color: var(--palette-pink);
+  color: var(--palette-primary);
   font-family: 'SourceCodePro';
 }
 .blend-text{
-  color: var(--palette-pink)
+  color: var(--palette-primary)
 }
 .blend-mode:hover{
   cursor: pointer;
