@@ -1,6 +1,6 @@
-import {ReactComponent as LogHomepageMuraSVG} from './logoMuraExtended.svg';
-import {ReactComponent as LogoImageNamaSVG} from './logoNama.svg'
-import {ReactComponent as LogoImageMuraSVG} from './logoMura.svg'
+import {ReactComponent as LogHomepageMuraSVG} from './images/logoMuraExtended.svg';
+import {ReactComponent as LogoImageNamaSVG} from './images/logoNama.svg'
+import {ReactComponent as LogoImageMuraSVG} from './images/logoMura.svg'
 
 const returnImageLogoNama = (classes, styles) => {
     return (<div id="canvasLogo" className={classes}>

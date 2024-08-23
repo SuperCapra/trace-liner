@@ -1,23 +1,23 @@
 import './App.css';
 import React, {useState} from 'react';
-import {ReactComponent as ShareSVG} from './share.svg'
-import {ReactComponent as ModifySVG} from './modify.svg'
-import {ReactComponent as TextSVG} from './text.svg'
-import {ReactComponent as RectangleSVG} from './rectangle.svg'
-import {ReactComponent as SquareSVG} from './square.svg'
-import {ReactComponent as ViewSVG} from './view.svg'
-import {ReactComponent as HideSVG} from './hide.svg'
-import {ReactComponent as UnitMeasureSVG} from './unitMeasure.svg'
+import {ReactComponent as ShareSVG} from './images/share.svg'
+import {ReactComponent as ModifySVG} from './images/modify.svg'
+import {ReactComponent as TextSVG} from './images/text.svg'
+import {ReactComponent as RectangleSVG} from './images/rectangle.svg'
+import {ReactComponent as SquareSVG} from './images/square.svg'
+import {ReactComponent as ViewSVG} from './images/view.svg'
+import {ReactComponent as HideSVG} from './images/hide.svg'
+import {ReactComponent as UnitMeasureSVG} from './images/unitMeasure.svg'
 import SelectedImage from './SelectedImage';
 import brandingPalette from './brandingPalette';
 import {vocabulary} from './vocabulary';
-import image1 from './image1.jpeg'
-import image2 from './image2.jpeg'
-import image3 from './image3.jpeg'
-import image4 from './image4.jpeg'
-import image5 from './image5.jpg'
-import image6 from './image6.jpeg'
-import image7 from './image7.jpeg'
+import image1 from './images/image1.jpeg'
+import image2 from './images/image2.jpeg'
+import image3 from './images/image3.jpeg'
+import image4 from './images/image4.jpeg'
+import image5 from './images/image5.jpg'
+import image6 from './images/image6.jpeg'
+import image7 from './images/image7.jpeg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 

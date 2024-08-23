@@ -95,6 +95,8 @@ p {
   background-color: var(--palette-pink);
   border-radius: 5px;
   margin: 0 15%;
+  width: 60%;
+  max-width: 500px;
 }
 .button-login:hover {
   cursor: pointer
@@ -107,6 +109,10 @@ p {
 .translate-y{
   transform: translateY(-5vh);
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .p-login{
   padding: 1vh 3vw 1vh 3vw;
@@ -579,7 +585,8 @@ p {
   width: 80vw;
 }
 .homepage-logo-width{
-  margin: 0 15%
+  width: 45%;
+  max-width: 400px;
 }
 @media print, screen and (min-width: 450px) {
   .p-back{
@@ -599,9 +606,6 @@ p {
   .button-login {
     padding: 0.75vw;
     margin: 0 22.5%;
-  }
-  .homepage-logo-width{
-    margin: 0 22.5%
   }
   .p-login{
     padding: 0.75vh 2.25vw 0.75vh 2.25vw;
@@ -744,9 +748,6 @@ p {
   .button-login {
     padding: 0.5vw;
     margin: 0 25%;
-  }
-  .homepage-logo-width{
-    margin: 0 25%
   }
   .p-login{
     padding: 0.5vh 1.5vw 0.5vh 1.5vw;

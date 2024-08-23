@@ -1,9 +1,9 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
-import image1 from './image1.jpeg'
+import image1 from './images/image1.jpeg'
 import utils from './utils.js'
-import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified.svg'
 import html2canvas from 'html2canvas';
 import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
@@ -105,8 +105,8 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
-    let anchor = club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    if(club.name === 'dev-admin') {
+    let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    if(club && club.name === 'dev-admin') {
       document.getElementById('showingImage').classList.remove('round-corner')
     } else {
       removeRoundCorner()
@@ -149,7 +149,7 @@ function ImageComponent(props) {
     }, 'image/jpeg');
     })
     .finally(() => {
-      if(club.name === 'dev-admin') {
+      if(club && club.name === 'dev-admin') {
         document.getElementById('showingImage').classList.add('round-corner')
       } else {
         addRoundCorner()
@@ -268,10 +268,10 @@ function ImageComponent(props) {
     }
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-    if(club.name === 'dev-admin') returnImage()
+    if(club && club.name === 'dev-admin') returnImage()
   },[
     activity.coordinates,
-    club.name,
+    club,
     returnImage
   ])
 
@@ -515,7 +515,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
-    if(club.name === 'dev-admin') seeHiding()
+    if(club && club.name === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -523,13 +523,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    if(club.name === 'dev-admin') returnImage()
+    if(club && club.name === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
     canvasHeight,
     returnImage,
-    club.name
+    club
   ])
 
   const handleClickDispatcher = (data) => {
@@ -772,7 +772,7 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
-    if(club.name === 'dev-admin') {
+    if(club && club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -834,7 +834,7 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    if(club.name === 'dev-admin') {
+    if(club && club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -845,7 +845,7 @@ function ImageComponent(props) {
       canvasWidth,
       handleCrop,
       imageSrc,
-      club.name
+      club
     ])
   
   return (

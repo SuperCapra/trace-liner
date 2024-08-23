@@ -3,12 +3,11 @@ import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
-import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
-import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
+import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
 import {vocabulary, languages} from './vocabulary';
 import clubs from './clubs'
-import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
 
@@ -283,12 +282,14 @@ class Homepage extends React.Component{
         let styleArrow = !activitiesButton.length ? { display : 'none' } : this.props.displayStyle
         return (
           <div>
-            <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
-              <div className="back-arrow-container">
-                <ArrowLeft className="back-image"/>
-              </div>
-              <div className="back-text-container">
-                <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+            <div className="header-wrapper">
+              <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
+                <div className="back-arrow-container">
+                  <ArrowLeft className="back-image"/>
+                </div>
+                <div className="back-text-container">
+                  <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+                </div>
               </div>
               <div className="language-selector">
                 <p>{language}</p>
