@@ -224,7 +224,6 @@ p {
   left: 50%;
   translate: -50%;
 }
-
 .camouflage{
   color: var(--palette-background);
 }
@@ -379,11 +378,23 @@ p {
 .colors{
   margin: 4px;
 }
+.colors:hover{
+  cursor: pointer;
+}
+.proportion:hover{
+  cursor: pointer;
+}
+.feature:hover{
+  cursor: pointer;
+}
 .image-props{
   margin: 5px;
   border-radius: 5px;
   width: 50px;
   height: 50px;
+}
+.image-props:hover{
+  cursor: pointer;
 }
 .selected-image{
   position: absolute;

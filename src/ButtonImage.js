@@ -548,23 +548,23 @@ function ButtonImage(props) {
     <div className="display-buttons">
       <div className="wrapper-buttons">
         <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
-          <UnitMeasureSVG />
+          <UnitMeasureSVG className="feature" />
         </div>
         <div style={textStyle} onClick={() => showModifySetText()}>
-          <TextSVG />
+          <TextSVG className="feature" />
         </div>
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
-          <ModifySVG />
+          <ModifySVG className="feature" />
         </div>
         <div style={shareStyle} onClick={() => handleClick({type: 'share'})}>
-          <ShareSVG />
+          <ShareSVG className="feature" />
         </div>
       </div>
       {showModifyImage && (
         <div className="wrapper-controller">
           <div className="wrapper-sub-buttons">
-            <RectangleSVG style={rectangleStyle} onClick={() => propagateRectangle()}/>
-            <SquareSVG style={squareStyle} onClick={() => propagateSquare()}/>
+            <RectangleSVG className="proportion" style={rectangleStyle} onClick={() => propagateRectangle()}/>
+            <SquareSVG className="proportion" style={squareStyle} onClick={() => propagateSquare()}/>
             {/* <SquareSVG style={squareStyle} onClick={() => propagateTwice()}/> */}
           </div>
           {/* <div className="wrapper-sub-buttons">
