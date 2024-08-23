@@ -1,10 +1,10 @@
-import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
-import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-import {ReactComponent as LogoMuraSVG} from './logoMura.svg'
+import {ReactComponent as LogHomepageMuraSVG} from './logoMuraExtended.svg';
+import {ReactComponent as LogoImageNamaSVG} from './logoNama.svg'
+import {ReactComponent as LogoImageMuraSVG} from './logoMura.svg'
 
 const returnImageLogoNama = (classes, styles) => {
     return (<div id="canvasLogo" className={classes}>
-            <LogoNamaSVG className="logo-club-svg" style={styles}/>
+            <LogoImageNamaSVG className="logo-club-svg" style={styles}/>
         </div>)
 }
 const returnHomepageLogoMura = (vocabulary, language) => {
@@ -12,12 +12,12 @@ const returnHomepageLogoMura = (vocabulary, language) => {
         <div className="margin-x">
         <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_PER}</p>
         </div>
-        <LogoMuraExtendedSVG/>
+        <LogHomepageMuraSVG/>
     </div>)
 }
 const returnImageLogoMura = (classes, styles) => {
     return (<div id="canvasLogo" className={classes}>
-        <LogoMuraSVG className="logo-club-svg" style={styles}/>
+        <LogoImageMuraSVG className="logo-club-svg" style={styles}/>
     </div>)
 }
 
