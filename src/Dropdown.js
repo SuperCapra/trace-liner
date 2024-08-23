@@ -18,7 +18,7 @@ function Dropdown(props) {
             let styleTick = {
                 fill: brandingPalette.background
             }
-            resultHTML.push(<div className={classesForvalue} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
+            resultHTML.push(<div className={classesForvalue} key={v} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
         }
         return resultHTML
     }
@@ -41,7 +41,7 @@ function Dropdown(props) {
     const changeValue = (valueSetting) => {
         if(valueSetting === valueSelected) return
         setValueSelected(valueSetting)
-        handleChangeValue({type: 'language', value: 'valueSetting'})
+        handleChangeValue({type: 'language', value: valueSetting})
         // value = valueSetting
     }
 

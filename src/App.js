@@ -19,8 +19,6 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
-let language = 'en'
-let languageSelected
 
 let athleteData = {}
 let activities = []
@@ -38,6 +36,11 @@ function App() {
     rotate: '0deg',
     transition: 'rotate 1s',
   })
+  const [selectedLanguage, setSelectedLanguage] = useState((languages && languages.length && navigator && navigator.language && navigator.language.length >= 2 && languages.findIndex(x => x === navigator.language.substring(0,2).toLowerCase()) > -1 ? navigator.language.substring(0,2).toLowerCase() : 'en'))
+
+  const changeLanguage = (language) => {
+    setSelectedLanguage(language)
+  }
 
   const changeDisplayStyle = (sty) => {
     setDisplayStyle(sty)
@@ -65,7 +68,7 @@ function App() {
 
   return (
     <div>
-      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} />
+      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} language={selectedLanguage} changeLanguage={changeLanguage}/>
     </div>
   );
 }
@@ -77,10 +80,9 @@ class Homepage extends React.Component{
       stage : stage,
       stageHistory : stageHistory,
     }
-    this.language = language
     this.processGPX = this.processGPX.bind(this);
     this.changeStage = this.changeStage.bind(this);
-    this.changeLanguage = this.changeLanguage.bind(this);
+    this.setLanguage = this.setLanguage.bind(this);
   }
 
   changeStage(value) {
@@ -198,13 +200,13 @@ class Homepage extends React.Component{
     }
   }
 
-  changeLanguage(data) {
-    this.setLanguage = data.value
-    this.routesToStage()
+  setLanguage(data) {
+    this.props.changeLanguage(data.value)
   }
 
   routesToStage() {
     console.log('navigator.language:', navigator.language)
+    console.log('this.props.language:', this.props.language)
     console.log('clubs', clubs)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -258,24 +260,24 @@ class Homepage extends React.Component{
           <div className="quadratic-wrapper">
             <div className="buttons-wrapper">
               <div className="language-selector-alone">
-                <Dropdown value={this.language} values={languages} handleChangeValue={this.changeLanguage}/>
+                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
               </div>
             </div>
             <div className="translate-y">
               <div className="margin-title">
-                <p className="p-or p-login-or-size">{vocabulary[this.language].HOMEPAGE_SHARE_BY}</p>
+                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
               </div>
               <div className="button-login justify-center-column" onClick={() => {
                 window.location.href = stravaAuthorizeUrl
-              }}><p className="p-login p-login-or-size">{vocabulary[this.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
+              }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
               <div className="margin-or">
-                <p className="p-or p-login-or-size">{vocabulary[this.language].HOMEPAGE_OR}</p>
+                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
               </div>
               <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
-                <p className="p-login p-login-or-size">{vocabulary[this.language].HOMEPAGE_LOAD}</p>
+                <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
                 <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
               </div>
-              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.language)}
+              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)}
             </div>
           </div>
         )
@@ -289,7 +291,7 @@ class Homepage extends React.Component{
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>
-            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[this.language]}</p>
+            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[this.props.language]}</p>
           </div>)
         let styleSelectActivity = {
           display: activitiesButton.length ? 'block' : 'none'
@@ -303,20 +305,20 @@ class Homepage extends React.Component{
                   <ArrowLeft className="back-image"/>
                 </div>
                 <div className="back-text-container">
-                  <p className="p-back">{vocabulary[this.language].HOMEPAGE_BACK}</p>
+                  <p className="p-back">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
                 </div>
               </div>
               <div className="language-selector">
-                <p className="p-back">{this.language}</p>
+                <p className="p-back">{this.props.language}</p>
               </div>
             </div>
             <div style={styleSelectActivity}>
-              <p className="p-select">{vocabulary[this.language].HOMEPAGE_SELECT_ACTIVITY}</p>
+              <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_SELECT_ACTIVITY}</p>
             </div>
             {activitiesButton.length > 0 && activitiesButton}
             {(activitiesButton.length === 0 || !activitiesButton.length) && (
               <div>
-                <p className="p-select">{vocabulary[this.language].HOMEPAGE_BEFORE_START}</p>
+                <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
@@ -327,7 +329,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} club={club} language={this.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} club={club} language={this.props.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }
