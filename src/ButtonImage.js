@@ -8,6 +8,7 @@ import {ReactComponent as SquareSVG} from './square.svg'
 import {ReactComponent as ViewSVG} from './view.svg'
 import {ReactComponent as HideSVG} from './hide.svg'
 import {ReactComponent as UnitMeasureSVG} from './unitMeasure.svg'
+import SelectedImage from './SelectedImage';
 import brandingPalette from './brandingPalette';
 import {vocabulary} from './vocabulary';
 import image1 from './image1.jpeg'
@@ -39,6 +40,7 @@ function ButtonImage(props) {
   const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
+  const [additionalImagesInfo, setAdditionalImagesInfo] = useState([]);
   const [valueFilter, setValueFilter] = useState(0);
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
@@ -50,25 +52,32 @@ function ButtonImage(props) {
   const colors = []
   let images = [{
     photo: image1, 
-    alt: 'default-1'
+    alt: 'default-1',
+    selected: true,
   },{
     photo: image2, 
-    alt: 'default-2'
+    alt: 'default-2',
+    selected: false,
   },{
     photo: image3, 
-    alt: 'default-3'
+    alt: 'default-3',
+    selected: false,
   },{
     photo: image4, 
-    alt: 'default-4'
+    alt: 'default-4',
+    selected: false,
   },{
     photo: image5, 
-    alt: 'default-5'
+    alt: 'default-5',
+    selected: false,
   },{
     photo: image6, 
-    alt: 'default-6'
+    alt: 'default-6',
+    selected: false,
   },{
     photo: image7, 
-    alt: 'default-7'
+    alt: 'default-7',
+    selected: false,
   }]
 
   const showModifySetImage = () => {
@@ -395,14 +404,20 @@ function ButtonImage(props) {
     // }
     let htmlImages = []
     for(let element of images) {
-      console.log(element)
-      htmlImages.push(<img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/>)
+      let classesForSelected = element.selected ? "selected-image see-selected-image" : "selected-image no-see-selected-image"
+      htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
     }
     return(htmlImages)
   }
 
   const resetImage = (alt) => {
+    deselectImage()
     const elementChosen = document.getElementById(alt)
+    const elementChosenSelected = document.getElementById(alt + '-selected')
+    if(elementChosenSelected) {
+      elementChosenSelected.classList.remove('no-see-selected-image')
+      elementChosenSelected.classList.add('see-selected-image')
+    }
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
     handleClick({type: 'image', image: src})
@@ -426,13 +441,27 @@ function ButtonImage(props) {
         returnImages(imageDataURL)
         let key = additionalImages.length + 1
         let alt = 'loaded-images-' + key
+        deselectImage()
         setImageLoading(true)
-        setAdditionalImages([...additionalImages, <img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/>])
+        setAdditionalImagesInfo([...additionalImagesInfo, {
+          photo: imageDataURL, 
+          alt: alt,
+          selected: true}])
+        setAdditionalImages([...additionalImages, <div key={key + 'wrapper'} className="wrapper-image-selected"><div key={alt + '-selected'} id={alt + '-selected'} className="selected-image see-selected-image"><SelectedImage/></div><img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/></div>])
+        handleClick({type: 'image', image: imageDataURL})
         if(additionalImages.length > 2) {
           setEnableUploading(false)
         }
       };
       reader.readAsDataURL(file);
+    }
+  }
+
+  const deselectImage = () => {
+    const selectedImages = document.getElementsByClassName('see-selected-image')
+    for(let selectedImage of selectedImages) {
+      selectedImage.classList.remove('see-selected-image')
+      selectedImage.classList.add('no-see-selected-image')
     }
   }
 

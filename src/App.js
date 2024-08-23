@@ -6,7 +6,7 @@ import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
-import {vocabulary, languages} from './vocabulary';
+import {vocabulary} from './vocabulary';
 import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
