@@ -61,7 +61,6 @@ p {
 }
 .back-image{
   fill: var(--palette-primary);
-  transform: scale(0.6);
 }
 .p-back{
   color: var(--palette-primary);
@@ -72,7 +71,12 @@ p {
   text-transform: uppercase;
 }
 .header-wrapper{
-
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.width-header-wrapper{
+  width: 80vw;
 }
 .buttons-wrapper{
   width: 100%;
@@ -81,7 +85,7 @@ p {
 }
 .back-arrow-container{
   display: flex;
-  width: 40px
+  width: 25px
 }
 .wrapper-image{
   text-align: center;
@@ -231,6 +235,11 @@ p {
   width: 80vw;
   margin: 1vh 0vh 5vh
 }
+.wrapper-main{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .canvas-image{
   width: 80vw;
   position: absolute;
@@ -302,6 +311,10 @@ p {
 }
 #loader {
   z-index: 5;
+}
+#dropDown{
+  z-index: 6;
+  position: relative;
 }
 .background-loading{
   background-color: var(--palette-background);
@@ -628,6 +641,7 @@ p {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+  position: absolute
 }
 .dropdown-value{
   color: var(--palette-background)
@@ -681,6 +695,9 @@ p {
     width: 60vw;
   }
   .width-general{
+    width: 60vw;
+  }
+  .width-header-wrapper{
     width: 60vw;
   }
   .App-header {
@@ -829,6 +846,9 @@ p {
     width: 40vw;
   }
   .width-general{
+    width: 40vw;
+  }
+  .width-header-wrapper{
     width: 40vw;
   }
   .App-header {
@@ -984,6 +1004,9 @@ p {
   }
   .width-general{
     width: 320px;
+  }
+  .width-header-wrapper{
+    width: 740px;
   }
   .App-header {
     align-items: center;

@@ -1,18 +1,19 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
+import Dropdown from './Dropdown.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
-import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import html2canvas from 'html2canvas';
 import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
-import { vocabulary } from './vocabulary.js';
+import { vocabulary, languages } from './vocabulary.js';
 // import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
 
-  const {activity, club, language, handleBack} = props
+  const {activity, club, language, handleBack, handleBubbleLanguage} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -833,6 +834,10 @@ function ImageComponent(props) {
     return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
   }
 
+  const bubbleChangeLanguage = (value) => {
+    handleBubbleLanguage(value)
+  }
+
   useEffect(() => {
     if(club && club.name === 'dev-admin') {
       setIsLoading(true)
@@ -850,10 +855,23 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      <div className="back-button" onClick={() => handleBack()}>
-        <ArrowLeft className="back-image"/>
-        <p className="p-back">BACK</p>
+      <div className="header-wrapper width-header-wrapper">
+        <div className="back-button" onClick={() => handleBack()}>
+          <div className="back-arrow-container">
+            <ArrowLeft className="back-image"/>
+          </div>
+          <div className="back-text-container">
+            <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+          </div>
+        </div>
+        <div className="language-selector">
+          <Dropdown value={language} values={languages} handleChangeValue={bubbleChangeLanguage}/>
+        </div>
       </div>
+      {/* <div className="back-button" onClick={() => handleBack()}>
+        <ArrowLeft className="back-image"/>
+        <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+      </div> */}
       <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">

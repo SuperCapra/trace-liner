@@ -5,7 +5,7 @@ import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import Dropdown from './Dropdown.js'
 import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
-import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import brandingPalette from './brandingPalette';
 import {vocabulary, languages} from './vocabulary';
 import clubs from './clubs'
@@ -309,7 +309,7 @@ class Homepage extends React.Component{
                 </div>
               </div>
               <div className="language-selector">
-                <p className="p-back">{this.props.language}</p>
+                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
               </div>
             </div>
             <div style={styleSelectActivity}>
@@ -329,7 +329,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} club={club} language={this.props.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} club={club} language={this.props.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
           </div>
         )
       }

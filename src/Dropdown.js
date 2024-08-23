@@ -56,7 +56,8 @@ function Dropdown(props) {
     }
 
     return(
-        <div className="p-back p-uppercase" onBlur={closeDropdown} tabIndex={0}>
+        // <div className="p-back p-uppercase" id="dropDown">
+        <div className="p-back p-uppercase" id="dropDown" onBlur={closeDropdown} tabIndex={0}>
             <div className="dropdown-selected-value" onClick={hideShowDropDown}>
                 <p>{valueSelected}</p>
                 <ArrowDown className="padding-5" style={styleArrowDown20}/>
