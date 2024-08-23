@@ -583,7 +583,7 @@ function ButtonImage(props) {
             {returnImages()}
             {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+            <input id="fileInput" type="file" accept=".jpg,.png,.jpeg" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>
       )}

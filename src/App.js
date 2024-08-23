@@ -6,7 +6,8 @@ import ImageComponent from './ImageComponent.js'
 import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
 import brandingPalette from './brandingPalette';
-import {vocabulary} from './vocabulary';
+import {vocabulary, languages} from './vocabulary';
+import clubs from './clubs'
 import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
 import GPXParser from 'gpxparser';
 import he from 'he';
@@ -18,7 +19,8 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
-let language = 'it'
+let language = 'en'
+let languageSelected
 
 let athleteData = {}
 let activities = []
@@ -195,6 +197,8 @@ class Homepage extends React.Component{
   }
 
   routesToStage() {
+    console.log('navigator.language:', navigator.language)
+    console.log('clubs', clubs)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
@@ -206,14 +210,26 @@ class Homepage extends React.Component{
     //   window.open(process.env.REACT_REDIRECT_URL + urlCurrent.replace(window.location.host,''))
     // }
     let code = queryParameters.get('code')
-    let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName
-    clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : clubName
-    if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin') || urlCurrent.includes('/mura-sunset-ride')) 
-        && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin') || !stravaAuthorizeUrl.includes('/mura-sunset-ride'))) {
-      console.log('clubName: ', clubName)
-      stravaAuthorizeUrl += '/' + clubName
+    //TODO do a better structure for the club, the idea could be ho have a json of the clubs and the relative information
+    let club
+    for(let c of clubs) {
+      if(urlCurrent.includes(c.urlKey)) {
+        club = c
+        break
+      }
     }
+    // let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
+    // clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName
+    // clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : clubName
+    if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
+      console.log('club: ', club)
+      stravaAuthorizeUrl += club.urlKey
+    }
+    // if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin') || urlCurrent.includes('/mura-sunset-ride')) 
+    //     && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin') || !stravaAuthorizeUrl.includes('/mura-sunset-ride'))) {
+    //   console.log('clubName: ', clubName)
+    //   stravaAuthorizeUrl += '/' + clubName
+    // }
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
     }
@@ -246,14 +262,7 @@ class Homepage extends React.Component{
               <p className="p-login p-login-or-size">{vocabulary[language].HOMEPAGE_LOAD}</p>
               <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
             </div>
-            {clubName === 'mura-sunset-ride' &&
-              <div>
-                <div className="margin-x">
-                  <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_PER}</p>
-                </div>
-                <LogoMuraExtendedSVG/>
-              </div>
-            }
+            {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, language)}
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -281,6 +290,9 @@ class Homepage extends React.Component{
               <div className="back-text-container">
                 <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
               </div>
+              <div className="language-selector">
+                <p>{language}</p>
+              </div>
             </div>
             <div style={styleSelectActivity}>
               <p className="p-select">{vocabulary[language].HOMEPAGE_SELECT_ACTIVITY}</p>
@@ -299,7 +311,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} club={club} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
           </div>
         )
       }

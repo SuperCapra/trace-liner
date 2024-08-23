@@ -4,8 +4,6 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './arrowLeftSimplified.svg'
-import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-import {ReactComponent as LogoMuraSVG} from './logoMura.svg'
 import html2canvas from 'html2canvas';
 import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
@@ -14,7 +12,7 @@ import { vocabulary } from './vocabulary.js';
 
 function ImageComponent(props) {
 
-  const {activity, clubname, language, handleBack} = props
+  const {activity, club, language, handleBack} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -107,8 +105,8 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
-    let anchor = clubname === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    if(clubname === 'dev-admin') {
+    let anchor = club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    if(club.name === 'dev-admin') {
       document.getElementById('showingImage').classList.remove('round-corner')
     } else {
       removeRoundCorner()
@@ -151,7 +149,7 @@ function ImageComponent(props) {
     }, 'image/jpeg');
     })
     .finally(() => {
-      if(clubname === 'dev-admin') {
+      if(club.name === 'dev-admin') {
         document.getElementById('showingImage').classList.add('round-corner')
       } else {
         addRoundCorner()
@@ -270,10 +268,10 @@ function ImageComponent(props) {
     }
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-    if(clubname === 'dev-admin') returnImage()
+    if(club.name === 'dev-admin') returnImage()
   },[
     activity.coordinates,
-    clubname,
+    club.name,
     returnImage
   ])
 
@@ -517,7 +515,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
-    if(clubname === 'dev-admin') seeHiding()
+    if(club.name === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -525,13 +523,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    if(clubname === 'dev-admin') returnImage()
+    if(club.name === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
     canvasHeight,
     returnImage,
-    clubname
+    club.name
   ])
 
   const handleClickDispatcher = (data) => {
@@ -774,7 +772,7 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
-    if(clubname === 'dev-admin') {
+    if(club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -836,7 +834,7 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    if(clubname === 'dev-admin') {
+    if(club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -847,7 +845,7 @@ function ImageComponent(props) {
       canvasWidth,
       handleCrop,
       imageSrc,
-      clubname
+      club.name
     ])
   
   return (
@@ -868,16 +866,7 @@ function ImageComponent(props) {
                   {showDate && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
                 </div>
               )}
-              {clubname === 'nama-crew' &&
-                <div id="canvasLogo" className={classesLogoClub}>
-                  <LogoNamaSVG className="logo-club-svg" style={styleLogoClub}/>
-                </div>
-              }
-              {clubname === 'mura-sunset-ride' &&
-                <div id="canvasLogo" className={classesLogoClub}>
-                  <LogoMuraSVG className="logo-club-svg" style={styleLogoClub}/>
-                </div>
-              }
+              {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
               {showMode1 && returnMode1Disposition()}
               {showMode2 && returnMode2Disposition()}
               {showMode3 && returnMode3Disposition()}
