@@ -36,7 +36,8 @@ function App() {
     rotate: '0deg',
     transition: 'rotate 1s',
   })
-  const [selectedLanguage, setSelectedLanguage] = useState((languages && languages.length && navigator && navigator.language && navigator.language.length >= 2 && languages.findIndex(x => x === navigator.language.substring(0,2).toLowerCase()) > -1 ? navigator.language.substring(0,2).toLowerCase() : 'en'))
+  const [selectedLanguage, setSelectedLanguage] = useState('en')
+  // const [selectedLanguage, setSelectedLanguage] = useState((languages && languages.length && navigator && navigator.language && navigator.language.length >= 2 && languages.findIndex(x => x === navigator.language.substring(0,2).toLowerCase()) > -1 ? navigator.language.substring(0,2).toLowerCase() : 'en'))
 
   const changeLanguage = (language) => {
     setSelectedLanguage(language)
@@ -192,19 +193,12 @@ class Homepage extends React.Component{
     }
   }
 
-  displayStyleArrow() {
-    return {
-      fill: brandingPalette.background,
-      rotate: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight ? 0 : 180) + 'deg',
-      transition: 'rotate 1s',
-    }
-  }
-
   setLanguage(data) {
     this.props.changeLanguage(data.value)
   }
 
   routesToStage() {
+    // window.alert(window.innerHeight + ' and ' + window.clientHeight)
     console.log('navigator.language:', navigator.language)
     console.log('this.props.language:', this.props.language)
     console.log('clubs', clubs)
@@ -212,14 +206,7 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('window.location', window.location.href)
-    // if(!urlCurrent.startsWith(process.env.REACT_REDIRECT_URL)) {
-    //   console.log('window.location.host', window.location.host)
-    //   console.log('urlCurrent.replace(window.location.host', urlCurrent.replace(window.location.host,''))
-    //   console.log('process.env.REACT_REDIRECT_URL:', urlCurrent.replace(window.location.host,''))
-    //   window.open(process.env.REACT_REDIRECT_URL + urlCurrent.replace(window.location.host,''))
-    // }
     let code = queryParameters.get('code')
-    //TODO do a better structure for the club, the idea could be ho have a json of the clubs and the relative information
     let club
     for(let c of clubs) {
       if(urlCurrent.includes(c.urlKey)) {
@@ -227,18 +214,11 @@ class Homepage extends React.Component{
         break
       }
     }
-    // let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    // clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName
-    // clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : clubName
     if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
       console.log('club: ', club)
       stravaAuthorizeUrl += club.urlKey
     }
-    // if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin') || urlCurrent.includes('/mura-sunset-ride')) 
-    //     && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin') || !stravaAuthorizeUrl.includes('/mura-sunset-ride'))) {
-    //   console.log('clubName: ', clubName)
-    //   stravaAuthorizeUrl += '/' + clubName
-    // }
+
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
     }
@@ -246,24 +226,25 @@ class Homepage extends React.Component{
       called = true
       this.getAccessTokenAndActivities(code)
     }
+    let mainWrapperClasses = "main-wrapper" + (navigator && navigator.userAgentData && navigator.userAgentData.mobile ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
-        <div className="translate-y">
+        <div className={mainWrapperClasses}>
           <Loader/>
         </div>
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
         let urlWithoutParams = window.location.pathname
-        if(urlCurrent !== urlWithoutParams) window.history.replaceState({}, '', urlWithoutParams);
+        if(urlCurrent !== urlWithoutParams && !urlCurrent.includes('192.168.1.69')) window.history.replaceState({}, '', urlWithoutParams);
         return (
           <div className="quadratic-wrapper">
-            <div className="buttons-wrapper">
+            {/* <div className="buttons-wrapper">
               <div className="language-selector-alone">
                 <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
               </div>
-            </div>
-            <div className="translate-y">
+            </div> */}
+            <div className={mainWrapperClasses}>
               <div className="margin-title">
                 <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
               </div>
@@ -309,7 +290,7 @@ class Homepage extends React.Component{
                 </div>
               </div>
               <div className="language-selector">
-                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
+                {/* <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/> */}
               </div>
             </div>
             <div style={styleSelectActivity}>

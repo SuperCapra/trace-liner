@@ -865,7 +865,7 @@ function ImageComponent(props) {
           </div>
         </div>
         <div className="language-selector">
-          <Dropdown value={language} values={languages} handleChangeValue={bubbleChangeLanguage}/>
+          {/* <Dropdown value={language} values={languages} handleChangeValue={bubbleChangeLanguage}/> */}
         </div>
       </div>
       {/* <div className="back-button" onClick={() => handleBack()}>

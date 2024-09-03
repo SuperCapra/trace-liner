@@ -9,7 +9,6 @@
   --palette-white: #edf6f9;
   --palette-black: #000000;
 }
-
 @font-face {
   font-family: 'SourceCodePro';
   src: local('SourceCodePro'),
@@ -20,24 +19,20 @@ p {
   margin-block-start: 0px; 
   margin-block-end: 0px;
 }
-
 .code-inactive {
   background: var(--palette-primary); 
   color: var(--palette-background);
 }
-
 .App {
   background-color: var(--palette-background);
   font-size: calc(4vmin);
   text-align: center;
   font-family: 'SourceCodePro';
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
-
 .App-header {
   padding: 2vh;
   min-height: 96vh;
@@ -47,7 +42,6 @@ p {
   justify-content: center;
   color: var(--palette-white);
 }
-
 .App-link {
   color: var(--palette-quaternary);
 }
@@ -137,9 +131,15 @@ p {
   fill: var(--palette-primary);
   transform: scale(0.5)
 }
-.translate-y{
-  /* transform: translateY(-5vh); */
+.translate-main-wapper-desktop{
+  transform: translateY(-3vh);
+}
+.translate-main-wapper-mobile{
+  transform: translateY(-12vh);
+}
+.main-wrapper{
   width: 100%;
+  margin-bottom: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
