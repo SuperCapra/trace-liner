@@ -62,7 +62,7 @@ function Dropdown(props) {
                 <p>{valueSelected}</p>
                 <ArrowDown className="padding-5" style={styleArrowDown20}/>
             </div>
-            <div id="dropdownValues" className="dropdown-values no-see-dropdown-values">
+            <div id="dropdownValues" className="dropdown-appear dropdown-values no-see-dropdown-values">
                 {returnValues()}
             </div>
         </div>
