@@ -881,7 +881,7 @@ function ImageComponent(props) {
               {showTitle && (
                 <div className="width-general text-overlay text-title">
                   <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                  {showDate && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+                  {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
                 </div>
               )}
               {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
