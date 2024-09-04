@@ -28,7 +28,6 @@ const utilsFunction = {
     },
 
     getBeautyCoordinates(coordinates) {
-        console.log('coordinates: ', coordinates)
         let result = {
             coordinates: coordinates,
             beautyCoordinates: [],
@@ -54,15 +53,9 @@ const utilsFunction = {
 
         let tempLatSec = (Math.abs((tempLat) - (result.latDeg * 100))) * 36
         let tempLongSec = (Math.abs((tempLong) - (result.longDeg * 100))) * 36
-
-        console.log('tempLong:', tempLong)
-        console.log('tempLatSec:', tempLongSec)
-        console.log('longCoord:', longCoord)
-        console.log('(tempLong) - (result.longDeg * 100):', (tempLong) - (result.longDeg * 100))
         
         result.latSec = Math.floor(tempLatSec % 60)
         result.longSec = Math.floor(tempLongSec % 60)
-        console.log('result.longSec:', result.longSec)
 
         result.latMin = Math.floor((tempLatSec - result.latSec) / 60)
         result.longMin = Math.floor((tempLongSec - result.longSec) / 60)
@@ -75,7 +68,7 @@ const utilsFunction = {
         result.beautyCoordinatesTextTime = result.beautyCoordinates[0] + ' | ' + result.beautyCoordinates[1]
         result.beautyCoordinatesTextDecimal = Math.abs(result.coordinates[0]).toFixed(5) + '°' + latPolarDirection + ' | ' + Math.abs(result.coordinates[1]).toFixed(5) + '°' + longPolarDirection
 
-        console.log(result)
+        console.log('GetBeautyCoordinates result: ', result)
 
         return result
     },
@@ -114,7 +107,7 @@ const utilsFunction = {
         parsedDuration.hours = Math.floor(durationInSec / 3600)
         parsedDuration.minutes = Math.floor((durationInSec - (parsedDuration.hours * 3600)) / 60)
         parsedDuration.seconds = durationInSec - (parsedDuration.hours * 3600) - (parsedDuration.minutes * 60)
-        console.log('getJsonDuration:', parsedDuration)
+        console.log('GetJsonDuration result:', parsedDuration)
         return parsedDuration
     },
 
@@ -220,7 +213,6 @@ const utilsFunction = {
 
     getSubTitle(element, unitOfMeasure) {
         let result = {}
-        console.log('element', element)
         for(let language of languages) {
             result[language] = ''
             if(element.beautyDatetimeLanguages[language]) result[language] += element.beautyDatetimeLanguages[language]

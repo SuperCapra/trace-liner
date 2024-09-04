@@ -197,10 +197,16 @@ class Homepage extends React.Component{
     this.props.changeLanguage(data.value)
   }
 
-  routesToStage() {
+  routesToStage() {    
+    // let localKey = localStorage.getItem('tracelinerkey');
+    // if(localKey && !accessToken) {
+    //   accessToken = localKey
+    //   console.log('localKey:', localKey)
+    //   this.getActivities()
+    // }
     // window.alert(window.innerHeight + ' and ' + window.clientHeight)
-    console.log('navigator.language:', navigator.language)
-    console.log('this.props.language:', this.props.language)
+    console.info('Language navigator:', navigator.language)
+    console.info('Language:', this.props.language)
     console.log('clubs', clubs)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
@@ -215,7 +221,7 @@ class Homepage extends React.Component{
       }
     }
     if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
-      console.log('club: ', club)
+      console.info('Club: ', club)
       stravaAuthorizeUrl += club.urlKey
     }
 
@@ -263,7 +269,7 @@ class Homepage extends React.Component{
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
-        console.log(activities)
+        console.log('Activities: ', activities)
         let arrowDownStyle = {
           fill: brandingPalette.background
         }
@@ -318,10 +324,6 @@ class Homepage extends React.Component{
   }
 
   scroll() {
-    console.log('hey from scroll:', window.scrollY)
-    console.log('window.innerHeight:', window.innerHeight)
-    console.log('window.innerHeight + window.scrollY:', window.innerHeight + window.scrollY)
-    console.log('document.body.scrollHeight:', document.body.scrollHeight)
     isAutoScrolling = true
     window.scrollTo({
       top: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
@@ -336,7 +338,7 @@ class Homepage extends React.Component{
 
   getAccessTokenAndActivities(userCode) {
     isLoading = true
-    console.log('getting the access token...')
+    console.info('getting the access token...')
     let urlAccessToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
       '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
       '&client_secret=' + process.env.REACT_APP_STRAVA_CLIENT_SECRET + 
@@ -360,15 +362,16 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
+        localStorage.setItem('tracelinerkey',accessToken);
         console.log('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
-      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
   }
 
   getAthleDataComplete() {
-    console.log('getting all the athlete data...')
+    console.info('getting all the athlete data...')
     let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
     '?access_token=' + accessToken
 
@@ -382,14 +385,13 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('res: ', res)
         if(res) {
           console.log('Athlete data: ', res)
           unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
           this.getActivities()
         }
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
   }
   
   getActivities() {
@@ -407,7 +409,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('res: ', res)
+        console.info('Row activities: ', res)
         if(res) {
           res.forEach(e => {
             console.log('Activity: ', e)
@@ -467,11 +469,11 @@ class Homepage extends React.Component{
           })
         }
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
-        console.log('activities: ', activities)
+        console.info('Activities: ', activities)
       })
   }
 
@@ -479,7 +481,7 @@ class Homepage extends React.Component{
     let indexActivity = activities.findIndex(x => x.id === activityId)
     isLoading = true
     this.changeStage({stage:'FetchingActivity'})
-    console.log('getting activityId: ', activityId)
+    console.info('getting activity with id: ', activityId)
     if(activities[indexActivity].hasCoordinates && activities[indexActivity].hasAltitudeStream) {
       isLoading = false
       this.changeStage({stage:'ShowingActivity'})
@@ -500,7 +502,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('res: ', res)
+        console.log('Complete raw activity: ', res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
@@ -511,7 +513,7 @@ class Homepage extends React.Component{
           // this.getImage(activity.photoUrl)
         }
       })
-      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
@@ -519,7 +521,7 @@ class Homepage extends React.Component{
   }
 
   getAltitideStream(activityId, indexActivity) {
-    console.log('getting the altitude stream')
+    console.info('getting the altitude stream...')
     let urlStreamsAltitude = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STREAMS_DIRECTORY.replace('{id}',activityId) +
       '?access_token=' + accessToken +
       '&keys=altitude&key_by_type=true'
@@ -528,12 +530,12 @@ class Homepage extends React.Component{
       method: 'GET',
     }).then(response => response.json())
       .then(res => {
-        console.log('Result altitude stream: ', res)
+        console.info('Result altitude stream: ', res)
         activities[indexActivity].altitudeStream = res.altitude.data
         activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivity'})
