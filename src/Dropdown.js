@@ -52,7 +52,6 @@ function Dropdown(props) {
         setValueSelected(valueSetting)
         handleChangeValue({type: 'language', value: valueSetting})
         closeDropdown()
-        // value = valueSetting
     }
 
     return(

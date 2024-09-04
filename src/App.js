@@ -197,7 +197,13 @@ class Homepage extends React.Component{
     this.props.changeLanguage(data.value)
   }
 
-  routesToStage() {
+  routesToStage() {    
+    // let localKey = localStorage.getItem('tracelinerkey');
+    // if(localKey && !accessToken) {
+    //   accessToken = localKey
+    //   console.log('localKey:', localKey)
+    //   this.getActivities()
+    // }
     // window.alert(window.innerHeight + ' and ' + window.clientHeight)
     console.log('navigator.language:', navigator.language)
     console.log('this.props.language:', this.props.language)
@@ -360,11 +366,12 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
+        localStorage.setItem('tracelinerkey',accessToken);
         console.log('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
-      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
   }
 
   getAthleDataComplete() {
@@ -389,7 +396,7 @@ class Homepage extends React.Component{
           this.getActivities()
         }
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
   }
   
   getActivities() {
@@ -467,7 +474,7 @@ class Homepage extends React.Component{
           })
         }
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
@@ -511,7 +518,7 @@ class Homepage extends React.Component{
           // this.getImage(activity.photoUrl)
         }
       })
-      .catch(e => console.log('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
       .finally(() => {
         // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
@@ -533,7 +540,7 @@ class Homepage extends React.Component{
         activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
       })
-      .catch(e => console.log('Fatal Error: ', e))
+      .catch(e => console.error('Fatal Error: ', e))
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivity'})
