@@ -384,11 +384,11 @@ p {
 .proportion:hover{
   cursor: pointer;
 }
-.feature:active{
+/* .feature:active{
   background-color: white;
   opacity: 0.5;
   border-radius: 5px;
-}
+} */
 .feature:hover{
   cursor: pointer;
 }
