@@ -1,6 +1,6 @@
-# STRAVA BEAUTYLINER Project
+# TRACE LINER Project
 
-node.js project to extrapolate a strava routes and produce a beautiful image to share with your friends
+node.js project to extrapolate a strava routes or load a gpx file and produce a beautiful image to share with your friends
 
 ## Strava Authentication and Beautiliner Procedure 
 

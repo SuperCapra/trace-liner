@@ -3,9 +3,12 @@ import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
-import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
+import Dropdown from './Dropdown.js'
+import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import brandingPalette from './brandingPalette';
-import {ReactComponent as LogoMuraExtendedSVG} from './logoMuraExtended.svg';
+import {vocabulary, languages} from './vocabulary';
+import clubs from './clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
 
@@ -22,6 +25,7 @@ let activities = []
 let activity = {}
 let accessToken
 let isLoading = false
+let isAutoScrolling = false
 let stage = 'RequestedLogin'
 let stageHistory = ['ShowingActivity']
 let stages = ['RequestedLogin','FetchingActivities','ShowingActivities','FetchingActivity','PersonalizingPhoto','ShowingActivity']
@@ -32,14 +36,40 @@ function App() {
     rotate: '0deg',
     transition: 'rotate 1s',
   })
+  const [selectedLanguage, setSelectedLanguage] = useState('en')
+  // const [selectedLanguage, setSelectedLanguage] = useState((languages && languages.length && navigator && navigator.language && navigator.language.length >= 2 && languages.findIndex(x => x === navigator.language.substring(0,2).toLowerCase()) > -1 ? navigator.language.substring(0,2).toLowerCase() : 'en'))
+
+  const changeLanguage = (language) => {
+    setSelectedLanguage(language)
+  }
 
   const changeDisplayStyle = (sty) => {
     setDisplayStyle(sty)
   }
+  const handleScroll = () => {
+    if(!isAutoScrolling && (window.scrollY < document.body.scrollHeight * 0.1 || window.scrollY + window.innerHeight > document.body.scrollHeight * 0.9)) {
+      if(window.scrollY < document.body.scrollHeight * 0.1 && displayStyle.rotate === '180deg') {
+        setDisplayStyle({
+          display: 'block',
+          rotate: '0deg',
+          transition: 'rotate 1s',
+        })
+      }
+      if(window.scrollY + window.innerHeight > document.body.scrollHeight * 0.9 && displayStyle.rotate === '0deg') {
+        setDisplayStyle({
+          display: 'block',
+          rotate: '180deg',
+          transition: 'rotate 1s',
+        })
+      }
+    } else if(isAutoScrolling && (window.scrollY === 0 || window.scrollY === document.body.scrollHeight)) isAutoScrolling = false
+  };
+
+  window.addEventListener('scroll', handleScroll);
 
   return (
     <div>
-      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} />
+      <Homepage displayStyle={displayStyle} onChangeDisplayStyle={changeDisplayStyle} language={selectedLanguage} changeLanguage={changeLanguage}/>
     </div>
   );
 }
@@ -53,6 +83,7 @@ class Homepage extends React.Component{
     }
     this.processGPX = this.processGPX.bind(this);
     this.changeStage = this.changeStage.bind(this);
+    this.setLanguage = this.setLanguage.bind(this);
   }
 
   changeStage(value) {
@@ -110,7 +141,8 @@ class Homepage extends React.Component{
           beautyDuration: undefined,
           beautyName: track.name ? he.decode(track.name) : undefined,
           beautyPower: undefined,
-          beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+          // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+          beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
           coordinates: track.points && track.points.length ? track.points.map(point => ([
             point.lon,
             point.lat
@@ -161,26 +193,32 @@ class Homepage extends React.Component{
     }
   }
 
+  setLanguage(data) {
+    this.props.changeLanguage(data.value)
+  }
+
   routesToStage() {
+    // window.alert(window.innerHeight + ' and ' + window.clientHeight)
+    console.log('navigator.language:', navigator.language)
+    console.log('this.props.language:', this.props.language)
+    console.log('clubs', clubs)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('window.location', window.location.href)
-    // if(!urlCurrent.startsWith(process.env.REACT_REDIRECT_URL)) {
-    //   console.log('window.location.host', window.location.host)
-    //   console.log('urlCurrent.replace(window.location.host', urlCurrent.replace(window.location.host,''))
-    //   console.log('process.env.REACT_REDIRECT_URL:', urlCurrent.replace(window.location.host,''))
-    //   window.open(process.env.REACT_REDIRECT_URL + urlCurrent.replace(window.location.host,''))
-    // }
     let code = queryParameters.get('code')
-    let clubName = (urlCurrent.includes('/nama-crew')) ? 'nama-crew' : undefined
-    clubName = urlCurrent.includes('/mura-sunset-ride') ? 'mura-sunset-ride' : clubName
-    clubName = (urlCurrent.includes('/dev-admin')) ? 'dev-admin' : clubName
-    if((urlCurrent.includes('/nama-crew') || urlCurrent.includes('/dev-admin') || urlCurrent.includes('/mura-sunset-ride')) 
-        && (!stravaAuthorizeUrl.includes('/nama-crew') || !stravaAuthorizeUrl.includes('/dev-admin') || !stravaAuthorizeUrl.includes('/mura-sunset-ride'))) {
-      console.log('clubName: ', clubName)
-      stravaAuthorizeUrl += '/' + clubName
+    let club
+    for(let c of clubs) {
+      if(urlCurrent.includes(c.urlKey)) {
+        club = c
+        break
+      }
     }
+    if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
+      console.log('club: ', club)
+      stravaAuthorizeUrl += club.urlKey
+    }
+
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
     }
@@ -188,39 +226,40 @@ class Homepage extends React.Component{
       called = true
       this.getAccessTokenAndActivities(code)
     }
+    let mainWrapperClasses = "main-wrapper" + (navigator && navigator.userAgentData && navigator.userAgentData.mobile ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
-        <div className="translate-y">
+        <div className={mainWrapperClasses}>
           <Loader/>
         </div>
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
         let urlWithoutParams = window.location.pathname
-        if(urlCurrent !== urlWithoutParams) window.history.replaceState({}, '', urlWithoutParams);
+        if(urlCurrent !== urlWithoutParams && !urlCurrent.includes('192.168.1.69')) window.history.replaceState({}, '', urlWithoutParams);
         return (
-          <div className="translate-y">
-            <div className="margin-title">
-              <p className="p-or p-login-or-size">SHARE YOUR RIDE BY</p>
-            </div>
-            <div className="button-login justify-center-column" onClick={() => {
-              window.location.href = stravaAuthorizeUrl
-            }}><p className="p-login p-login-or-size">LOGIN TO STRAVA</p></div>
-            <div className="margin-or">
-              <p className="p-or p-login-or-size">OR</p>
-            </div>
-            <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
-              <p className="p-login p-login-or-size">LOAD A GPX</p>
-              <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-            </div>
-            {clubName === 'mura-sunset-ride' &&
-              <div>
-                <div className="margin-x">
-                  <p className="p-or p-login-or-size">X</p>
-                </div>
-                <LogoMuraExtendedSVG/>
+          <div className="quadratic-wrapper">
+            {/* <div className="buttons-wrapper">
+              <div className="language-selector-alone">
+                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
               </div>
-            }
+            </div> */}
+            <div className={mainWrapperClasses}>
+              <div className="margin-title">
+                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
+              </div>
+              <div className="button-login justify-center-column" onClick={() => {
+                window.location.href = stravaAuthorizeUrl
+              }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
+              <div className="margin-or">
+                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
+              </div>
+              <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
+                <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
+                <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+              </div>
+              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)}
+            </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -233,7 +272,7 @@ class Homepage extends React.Component{
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>
-            <p className="subtitle-activity">{element[element.unitMeasure].subtitle}</p>
+            <p className="subtitle-activity">{element[element.unitMeasure].subtitle[this.props.language]}</p>
           </div>)
         let styleSelectActivity = {
           display: activitiesButton.length ? 'block' : 'none'
@@ -241,17 +280,26 @@ class Homepage extends React.Component{
         let styleArrow = !activitiesButton.length ? { display : 'none' } : this.props.displayStyle
         return (
           <div>
-            <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
-              <ArrowDown className="back-image"/>
-              <p className="p-back">BACK</p>
+            <div className="header-wrapper">
+              <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
+                <div className="back-arrow-container">
+                  <ArrowLeft className="back-image"/>
+                </div>
+                <div className="back-text-container">
+                  <p className="p-back">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
+                </div>
+              </div>
+              <div className="language-selector">
+                {/* <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/> */}
+              </div>
             </div>
             <div style={styleSelectActivity}>
-              <p className="p-select">SELECT AN ACTIVITY</p>
+              <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_SELECT_ACTIVITY}</p>
             </div>
             {activitiesButton.length > 0 && activitiesButton}
             {(activitiesButton.length === 0 || !activitiesButton.length) && (
               <div>
-                <p className="p-select">BEFORE YOU CAN START YOU HAVE TO LOAD SOME ACTIVITIES</p>
+                <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
@@ -262,7 +310,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} clubname={clubName} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})}/>
+              <ImageComponent activity={activity} club={club} language={this.props.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
           </div>
         )
       }
@@ -270,13 +318,18 @@ class Homepage extends React.Component{
   }
 
   scroll() {
+    console.log('hey from scroll:', window.scrollY)
+    console.log('window.innerHeight:', window.innerHeight)
+    console.log('window.innerHeight + window.scrollY:', window.innerHeight + window.scrollY)
+    console.log('document.body.scrollHeight:', document.body.scrollHeight)
+    isAutoScrolling = true
     window.scrollTo({
-      top: (window.innerHeight + window.scrollY >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
+      top: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight) ? 0 : document.body.scrollHeight,
       behavior: 'smooth'
     });
     this.props.onChangeDisplayStyle({
       display: document.body.scrollHeight > window.innerHeight ? 'block' : 'none',
-      rotate: (window.innerHeight + window.scrollY >= document.body.scrollHeight ? 0 : 180) + 'deg',
+      rotate: (window.innerHeight + window.scrollY + 50 >= document.body.scrollHeight ? 0 : 180) + 'deg',
       transition: 'rotate 1s',
     })
   }
@@ -378,7 +431,8 @@ class Homepage extends React.Component{
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: e.name,
               beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
-              beautyDate: utils.getBeautyDatetime(e.start_date_local),
+              // beautyDate: utils.getBeautyDatetime(e.start_date_local),
+              beautyDatetimeLanguages: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
               durationElapsed: e.elapsed_time,
               endLatitude: e.end_latlng && e.end_latlng.length && e.end_latlng.length === 2 ? e.end_latlng[0] : undefined,

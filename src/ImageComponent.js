@@ -1,19 +1,19 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
-import image1 from './image1.jpeg'
+import Dropdown from './Dropdown.js'
+import image1 from './images/image1.jpeg'
 import utils from './utils.js'
-import {ReactComponent as ArrowDown} from './arrowDownSimplified.svg'
-import {ReactComponent as LogoNamaSVG} from './logoNama.svg'
-import {ReactComponent as LogoMuraSVG} from './logoMura.svg'
+import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import html2canvas from 'html2canvas';
 import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
+import { vocabulary, languages } from './vocabulary.js';
 // import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
 
-  const {activity, clubname, handleBack} = props
+  const {activity, club, language, handleBack, handleBubbleLanguage} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -106,8 +106,8 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async () => {
-    let anchor = clubname === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    if(clubname === 'dev-admin') {
+    let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    if(club && club.name === 'dev-admin') {
       document.getElementById('showingImage').classList.remove('round-corner')
     } else {
       removeRoundCorner()
@@ -128,6 +128,7 @@ function ImageComponent(props) {
         // console.log('try to share..., navigator.share', navigator.share)
         // console.log('try to share..., navigator.canShare', navigator.canShare)
         console.log('navigator.share', navigator.share)
+        // window.alert('navigator.share: ' + navigator.share)
         if(navigator.share) {
             try {
                 const file = new File([blob], (title ? title : 'image') + '.jpeg', {type: 'image/jpeg', lastModified: new Date()});
@@ -149,7 +150,7 @@ function ImageComponent(props) {
     }, 'image/jpeg');
     })
     .finally(() => {
-      if(clubname === 'dev-admin') {
+      if(club && club.name === 'dev-admin') {
         document.getElementById('showingImage').classList.add('round-corner')
       } else {
         addRoundCorner()
@@ -261,8 +262,6 @@ function ImageComponent(props) {
     // stroke the path
     ctx.stroke()
     // stroke the initial circle only if the intersection it's null with the final circle
-    console.log('utils.quadraticFunction(endCoordinates, startCoordinates)', utils.quadraticFunction(endCoordinates, startCoordinates))
-    console.log('dimentionCircleFinish + dimentionCircleStart', (dimentionCircleFinish + dimentionCircleStart * 2) ** 2)
     if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2) {
       drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
     } else {
@@ -270,10 +269,10 @@ function ImageComponent(props) {
     }
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-    if(clubname === 'dev-admin') returnImage()
+    if(club && club.name === 'dev-admin') returnImage()
   },[
     activity.coordinates,
-    clubname,
+    club,
     returnImage
   ])
 
@@ -358,7 +357,7 @@ function ImageComponent(props) {
     //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
     //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.strokeStyle = brandingPalette.secondary
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
@@ -437,7 +436,7 @@ function ImageComponent(props) {
     //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
     //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.yellow
+    //   ctx.strokeStyle = brandingPalette.secondary
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
     //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
     //   ctx.stroke()
@@ -517,7 +516,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
-    if(clubname === 'dev-admin') seeHiding()
+    if(club && club.name === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -525,13 +524,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    if(clubname === 'dev-admin') returnImage()
+    if(club && club.name === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
     canvasHeight,
     returnImage,
-    clubname
+    club
   ])
 
   const handleClickDispatcher = (data) => {
@@ -684,7 +683,7 @@ function ImageComponent(props) {
   // const handleBlendMode = (blendModeSetting) => {
   //   console.log('Blend mode to set:', blendModeSetting)
   //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
-  //     handleColorChange(brandingPalette.pink)
+  //     handleColorChange(brandingPalette.primary)
   //   } else {
   //     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
   //     else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
@@ -774,7 +773,7 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
-    if(clubname === 'dev-admin') {
+    if(club && club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -786,11 +785,11 @@ function ImageComponent(props) {
     let line1 = []
     let line2 = []
     let dataShowing = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>Distance</p><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>Elevation</p><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>Duration</p><p>{activity.beautyDuration}</p></div>)
-    if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>Power</p><p>{activity.beautyPower}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>Average</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_ELEVATION}</p><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DURATION}</p><p>{activity.beautyDuration}</p></div>)
+    if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_POWER}</p><p>{activity.beautyPower}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
     if(dataShowing.length <= 3) {
       line1.push(...dataShowing)
     } else if(dataShowing.length === 4) {
@@ -835,8 +834,12 @@ function ImageComponent(props) {
     return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
   }
 
+  const bubbleChangeLanguage = (value) => {
+    handleBubbleLanguage(value)
+  }
+
   useEffect(() => {
-    if(clubname === 'dev-admin') {
+    if(club && club.name === 'dev-admin') {
       setIsLoading(true)
       seeHiding()
     }
@@ -847,15 +850,28 @@ function ImageComponent(props) {
       canvasWidth,
       handleCrop,
       imageSrc,
-      clubname
+      club
     ])
   
   return (
     <div className="wrapper-main">
-      <div className="back-button" onClick={() => handleBack()}>
-        <ArrowDown className="back-image"/>
-        <p className="p-back">BACK</p>
+      <div className="header-wrapper width-header-wrapper">
+        <div className="back-button" onClick={() => handleBack()}>
+          <div className="back-arrow-container">
+            <ArrowLeft className="back-image"/>
+          </div>
+          <div className="back-text-container">
+            <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+          </div>
+        </div>
+        <div className="language-selector">
+          {/* <Dropdown value={language} values={languages} handleChangeValue={bubbleChangeLanguage}/> */}
+        </div>
       </div>
+      {/* <div className="back-button" onClick={() => handleBack()}>
+        <ArrowLeft className="back-image"/>
+        <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+      </div> */}
       <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">
@@ -865,19 +881,10 @@ function ImageComponent(props) {
               {showTitle && (
                 <div className="width-general text-overlay text-title">
                   <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                  {showDate && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDate}</p></div>)}
+                  {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
                 </div>
               )}
-              {clubname === 'nama-crew' &&
-                <div id="canvasLogo" className={classesLogoClub}>
-                  <LogoNamaSVG className="logo-club-svg" style={styleLogoClub}/>
-                </div>
-              }
-              {clubname === 'mura-sunset-ride' &&
-                <div id="canvasLogo" className={classesLogoClub}>
-                  <LogoMuraSVG className="logo-club-svg" style={styleLogoClub}/>
-                </div>
-              }
+              {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
               {showMode1 && returnMode1Disposition()}
               {showMode2 && returnMode2Disposition()}
               {showMode3 && returnMode3Disposition()}
@@ -894,7 +901,7 @@ function ImageComponent(props) {
         <div>
           {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );
