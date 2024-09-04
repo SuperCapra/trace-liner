@@ -431,7 +431,6 @@ p {
 .image-square:hover{
   cursor: pointer
 }
-
 .image-square p {
   font-size: calc(4vmin);
   color: var(--palette-background);
