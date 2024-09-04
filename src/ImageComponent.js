@@ -129,25 +129,32 @@ function ImageComponent(props) {
         // console.log('try to share..., navigator.canShare', navigator.canShare)
         console.log('navigator.share', navigator.share)
         // window.alert('navigator.share: ' + navigator.share)
+        let titleImage = (title ? title : 'image') + '.jpg'
         if(navigator.share) {
             try {
-                const file = new File([blob], (title ? title : 'image') + '.jpeg', {type: 'image/jpeg', lastModified: new Date()});
+                const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
                 await navigator.share({
                     title: (title ? title : 'image' ),
                     files: [file],
                 });
             } catch (error) {
                 console.error('Error sharing image:', error);
+                const url = URL.createObjectURL(blob);
+                const temp = document.createElement('a');
+                temp.href = url;
+                temp.download = titleImage;
+                temp.click();
+                URL.revokeObjectURL(url); // Clean up URL object after use
             }
         } else {
             const url = URL.createObjectURL(blob);
             const temp = document.createElement('a');
             temp.href = url;
-            temp.download = (title ? title : 'image' ) + '.jpeg';
+            temp.download = titleImage;
             temp.click();
             URL.revokeObjectURL(url); // Clean up URL object after use
         }
-    }, 'image/jpeg');
+    }, 'image/jpg');
     })
     .finally(() => {
       if(club && club.name === 'dev-admin') {
