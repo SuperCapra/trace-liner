@@ -308,9 +308,6 @@ function ImageComponent(props) {
     let height = canvasSketchHeight
     setDrawingWidth(width)
     setDrawingHeight(canvasSketchHeight)
-    console.log('width:', width)
-    console.log('height:', height)
-    console.log('altitudeStream:', altitudeStream)
     let ctx = canvasSketch.getContext('2d')
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round';
@@ -320,6 +317,10 @@ function ImageComponent(props) {
     let minAltitude = Math.min(...altitudeStream)
 
     let altitudeGap = maxAltitude - minAltitude
+
+    console.log('width:', width)
+    console.log('height:', height)
+    console.log('altitudeStream:', altitudeStream)
     console.log('maxAltitude:', maxAltitude)
     console.log('minAltitude:', minAltitude)
     console.log('altitudeGap:', altitudeGap)
@@ -343,8 +344,9 @@ function ImageComponent(props) {
         ctx.lineTo(aX,aY)
       }
     }
-    console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    console.log('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    console.log('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    
     ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
     ctx.lineTo(width,height)
     ctx.lineTo(0,height)
@@ -386,9 +388,6 @@ function ImageComponent(props) {
     let height = canvasSketchHeight
     setDrawingWidth(width)
     setDrawingHeight(canvasSketchHeight)
-    console.log('width:', width)
-    console.log('height:', height)
-    console.log('altitudeStream:', altitudeStream)
     let ctx = canvasSketch.getContext('2d')
     // Setup line properties to avoid spikes
     ctx.lineJoin = 'round';
@@ -398,6 +397,10 @@ function ImageComponent(props) {
     let minAltitude = Math.min(...altitudeStream)
 
     let altitudeGap = maxAltitude - minAltitude
+
+    console.log('width:', width)
+    console.log('height:', height)
+    console.log('altitudeStream:', altitudeStream)
     console.log('maxAltitude:', maxAltitude)
     console.log('minAltitude:', minAltitude)
     console.log('altitudeGap:', altitudeGap)
@@ -412,6 +415,7 @@ function ImageComponent(props) {
   
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
     let zoomFactorX = (width * 0.4)/altitudeGap
+
     console.log('zoomFactorY:', zoomFactorY)
     console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
 
@@ -422,8 +426,10 @@ function ImageComponent(props) {
         ctx.lineTo(aX,aY)
       }
     }
-    console.log('altitudeStream[i] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    console.log('altitudeStream[i] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+
+    console.log('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    console.log('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+
     ctx.lineTo(width - ((altitudeStream[lengthAltitude - 1] - minAltitude * 0.9) * zoomFactorX),0)
     ctx.lineTo(width,0)
     ctx.lineTo(width,height)
@@ -454,7 +460,6 @@ function ImageComponent(props) {
   const returnClimbing = (altitudeStream, distanceStream) => {
     let asl = altitudeStream.length
     let dsl = distanceStream.length
-    console.log('altitudeStream:', altitudeStream)
     altitudeStream = altitudeStream.map(x => Math.floor(x))
     distanceStream = distanceStream.map(x => Math.floor(x))
     console.log('altitudeStream:', altitudeStream)
@@ -488,7 +493,6 @@ function ImageComponent(props) {
       }
     }
     console.log('climbs:', climbs)
-    console.log('(distanceStream[dsl - 1] * 0.01):', (distanceStream[dsl - 1] * 0.01))
     climbs = climbs.filter(x => x.gradient > 0)
     let finalClimbs = []
     if(climbs) finalClimbs.push(climbs[0])
@@ -513,7 +517,6 @@ function ImageComponent(props) {
           finalClimbs.push(tempClimb)
         }
     }
-    console.log('finalClimbs:', finalClimbs)
     finalClimbs = finalClimbs.filter(x => x.distance > (distanceStream[dsl - 1] * 0.01) && x.gradient > 0.03)
     console.log('finalClimbs:', finalClimbs)
     return finalClimbs
@@ -538,7 +541,7 @@ function ImageComponent(props) {
   ])
 
   const handleClickDispatcher = (data) => {
-    console.log('data:', data)
+    console.info('handleClickDispatcher:', data)
     if(data.type === 'filterSlider') {
       setValueFilter(data.value)
       drawFilter()
@@ -621,7 +624,6 @@ function ImageComponent(props) {
         }
       }
     } else if(data.type === 'image') {
-      console.log('data', data)
       setImage(data.image)
     } else if(data.type === 'unit') {
       setUnitMeasureSelected(data.unit)
@@ -676,7 +678,7 @@ function ImageComponent(props) {
   }
 
   const handleColorChange = (color) => {
-    console.log('color to set:', color)
+    console.info('color to set:', color)
     setDrawingColor(color)
     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
     else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
@@ -698,7 +700,7 @@ function ImageComponent(props) {
   // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
-    console.log('ratioText:', ratioText)
+    console.info('Ratio text:', ratioText)
     if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
     imageReference.onload = () => {
@@ -755,8 +757,7 @@ function ImageComponent(props) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
-      console.log('showMode3:', showMode3)
-      console.log('showMode4:', showMode4)
+
       if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
       else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
       else drawLine(drawingColor, canvasWidth, canvasHeight);
