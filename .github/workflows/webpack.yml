@@ -13,4 +13,4 @@ jobs:
     - name: Build
       run: react-scripts build
       env:
-        MODE_ENV: production
+        NODE_ENV: production
