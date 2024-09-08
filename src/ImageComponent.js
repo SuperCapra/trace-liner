@@ -105,61 +105,82 @@ function ImageComponent(props) {
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
-  const handleDownloadClick = async () => {
+  const handleDownloadClick = async (type) => {
     let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
     if(club && club.name === 'dev-admin') {
       document.getElementById('showingImage').classList.remove('round-corner')
     } else {
       removeRoundCorner()
+      if(type === 'contour') addOpacity()
     }
+    console.log('anchor:',anchor)
     let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
-    html2canvas(anchor, {
-      useCORS: true
-      // onclone: function(doc) {
-      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-      //   doc.getElementById('canvasImage').classList.remove('round-corner')
-      //   doc.getElementById('canvasFilter').classList.remove('round-corner')
-      //   console.log('cloning...', doc.getElementById('canvasFilter').classList)
-      //   console.log('document', document)
-      // }
-    }).then(async function(canvas) {
+    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let titleImage = (title ? title : 'image') + '.jpg'
-        if(navigator.share) {
-          try {
-            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-            await navigator.share({
-                title: (title ? title : 'image' ),
-                files: [file],
-            });
-          } catch (error) {
-            console.error('Error sharing image:', error);
-            const url = URL.createObjectURL(blob);
-            const temp = document.createElement('a');
-            temp.href = url;
-            temp.download = titleImage;
-            temp.click();
-            URL.revokeObjectURL(url); // Clean up URL object after use
-          }
+        let titleImage = (title ? title : 'image') + '.png'
+        // if(navigator.share) {
+        if(navigator.share && navigator.userAgentData.mobile) {
+          sharePNG(title, titleImage, blob)
         } else {
-          const url = URL.createObjectURL(blob);
-          const temp = document.createElement('a');
-          temp.href = url;
-          temp.download = titleImage;
-          temp.click();
-          URL.revokeObjectURL(url); // Clean up URL object after use
+          downloadImage(title, blob, 'png')
         }
-      }, 'image/jpg');
+      }, 'image/png');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
     })
     .finally(() => {
       if(club && club.name === 'dev-admin') {
         document.getElementById('showingImage').classList.add('round-corner')
       } else {
         addRoundCorner()
+        if(type === 'contour') removeOpacity()
       }
     })
+  }
+
+  const sharePNG = async (title, titleImage, blob) => {
+    try {
+      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
+      let data = {
+        title: (title ? title : 'image'),
+        files: [file]
+      }
+      await navigator.share(data);
+    } catch (error) {
+      console.error('Error sharing image:', error)
+      if(!String(error).includes('AbortError: Share canceled')) downloadImage(title, blob, 'png')
+    }
+  }
+  // const shareJPG = async (title, titleImage, blob) => {
+  //   try {
+  //     const file = new File([blob], titleImage , {type: 'image/jpg', lastModified: new Date()});
+  //     let data = {
+  //       title: (title ? title : 'image'),
+  //       files: [file]
+  //     }
+  //     await navigator.share(data);
+  //   } catch (error) {
+  //     console.error('Error sharing image:', error)
+  //     downloadImage(title, blob, 'jpg')
+  //   }
+  // }
+  const downloadImage = (title, blob, type) => {
+    try {
+      console.log('title:', title)
+      console.log('blob:', blob)
+      console.log('type:', type)
+      const url = URL.createObjectURL(blob);
+      const temp = document.createElement('a');
+      temp.href = url;
+      temp.download = title + (type === 'jpg' ? '.jpg' : '.png') ;
+      temp.click();
+      URL.revokeObjectURL(url); // Clean up URL object after use
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
   }
 
   const seeHiding = () => {
@@ -181,6 +202,14 @@ function ImageComponent(props) {
     document.getElementById('canvasFilter').classList.add('round-corner')
     document.getElementById('canvasSketch').classList.add('round-corner')
     document.getElementById('printingAnchor').classList.add('round-corner')
+  }
+  const addOpacity = () => {
+    document.getElementById('canvasImage').classList.add('background-opacity')
+    document.getElementById('printingAnchor').classList.add('background-trasparency')
+  }
+  const removeOpacity = () => {
+    document.getElementById('canvasImage').classList.remove('background-opacity')
+    document.getElementById('printingAnchor').classList.remove('background-trasparency')
   }
 
   const returnImage = useCallback(() => {
@@ -547,6 +576,7 @@ function ImageComponent(props) {
       drawFilter()
     }
     else if(data.type === 'share') handleDownloadClick()
+    else if(data.type === 'share-contour') handleDownloadClick('contour')
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {
@@ -880,20 +910,20 @@ function ImageComponent(props) {
       <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">
-              <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-              <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-              <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
-              {showTitle && (
-                <div className="width-general text-overlay text-title">
-                  <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                  {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
-                </div>
-              )}
-              {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
-              {showMode1 && returnMode1Disposition()}
-              {showMode2 && returnMode2Disposition()}
-              {showMode3 && returnMode3Disposition()}
-              {showMode4 && returnMode4Disposition()}
+            <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
+            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
+            {showTitle && (
+              <div className="width-general text-overlay text-title">
+                <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
+                {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+              </div>
+            )}
+            {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
+            {showMode1 && returnMode1Disposition()}
+            {showMode2 && returnMode2Disposition()}
+            {showMode3 && returnMode3Disposition()}
+            {showMode4 && returnMode4Disposition()}
           </div>
         </div>
         {isLoading && 
