@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState} from 'react';
 import {ReactComponent as ShareSVG} from './images/share.svg'
+import ShareContour from './ShareContour'
 import {ReactComponent as ModifySVG} from './images/modify.svg'
 import {ReactComponent as TextSVG} from './images/text.svg'
 import {ReactComponent as RectangleSVG} from './images/rectangle.svg'
@@ -558,6 +559,9 @@ function ButtonImage(props) {
         </div>
         <div style={shareStyle} onClick={() => handleClick({type: 'share'})}>
           <ShareSVG className="feature" />
+        </div>
+        <div style={shareStyle} onClick={() => handleClick({type: 'share-contour'})}>
+          <ShareContour/>
         </div>
       </div>
       {showModifyImage && (

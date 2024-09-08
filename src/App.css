@@ -335,7 +335,7 @@ p {
   color: white;
 }
 .text-title{
-  width: 72vw !important;
+  width: 72vw;
   top: 8vw;
   left: 4vw;
   display: flex;
@@ -445,6 +445,12 @@ p {
     color: var(--palette-primary);
     box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     animation: dot-typing 1.5s infinite linear;
+}
+.background-opacity{
+  opacity: 0 !important
+}
+.background-trasparency{
+  background-color: unset !important;
 }
 @keyframes dot-typing {
     0% {
@@ -699,6 +705,11 @@ p {
 .display-flex-dropdown-value{
   display: flex;
   align-items: center;
+}
+@media print, screen and (max-width: 450px) {
+  .text-title{
+    width: 72vw !important;
+  }
 }
 @media print, screen and (min-width: 450px) {
   .p-back{
