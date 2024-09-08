@@ -244,7 +244,7 @@ const utilsFunction = {
         return y + '-' + m + '-' + d
     },
 
-    isMobile() {
+    isMobile(club) {
         const toMatch = [
             /Android/i,
             /webOS/i,
@@ -254,14 +254,25 @@ const utilsFunction = {
             /BlackBerry/i,
             /Windows Phone/i
         ]
+        this.consoleAndAlert(String(navigator.userAgent), club)
         try {
             return navigator.userAgentData.mobile
         } catch (error) {
+            this.consoleAndAlert(String(error), club)
+            this.consoleAndAlert(String(navigator.userAgent), club)
+            this.consoleAndAlert(String(toMatch.some((toMatchItem) => {
+                return navigator.userAgent.match(toMatchItem)
+            })),club)
             if(String(error).includes('navigator')) return toMatch.some((toMatchItem) => {
                 return navigator.userAgent.match(toMatchItem)
             })
         }
         return false
+    },
+
+    consoleAndAlert(message, club) {
+        if(club && club.name === 'dev-admin') window.alert(message)
+        console.log(message)
     }
 }
 

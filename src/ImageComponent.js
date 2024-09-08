@@ -106,13 +106,14 @@ function ImageComponent(props) {
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
   const handleDownloadClick = async (type) => {
-    let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    if(club && club.name === 'dev-admin') {
-      document.getElementById('showingImage').classList.remove('round-corner')
-    } else {
+    let anchor = document.getElementById('printingAnchor')
+    // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    // if(club && club.name === 'dev-admin') {
+    //   document.getElementById('showingImage').classList.remove('round-corner')
+    // } else {
       removeRoundCorner()
       if(type === 'contour') addOpacity()
-    }
+    // }
     console.log('anchor:',anchor)
     let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
@@ -121,8 +122,9 @@ function ImageComponent(props) {
         console.log('navigator.share', navigator.share)
         let titleImage = (title ? title : 'image') + '.png'
         // if(navigator.share) {
-        if(navigator.share && utils.isMobile()) {
-          sharePNG(title, titleImage, blob)
+        if(navigator.share && !utils.isMobile(club)) {
+          if(type === 'contour') sharePNG(title, titleImage, blob)
+          else shareJPG(title, titleImage, blob)
         } else {
           downloadImage(title, blob, 'png')
         }
@@ -132,12 +134,12 @@ function ImageComponent(props) {
       console.error('Error:', e)
     })
     .finally(() => {
-      if(club && club.name === 'dev-admin') {
-        document.getElementById('showingImage').classList.add('round-corner')
-      } else {
+      // if(club && club.name === 'dev-admin') {
+      //   document.getElementById('showingImage').classList.add('round-corner')
+      // } else {
         addRoundCorner()
         if(type === 'contour') removeOpacity()
-      }
+      // }
     })
   }
 
@@ -150,23 +152,25 @@ function ImageComponent(props) {
       }
       await navigator.share(data);
     } catch (error) {
+      utils.consoleAndAlert('Error sharing image:' + error, club)
       console.error('Error sharing image:', error)
       if(!String(error).includes('AbortError: Share canceled')) downloadImage(title, blob, 'png')
     }
   }
-  // const shareJPG = async (title, titleImage, blob) => {
-  //   try {
-  //     const file = new File([blob], titleImage , {type: 'image/jpg', lastModified: new Date()});
-  //     let data = {
-  //       title: (title ? title : 'image'),
-  //       files: [file]
-  //     }
-  //     await navigator.share(data);
-  //   } catch (error) {
-  //     console.error('Error sharing image:', error)
-  //     downloadImage(title, blob, 'jpg')
-  //   }
-  // }
+  const shareJPG = async (title, titleImage, blob) => {
+    try {
+      const file = new File([blob], titleImage , {type: 'image/jpg', lastModified: new Date()});
+      let data = {
+        title: (title ? title : 'image'),
+        files: [file]
+      }
+      await navigator.share(data);
+    } catch (error) {
+      utils.consoleAndAlert('Error sharing image:' + error, club)
+      console.error('Error sharing image:', error)
+      downloadImage(title, blob, 'jpg')
+    }
+  }
   const downloadImage = (title, blob, type) => {
     try {
       console.log('title:', title)
@@ -302,11 +306,11 @@ function ImageComponent(props) {
     }
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-    if(club && club.name === 'dev-admin') returnImage()
+    // if(club && club.name === 'dev-admin') returnImage()
   },[
     activity.coordinates,
-    club,
-    returnImage
+    // club,
+    // returnImage
   ])
 
   const drawCircle = (ctx, coordinates, diameter, fill, color) => {
@@ -552,7 +556,7 @@ function ImageComponent(props) {
   }
 
   const drawFilter = useCallback((width, height) => {
-    if(club && club.name === 'dev-admin') seeHiding()
+    // if(club && club.name === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -560,13 +564,13 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    if(club && club.name === 'dev-admin') returnImage()
+    // if(club && club.name === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
     canvasHeight,
-    returnImage,
-    club
+    // returnImage,
+    // club
   ])
 
   const handleClickDispatcher = (data) => {
@@ -808,10 +812,10 @@ function ImageComponent(props) {
   ])
 
   const setImage = (newImage) => {
-    if(club && club.name === 'dev-admin') {
-      setIsLoading(true)
-      seeHiding()
-    }
+    // if(club && club.name === 'dev-admin') {
+    //   setIsLoading(true)
+    //   seeHiding()
+    // }
     setImageSrc(newImage)
     handleCrop(ratio, newImage)
   }
@@ -874,10 +878,10 @@ function ImageComponent(props) {
   }
 
   useEffect(() => {
-    if(club && club.name === 'dev-admin') {
-      setIsLoading(true)
-      seeHiding()
-    }
+    // if(club && club.name === 'dev-admin') {
+    //   setIsLoading(true)
+    //   seeHiding()
+    // }
     handleCrop(ratio, imageSrc)
   }, [
       ratio,
@@ -936,7 +940,7 @@ function ImageComponent(props) {
         <div>
           {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );
