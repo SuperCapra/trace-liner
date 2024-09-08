@@ -24,7 +24,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, handleClickButton } = props
+  const { activity, unitMeasure, language, club, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -557,12 +557,12 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={() => handleClick({type: 'share'})}>
+        <div style={shareStyle} allow="web-share" onClick={() => handleClick({type: 'share'})}>
           <ShareSVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={() => handleClick({type: 'share-contour'})}>
+        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() => handleClick({type: 'share-contour'})}>
           <ShareContour/>
-        </div>
+        </div>}
       </div>
       {showModifyImage && (
         <div className="wrapper-controller">
