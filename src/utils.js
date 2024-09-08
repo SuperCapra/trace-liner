@@ -257,7 +257,7 @@ const utilsFunction = {
         try {
             return navigator.userAgentData.mobile
         } catch (error) {
-            if(error.includes('navigator')) return toMatch.some((toMatchItem) => {
+            if(String(error).includes('navigator')) return toMatch.some((toMatchItem) => {
                 return navigator.userAgent.match(toMatchItem)
             })
         }
