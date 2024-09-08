@@ -335,7 +335,7 @@ p {
   color: white;
 }
 .text-title{
-  width: 72vw;
+  width: 72vw !important;
   top: 8vw;
   left: 4vw;
   display: flex;
