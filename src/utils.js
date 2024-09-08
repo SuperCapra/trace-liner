@@ -242,6 +242,26 @@ const utilsFunction = {
         let d = String(dateTimeJs.getDate()).padStart(2,'0')
         console.log(y + '-' + m + '-' + d)
         return y + '-' + m + '-' + d
+    },
+
+    isMobile() {
+        const toMatch = [
+            /Android/i,
+            /webOS/i,
+            /iPhone/i,
+            /iPad/i,
+            /iPod/i,
+            /BlackBerry/i,
+            /Windows Phone/i
+        ]
+        try {
+            return navigator.userAgentData.mobile
+        } catch (error) {
+            if(error.includes('navigator')) return toMatch.some((toMatchItem) => {
+                return navigator.userAgent.match(toMatchItem)
+            })
+        }
+        return false
     }
 }
 

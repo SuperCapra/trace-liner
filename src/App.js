@@ -233,7 +233,7 @@ class Homepage extends React.Component{
       called = true
       this.getAccessTokenAndActivities(code)
     }
-    let mainWrapperClasses = "main-wrapper" + (navigator && navigator.userAgentData && navigator.userAgentData.mobile ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
+    let mainWrapperClasses = "main-wrapper" + (utils.isMobile() ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
         <div className={mainWrapperClasses}>
