@@ -121,7 +121,7 @@ function ImageComponent(props) {
         console.log('navigator.share', navigator.share)
         let titleImage = (title ? title : 'image') + '.png'
         // if(navigator.share) {
-        if(navigator.share && navigator.userAgentData.mobile) {
+        if(navigator.share && utils.isMobile()) {
           sharePNG(title, titleImage, blob)
         } else {
           downloadImage(title, blob, 'png')
