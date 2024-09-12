@@ -1,12 +1,13 @@
-import {ReactComponent as LogHomepageMuraSVG} from './images/logoMuraExtended.svg';
+import {ReactComponent as LogoHomepageMuraSVG} from './images/logoMuraExtended.svg';
 import {ReactComponent as LogoImageNamaSVG} from './images/logoNama.svg'
 import {ReactComponent as LogoImageMuraSVG} from './images/logoMura.svg'
 import {ReactComponent as LogoImageSEM} from './images/logoSEM.svg'
+import {ReactComponent as LogoHomepageImageSEM} from './images/logoSEMExtended.svg'
 import brandingPalette from './brandingPalette';
 
 const styleLogoSem = {
     fill: brandingPalette.primary,
-    height: '15vh'
+    height: '20vh'
 }
 
 const returnImageLogoNama = (classes, styles) => {
@@ -19,7 +20,7 @@ const returnHomepageLogoMura = (vocabulary, language) => {
         <div className="margin-x">
         <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_PER}</p>
         </div>
-        <LogHomepageMuraSVG/>
+        <LogoHomepageMuraSVG/>
     </div>)
 }
 const returnHomepageLogoSem = (vocabulary, language) => {
@@ -27,7 +28,7 @@ const returnHomepageLogoSem = (vocabulary, language) => {
         <div className="margin-x">
         <p className="p-or p-login-or-size">{vocabulary[language].HOMEPAGE_PER}</p>
         </div>
-        <LogoImageSEM style={styleLogoSem}/>
+        <LogoHomepageImageSEM style={styleLogoSem}/>
     </div>)
 }
 const returnImageLogoMura = (classes, styles) => {
