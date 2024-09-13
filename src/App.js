@@ -19,6 +19,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+let changedLanguage = false
 
 let athleteData = {}
 let activities = []
@@ -215,6 +216,7 @@ class Homepage extends React.Component{
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
+    let language = this.props.language
     for(let c of clubs) {
       if(urlCurrent.includes(c.urlKey)) {
         club = c
@@ -232,6 +234,9 @@ class Homepage extends React.Component{
     if(code && !called) {
       called = true
       this.getAccessTokenAndActivities(code)
+      if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language
+    } else if(club && club.language && languages.includes(club.language) && !changedLanguage) {
+      this.setLanguage({value: club.language})
     }
     let mainWrapperClasses = "main-wrapper" + (utils.isMobile() ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
@@ -317,7 +322,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-              <ImageComponent activity={activity} club={club} language={this.props.language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+            <ImageComponent activity={activity} club={club} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
           </div>
         )
       }
