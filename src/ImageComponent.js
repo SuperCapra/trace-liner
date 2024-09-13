@@ -120,13 +120,14 @@ function ImageComponent(props) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let titleImage = (title ? title : 'image') +  (type === 'contour' ? '.png' : '.jpeg')
+        let extension = type === 'contour' ? 'png' : 'jpeg'
+        let titleImage = (title ? title : 'image') + '.' + extension
         // if(navigator.share) {
-        if(navigator.share && !utils.isMobile(club)) {
+        if(navigator.share) {
           if(type === 'contour') sharePNG(title, titleImage, blob)
           else shareJPG(title, titleImage, blob)
         } else {
-          downloadImage(title, blob, 'png')
+          downloadImage(title, blob, extension)
         }
       }, 'image/png');
     })
@@ -183,7 +184,7 @@ function ImageComponent(props) {
       const url = URL.createObjectURL(blob);
       const temp = document.createElement('a');
       temp.href = url;
-      temp.download = title + (type === 'jpg' ? '.jpg' : '.png') ;
+      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
       temp.click();
       URL.revokeObjectURL(url); // Clean up URL object after use
     } catch (error) {
