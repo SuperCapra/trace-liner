@@ -120,7 +120,7 @@ function ImageComponent(props) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let titleImage = (title ? title : 'image') + '.png'
+        let titleImage = (title ? title : 'image') +  (type === 'contour' ? '.png' : '.jpeg')
         // if(navigator.share) {
         if(navigator.share && !utils.isMobile(club)) {
           if(type === 'contour') sharePNG(title, titleImage, blob)
@@ -145,30 +145,34 @@ function ImageComponent(props) {
 
   const sharePNG = async (title, titleImage, blob) => {
     try {
-      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
-      let data = {
+      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
+      navigator.share({
         title: (title ? title : 'image'),
+        text: 'Trace liner image share',
         files: [file]
-      }
-      await navigator.share(data);
+      }).catch(error => {
+        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+        console.error('Error sharing image:', error)
+      });
     } catch (error) {
       utils.consoleAndAlert('Error sharing image:' + error, club)
       console.error('Error sharing image:', error)
-      if(!String(error).includes('AbortError: Share canceled')) downloadImage(title, blob, 'png')
     }
   }
   const shareJPG = async (title, titleImage, blob) => {
     try {
-      const file = new File([blob], titleImage , {type: 'image/jpg', lastModified: new Date()});
-      let data = {
+      const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+      navigator.share({
         title: (title ? title : 'image'),
+        text: 'Trace liner image share',
         files: [file]
-      }
-      await navigator.share(data);
+      }).catch(error => {
+        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+        console.error('Error sharing image:', error)
+      });
     } catch (error) {
       utils.consoleAndAlert('Error sharing image:' + error, club)
       console.error('Error sharing image:', error)
-      downloadImage(title, blob, 'jpg')
     }
   }
   const downloadImage = (title, blob, type) => {
