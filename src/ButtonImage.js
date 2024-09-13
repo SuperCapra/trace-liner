@@ -548,7 +548,7 @@ function ButtonImage(props) {
   }
   const handleDownloadClickJPEG = () => {
     let anchor = document.getElementById('printingAnchor')
-    console.log('new logic')
+    console.log('new logic bau haus')
     removeRoundCorner()
     console.log('anchor:',anchor)
     let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
@@ -711,10 +711,10 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={() => handleDownloadClickJPEG()}>
+        <div style={shareStyle} onClick={handleDownloadClickJPEG}>
           <ShareSVG className="feature" />
         </div>
-        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() =>handleDownloadClickPNG()}>
+        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={handleDownloadClickPNG}>
           <ShareContour/>
         </div>}
       </div>
