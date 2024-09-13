@@ -546,29 +546,75 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const handleDownloadClick = async (type) => {
+  const handleDownloadClickJPEG = () => {
     let anchor = document.getElementById('printingAnchor')
-    // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    // if(club && club.name === 'dev-admin') {
-    //   document.getElementById('showingImage').classList.remove('round-corner')
-    // } else {
-      removeRoundCorner()
-      if(type === 'contour') addOpacity()
-    // }
+    console.log('new logic')
+    removeRoundCorner()
     console.log('anchor:',anchor)
     let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let extension = type === 'contour' ? 'png' : 'jpeg'
-        let titleImage = (title ? title : 'image') + '.' + extension
+        let titleImage = (title ? title : 'image') + '.jpeg'
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club)) {
-          if(type === 'contour') sharePNG(title, titleImage, blob)
-          else shareJPG(title, titleImage, blob)
+          try {
+            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            navigator.share({
+              title: (title ? title : 'image'),
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+              console.error('Error sharing image:', error)
+            });
+          } catch (error) {
+            utils.consoleAndAlert('Error sharing image:' + error, club)
+            console.error('Error sharing image:', error)
+          }
         } else {
-          downloadImage(title, blob, extension)
+          downloadImage(title, blob, 'jpeg')
+        }
+      }, 'image/jpeg');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      addRoundCorner()
+    })
+  }
+  const handleDownloadClickPNG = () => {
+    let anchor = document.getElementById('printingAnchor')
+    console.log('new logic png')
+    removeRoundCorner()
+    addOpacity()
+    console.log('anchor:',anchor)
+    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
+    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(async function(blob) {
+        console.log('navigator.share', navigator.share)
+        let titleImage = (title ? title : 'image') + '.png'
+        // if(navigator.share) {
+        if(navigator.share && utils.isMobile(club)) {
+          try {
+            const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
+            navigator.share({
+              title: (title ? title : 'image'),
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+              console.error('Error sharing image:', error)
+            });
+          } catch (error) {
+            utils.consoleAndAlert('Error sharing image:' + error, club)
+            console.error('Error sharing image:', error)
+          }
+        } else {
+          downloadImage(title, blob, 'png')
         }
       }, 'image/png');
     })
@@ -576,12 +622,8 @@ function ButtonImage(props) {
       console.error('Error:', e)
     })
     .finally(() => {
-      // if(club && club.name === 'dev-admin') {
-      //   document.getElementById('showingImage').classList.add('round-corner')
-      // } else {
-        addRoundCorner()
-        if(type === 'contour') removeOpacity()
-      // }
+      addRoundCorner()
+      removeOpacity()
     })
   }
 
@@ -601,7 +643,7 @@ function ButtonImage(props) {
       console.error('Error sharing image:', error)
     }
   }
-  const shareJPG = async (title, titleImage, blob) => {
+  const shareJPEG = async (title, titleImage, blob) => {
     try {
       const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
       navigator.share({
@@ -669,10 +711,10 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} allow="web-share" onClick={() => handleDownloadClick('share')}>
+        <div style={shareStyle} onClick={() => handleDownloadClickJPEG()}>
           <ShareSVG className="feature" />
         </div>
-        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() => handleDownloadClick('contour')}>
+        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() =>handleDownloadClickPNG()}>
           <ShareContour/>
         </div>}
       </div>
