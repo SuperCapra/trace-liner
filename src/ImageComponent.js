@@ -123,7 +123,7 @@ function ImageComponent(props) {
         let extension = type === 'contour' ? 'png' : 'jpeg'
         let titleImage = (title ? title : 'image') + '.' + extension
         // if(navigator.share) {
-        if(navigator.share) {
+        if(navigator.share && utils.isMobile(club)) {
           if(type === 'contour') sharePNG(title, titleImage, blob)
           else shareJPG(title, titleImage, blob)
         } else {
