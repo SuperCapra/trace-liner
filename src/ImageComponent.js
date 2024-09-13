@@ -584,8 +584,8 @@ function ImageComponent(props) {
       setValueFilter(data.value)
       drawFilter()
     }
-    else if(data.type === 'share') handleDownloadClick()
-    else if(data.type === 'share-contour') handleDownloadClick('contour')
+    // else if(data.type === 'share') handleDownloadClick()
+    // else if(data.type === 'share-contour') handleDownloadClick('contour')
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {

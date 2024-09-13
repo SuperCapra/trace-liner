@@ -20,6 +20,8 @@ import image5 from './images/image5.jpg'
 import image6 from './images/image6.jpeg'
 import image7 from './images/image7.jpeg'
 import Slider from 'rc-slider';
+import utils from './utils.js'
+import html2canvas from 'html2canvas';
 import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
@@ -544,6 +546,116 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const handleDownloadClick = async (type) => {
+    let anchor = document.getElementById('printingAnchor')
+    // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+    // if(club && club.name === 'dev-admin') {
+    //   document.getElementById('showingImage').classList.remove('round-corner')
+    // } else {
+      removeRoundCorner()
+      if(type === 'contour') addOpacity()
+    // }
+    console.log('anchor:',anchor)
+    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
+    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(async function(blob) {
+        console.log('navigator.share', navigator.share)
+        let extension = type === 'contour' ? 'png' : 'jpeg'
+        let titleImage = (title ? title : 'image') + '.' + extension
+        // if(navigator.share) {
+        if(navigator.share && utils.isMobile(club)) {
+          if(type === 'contour') sharePNG(title, titleImage, blob)
+          else shareJPG(title, titleImage, blob)
+        } else {
+          downloadImage(title, blob, extension)
+        }
+      }, 'image/png');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      // if(club && club.name === 'dev-admin') {
+      //   document.getElementById('showingImage').classList.add('round-corner')
+      // } else {
+        addRoundCorner()
+        if(type === 'contour') removeOpacity()
+      // }
+    })
+  }
+
+  const sharePNG = async (title, titleImage, blob) => {
+    try {
+      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
+      navigator.share({
+        title: (title ? title : 'image'),
+        text: 'Trace liner image share',
+        files: [file]
+      }).catch(error => {
+        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+        console.error('Error sharing image:', error)
+      });
+    } catch (error) {
+      utils.consoleAndAlert('Error sharing image:' + error, club)
+      console.error('Error sharing image:', error)
+    }
+  }
+  const shareJPG = async (title, titleImage, blob) => {
+    try {
+      const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+      navigator.share({
+        title: (title ? title : 'image'),
+        text: 'Trace liner image share',
+        files: [file]
+      }).catch(error => {
+        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+        console.error('Error sharing image:', error)
+      });
+    } catch (error) {
+      utils.consoleAndAlert('Error sharing image:' + error, club)
+      console.error('Error sharing image:', error)
+    }
+  }
+  const downloadImage = (title, blob, type) => {
+    try {
+      console.log('title:', title)
+      console.log('blob:', blob)
+      console.log('type:', type)
+      const url = URL.createObjectURL(blob);
+      const temp = document.createElement('a');
+      temp.href = url;
+      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
+      temp.click();
+      URL.revokeObjectURL(url); // Clean up URL object after use
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  }
+  const seeImage = () => {
+    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
+    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
+  }
+  const removeRoundCorner = () => {
+    document.getElementById('canvasImage').classList.remove('round-corner')
+    document.getElementById('canvasFilter').classList.remove('round-corner')
+    document.getElementById('canvasSketch').classList.remove('round-corner')
+    document.getElementById('printingAnchor').classList.remove('round-corner')
+  }
+  const addRoundCorner = () => {
+    document.getElementById('canvasImage').classList.add('round-corner')
+    document.getElementById('canvasFilter').classList.add('round-corner')
+    document.getElementById('canvasSketch').classList.add('round-corner')
+    document.getElementById('printingAnchor').classList.add('round-corner')
+  }
+  const addOpacity = () => {
+    document.getElementById('canvasImage').classList.add('background-opacity')
+    document.getElementById('printingAnchor').classList.add('background-trasparency')
+  }
+  const removeOpacity = () => {
+    document.getElementById('canvasImage').classList.remove('background-opacity')
+    document.getElementById('printingAnchor').classList.remove('background-trasparency')
+  }
 
   return (
     <div className="display-buttons">
@@ -557,10 +669,10 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} allow="web-share" onClick={() => handleClick({type: 'share'})}>
+        <div style={shareStyle} allow="web-share" onClick={() => handleDownloadClick('share')}>
           <ShareSVG className="feature" />
         </div>
-        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() => handleClick({type: 'share-contour'})}>
+        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={() => handleDownloadClick('contour')}>
           <ShareContour/>
         </div>}
       </div>
