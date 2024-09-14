@@ -13,7 +13,7 @@ import { vocabulary, languages } from './vocabulary.js';
 
 function ImageComponent(props) {
 
-  const {activity, club, language, handleBack, handleBubbleLanguage} = props
+  const {activity, club, admin, language, handleBack, handleBubbleLanguage} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -123,7 +123,7 @@ function ImageComponent(props) {
         let extension = type === 'contour' ? 'png' : 'jpeg'
         let titleImage = (title ? title : 'image') + '.' + extension
         // if(navigator.share) {
-        if(navigator.share && utils.isMobile(club)) {
+        if(navigator.share && utils.isMobile(club, admin)) {
           if(type === 'contour') sharePNG(title, titleImage, blob)
           else shareJPG(title, titleImage, blob)
         } else {
@@ -156,7 +156,7 @@ function ImageComponent(props) {
         console.error('Error sharing image:', error)
       });
     } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club)
+      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
       console.error('Error sharing image:', error)
     }
   }
@@ -172,7 +172,7 @@ function ImageComponent(props) {
         console.error('Error sharing image:', error)
       });
     } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club)
+      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
       console.error('Error sharing image:', error)
     }
   }
@@ -945,7 +945,7 @@ function ImageComponent(props) {
         <div>
           {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );

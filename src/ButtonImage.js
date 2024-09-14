@@ -26,7 +26,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, club, handleClickButton } = props
+  const { activity, unitMeasure, language, club, admin, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -558,7 +558,7 @@ function ButtonImage(props) {
         console.log('navigator.share', navigator.share)
         let titleImage = (title ? title : 'image') + '.jpeg'
         // if(navigator.share) {
-        if(navigator.share && utils.isMobile(club)) {
+        if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
@@ -570,7 +570,7 @@ function ButtonImage(props) {
               console.error('Error sharing image:', error)
             });
           } catch (error) {
-            utils.consoleAndAlert('Error sharing image:' + error, club)
+            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
           }
         } else {
@@ -598,7 +598,7 @@ function ButtonImage(props) {
         console.log('navigator.share', navigator.share)
         let titleImage = (title ? title : 'image') + '.png'
         // if(navigator.share) {
-        if(navigator.share && utils.isMobile(club)) {
+        if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
             navigator.share({
@@ -610,7 +610,7 @@ function ButtonImage(props) {
               console.error('Error sharing image:', error)
             });
           } catch (error) {
-            utils.consoleAndAlert('Error sharing image:' + error, club)
+            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
           }
         } else {
@@ -639,7 +639,7 @@ function ButtonImage(props) {
         console.error('Error sharing image:', error)
       });
     } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club)
+      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
       console.error('Error sharing image:', error)
     }
   }
@@ -655,7 +655,7 @@ function ButtonImage(props) {
         console.error('Error sharing image:', error)
       });
     } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club)
+      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
       console.error('Error sharing image:', error)
     }
   }
@@ -714,7 +714,7 @@ function ButtonImage(props) {
         <div style={shareStyle} onClick={handleDownloadClickJPEG}>
           <ShareSVG className="feature" />
         </div>
-        {club && club.name === 'dev-admin' && <div style={shareStyle} onClick={handleDownloadClickPNG}>
+        {admin && <div style={shareStyle} onClick={handleDownloadClickPNG}>
           <ShareContour/>
         </div>}
       </div>
