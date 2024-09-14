@@ -20,6 +20,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 let unitMeasure = 'metric'
 let called = false 
 let changedLanguage = false
+let admin = false
 
 let athleteData = {}
 let activities = []
@@ -213,6 +214,8 @@ class Homepage extends React.Component{
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
+    admin = urlCurrent.includes('/admin')
+    if(admin) stravaAuthorizeUrl += '/admin'
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
@@ -322,7 +325,7 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-            <ImageComponent activity={activity} club={club} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+            <ImageComponent activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
           </div>
         )
       }

@@ -63,11 +63,6 @@ const clubs = [{
         hasImageLogo: true,
         imageLogo: returnImageLogoSem,
         language: 'it',
-    },{
-        name: 'dev-admin',
-        urlKey: '/dev-admin',
-        hasHomepageLogo: false,
-        hasImageLogo: false,
     }
 ]
 
