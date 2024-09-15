@@ -1,21 +1,21 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const helmet = require('helmet');
+// const helmet = require('helmet');
 
 // Use Helmet to set various security headers
-app.use(helmet());
+// app.use(helmet());
 
-// Enforce Permissions-Policy header
-app.use(
-  helmet({
-    permissionsPolicy: {
-      features: {
-        'web-share': ["'self'"], // Allow web-sharing
-      },
-    },
-  })
-);
+// // Enforce Permissions-Policy header
+// app.use(
+//   helmet({
+//     permissionsPolicy: {
+//       features: {
+//         'web-share': ["'self'"], // Allow web-sharing
+//       },
+//     },
+//   })
+// );
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
