@@ -556,14 +556,13 @@ function ButtonImage(props) {
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title ? title : 'image') + '.jpeg'
+        let titleImage = (title || 'image') + '.jpeg'
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
-              url: 'https://www.traceliner.com',
-              title: (title ? title : 'image'),
+              title: title || 'image',
               text: 'Trace liner image share',
               files: [file]
             }).catch(error => {
@@ -599,14 +598,13 @@ function ButtonImage(props) {
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title ? title : 'image') + '.png'
+        let titleImage = (title || 'image') + '.png'
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
             navigator.share({
-              url: 'https://www.traceliner.com',
-              title: (title ? title : 'image'),
+              title: title || 'image',
               text: 'Trace liner image share',
               files: [file]
             }).catch(error => {
