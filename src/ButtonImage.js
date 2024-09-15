@@ -562,6 +562,7 @@ function ButtonImage(props) {
           try {
             const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
+              url: 'https://www.traceliner.com',
               title: (title ? title : 'image'),
               text: 'Trace liner image share',
               files: [file]
@@ -602,6 +603,7 @@ function ButtonImage(props) {
           try {
             const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
             navigator.share({
+              url: 'https://www.traceliner.com',
               title: (title ? title : 'image'),
               text: 'Trace liner image share',
               files: [file]
