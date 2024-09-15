@@ -548,7 +548,6 @@ function ButtonImage(props) {
   }
   const handleDownloadClickJPEG = () => {
     let anchor = document.getElementById('printingAnchor')
-    console.log('new logic bau haus')
     removeRoundCorner()
     console.log('anchor:',anchor)
     let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
@@ -556,14 +555,14 @@ function ButtonImage(props) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let titleImage = (title ? title : 'image') + '.jpeg'
+        const url = URL.createObjectURL(blob);
+        let titleImage = (title || 'image') + '.jpeg'
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
-              url: 'https://www.traceliner.com',
-              title: (title ? title : 'image'),
+              title: title || 'image',
               text: 'Trace liner image share',
               files: [file]
             }).catch(error => {
@@ -577,6 +576,7 @@ function ButtonImage(props) {
         } else {
           downloadImage(title, blob, 'jpeg')
         }
+        URL.revokeObjectURL(url);
       }, 'image/jpeg');
     })
     .catch((e) => {
@@ -597,14 +597,14 @@ function ButtonImage(props) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
-        let titleImage = (title ? title : 'image') + '.png'
+        const url = URL.createObjectURL(blob);
+        let titleImage = (title || 'image') + '.png'
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
             const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
             navigator.share({
-              url: 'https://www.traceliner.com',
-              title: (title ? title : 'image'),
+              title: title || 'image',
               text: 'Trace liner image share',
               files: [file]
             }).catch(error => {
@@ -618,6 +618,7 @@ function ButtonImage(props) {
         } else {
           downloadImage(title, blob, 'png')
         }
+        URL.revokeObjectURL(url);
       }, 'image/png');
     })
     .catch((e) => {

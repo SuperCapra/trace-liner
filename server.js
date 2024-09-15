@@ -12,7 +12,7 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: ["'self'", "https://www.strava.com"],
-        imgSrc: ["'self'", "data:"],
+        imgSrc: ["*"],
       }
     }
   })
@@ -20,6 +20,7 @@ app.use(
 
 app.use((req, res, next) => {
   res.setHeader('Permissions-Policy', "web-share=(self)");
+  res.setHeader('Access-Control-Allow-Origin', '*');
   next();
 });
 
