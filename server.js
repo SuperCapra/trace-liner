@@ -6,37 +6,22 @@ const helmet = require('helmet');
 // Use Helmet to set various security headers
 app.use(helmet());
 
-// // Enforce Permissions-Policy header
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       defaultSrc: ["'self'"], // Default policy for all resources
-//       scriptSrc: ["'self'"], // Allow scripts from the same origin
-//       styleSrc: ["'self'"], // Allow styles from the same origin
-//       connectSrc: ["'self'", "https://www.strava.com/oauth/token"], // Allow connections to strava.com
-//       imgSrc: ["'self'", "data:"], // Allow images from the same origin and data URIs
-//       fontSrc: ["'self'"], // Allow fonts from the same origin
-//       frameSrc: ["'none'"], // Prevent embedding in frames
-//       objectSrc: ["'none'"], // Prevent embedding objects
-//     },
-//   })
-// );
-
 app.use(
   helmet({
-    permissionsPolicy: {
-      features: {
-        'web-share': ["'self'"], // Allow web-sharing
-      },
-    },
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "https://www.strava.com"]
+        connectSrc: ["'self'", "https://www.strava.com"],
+        imgSrc: ["'self'", "data:"],
       }
     }
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', "web-share='self'");
+  next();
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
