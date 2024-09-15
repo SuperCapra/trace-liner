@@ -19,7 +19,7 @@ app.use(
 );
 
 app.use((req, res, next) => {
-  res.setHeader('Permissions-Policy', "web-share='self'");
+  res.setHeader('Permissions-Policy', "web-share=(self)");
   next();
 });
 
