@@ -200,7 +200,6 @@ class Homepage extends React.Component{
   }
 
   routesToStage() {    
-    console.log('Webpack is running in', process.env.NODE_ENV, 'mode');
     // let localKey = localStorage.getItem('tracelinerkey');
     // if(localKey && !accessToken) {
     //   accessToken = localKey
