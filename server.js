@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 // The "catchall" handler: for any request that doesn't match,
 // send back the index.html from the React app.
-app.get('/' || '/sem' || '/nama-crew' || '/admin', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
