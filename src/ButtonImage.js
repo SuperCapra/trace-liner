@@ -560,7 +560,7 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
             navigator.share({
               title: title || 'image',
               text: 'Trace liner image share',
@@ -602,7 +602,7 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date()});
+            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
             navigator.share({
               title: title || 'image',
               text: 'Trace liner image share',
