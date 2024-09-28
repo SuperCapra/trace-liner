@@ -54,12 +54,34 @@ app.post('/upload', upload.single('file'), (req, res) => {
   }
 
   // The image was uploaded successfully, now return the URL
-  const imageUrl = window.location.origin + `/uploads/${req.file.filename}`;
-  res.json({ url: imageUrl });
+  try {
+    const imageUrl = req.query.server + `/uploads/${req.file.filename}`;
+    res.json({ url: imageUrl });
+  } catch (e) {
+    console.log('Server upload error:', e)
+  }
 });
 
-// Serve the uploaded images statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve and delete image after download
+app.get('/uploads/:filename', (req, res) => {
+  const filePath = path.join(__dirname, 'uploads', req.params.filename);
+
+  // Send the file for download
+  res.download(filePath, (err) => {
+    if (err) {
+      console.error('Error downloading the file:', err);
+    } else {
+      // Delete the file after download
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('Error deleting the file:', err);
+        } else {
+          console.log('File successfully deleted:', req.params.filename);
+        }
+      });
+    }
+  });
+});
 
 // Use Helmet to set various security headers
 app.use(helmet());
@@ -70,7 +92,7 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         connectSrc: ["'self'", "https://www.strava.com"],
-        imgSrc: ["*"],
+        imgSrc: ["'self'","*","data:"],
       }
     }
   })

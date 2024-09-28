@@ -556,20 +556,20 @@ function ButtonImage(props) {
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title || 'image') + '.jpeg'
+        let titleImage = (title || 'image')
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            // captureAndUploadImage(canvas, titleImage)
-            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
-            navigator.share({
-              title: title || 'image',
-              text: 'Trace liner image share',
-              files: [file]
-            }).catch(error => {
-              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-              console.error('Error sharing image:', error)
-            });
+            captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
+            // const file = new File([url], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            // navigator.share({
+            //   title: title || 'image',
+            //   text: 'Trace liner image share',
+            //   files: [file]
+            // }).catch(error => {
+            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+            //   console.error('Error sharing image:', error)
+            // });
           } catch (error) {
             utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
@@ -599,20 +599,20 @@ function ButtonImage(props) {
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title || 'image') + '.png'
+        let titleImage = (title || 'image')
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            // captureAndUploadImage(canvas, titleImage)
-            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
-            navigator.share({
-              title: title || 'image',
-              text: 'Trace liner image share',
-              files: [file]
-            }).catch(error => {
-              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-              console.error('Error sharing image:', error)
-            });
+            captureAndUploadImage(canvas, titleImage, 'png', blob)
+            // const file = new File([url], titleImage , {type: 'image/png', lastModified: new Date()});
+            // navigator.share({
+            //   title: title || 'image',
+            //   text: 'Trace liner image share',
+            //   files: [file]
+            // }).catch(error => {
+            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+            //   console.error('Error sharing image:', error)
+            // });
           } catch (error) {
             utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
@@ -632,9 +632,8 @@ function ButtonImage(props) {
     })
   }
 
-  const captureAndUploadImage = (canvas, titleImage) => {
+  const captureAndUploadImage = (canvas, titleImage, type, blob) => {
     try {
-  
       // Convert canvas to Blob
       canvas.toBlob(async (blob) => {
         if (blob) {
@@ -649,6 +648,7 @@ function ButtonImage(props) {
       }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
     } catch (error) {
       console.error('Error capturing and uploading image:', error);
+      downloadImage(titleImage, blob, type)
     }
   };
   
@@ -666,10 +666,11 @@ function ButtonImage(props) {
 
   const uploadImageToProxy = async (blob, titleImage) => {
     const formData = new FormData();
-    formData.append(titleImage, blob, titleImage + '.jpg');
+    formData.append('file', blob, titleImage + '.jpg');
+    let origin = window.location.origin
   
     try {
-      const response = await fetch(window.location.origin + '/upload', {  // Proxy URL
+      const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
         method: 'POST',
         body: formData,
       });
