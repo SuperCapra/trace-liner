@@ -1,9 +1,11 @@
 const express = require('express');
 const path = require('path');
+const multer = require('multer');
 // const axios = require('axios');
 // const cors = require('cors');
 const app = express();
 const helmet = require('helmet');
+const fs = require('fs');
 
 const roots = [
   '/nama-crew',
@@ -29,6 +31,35 @@ const roots = [
 //     res.status(500).send('Error fetching image');
 //   }
 // });
+
+// Set up multer for handling file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, 'uploads');
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath);
+    }
+    cb(null, uploadPath); // Store the file in 'uploads' directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage });
+
+// Proxy route for handling image upload
+app.post('/upload', upload.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  // The image was uploaded successfully, now return the URL
+  const imageUrl = window.location.origin + `/uploads/${req.file.filename}`;
+  res.json({ url: imageUrl });
+});
+
+// Serve the uploaded images statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Use Helmet to set various security headers
 app.use(helmet());

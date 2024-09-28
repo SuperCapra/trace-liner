@@ -602,15 +602,16 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
-            navigator.share({
-              title: title || 'image',
-              text: 'Trace liner image share',
-              files: [file]
-            }).catch(error => {
-              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-              console.error('Error sharing image:', error)
-            });
+            captureAndUploadImage(canvas, titleImage)
+            // const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
+            // navigator.share({
+            //   title: title || 'image',
+            //   text: 'Trace liner image share',
+            //   files: [file]
+            // }).catch(error => {
+            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+            //   console.error('Error sharing image:', error)
+            // });
           } catch (error) {
             utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
@@ -629,6 +630,59 @@ function ButtonImage(props) {
       removeOpacity()
     })
   }
+
+  const captureAndUploadImage = (canvas, titleImage) => {
+    try {
+  
+      // Convert canvas to Blob
+      canvas.toBlob(async (blob) => {
+        if (blob) {
+          // Send the blob to the proxy server
+          const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
+          
+          // Share the URL once the image is uploaded
+          if (uploadedImageUrl) {
+            shareImageUrl(uploadedImageUrl, titleImage);
+          }
+        }
+      }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
+    } catch (error) {
+      console.error('Error capturing and uploading image:', error);
+    }
+  };
+  
+  // Share the uploaded image URL
+  const shareImageUrl = async (url, titleImage) => {
+    try {
+      await navigator.share({
+        title: titleImage,
+        url,  // Sharing the HTTP URL of the uploaded image
+      });
+    } catch (error) {
+      console.error('Error sharing the image:', error);
+    }
+  };
+
+  const uploadImageToProxy = async (blob, titleImage) => {
+    const formData = new FormData();
+    formData.append(titleImage, blob, titleImage + '.jpg');
+  
+    try {
+      const response = await fetch(window.location.origin + '/upload', {  // Proxy URL
+        method: 'POST',
+        body: formData,
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        return data.url;  // Return the uploaded image URL
+      } else {
+        throw new Error('Image upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
 
   const sharePNG = async (title, titleImage, blob) => {
     try {
