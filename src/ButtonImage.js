@@ -642,7 +642,7 @@ function ButtonImage(props) {
           
           // Share the URL once the image is uploaded
           if (uploadedImageUrl) {
-            shareImageUrl(uploadedImageUrl, titleImage);
+            shareImageUrl(uploadedImageUrl, titleImage, type, blob);
           }
         }
       }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
@@ -653,14 +653,16 @@ function ButtonImage(props) {
   };
   
   // Share the uploaded image URL
-  const shareImageUrl = async (url, titleImage) => {
+  const shareImageUrl = async (url, titleImage, type, blob) => {
     try {
+      console.log('url:', url)
       await navigator.share({
         title: titleImage,
         url,  // Sharing the HTTP URL of the uploaded image
       });
     } catch (error) {
       console.error('Error sharing the image:', error);
+      downloadImage(titleImage, blob, type)
     }
   };
 
