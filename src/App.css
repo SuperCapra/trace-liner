@@ -553,7 +553,7 @@ p {
   font-size: calc(4vmin);
   font-weight: 900;
   font-family: 'Helvetica';
-  bottom: 15vw
+  top: 104vw
 }
 .wrapper-data-2-lines{
   position: absolute;
@@ -792,7 +792,7 @@ p {
   .wrapper-data-2-lines-rect{
     font-size: calc(3vw);
     min-width: 60vw;
-    bottom: 11.25vw;
+    top: 78vw;
   }
   .wrapper-data-2-lines{
     font-size: calc(2.625vw);
@@ -948,7 +948,7 @@ p {
   .wrapper-data-2-lines-rect{
     font-size: calc(2vw);
     min-width: 40vw;
-    bottom: 7.5vw;
+    top: 52vw;
   }
   .wrapper-data-2-lines{
     font-size: calc(1.75vw);
@@ -1087,7 +1087,7 @@ p {
   .wrapper-data-2-lines-rect{
     font-size: 16px;
     min-width: 320px;
-    bottom: 60px;
+    top: 420px;
   }
   .wrapper-data-2-lines{
     font-size: 14px;
@@ -1226,7 +1226,7 @@ p {
   .wrapper-data-2-lines-rect{
     font-size: 20px;
     min-width: 400px;
-    bottom: 75px;
+    top: 525px;
   }
   .wrapper-data-2-lines{
     font-size: 17.5px;
