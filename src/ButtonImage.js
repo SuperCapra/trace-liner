@@ -560,16 +560,16 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            captureAndUploadImage(canvas, titleImage)
-            // const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
-            // navigator.share({
-            //   title: title || 'image',
-            //   text: 'Trace liner image share',
-            //   files: [file]
-            // }).catch(error => {
-            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-            //   console.error('Error sharing image:', error)
-            // });
+            // captureAndUploadImage(canvas, titleImage)
+            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
+            navigator.share({
+              title: title || 'image',
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+              console.error('Error sharing image:', error)
+            });
           } catch (error) {
             utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
@@ -603,16 +603,16 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
-            captureAndUploadImage(canvas, titleImage)
-            // const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
-            // navigator.share({
-            //   title: title || 'image',
-            //   text: 'Trace liner image share',
-            //   files: [file]
-            // }).catch(error => {
-            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-            //   console.error('Error sharing image:', error)
-            // });
+            // captureAndUploadImage(canvas, titleImage)
+            const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
+            navigator.share({
+              title: title || 'image',
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+              console.error('Error sharing image:', error)
+            });
           } catch (error) {
             utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
