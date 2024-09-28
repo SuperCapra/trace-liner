@@ -656,9 +656,10 @@ function ButtonImage(props) {
   const shareImageUrl = async (url, titleImage, type, blob) => {
     try {
       console.log('url:', url)
+      const file = new File([url], titleImage , {type: 'image/' + type, lastModified: new Date()});
       await navigator.share({
         title: titleImage,
-        url,  // Sharing the HTTP URL of the uploaded image
+        files: [file]
       });
     } catch (error) {
       console.error('Error sharing the image:', error);
