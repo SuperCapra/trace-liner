@@ -105,6 +105,23 @@ function ImageComponent(props) {
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
+  // const fetchImage = useCallback(async () => {
+  //   const imageUrl = activity.photoUrl;
+  //   const proxyUrl = window.location.origin + `/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+  //   // const proxyUrl = `http:localhost:3000/image-proxy?url=${encodeURIComponent(imageUrl)}`;
+  
+  //   const response = await fetch(proxyUrl);
+  //   console.log('response: ', response)
+  //   const blob = await response.blob();
+  //   const imageObjectURL = URL.createObjectURL(blob);
+    
+  //   // Set the image source in your app (for example, in an img element)
+  //   activity['photoUrlProxied'] = imageObjectURL.replace('blob:','');
+  //   console.log('activity: ', activity)
+  // },[
+  //   activity
+  // ]);
+
   const handleDownloadClick = async (type) => {
     let anchor = document.getElementById('printingAnchor')
     // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
@@ -146,7 +163,7 @@ function ImageComponent(props) {
 
   const sharePNG = async (title, titleImage, blob) => {
     try {
-      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
+      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
       navigator.share({
         title: (title ? title : 'image'),
         text: 'Trace liner image share',
@@ -162,7 +179,7 @@ function ImageComponent(props) {
   }
   const shareJPG = async (title, titleImage, blob) => {
     try {
-      const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
       navigator.share({
         title: (title ? title : 'image'),
         text: 'Trace liner image share',
@@ -887,6 +904,7 @@ function ImageComponent(props) {
     //   setIsLoading(true)
     //   seeHiding()
     // }
+    // if(activity.photoUrl) fetchImage()
     handleCrop(ratio, imageSrc)
   }, [
       ratio,
@@ -894,7 +912,9 @@ function ImageComponent(props) {
       canvasWidth,
       handleCrop,
       imageSrc,
-      club
+      club,
+      // activity.photoUrl,
+      // fetchImage
     ])
   
   return (

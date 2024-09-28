@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+// const axios = require('axios');
+// const cors = require('cors');
 const app = express();
 const helmet = require('helmet');
 
@@ -8,6 +10,25 @@ const roots = [
   '/mura-sunset-ride',
   '/sem',
 ];
+
+// // enables cors for all routea
+// app.use(cors());
+
+// // Route to handle image requests
+// app.get('/image-proxy', async (req, res) => {
+//   const imageUrl = req.query.url;
+  
+//   try {
+//     // Fetch the image from the external service
+//     const response = await axios.get(imageUrl, { responseType: 'stream' });
+    
+//     // Forward the image back to the client
+//     res.setHeader('Content-Type', response.headers['content-type']);
+//     response.data.pipe(res);
+//   } catch (error) {
+//     res.status(500).send('Error fetching image');
+//   }
+// });
 
 // Use Helmet to set various security headers
 app.use(helmet());

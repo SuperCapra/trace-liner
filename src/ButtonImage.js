@@ -399,9 +399,9 @@ function ButtonImage(props) {
   }
 
   const returnImages = () => {
-    // if(props.activity.photoUrl) {
+    // if(props.activity.photoUrlProxied) {
     //   images = [{
-    //     photo: props.activity.photoUrl, 
+    //     photo: props.activity.photoUrlProxied, 
     //     alt: 'activity'
     //   },...images]
     // }
