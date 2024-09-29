@@ -214,7 +214,7 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     admin = urlCurrent.includes('/admin')
-    if(admin) stravaAuthorizeUrl += '/admin'
+    if(admin) stravaAuthorizeUrl += 'admin'
     console.log('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
