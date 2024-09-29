@@ -44,20 +44,20 @@ const returnImageLogoSem = (classes, styles) => {
 
 const clubs = [{
         name: 'nama-crew',
-        urlKey: 'nama-crew',
+        urlKey: '/nama-crew',
         hasHomepageLogo: false,
         hasImageLogo: true,
         imageLogo: returnImageLogoNama,
     },{
         name: 'mura-sunset-ride',
-        urlKey: 'mura-sunset-ride',
+        urlKey: '/mura-sunset-ride',
         hasHomepageLogo: true,
         homepageLogo: returnHomepageLogoMura,
         hasImageLogo: true,
         imageLogo: returnImageLogoMura,
     },{
         name: 'settimana-europea-mobilita',
-        urlKey: 'sem',
+        urlKey: '/sem',
         hasHomepageLogo: true,
         homepageLogo: returnHomepageLogoSem,
         hasImageLogo: true,
