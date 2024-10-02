@@ -234,6 +234,10 @@ class Homepage extends React.Component{
       this.changeStage({stage: 'ShowingActivity'})
     }
     if(code && !called) {
+      // queryParameters.forEach((value, key) => {
+      //   queryParameters.delete(key)
+      //   console.log(key, value);
+      // });
       called = true
       this.getAccessTokenAndActivities(code)
       if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language

@@ -271,7 +271,7 @@ const utilsFunction = {
     },
 
     consoleAndAlert(message, club, admin) {
-        if(admin) window.alert(message)
+        // if(admin) window.alert(message)
         console.log(message)
     }
 }
