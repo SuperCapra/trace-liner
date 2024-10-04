@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
+import Creator from './Creator.js'
 import Dropdown from './Dropdown.js'
 import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
@@ -278,6 +279,9 @@ class Homepage extends React.Component{
               </div>
               {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)}
             </div>
+            <div className="creator-justify-center">
+              <Creator language={this.props.language} classes="creator creator-homepage"/>
+            </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -320,6 +324,7 @@ class Homepage extends React.Component{
                 <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
+            <Creator language={this.props.language} classes="creator"/>
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}/>
             </div>
@@ -328,7 +333,14 @@ class Homepage extends React.Component{
       } else if(this.state.stage === 'ShowingActivity') {
         return (
           <div>
-            <ImageComponent activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+            <div className="image-creator">
+              <div className="image-creator-wrapper-1">
+                <ImageComponent activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+              </div>
+              <div className="image-creator-wrapper-2">
+                <Creator language={this.props.language} classes="creator creator-800"/>
+              </div>
+            </div>
           </div>
         )
       }
@@ -558,8 +570,8 @@ class Homepage extends React.Component{
   render() {
     return (   
       <div className="App">
-        <div className="App-header">
-            {this.routesToStage()}
+        <div className="App-body">
+          {this.routesToStage()}
         </div>
       </div>
     )

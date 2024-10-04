@@ -34,6 +34,8 @@ const vocabulary = {
         IMAGE_AVERAGE: 'Average',
         IMAGE_POWER: 'Power',
         IMAGE_COORDINATES: 'Coordinates',
+        NAME_APP: 'TRACELINER © ' + new Date().getFullYear(),
+        CREATED_BY: 'Created with ❤️ by Giovanni Maggi',
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -70,6 +72,8 @@ const vocabulary = {
         IMAGE_AVERAGE: 'Media',
         IMAGE_POWER: 'Potenza',
         IMAGE_COORDINATES: 'Coordinate',
+        NAME_APP: 'TRACELINER © ' + new Date().getFullYear(),
+        CREATED_BY: 'Creato con ❤️ da Giovanni Maggi',
     }
 }
 
