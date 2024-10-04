@@ -550,13 +550,13 @@ function ButtonImage(props) {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     console.log('anchor:',anchor)
-    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
+    let title = utils.getTitle(activity.beautyName)
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title || 'image')
+        let titleImage = utils.getTitleExtension(title, 'jpeg')
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
@@ -593,13 +593,13 @@ function ButtonImage(props) {
     removeRoundCorner()
     addOpacity()
     console.log('anchor:',anchor)
-    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
+    let title = utils.getTitleExtension(activity.beautyName)
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
-        let titleImage = (title || 'image')
+        let titleImage = utils.getTitleExtension(title, 'png')
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
