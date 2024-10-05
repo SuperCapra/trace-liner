@@ -65,23 +65,48 @@ app.post('/upload', upload.single('file'), (req, res) => {
 // Serve and delete image after download
 app.get('/uploads/:filename', (req, res) => {
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
+  try {
+    // navigator.share({
+    //   title: req.params.filename,
+    //   files: filePath
+    // });
+    // Send the file for download
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error('Error downloading the file:', err);
+      }
+    });
+  } catch (e) {
+    console.log(e)
+    // Send the file for download
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error('Error downloading the file:', err);
+      }
+    });
+  } finally {
+    // fs.unlink(filePath, (err) => {
+    //   if (err) {
+    //     console.error('Error deleting the file:', err);
+    //   } else {
+    //     console.log('File successfully deleted:', req.params.filename);
+    //   }
+    // });
+  }
+});
 
-  // Send the file for download
-  res.download(filePath, (err) => {
+app.post('/delete/:filename', (req,res) => {
+  console.log('filePath:', req.params.filename)
+  const filePath = path.join(__dirname, 'uploads', req.params.filename);
+  console.log('filePath:', filePath)
+  fs.unlink(filePath, (err) => {
     if (err) {
-      console.error('Error downloading the file:', err);
+      console.error('Error deleting the file:', err);
     } else {
-      // Delete the file after download
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error('Error deleting the file:', err);
-        } else {
-          console.log('File successfully deleted:', req.params.filename);
-        }
-      });
+      console.log('File successfully deleted:', req.params.filename);
     }
   });
-});
+})
 
 // Use Helmet to set various security headers
 app.use(helmet());

@@ -639,6 +639,7 @@ function ButtonImage(props) {
         if (blob) {
           // Send the blob to the proxy server
           const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
+          console.log('url:', uploadedImageUrl)
           
           // Share the URL once the image is uploaded
           if (uploadedImageUrl) {
@@ -648,7 +649,7 @@ function ButtonImage(props) {
       }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
     } catch (error) {
       console.error('Error capturing and uploading image:', error);
-      downloadImage(titleImage, blob, type)
+      downloadImage(titleImage.replace('.' + type, ''), blob, type)
     }
   };
   
@@ -656,21 +657,28 @@ function ButtonImage(props) {
   const shareImageUrl = async (url, titleImage, type, blob) => {
     try {
       console.log('url:', url)
-      const file = new File([url], titleImage , {type: 'image/' + type, lastModified: new Date()});
+      const file = new File([url], titleImage, {type: 'image/' + type, lastModified: new Date()});
       await navigator.share({
         title: titleImage,
-        files: [file]
+        url: url
       });
     } catch (error) {
       console.error('Error sharing the image:', error);
-      downloadImage(titleImage, blob, type)
+      downloadImage(titleImage.replace('.' + type, ''), blob, type)
+    } finally {
+      let filename = url.slice(url.indexOf('/uploads/') + 9)
+      console.log('filename:', filename)
+      await fetch(origin + `/delete/${filename}`, { 
+        method: 'POST',
+      });
     }
   };
 
   const uploadImageToProxy = async (blob, titleImage) => {
     const formData = new FormData();
-    formData.append('file', blob, titleImage + '.jpg');
+    formData.append('file', blob, titleImage);
     let origin = window.location.origin
+    console.log('formData:', formData)
   
     try {
       const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
@@ -693,7 +701,7 @@ function ButtonImage(props) {
     try {
       const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
       navigator.share({
-        title: (title ? title : 'image'),
+        title: utils.getTitle(title),
         text: 'Trace liner image share',
         files: [file]
       }).catch(error => {
