@@ -565,7 +565,7 @@ function ButtonImage(props) {
             navigator.share({
               title: title,
               text: 'Trace liner image share',
-              files: [file]
+              // files: [file]
             }).catch(error => {
               if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
               console.error('Error sharing image:', error)
@@ -781,8 +781,8 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle}>
-          <ShareSVG className="feature" onClick={handleDownloadClickJPEG}/>
+        <div style={shareStyle} onClick={handleDownloadClickJPEG}>
+          <ShareSVG className="feature"/>
         </div>
         {admin && <div style={shareStyle} onClick={handleDownloadClickPNG}>
           <ShareContour/>
