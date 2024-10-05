@@ -273,6 +273,15 @@ const utilsFunction = {
     consoleAndAlert(message, club, admin) {
         // if(admin) window.alert(message)
         console.log(message)
+    },
+
+    getTitleExtension(text, extension) {
+        return text + '.' + extension
+    },
+
+    getTitle(text) {
+        text = this.removeEmoji(text).replaceAll(' ', '_').toLowerCase()
+        return (text && text.length) ? text : 'image'
     }
 }
 

@@ -132,13 +132,13 @@ function ImageComponent(props) {
       if(type === 'contour') addOpacity()
     // }
     console.log('anchor:',anchor)
-    let title = utils.removeEmoji(activity.beautyName).replaceAll(' ', '_').toLowerCase()
+    let title = utils.getTitle(activity.beautyName)
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
         console.log('navigator.share', navigator.share)
         let extension = type === 'contour' ? 'png' : 'jpeg'
-        let titleImage = (title ? title : 'image') + '.' + extension
+        let titleImage = utils.getTitleExtension(title, extension)
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           if(type === 'contour') sharePNG(title, titleImage, blob)
@@ -165,7 +165,7 @@ function ImageComponent(props) {
     try {
       const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
       navigator.share({
-        title: (title ? title : 'image'),
+        title: title,
         text: 'Trace liner image share',
         files: [file]
       }).catch(error => {
@@ -179,9 +179,9 @@ function ImageComponent(props) {
   }
   const shareJPG = async (title, titleImage, blob) => {
     try {
-      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date()});
+      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
       navigator.share({
-        title: (title ? title : 'image'),
+        title: title,
         text: 'Trace liner image share',
         files: [file]
       }).catch(error => {

@@ -36,7 +36,7 @@ p {
   height: 40vmin;
   pointer-events: none;
 }
-.App-header {
+.App-body {
   padding: 2vh;
   min-height: 96vh;
   display: flex;
@@ -47,6 +47,28 @@ p {
 }
 .App-link {
   color: var(--palette-quaternary);
+}
+.creator{
+  font-size: calc(2vmin);
+  color: var(--palette-primary)
+}
+.creator-homepage{
+  position: absolute;
+  bottom: 1vh;
+}
+.creator-justify-center{
+  display: flex;
+  justify-content: center;
+}
+.image-creator{
+  display: flex;
+  flex-direction: column;
+}
+.image-creator-wrapper-1{
+  height: auto
+}
+.image-creator-wrapper-2{
+  height: 10%
 }
 .back-button{
   display: flex;
@@ -727,6 +749,9 @@ p {
   }
 }
 @media print, screen and (min-width: 450px) {
+  .creator{
+    font-size: calc(1.6vmin);
+  }
   .p-back{
     font-size: calc(3.25vw);
   }
@@ -764,9 +789,6 @@ p {
   }
   .width-header-wrapper{
     width: 60vw;
-  }
-  .App-header {
-    align-items: center;
   }
   .canvas-container-square{
     min-height: 60vw;
@@ -878,6 +900,9 @@ p {
   }
 }
 @media print, screen and (min-width: 600px) {
+  .creator{
+    font-size: calc(1vmin);
+  }
   .p-back{
     font-size: calc(2vw);
   }
@@ -915,9 +940,6 @@ p {
   }
   .width-header-wrapper{
     width: 40vw;
-  }
-  .App-header {
-    align-items: center;
   }
   .canvas-container-square{
     min-height: 40vw;
@@ -1031,6 +1053,17 @@ p {
   }
 }
 @media print, screen and (min-width: 800px) {
+  .creator{
+    font-size: 15px;
+  }
+  .image-creator-wrapper-2{
+    display: flex;
+    justify-content: center;
+  }
+  .creator-800{
+    position: absolute;
+    bottom: 1vh;
+  }
   .p-back{
     font-size: 24px;
   }
@@ -1072,9 +1105,6 @@ p {
   }
   .width-header-wrapper{
     width: 740px;
-  }
-  .App-header {
-    align-items: center;
   }
   .canvas-container-square{
     min-height: 320px;
@@ -1211,9 +1241,6 @@ p {
   }
   .width-header-wrapper{
     width: 920px;
-  }
-  .App-header {
-    align-items: center;
   }
   .canvas-container-square{
     min-height: 400px;
