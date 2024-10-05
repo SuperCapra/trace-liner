@@ -565,7 +565,7 @@ function ButtonImage(props) {
             navigator.share({
               title: title,
               text: 'Trace liner image share',
-              // files: [file]
+              files: [file]
             }).catch(error => {
               if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
               console.error('Error sharing image:', error)
