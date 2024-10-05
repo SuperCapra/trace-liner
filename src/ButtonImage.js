@@ -561,7 +561,7 @@ function ButtonImage(props) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
             // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-            const file = new File([url], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
               title: title,
               text: 'Trace liner image share',
