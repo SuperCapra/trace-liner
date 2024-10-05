@@ -781,8 +781,8 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={handleDownloadClickJPEG}>
-          <ShareSVG className="feature" />
+        <div style={shareStyle}>
+          <ShareSVG className="feature" onClick={handleDownloadClickJPEG}/>
         </div>
         {admin && <div style={shareStyle} onClick={handleDownloadClickPNG}>
           <ShareContour/>
