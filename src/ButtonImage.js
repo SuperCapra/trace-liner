@@ -593,7 +593,7 @@ function ButtonImage(props) {
     removeRoundCorner()
     addOpacity()
     console.log('anchor:',anchor)
-    let title = utils.getTitleExtension(activity.beautyName)
+    let title = utils.getTitle(activity.beautyName)
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {

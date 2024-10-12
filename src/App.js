@@ -363,13 +363,13 @@ class Homepage extends React.Component{
   getAccessTokenAndActivities(userCode) {
     isLoading = true
     console.info('getting the access token...')
-    let urlAccessToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
+    let urlToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
       '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
       '&client_secret=' + process.env.REACT_APP_STRAVA_CLIENT_SECRET + 
       '&code=' + userCode +
       '&grant_type=authorization_code'
   
-    fetch(urlAccessToken, {
+    fetch(urlToken, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
