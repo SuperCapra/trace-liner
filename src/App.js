@@ -389,14 +389,11 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         let refreshToken = res.refresh_token
-        console.log('athleteData.id:', athleteData.id)
-        console.log('process.env.REACT_APP_STRAVA_USER_ID:', process.env.REACT_APP_STRAVA_USER_ID)
-        console.log('athleteData.id === process.env.REACT_APP_STRAVA_USER_ID:', athleteData.id === process.env.REACT_APP_STRAVA_USER_ID)
+        console.log('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
+        console.log('is equal?', athleteData.id === process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
-          console.log('it\'s giovanni!')
-          let bodyUpsert = saleforceApiUtils.getBodyTokens(athleteData.firstname + ' ' + athleteData.lastname,refreshToken)
           try {
-            saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,athleteData.firstname + ' ' + athleteData.lastname,refreshToken)
+            saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,utils.getName(athleteData.firstname,athleteData.lastname),refreshToken)
           } catch (e) {
             console.error(e)
           }
