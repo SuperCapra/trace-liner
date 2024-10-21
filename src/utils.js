@@ -282,6 +282,10 @@ const utilsFunction = {
     getTitle(text) {
         text = this.removeEmoji(text).replaceAll(' ', '_').toLowerCase()
         return (text && text.length) ? text : 'image'
+    },
+
+    getName(firstName, lastName) {
+        return firstName && lastName ? firstName + ' ' + lastName : firstName ? firstName : lastName ? lastName : 'name'
     }
 }
 
