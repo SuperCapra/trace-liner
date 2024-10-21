@@ -1,4 +1,5 @@
 import brandingPalette from "../brandingPalette"
+import utils from "../utils.js"
 
 const saleforceApiUtils = {
     storeRefreshToken(setting, userCode, name, refreshToken) {
@@ -13,7 +14,7 @@ const saleforceApiUtils = {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: this.getBodyStringified(setting, userCode, 'Token', 'StravaUserId__c', name, refreshToken)
+            body: this.getBodyStringified(setting, userCode, 'Token__c', 'StravaUserId__c', this.getBodyTokens(name, refreshToken))
         }).then(response => response.json())
         .then(data => {
             console.log('Upsert Success:', data);
@@ -22,7 +23,28 @@ const saleforceApiUtils = {
             console.error('Error:', error);
         });
     },
-    getBodyStringified(setting, userCode, object, field, name, refreshToken) {
+    storeLog(setting, athleteData, infoLog) {
+        console.log(window.location.href)
+        let href = window.location.href
+        let pathname = window.location.pathname + '?'
+        let urlHost = href.substring(0,href.indexOf(pathname))
+        let url = `${urlHost}/api/salesforce-login-and-upsert`
+        console.log('url:', url)
+        fetch(url, {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: this.getBodyStringified(setting, athleteData.id + '_' + this.getSalesforceFormattedDate(), 'TraceinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
+        }).then(response => response.json())
+        .then(data => {
+            console.log('Upsert Success:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    },
+    getBodyStringified(setting, exetrnalId, object, field, body) {
         return  JSON.stringify({
             username: setting.REACT_APP_SALESFORCE_USERNAME,
             password: setting.REACT_APP_SALESFORCE_PASSWORD,
@@ -30,10 +52,10 @@ const saleforceApiUtils = {
             clientId: setting.REACT_APP_SALESFORCE_CLIENT_ID,
             clientSecret: setting.REACT_APP_SALESFORCE_SECRET_KEY,
             instanceUrl: setting.REACT_APP_SALESFORCE_URL,
-            userCode: userCode,
+            exetrnalId: exetrnalId,
             object: object,
             field: field,
-            body: this.getBodyTokens(name, refreshToken),
+            body: body,
         })
     },
     getBodyTokens(name,refreshToken) {
@@ -42,6 +64,7 @@ const saleforceApiUtils = {
     getBodyLog(info) {
         let result = '{'
 
+        result += `"Timestamp__c":"${this.getSalesforceFormattedDate()}",`
         if(info.stravaName) result += `"StravaName__c":"${info.stravaName}",`
         if(info.stravaId) result += `"StravaId__c":"${info.stravaId}",`
         if(info.size) result += `"Size__c":"${info.size}",`
@@ -50,13 +73,13 @@ const saleforceApiUtils = {
         if(info.mode) result += `"Mode__c":"${info.mode}",`
         if(info.color) result += `"Color__c":"${info.color}",`
         result += `"ShowDate__c":"${info.showDate}",`
-        result += `"ShowElevation__c":"${info.showElevation}",`
-        result += `"ShowPower__c":"${info.showPower}",`
-        result += `"ShowCoordinates__c":"${info.showCoordinates}",`
-        result += `"ShowDistance__c":"${info.showDistance}",`
-        result += `"ShowDuration__c":"${info.showDuration}",`
-        result += `"ShowAverage__c":"${info.showAverage}",`
-        result += `"ShowTitle__c":"${info.showTitle}"}`
+        result += `"ShowElevation__c":"${info.showelevation}",`
+        result += `"ShowPower__c":"${info.showpower}",`
+        result += `"ShowCoordinates__c":"${info.showcoordinates}",`
+        result += `"ShowDistance__c":"${info.showcistance}",`
+        result += `"ShowDuration__c":"${info.showcuration}",`
+        result += `"ShowAverage__c":"${info.showaverage}",`
+        result += `"ShowTitle__c":"${info.showtitle}"}`
 
         return result
     },
@@ -66,65 +89,61 @@ const saleforceApiUtils = {
             filter: '0',
             image: 'default-1',
             mode: 'mode 1',
-            showAverage: true,
-            showCoordinates: false,
-            showDate: true,
-            showDistance: true,
-            showDuration: true,
-            showElevation: true,
-            showPower: true,
-            showTitle: true,
+            showaverage: true,
+            showcoordinates: false,
+            showdate: true,
+            showdistance: true,
+            showduration: true,
+            showelevation: true,
+            showpower: true,
+            showname: true,
             size: 'rectangle',
-            stravaId: atheleinfo ? atheleinfo.stravaId: undefined,
-            stravaName: atheleinfo ? atheleinfo.name : undefined,
+            stravaId: atheleinfo ? atheleinfo.id: undefined,
+            stravaName: atheleinfo ? utils.getName(atheleinfo.firstname, atheleinfo.lastname) : undefined,
         }
     },
     setMode1(info) {
-        info.showAverage = true
-        info.showCoordinates = false
-        info.showDate = true
-        info.showDistance = true
-        info.showDuration = true
-        info.showElevation = true
-        info.showPower = true
-        info.showTitle = true
-        info.showTitle = true
+        info.showaverage = true
+        info.showcoordinates = false
+        info.showdate = true
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = true
+        info.showpower = true
+        info.showtitle = true
         return info
     },
     setMode2(info) {
-        info.showAverage = false
-        info.showCoordinates = false
-        info.showDate = true
-        info.showDistance = true
-        info.showDuration = true
-        info.showElevation = true
-        info.showPower = false
-        info.showTitle = true
-        info.showTitle = true
+        info.showaverage = false
+        info.showcoordinates = false
+        info.showdate = true
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = true
+        info.showpower = false
+        info.showname = true
         return info
     },
     setMode3(info) {
-        info.showAverage = true
-        info.showCoordinates = false
-        info.showDate = false
-        info.showDistance = true
-        info.showDuration = true
-        info.showElevation = true
-        info.showPower = true
-        info.showTitle = false
-        info.showTitle = false
+        info.showaverage = true
+        info.showcoordinates = false
+        info.showdate = false
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = true
+        info.showpower = true
+        info.showname = false
         return info
     },
     setMode4(info) {
-        info.showAverage = true
-        info.showCoordinates = false
-        info.showDate = false
-        info.showDistance = true
-        info.showDuration = true
-        info.showElevation = true
-        info.showPower = true
-        info.showTitle = false
-        info.showTitle = false
+        info.showaverage = true
+        info.showcoordinates = false
+        info.showdate = false
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = true
+        info.showpower = true
+        info.showname = false
         return info
     },
     getSalesforceFormattedDate() {

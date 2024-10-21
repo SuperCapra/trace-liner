@@ -111,7 +111,7 @@ app.post('/delete/:filename', (req,res) => {
 app.use(express.json())
 
 app.post('/api/salesforce-login-and-upsert', async (req, res) => {
-  const { username, password, securityToken, clientId, clientSecret, userCode, object, field, body } = req.body;
+  const { username, password, securityToken, clientId, clientSecret, exetrnalId, object, field, body } = req.body;
 
   // Step 1: Get the access token by logging in to Salesforce
   const loginUrl = `https://login.salesforce.com/services/oauth2/token?grant_type=password&client_id=${clientId}&client_secret=${clientSecret}&username=${username}&password=${password}${securityToken}`;
@@ -129,7 +129,7 @@ app.post('/api/salesforce-login-and-upsert', async (req, res) => {
     const instanceUrlFromLogin = loginData.instance_url;
     
     // Step 2: Perform the upsert using the access token obtained
-    const upsertUrl = `${instanceUrlFromLogin}/services/data/v50.0/sobjects/${object}/${field}/${userCode}`;
+    const upsertUrl = `${instanceUrlFromLogin}/services/data/v50.0/sobjects/${object}/${field}/${exetrnalId}`;
 
     const upsertResponse = await fetch(upsertUrl, {
       method: 'PATCH',

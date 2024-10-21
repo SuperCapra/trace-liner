@@ -337,7 +337,7 @@ class Homepage extends React.Component{
           <div>
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
-                <ImageComponent activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
               </div>
               <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>

@@ -13,7 +13,7 @@ import { vocabulary, languages } from './vocabulary.js';
 
 function ImageComponent(props) {
 
-  const {activity, club, admin, language, handleBack, handleBubbleLanguage} = props
+  const {athlete, activity, club, admin, language, handleBack, handleBubbleLanguage} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -965,7 +965,7 @@ function ImageComponent(props) {
         <div>
           {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" athlete={athlete} activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );

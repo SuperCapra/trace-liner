@@ -23,10 +23,11 @@ import Slider from 'rc-slider';
 import utils from './utils.js'
 import html2canvas from 'html2canvas';
 import 'rc-slider/assets/index.css';
+import saleforceApiUtils from './api/salesforce.js';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, club, admin, handleClickButton } = props
+  const { athlete, activity, unitMeasure, language, club, admin, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -49,6 +50,9 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+
+  let infoLog = saleforceApiUtils.inizializeInfo(athlete)
+
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
   // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
@@ -95,11 +99,13 @@ function ButtonImage(props) {
     handleClickButton(data)
   }
   const propagateSquare = () => {
+    infoLog.size = 'square'
     if(rectangle) setRectangle(false)
     setSquare(true)
     handleClick({type: 'square'})
   }
   const propagateRectangle = () => {
+    infoLog.size = 'rectangle'
     if(square) setSquare(false)
     setRectangle(true)
     handleClick({type: 'rectangle'})
@@ -115,43 +121,54 @@ function ButtonImage(props) {
   // }
   const propagateShowHide = (type) => {
     if(type === 'name') {
+      infoLog.showname = !infoLog.showname
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
       if(!showName) {
+        infoLog.showdate = true
         setShowDate(true)
       } else {
+        infoLog.showdate = false
         setShowDate(false)
       }
       setShowName(!showName)
     } else if(type === 'date' && showName) {
+      infoLog.showdate = !infoLog.showdate
       handleClick({type: 'show-hide', subtype: 'date', show: !showDate})
       setShowDate(!showDate)
     } else if(type === 'distance') {
+      infoLog.showdistance = !infoLog.showdistance
       handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
       if(!showDistance) setShowCoordinates(false)
       setShowDistance(!showDistance)
     } else if(type === 'duration') {
+      infoLog.showduration = !infoLog.showduration
       handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
       if(!showDuration) setShowCoordinates(false)
       setShowDuration(!showDuration)
     } else if(type === 'elevation') {
+      infoLog.showelevation = !infoLog.showelevation
       handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
       if(!showElevation) setShowCoordinates(false)
       setShowElevation(!showElevation)
     } else if(type === 'average') {
+      infoLog.showaverage = !infoLog.showaverage
       handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
       if(!showAverage) setShowCoordinates(false)
       setShowAverage(!showAverage)
     } else if(type === 'power') {
+      infoLog.showpower = !infoLog.showpower
       handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
       if(!showPower) setShowCoordinates(false)
       setShowPower(!showPower)
     } else if(type === 'coordinates') {
+      infoLog.showcoordinates = !infoLog.showcoordinates
       handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
       if(showCoordinates) {
         enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
     } else if(type === 'mode1') {
+      infoLog.mode = 'mode 1'
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
       if(!showMode1) {
@@ -161,6 +178,7 @@ function ButtonImage(props) {
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
+      infoLog.mode = 'mode 2'
       handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
       setShowMode2(!showMode2)
       if(!showMode2) {
@@ -170,6 +188,7 @@ function ButtonImage(props) {
       }
       enableMode2()
     } else if(type === 'mode3') {
+      infoLog.mode = 'mode 3'
       handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
       setShowMode3(!showMode3)
       if(!showMode3) {
@@ -179,6 +198,7 @@ function ButtonImage(props) {
       }
       enableMode3()
     } else if(type === 'mode4') {
+      infoLog.mode = 'mode 4'
       handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
       setShowMode4(!showMode4)
       if(!showMode4) {
@@ -188,6 +208,11 @@ function ButtonImage(props) {
       }
       enableMode4()
     }
+  }
+
+  const propagateColor = (info) => {
+    infoLog.color = info.color
+    handleClick(info)
   }
 
   const enableMode1 = (bool, isStart) => {
@@ -201,6 +226,7 @@ function ButtonImage(props) {
     setShowPower(bool)
     setShowAverage(bool)
     setShowCoordinates(!bool)
+    infoLog = saleforceApiUtils.setMode1(infoLog)
   }
 
   const enableMode2 = () => {
@@ -209,6 +235,7 @@ function ButtonImage(props) {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
+    infoLog = saleforceApiUtils.setMode2(infoLog)
   }
 
   const enableMode3 = () => {
@@ -217,6 +244,7 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
+    infoLog = saleforceApiUtils.setMode1(infoLog)
     // setShowCoordinates(true)
   }
 
@@ -226,6 +254,7 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
+    infoLog = saleforceApiUtils.setMode4(infoLog)
     // setShowCoordinates(true)
   }
 
@@ -297,7 +326,7 @@ function ButtonImage(props) {
           borderRadius: '20px',
           border: '2px solid ' + brandingPalette['background']
         }
-        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => handleClick({type: 'changing-color', color: brandingPalette[color]})}/>)
+        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: brandingPalette[color]})}/>)
       }
       console.log('colors', colors)
     }
@@ -305,6 +334,7 @@ function ButtonImage(props) {
   }
 
   const handleChangeValueFilter = (value) => {
+    infoLog.filter = String(value)
     setValueFilter(value);
     handleClick({type: 'filterSlider', value: value})
   }
@@ -414,6 +444,7 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
+    infoLog.image = alt
     deselectImage()
     const elementChosen = document.getElementById(alt)
     const elementChosenSelected = document.getElementById(alt + '-selected')
@@ -551,6 +582,13 @@ function ButtonImage(props) {
     removeRoundCorner()
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
+    try {
+      console.log('infoLog: ', infoLog)
+      console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+      saleforceApiUtils.storeRefreshToken(process.env,athlete,infoLog)
+    } catch (e) {
+      console.log('Error:', e)
+    }
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(async function(blob) {
@@ -592,6 +630,13 @@ function ButtonImage(props) {
     console.log('new logic png')
     removeRoundCorner()
     addOpacity()
+    try {
+      console.log('infoLog: ', infoLog)
+      console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+      saleforceApiUtils.storeRefreshToken(process.env,athlete,infoLog)
+    } catch (e) {
+      console.log('Error:', e)
+    }
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
     html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
