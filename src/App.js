@@ -390,7 +390,7 @@ class Homepage extends React.Component{
         athleteData = res.athlete
         let refreshToken = res.refresh_token
         console.log('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
-        console.log('is equal?', athleteData.id === process.env.REACT_APP_STRAVA_USER_ID)
+        console.log('is equal?', String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
           try {
             saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,utils.getName(athleteData.firstname,athleteData.lastname),refreshToken)

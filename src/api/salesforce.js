@@ -69,12 +69,9 @@ const saleforceApiUtils = {
     storeRefreshToken(setting, userCode, name, refreshToken) {
         console.log(window.location.href)
         let href = window.location.href
-        let pathname = window.location.pathname +'?'
-        console.log('pathname:', pathname)
-        console.log('href:', href)
+        let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
         let url = `${urlHost}/api/salesforce-login-and-upsert`
-        console.log('urlHost:', urlHost)
         console.log('url:', url)
         fetch(url, {
             method: 'POST',
