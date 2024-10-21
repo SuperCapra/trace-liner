@@ -108,6 +108,56 @@ app.post('/delete/:filename', (req,res) => {
   });
 })
 
+app.use(express.json())
+
+app.post('/api/salesforce-login-and-upsert', async (req, res) => {
+  const { username, password, securityToken, clientId, clientSecret, userCode, body } = req.body;
+
+  // Step 1: Get the access token by logging in to Salesforce
+  const loginUrl = `https://login.salesforce.com/services/oauth2/token?grant_type=password&client_id=${clientId}&client_secret=${clientSecret}&username=${username}&password=${password}${securityToken}`;
+
+  try {
+    // Perform the login request to Salesforce
+    const loginResponse = await fetch(loginUrl, { method: 'POST' });
+    const loginData = await loginResponse.json();
+
+    if (!loginResponse.ok) {
+      throw new Error(`Salesforce login failed: ${loginData.error_description}`);
+    }
+
+    const accessToken = loginData.access_token;
+    const instanceUrlFromLogin = loginData.instance_url;
+    
+    // Step 2: Perform the upsert using the access token obtained
+    const upsertUrl = `${instanceUrlFromLogin}/services/data/v50.0/sobjects/Token__c/StravaUserId__c/${userCode}`;
+
+    const upsertResponse = await fetch(upsertUrl, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: body,
+    });
+
+    const upsertData = await upsertResponse.json();
+    console.log('upsertData:', upsertData)
+    if (!upsertResponse.ok) {
+      throw new Error(`Salesforce upsert failed: ${upsertData}`);
+    }
+
+    console.log('Upsert Response:', upsertData);
+
+    // Send the upsert response back to the client
+    res.json(upsertData);
+
+  } catch (error) {
+    console.error('Error:', error)
+    res.status(500).json({ error: 'Error in Salesforce login and upsert process', details: error.message });
+  }
+});
+
+
 // Use Helmet to set various security headers
 app.use(helmet());
 
@@ -116,7 +166,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "https://www.strava.com"],
+        connectSrc: ["'self'", "https://www.strava.com","https://login.saleforce.com"],
         imgSrc: ["'self'","*","data:"],
       }
     }

@@ -12,6 +12,7 @@ import {vocabulary, languages} from './vocabulary';
 import clubs from './clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
+import saleforceApiUtils from './api/salesforce.js';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -211,6 +212,7 @@ class Homepage extends React.Component{
     console.info('Language navigator:', navigator.language)
     console.info('Language:', this.props.language)
     console.log('clubs', clubs)
+    console.log('window.location.hostname:', window.location.pathname)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
@@ -386,6 +388,19 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
+        let refreshToken = res.refresh_token
+        console.log('athleteData.id:', athleteData.id)
+        console.log('process.env.REACT_APP_STRAVA_USER_ID:', process.env.REACT_APP_STRAVA_USER_ID)
+        console.log('athleteData.id === process.env.REACT_APP_STRAVA_USER_ID:', athleteData.id === process.env.REACT_APP_STRAVA_USER_ID)
+        if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
+          console.log('it\'s giovanni!')
+          let bodyUpsert = saleforceApiUtils.getBodyTokens(athleteData.firstname + ' ' + athleteData.lastname,refreshToken)
+          try {
+            saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,athleteData.firstname + ' ' + athleteData.lastname,refreshToken)
+          } catch (e) {
+            console.error(e)
+          }
+        }
         localStorage.setItem('tracelinerkey',accessToken);
         console.log('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
