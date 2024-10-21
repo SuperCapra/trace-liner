@@ -166,7 +166,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "https://www.strava.com","https://login.saleforce.com"],
+        connectSrc: ["'self'", "https://www.strava.com","https://login.salesforce.com"],
         imgSrc: ["'self'","*","data:"],
       }
     }
