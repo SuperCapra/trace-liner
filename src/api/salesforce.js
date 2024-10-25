@@ -22,7 +22,7 @@ const saleforceApiUtils = {
             // console.error('Error:', error);
         });
     },
-    storeLog(setting, athleteData, infoLog) {
+    storeLog(setting, infoLog) {
         let href = window.location.href
         let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
@@ -33,7 +33,7 @@ const saleforceApiUtils = {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: this.getBodyStringified(setting, athleteData.id + '_' + this.getSalesforceFormattedDate(), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
+            body: this.getBodyStringified(setting, this.getExternalId(infoLog), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
         }).then(response => response.json())
         .then(data => {
             // console.log('Upsert Success:', data);
@@ -65,6 +65,19 @@ const saleforceApiUtils = {
         result += `"Timestamp__c":"${this.getSalesforceFormattedDate()}",`
         if(info.stravaName) result += `"StravaName__c":"${info.stravaName}",`
         if(info.stravaId) result += `"StravaId__c":"${info.stravaId}",`
+        if(info.stravaActivityId) result += `"StravaActivityId__c":"${info.stravaActivityId}",`
+        if(info.userCity) result += `"UserCity__c":"${info.userCity}",`
+        if(info.userState) result += `"UserState__c":"${info.userState}",`
+        if(info.userCountry) result += `"UserCountry__c":"${info.userCountry}",`
+        if(info.userSex) result += `"UserSex__c":"${info.userSex}",`
+        if(info.city) result += `"ActivityCity__c":"${info.city}",`
+        if(info.state) result += `"ActivityState__c":"${info.state}",`
+        if(info.country) result += `"ActivityCountry__c":"${info.country}",`
+        if(info.isVirtual) result += `"IsVirtual__c":"${info.isVirtual}",`
+        if(info.latitudeEnd) result += `"LatitudeEnd__c":"${info.latitudeEnd}",`
+        if(info.latitudeStart) result += `"LatitudeStart__c":"${info.latitudeStart}",`
+        if(info.longitudeEnd) result += `"LongitudeEnd__c":"${info.longitudeEnd}",`
+        if(info.longitudeStart) result += `"LongitudeStart__c":"${info.longitudeStart}",`
         if(info.size) result += `"Size__c":"${info.size}",`
         if(info.image) result += `"Image__c":"${info.image}",`
         if(info.filter) result += `"Filter__c":"${info.filter}",`
@@ -82,7 +95,7 @@ const saleforceApiUtils = {
 
         return result
     },
-    inizializeInfo(atheleinfo) {
+    inizializeInfo(atheleinfo,activityInfo) {
         return {
             color: brandingPalette.white,
             filter: '0',
@@ -97,8 +110,21 @@ const saleforceApiUtils = {
             showpower: true,
             showname: true,
             size: 'rectangle',
+            latitudeEnd: activityInfo?.endLatitude,
+            latitudeStart: activityInfo?.startLatitude,
+            longitudeEnd: activityInfo?.endLongitude,
+            longitudeStart: activityInfo?.startLongitude,
+            isVirtual: activityInfo?.sportType === 'Virtual Ride',
+            city: activityInfo?.locationCity,
+            state: activityInfo?.locationState,
+            country: activityInfo?.locationCountry,
             stravaId: atheleinfo ? atheleinfo.id: undefined,
+            stravaActivityId: activityInfo?.id,
             stravaName: atheleinfo ? utils.getName(atheleinfo.firstname, atheleinfo.lastname) : undefined,
+            userCity: atheleinfo ? atheleinfo.city : undefined,
+            userState: atheleinfo ? atheleinfo.state : undefined,
+            userCountry: atheleinfo ? atheleinfo.country : undefined,
+            userSex: atheleinfo ? atheleinfo.sex : undefined,
         }
     },
     setMode1(info) {
@@ -158,6 +184,9 @@ const saleforceApiUtils = {
 
         // Construct the ISO 8601 formatted string
         return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+    },
+    getExternalId(info) {
+        return (info.stravaId ? `${info.stravaId}_${info.stravaActivityId}_` : 'nostrava_') + this.getSalesforceFormattedDate()
     }
 }
 

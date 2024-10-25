@@ -479,6 +479,8 @@ class Homepage extends React.Component{
               elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
+              locationCity: e.location_city,
+              locationState: e.location_state,
               movingTime: e.moving_time,
               name: e.name,
               power: e.average_watts,

@@ -50,7 +50,7 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete))
+  const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -582,7 +582,9 @@ function ButtonImage(props) {
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
     try {
-      saleforceApiUtils.storeLog(process.env,athlete,infoLog)
+      // console.log('infoLog: ', infoLog)
+      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+      saleforceApiUtils.storeLog(process.env,infoLog)
     } catch (e) {
       console.log('Error:', e)
     }
@@ -628,9 +630,9 @@ function ButtonImage(props) {
     removeRoundCorner()
     addOpacity()
     try {
-      console.log('infoLog: ', infoLog)
-      console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      saleforceApiUtils.storeLog(process.env,athlete,infoLog)
+      // console.log('infoLog: ', infoLog)
+      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+      saleforceApiUtils.storeLog(process.env,infoLog)
     } catch (e) {
       console.log('Error:', e)
     }
