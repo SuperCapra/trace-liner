@@ -4,7 +4,7 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import Creator from './Creator.js'
-import Dropdown from './Dropdown.js'
+// import Dropdown from './Dropdown.js'
 import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import brandingPalette from './brandingPalette';

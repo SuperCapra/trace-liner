@@ -50,8 +50,7 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-
-  let infoLog = saleforceApiUtils.inizializeInfo(athlete)
+  const [infoLog] = useState(saleforceApiUtils.inizializeInfo(athlete))
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -168,7 +167,9 @@ function ButtonImage(props) {
       }
       setShowCoordinates(!showCoordinates)
     } else if(type === 'mode1') {
+      console.log('infoLog',infoLog)
       infoLog.mode = 'mode 1'
+      console.log('infoLog',infoLog)
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
       if(!showMode1) {
@@ -178,7 +179,9 @@ function ButtonImage(props) {
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
+      console.log('infoLog',infoLog)
       infoLog.mode = 'mode 2'
+      console.log('infoLog',infoLog)
       handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
       setShowMode2(!showMode2)
       if(!showMode2) {
@@ -585,7 +588,7 @@ function ButtonImage(props) {
     try {
       console.log('infoLog: ', infoLog)
       console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      saleforceApiUtils.storeRefreshToken(process.env,athlete,infoLog)
+      saleforceApiUtils.storeLog(process.env,athlete,infoLog)
     } catch (e) {
       console.log('Error:', e)
     }
@@ -633,7 +636,7 @@ function ButtonImage(props) {
     try {
       console.log('infoLog: ', infoLog)
       console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      saleforceApiUtils.storeRefreshToken(process.env,athlete,infoLog)
+      saleforceApiUtils.storeLog(process.env,athlete,infoLog)
     } catch (e) {
       console.log('Error:', e)
     }
@@ -702,7 +705,7 @@ function ButtonImage(props) {
   const shareImageUrl = async (url, titleImage, type, blob) => {
     try {
       console.log('url:', url)
-      const file = new File([url], titleImage, {type: 'image/' + type, lastModified: new Date()});
+      // const file = new File([url], titleImage, {type: 'image/' + type, lastModified: new Date()});
       await navigator.share({
         title: titleImage,
         url: url
@@ -742,38 +745,38 @@ function ButtonImage(props) {
     }
   };
 
-  const sharePNG = async (title, titleImage, blob) => {
-    try {
-      const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
-      navigator.share({
-        title: utils.getTitle(title),
-        text: 'Trace liner image share',
-        files: [file]
-      }).catch(error => {
-        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-        console.error('Error sharing image:', error)
-      });
-    } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-      console.error('Error sharing image:', error)
-    }
-  }
-  const shareJPEG = async (title, titleImage, blob) => {
-    try {
-      const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-      navigator.share({
-        title: (title ? title : 'image'),
-        text: 'Trace liner image share',
-        files: [file]
-      }).catch(error => {
-        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-        console.error('Error sharing image:', error)
-      });
-    } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-      console.error('Error sharing image:', error)
-    }
-  }
+  // const sharePNG = async (title, titleImage, blob) => {
+  //   try {
+  //     const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
+  //     navigator.share({
+  //       title: utils.getTitle(title),
+  //       text: 'Trace liner image share',
+  //       files: [file]
+  //     }).catch(error => {
+  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+  //       console.error('Error sharing image:', error)
+  //     });
+  //   } catch (error) {
+  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+  //     console.error('Error sharing image:', error)
+  //   }
+  // }
+  // const shareJPEG = async (title, titleImage, blob) => {
+  //   try {
+  //     const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+  //     navigator.share({
+  //       title: (title ? title : 'image'),
+  //       text: 'Trace liner image share',
+  //       files: [file]
+  //     }).catch(error => {
+  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+  //       console.error('Error sharing image:', error)
+  //     });
+  //   } catch (error) {
+  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+  //     console.error('Error sharing image:', error)
+  //   }
+  // }
   const downloadImage = (title, blob, type) => {
     try {
       console.log('title:', title)
@@ -789,10 +792,10 @@ function ButtonImage(props) {
       console.error('Error downloading image:', error);
     }
   }
-  const seeImage = () => {
-    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
-    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
-  }
+  // const seeImage = () => {
+  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
+  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
+  // }
   const removeRoundCorner = () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')

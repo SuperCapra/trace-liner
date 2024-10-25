@@ -1,14 +1,14 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
-import Dropdown from './Dropdown.js'
+// import Dropdown from './Dropdown.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
-import html2canvas from 'html2canvas';
-import {toJpeg} from 'html-to-image';
+// import html2canvas from 'html2canvas';
+// import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
-import { vocabulary, languages } from './vocabulary.js';
+import { vocabulary/**, languages*/ } from './vocabulary.js';
 // import brandingPalette from './brandingPalette.js';
 
 function ImageComponent(props) {
@@ -40,8 +40,8 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [imageToShare, setImagetoShare] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [imageToShare/**, setImagetoShare*/] = useState(null)
+  const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
 
   const styleText = {
@@ -122,139 +122,139 @@ function ImageComponent(props) {
   //   activity
   // ]);
 
-  const handleDownloadClick = async (type) => {
-    let anchor = document.getElementById('printingAnchor')
-    // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-    // if(club && club.name === 'dev-admin') {
-    //   document.getElementById('showingImage').classList.remove('round-corner')
-    // } else {
-      removeRoundCorner()
-      if(type === 'contour') addOpacity()
-    // }
-    console.log('anchor:',anchor)
-    let title = utils.getTitle(activity.beautyName)
-    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(async function(blob) {
-        console.log('navigator.share', navigator.share)
-        let extension = type === 'contour' ? 'png' : 'jpeg'
-        let titleImage = utils.getTitleExtension(title, extension)
-        // if(navigator.share) {
-        if(navigator.share && utils.isMobile(club, admin)) {
-          if(type === 'contour') sharePNG(title, titleImage, blob)
-          else shareJPG(title, titleImage, blob)
-        } else {
-          downloadImage(title, blob, extension)
-        }
-      }, 'image/png');
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
-    .finally(() => {
-      // if(club && club.name === 'dev-admin') {
-      //   document.getElementById('showingImage').classList.add('round-corner')
-      // } else {
-        addRoundCorner()
-        if(type === 'contour') removeOpacity()
-      // }
-    })
-  }
+  // const handleDownloadClick = async (type) => {
+  //   let anchor = document.getElementById('printingAnchor')
+  //   // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
+  //   // if(club && club.name === 'dev-admin') {
+  //   //   document.getElementById('showingImage').classList.remove('round-corner')
+  //   // } else {
+  //     removeRoundCorner()
+  //     if(type === 'contour') addOpacity()
+  //   // }
+  //   console.log('anchor:',anchor)
+  //   let title = utils.getTitle(activity.beautyName)
+  //   html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
+  //     console.log('canvas: ', canvas)
+  //     canvas.toBlob(async function(blob) {
+  //       console.log('navigator.share', navigator.share)
+  //       let extension = type === 'contour' ? 'png' : 'jpeg'
+  //       let titleImage = utils.getTitleExtension(title, extension)
+  //       // if(navigator.share) {
+  //       if(navigator.share && utils.isMobile(club, admin)) {
+  //         if(type === 'contour') sharePNG(title, titleImage, blob)
+  //         else shareJPG(title, titleImage, blob)
+  //       } else {
+  //         downloadImage(title, blob, extension)
+  //       }
+  //     }, 'image/png');
+  //   })
+  //   .catch((e) => {
+  //     console.error('Error:', e)
+  //   })
+  //   .finally(() => {
+  //     // if(club && club.name === 'dev-admin') {
+  //     //   document.getElementById('showingImage').classList.add('round-corner')
+  //     // } else {
+  //       addRoundCorner()
+  //       if(type === 'contour') removeOpacity()
+  //     // }
+  //   })
+  // }
 
-  const sharePNG = async (title, titleImage, blob) => {
-    try {
-      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
-      navigator.share({
-        title: title,
-        text: 'Trace liner image share',
-        files: [file]
-      }).catch(error => {
-        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-        console.error('Error sharing image:', error)
-      });
-    } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-      console.error('Error sharing image:', error)
-    }
-  }
-  const shareJPG = async (title, titleImage, blob) => {
-    try {
-      const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
-      navigator.share({
-        title: title,
-        text: 'Trace liner image share',
-        files: [file]
-      }).catch(error => {
-        if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-        console.error('Error sharing image:', error)
-      });
-    } catch (error) {
-      utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-      console.error('Error sharing image:', error)
-    }
-  }
-  const downloadImage = (title, blob, type) => {
-    try {
-      console.log('title:', title)
-      console.log('blob:', blob)
-      console.log('type:', type)
-      const url = URL.createObjectURL(blob);
-      const temp = document.createElement('a');
-      temp.href = url;
-      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
-      temp.click();
-      URL.revokeObjectURL(url); // Clean up URL object after use
-    } catch (error) {
-      console.error('Error downloading image:', error);
-    }
-  }
+  // const sharePNG = async (title, titleImage, blob) => {
+  //   try {
+  //     const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
+  //     navigator.share({
+  //       title: title,
+  //       text: 'Trace liner image share',
+  //       files: [file]
+  //     }).catch(error => {
+  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
+  //       console.error('Error sharing image:', error)
+  //     });
+  //   } catch (error) {
+  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+  //     console.error('Error sharing image:', error)
+  //   }
+  // }
+  // const shareJPG = async (title, titleImage, blob) => {
+  //   try {
+  //     const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
+  //     navigator.share({
+  //       title: title,
+  //       text: 'Trace liner image share',
+  //       files: [file]
+  //     }).catch(error => {
+  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+  //       console.error('Error sharing image:', error)
+  //     });
+  //   } catch (error) {
+  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+  //     console.error('Error sharing image:', error)
+  //   }
+  // }
+  // const downloadImage = (title, blob, type) => {
+  //   try {
+  //     console.log('title:', title)
+  //     console.log('blob:', blob)
+  //     console.log('type:', type)
+  //     const url = URL.createObjectURL(blob);
+  //     const temp = document.createElement('a');
+  //     temp.href = url;
+  //     temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
+  //     temp.click();
+  //     URL.revokeObjectURL(url); // Clean up URL object after use
+  //   } catch (error) {
+  //     console.error('Error downloading image:', error);
+  //   }
+  // }
 
-  const seeHiding = () => {
-    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.remove('no-see')
-    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.add('no-see')
-  }
-  const seeImage = () => {
-    if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
-    if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
-  }
-  const removeRoundCorner = () => {
-    document.getElementById('canvasImage').classList.remove('round-corner')
-    document.getElementById('canvasFilter').classList.remove('round-corner')
-    document.getElementById('canvasSketch').classList.remove('round-corner')
-    document.getElementById('printingAnchor').classList.remove('round-corner')
-  }
-  const addRoundCorner = () => {
-    document.getElementById('canvasImage').classList.add('round-corner')
-    document.getElementById('canvasFilter').classList.add('round-corner')
-    document.getElementById('canvasSketch').classList.add('round-corner')
-    document.getElementById('printingAnchor').classList.add('round-corner')
-  }
-  const addOpacity = () => {
-    document.getElementById('canvasImage').classList.add('background-opacity')
-    document.getElementById('printingAnchor').classList.add('background-trasparency')
-  }
-  const removeOpacity = () => {
-    document.getElementById('canvasImage').classList.remove('background-opacity')
-    document.getElementById('printingAnchor').classList.remove('background-trasparency')
-  }
+  // const seeHiding = () => {
+  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.remove('no-see')
+  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.add('no-see')
+  // }
+  // const seeImage = () => {
+  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
+  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
+  // }
+  // const removeRoundCorner = () => {
+  //   document.getElementById('canvasImage').classList.remove('round-corner')
+  //   document.getElementById('canvasFilter').classList.remove('round-corner')
+  //   document.getElementById('canvasSketch').classList.remove('round-corner')
+  //   document.getElementById('printingAnchor').classList.remove('round-corner')
+  // }
+  // const addRoundCorner = () => {
+  //   document.getElementById('canvasImage').classList.add('round-corner')
+  //   document.getElementById('canvasFilter').classList.add('round-corner')
+  //   document.getElementById('canvasSketch').classList.add('round-corner')
+  //   document.getElementById('printingAnchor').classList.add('round-corner')
+  // }
+  // const addOpacity = () => {
+  //   document.getElementById('canvasImage').classList.add('background-opacity')
+  //   document.getElementById('printingAnchor').classList.add('background-trasparency')
+  // }
+  // const removeOpacity = () => {
+  //   document.getElementById('canvasImage').classList.remove('background-opacity')
+  //   document.getElementById('printingAnchor').classList.remove('background-trasparency')
+  // }
 
-  const returnImage = useCallback(() => {
-    removeRoundCorner()
-    let anchor = document.getElementById('printingAnchor')
+  // const returnImage = useCallback(() => {
+  //   removeRoundCorner()
+  //   let anchor = document.getElementById('printingAnchor')
 
-    toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
-      .then((dataUrl) => {
-        seeImage()
-        setImagetoShare(dataUrl)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error('oops, something went wrong!', error);
-      })
-      .finally(() => {
-        addRoundCorner()
-      })
-  },[])
+  //   toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
+  //     .then((dataUrl) => {
+  //       seeImage()
+  //       setImagetoShare(dataUrl)
+  //       setIsLoading(false)
+  //     })
+  //     .catch((error) => {
+  //       console.error('oops, something went wrong!', error);
+  //     })
+  //     .finally(() => {
+  //       addRoundCorner()
+  //     })
+  // },[])
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
     let canvasSketch = document.getElementById('canvasSketch')
@@ -512,70 +512,70 @@ function ImageComponent(props) {
     ratio
   ])
 
-  const returnClimbing = (altitudeStream, distanceStream) => {
-    let asl = altitudeStream.length
-    let dsl = distanceStream.length
-    altitudeStream = altitudeStream.map(x => Math.floor(x))
-    distanceStream = distanceStream.map(x => Math.floor(x))
-    console.log('altitudeStream:', altitudeStream)
-    let climbs = []
-    for(let i = 0; i < asl - 1; i++) {
-      let climb = {
-        distance: undefined,
-        gradient: undefined,
-        elevation: undefined,
-        maxElevation: undefined,
-        minElevation: undefined,
-        start: distanceStream[i],
-        finish: undefined,
-        indexStart: i,
-        indexFinish: i
-      }
+  // const returnClimbing = (altitudeStream, distanceStream) => {
+  //   let asl = altitudeStream.length
+  //   let dsl = distanceStream.length
+  //   altitudeStream = altitudeStream.map(x => Math.floor(x))
+  //   distanceStream = distanceStream.map(x => Math.floor(x))
+  //   console.log('altitudeStream:', altitudeStream)
+  //   let climbs = []
+  //   for(let i = 0; i < asl - 1; i++) {
+  //     let climb = {
+  //       distance: undefined,
+  //       gradient: undefined,
+  //       elevation: undefined,
+  //       maxElevation: undefined,
+  //       minElevation: undefined,
+  //       start: distanceStream[i],
+  //       finish: undefined,
+  //       indexStart: i,
+  //       indexFinish: i
+  //     }
       
-      for(let j = i + 1; j < asl; j++) {
-        if(altitudeStream[j] - altitudeStream[j - 1] < 0 && distanceStream[j] - distanceStream[i] > 0) {
-          climb.distance = distanceStream[j] - distanceStream[i]
-          climb.elevation = altitudeStream[j] - altitudeStream[i]
-          climb.maxElevation = altitudeStream[j]
-          climb.minElevation = altitudeStream[i]
-          climb.gradient = utils.returnGradient(climb.distance,climb.elevation)
-          climb.finish = distanceStream[j]
-          climb.indexFinish = j
-          climbs.push(climb)
-          i = j + 1
-          break
-        }
-      }
-    }
-    console.log('climbs:', climbs)
-    climbs = climbs.filter(x => x.gradient > 0)
-    let finalClimbs = []
-    if(climbs) finalClimbs.push(climbs[0])
-    for(let i = 1; i < climbs.length; i++) {
-      let previousClimb = finalClimbs[finalClimbs.length - 1]
-      let tempClimb = climbs[i]
-      if(tempClimb.start - previousClimb.finish < tempClimb.distance * 0.1 
-        || tempClimb.start - previousClimb.finish < previousClimb.distance * 0.1) {
-          finalClimbs[finalClimbs.length - 1] = {
-            distance: tempClimb.finish - previousClimb.start,
-            gradient: undefined,
-            elevation: tempClimb.maxElevation - previousClimb.minElevation,
-            maxElevation: tempClimb.maxElevation,
-            minElevation: previousClimb.minElevation,
-            start: previousClimb.start,
-            finish: tempClimb.finish,
-            indexStart: previousClimb.indexStart,
-            indexFinish: tempClimb.indexFinish
-          }
-          finalClimbs[finalClimbs.length - 1].gradient = utils.returnGradient(finalClimbs[finalClimbs.length - 1].distance, finalClimbs[finalClimbs.length - 1].elevation)
-        } else {
-          finalClimbs.push(tempClimb)
-        }
-    }
-    finalClimbs = finalClimbs.filter(x => x.distance > (distanceStream[dsl - 1] * 0.01) && x.gradient > 0.03)
-    console.log('finalClimbs:', finalClimbs)
-    return finalClimbs
-  }
+  //     for(let j = i + 1; j < asl; j++) {
+  //       if(altitudeStream[j] - altitudeStream[j - 1] < 0 && distanceStream[j] - distanceStream[i] > 0) {
+  //         climb.distance = distanceStream[j] - distanceStream[i]
+  //         climb.elevation = altitudeStream[j] - altitudeStream[i]
+  //         climb.maxElevation = altitudeStream[j]
+  //         climb.minElevation = altitudeStream[i]
+  //         climb.gradient = utils.returnGradient(climb.distance,climb.elevation)
+  //         climb.finish = distanceStream[j]
+  //         climb.indexFinish = j
+  //         climbs.push(climb)
+  //         i = j + 1
+  //         break
+  //       }
+  //     }
+  //   }
+  //   console.log('climbs:', climbs)
+  //   climbs = climbs.filter(x => x.gradient > 0)
+  //   let finalClimbs = []
+  //   if(climbs) finalClimbs.push(climbs[0])
+  //   for(let i = 1; i < climbs.length; i++) {
+  //     let previousClimb = finalClimbs[finalClimbs.length - 1]
+  //     let tempClimb = climbs[i]
+  //     if(tempClimb.start - previousClimb.finish < tempClimb.distance * 0.1 
+  //       || tempClimb.start - previousClimb.finish < previousClimb.distance * 0.1) {
+  //         finalClimbs[finalClimbs.length - 1] = {
+  //           distance: tempClimb.finish - previousClimb.start,
+  //           gradient: undefined,
+  //           elevation: tempClimb.maxElevation - previousClimb.minElevation,
+  //           maxElevation: tempClimb.maxElevation,
+  //           minElevation: previousClimb.minElevation,
+  //           start: previousClimb.start,
+  //           finish: tempClimb.finish,
+  //           indexStart: previousClimb.indexStart,
+  //           indexFinish: tempClimb.indexFinish
+  //         }
+  //         finalClimbs[finalClimbs.length - 1].gradient = utils.returnGradient(finalClimbs[finalClimbs.length - 1].distance, finalClimbs[finalClimbs.length - 1].elevation)
+  //       } else {
+  //         finalClimbs.push(tempClimb)
+  //       }
+  //   }
+  //   finalClimbs = finalClimbs.filter(x => x.distance > (distanceStream[dsl - 1] * 0.01) && x.gradient > 0.03)
+  //   console.log('finalClimbs:', finalClimbs)
+  //   return finalClimbs
+  // }
 
   const drawFilter = useCallback((width, height) => {
     // if(club && club.name === 'dev-admin') seeHiding()
@@ -895,9 +895,9 @@ function ImageComponent(props) {
     return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
   }
 
-  const bubbleChangeLanguage = (value) => {
-    handleBubbleLanguage(value)
-  }
+  // const bubbleChangeLanguage = (value) => {
+  //   handleBubbleLanguage(value)
+  // }
 
   useEffect(() => {
     // if(club && club.name === 'dev-admin') {

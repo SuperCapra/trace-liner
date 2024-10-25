@@ -35,7 +35,7 @@ const saleforceApiUtils = {
             headers: {
                'Content-Type': 'application/json',
             },
-            body: this.getBodyStringified(setting, athleteData.id + '_' + this.getSalesforceFormattedDate(), 'TraceinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
+            body: this.getBodyStringified(setting, athleteData.id + '_' + this.getSalesforceFormattedDate(), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
         }).then(response => response.json())
         .then(data => {
             console.log('Upsert Success:', data);
@@ -44,7 +44,7 @@ const saleforceApiUtils = {
             console.error('Error:', error);
         });
     },
-    getBodyStringified(setting, exetrnalId, object, field, body) {
+    getBodyStringified(setting, externalId, object, field, body) {
         return  JSON.stringify({
             username: setting.REACT_APP_SALESFORCE_USERNAME,
             password: setting.REACT_APP_SALESFORCE_PASSWORD,
@@ -52,14 +52,14 @@ const saleforceApiUtils = {
             clientId: setting.REACT_APP_SALESFORCE_CLIENT_ID,
             clientSecret: setting.REACT_APP_SALESFORCE_SECRET_KEY,
             instanceUrl: setting.REACT_APP_SALESFORCE_URL,
-            exetrnalId: exetrnalId,
+            externalId: externalId,
             object: object,
             field: field,
             body: body,
         })
     },
     getBodyTokens(name,refreshToken) {
-        return `{"Name":"${name}","refreshToken":"${refreshToken}"}`
+        return `{"Name":"${name}","StravaRefreshToken__c":"${refreshToken}"}`
     },
     getBodyLog(info) {
         let result = '{'
@@ -72,14 +72,15 @@ const saleforceApiUtils = {
         if(info.filter) result += `"Filter__c":"${info.filter}",`
         if(info.mode) result += `"Mode__c":"${info.mode}",`
         if(info.color) result += `"Color__c":"${info.color}",`
-        result += `"ShowDate__c":"${info.showDate}",`
+        result += `"LoggedToStrava__c":"${info.stravaId ? true : false}",`
+        result += `"ShowDate__c":"${info.showdate}",`
         result += `"ShowElevation__c":"${info.showelevation}",`
         result += `"ShowPower__c":"${info.showpower}",`
         result += `"ShowCoordinates__c":"${info.showcoordinates}",`
-        result += `"ShowDistance__c":"${info.showcistance}",`
-        result += `"ShowDuration__c":"${info.showcuration}",`
+        result += `"ShowDistance__c":"${info.showdistance}",`
+        result += `"ShowDuration__c":"${info.showduration}",`
         result += `"ShowAverage__c":"${info.showaverage}",`
-        result += `"ShowTitle__c":"${info.showtitle}"}`
+        result += `"ShowTitle__c":"${info.showname}"}`
 
         return result
     },
