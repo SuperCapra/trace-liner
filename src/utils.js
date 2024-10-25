@@ -286,7 +286,7 @@ const utilsFunction = {
 
     getName(firstName, lastName) {
         return firstName && lastName ? firstName + ' ' + lastName : firstName ? firstName : lastName ? lastName : 'name'
-    }
+    },
 }
 
 export default utilsFunction

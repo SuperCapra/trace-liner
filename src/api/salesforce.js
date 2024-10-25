@@ -3,7 +3,6 @@ import utils from "../utils.js"
 
 const saleforceApiUtils = {
     storeRefreshToken(setting, userCode, name, refreshToken) {
-        console.log(window.location.href)
         let href = window.location.href
         let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
@@ -17,14 +16,13 @@ const saleforceApiUtils = {
             body: this.getBodyStringified(setting, userCode, 'Token__c', 'StravaUserId__c', this.getBodyTokens(name, refreshToken))
         }).then(response => response.json())
         .then(data => {
-            console.log('Upsert Success:', data);
+            // console.log('Upsert Success:', data);
         })
         .catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     },
     storeLog(setting, athleteData, infoLog) {
-        console.log(window.location.href)
         let href = window.location.href
         let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
@@ -38,10 +36,10 @@ const saleforceApiUtils = {
             body: this.getBodyStringified(setting, athleteData.id + '_' + this.getSalesforceFormattedDate(), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
         }).then(response => response.json())
         .then(data => {
-            console.log('Upsert Success:', data);
+            // console.log('Upsert Success:', data);
         })
         .catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
     },
     getBodyStringified(setting, externalId, object, field, body) {

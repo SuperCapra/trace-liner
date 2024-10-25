@@ -50,7 +50,7 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [infoLog] = useState(saleforceApiUtils.inizializeInfo(athlete))
+  const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete))
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -167,9 +167,7 @@ function ButtonImage(props) {
       }
       setShowCoordinates(!showCoordinates)
     } else if(type === 'mode1') {
-      console.log('infoLog',infoLog)
       infoLog.mode = 'mode 1'
-      console.log('infoLog',infoLog)
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
       if(!showMode1) {
@@ -179,9 +177,7 @@ function ButtonImage(props) {
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
-      console.log('infoLog',infoLog)
       infoLog.mode = 'mode 2'
-      console.log('infoLog',infoLog)
       handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
       setShowMode2(!showMode2)
       if(!showMode2) {
@@ -229,7 +225,7 @@ function ButtonImage(props) {
     setShowPower(bool)
     setShowAverage(bool)
     setShowCoordinates(!bool)
-    infoLog = saleforceApiUtils.setMode1(infoLog)
+    setInfoLog(saleforceApiUtils.setMode1(infoLog))
   }
 
   const enableMode2 = () => {
@@ -238,7 +234,7 @@ function ButtonImage(props) {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
-    infoLog = saleforceApiUtils.setMode2(infoLog)
+    setInfoLog(saleforceApiUtils.setMode2(infoLog))
   }
 
   const enableMode3 = () => {
@@ -247,7 +243,7 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    infoLog = saleforceApiUtils.setMode1(infoLog)
+    setInfoLog(saleforceApiUtils.setMode1(infoLog))
     // setShowCoordinates(true)
   }
 
@@ -257,7 +253,7 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    infoLog = saleforceApiUtils.setMode4(infoLog)
+    setInfoLog(saleforceApiUtils.setMode4(infoLog))
     // setShowCoordinates(true)
   }
 
@@ -586,8 +582,6 @@ function ButtonImage(props) {
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
     try {
-      console.log('infoLog: ', infoLog)
-      console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
       saleforceApiUtils.storeLog(process.env,athlete,infoLog)
     } catch (e) {
       console.log('Error:', e)
