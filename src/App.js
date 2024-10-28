@@ -4,7 +4,7 @@ import utils from './utils.js'
 import Loader from './Loader.js'
 import ImageComponent from './ImageComponent.js'
 import Creator from './Creator.js'
-import Dropdown from './Dropdown.js'
+// import Dropdown from './Dropdown.js'
 import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import brandingPalette from './brandingPalette';
@@ -337,7 +337,7 @@ class Homepage extends React.Component{
           <div>
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
-                <ImageComponent activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
               </div>
               <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>
@@ -390,7 +390,6 @@ class Homepage extends React.Component{
         athleteData = res.athlete
         let refreshToken = res.refresh_token
         console.log('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
-        console.log('is equal?', String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
           try {
             saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,utils.getName(athleteData.firstname,athleteData.lastname),refreshToken)
@@ -480,6 +479,8 @@ class Homepage extends React.Component{
               elevation: e.total_elevation_gain,
               id: e.id,
               locationCountry: e.location_country,
+              locationCity: e.location_city,
+              locationState: e.location_state,
               movingTime: e.moving_time,
               name: e.name,
               power: e.average_watts,
