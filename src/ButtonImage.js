@@ -652,29 +652,36 @@ function ButtonImage(props) {
     } catch (e) {
       console.log('Error:', e)
     }
-    c.toBlob(function(b) {
-
-      if(navigator.share && utils.isMobile(club, admin)) {
-        try {
-          console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-          // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-          const file = new File([b], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-          navigator.share({
-            title: title,
-            text: 'Trace liner image share',
-            files: [file]
-          }).catch(error => {
-            if(String(error).includes('NotAllowedError')) downloadImage(title, b, 'jpeg')
+    try {
+      c.toBlob(function(b) {
+  
+        if(navigator.share && utils.isMobile(club, admin)) {
+          try {
+            console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+            // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
+            const file = new File([b], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            navigator.share({
+              title: title,
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, b, 'jpeg')
+              console.error('Error sharing image:', error)
+            });
+          } catch (error) {
+            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
             console.error('Error sharing image:', error)
-          });
-        } catch (error) {
-          utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-          console.error('Error sharing image:', error)
+          }
+        } else {
+          downloadImage(title, b, 'jpeg')
         }
-      } else {
-        downloadImage(title, b, 'jpeg')
-      }
-    }, 'image/jpeg');
+      }, 'image/jpeg');
+
+    } catch (e) {
+      console.log('Error:', e)
+    } finally {
+      addRoundCorner()
+    }
     // html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
     //   console.log('canvas: ', canvas)
     //   canvas.toBlob(function(blob) {
