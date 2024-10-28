@@ -576,7 +576,7 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const handleDownloadClickJPEG = () => {
+  const handleDownloadClickJPEG2 = () => {
     let anchor = document.getElementById('printingAnchor');
     removeRoundCorner();
     console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
@@ -617,7 +617,7 @@ function ButtonImage(props) {
     };
     document.body.appendChild(shareButton);
   }
-  const handleDownloadClickJPEG2 = () => {
+  const handleDownloadClickJPEG = () => {
     console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
