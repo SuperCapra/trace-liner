@@ -87,23 +87,22 @@ function ButtonImage(props) {
     selected: false,
   }]
 
-  const pregenerateImage = async() => {
+  const pregenerateImage = () => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     console.log('anchor:',anchor)
-    return await html2canvas(anchor, {backgroundColor:null})
-    // .then(function(canvas) {
-    //   console.log('canvas: ', canvas)
-    //   canvas.toBlob(function(blob) {
-    //     setBlobReady(blob)
-    //   }, 'image/jpeg');
-    // })
-    // .catch((e) => {
-    //   console.error('Error:', e)
-    // })
-    // .finally(() => {
-    //   addRoundCorner()
-    // })
+    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(function(blob) {
+        setBlobReady(blob)
+      }, 'image/jpeg');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      addRoundCorner()
+    })
   }
 
   const showModifySetImage = () => {
@@ -637,8 +636,7 @@ function ButtonImage(props) {
     };
     document.body.appendChild(shareButton);
   }
-  const handleDownloadClickJPEG = async () => {
-    let c = await pregenerateImage()
+  const handleDownloadClickJPEG = () => {
     console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
@@ -653,29 +651,27 @@ function ButtonImage(props) {
       console.log('Error:', e)
     }
     try {
-      c.toBlob(function(b) {
   
-        if(navigator.share && utils.isMobile(club, admin)) {
-          try {
-            console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-            // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-            const file = new File([b], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-            navigator.share({
-              title: title,
-              text: 'Trace liner image share',
-              files: [file]
-            }).catch(error => {
-              if(String(error).includes('NotAllowedError')) downloadImage(title, b, 'jpeg')
-              console.error('Error sharing image:', error)
-            });
-          } catch (error) {
-            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+      if(navigator.share && utils.isMobile(club, admin)) {
+        try {
+          console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+          // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
+          const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+          navigator.share({
+            title: title,
+            text: 'Trace liner image share',
+            files: [file]
+          }).catch(error => {
+            if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
             console.error('Error sharing image:', error)
-          }
-        } else {
-          downloadImage(title, b, 'jpeg')
+          });
+        } catch (error) {
+          utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+          console.error('Error sharing image:', error)
         }
-      }, 'image/jpeg');
+      } else {
+        downloadImage(title, blobReady, 'jpeg')
+      }
 
     } catch (e) {
       console.log('Error:', e)
