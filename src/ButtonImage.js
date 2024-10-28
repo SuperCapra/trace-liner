@@ -94,6 +94,7 @@ function ButtonImage(props) {
     html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(function(blob) {
+
         setBlobReady(blob)
       }, 'image/jpeg');
     })
@@ -114,6 +115,7 @@ function ButtonImage(props) {
     setModifyText(!showModifyText)
   }
   const handleClick = (data) => {
+    pregenerateImage()
     handleClickButton(data)
   }
   const propagateSquare = () => {
