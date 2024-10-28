@@ -589,9 +589,9 @@ function ButtonImage(props) {
     } catch (e) {
       console.log('Error:', e)
     }
-    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
+    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
       console.log('canvas: ', canvas)
-      canvas.toBlob(async function(blob) {
+      canvas.toBlob(function(blob) {
         console.log('navigator.share', navigator.share)
         // const url = URL.createObjectURL(blob);
         let titleImage = utils.getTitleExtension(title, 'jpeg')
@@ -640,9 +640,9 @@ function ButtonImage(props) {
     }
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
-    html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
+    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
       console.log('canvas: ', canvas)
-      canvas.toBlob(async function(blob) {
+      canvas.toBlob(function(blob) {
         console.log('navigator.share', navigator.share)
         const url = URL.createObjectURL(blob);
         let titleImage = utils.getTitleExtension(title, 'png')
