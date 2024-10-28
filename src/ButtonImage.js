@@ -577,6 +577,7 @@ function ButtonImage(props) {
     )
   }
   const handleDownloadClickJPEG = () => {
+    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     console.log('anchor:',anchor)
@@ -597,6 +598,7 @@ function ButtonImage(props) {
         // if(navigator.share) {
         if(navigator.share && utils.isMobile(club, admin)) {
           try {
+            console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
             // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
             const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
             navigator.share({
@@ -775,6 +777,7 @@ function ButtonImage(props) {
   // }
   const downloadImage = (title, blob, type) => {
     try {
+      console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
       console.log('title:', title)
       console.log('blob:', blob)
       console.log('type:', type)
