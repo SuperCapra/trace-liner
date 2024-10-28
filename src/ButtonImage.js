@@ -645,77 +645,72 @@ function ButtonImage(props) {
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
     let titleImage = utils.getTitleExtension(title, 'jpeg')
-    try {
-      // console.log('infoLog: ', infoLog)
-      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      saleforceApiUtils.storeLog(process.env,infoLog)
-    } catch (e) {
-      console.log('Error:', e)
-    }
-    try {
+    // try {
+    //   // console.log('infoLog: ', infoLog)
+    //   // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+    //   saleforceApiUtils.storeLog(process.env,infoLog)
+    // } catch (e) {
+    //   console.log('Error:', e)
+    // }
+    // try {
   
-      if(navigator.share && utils.isMobile(club, admin)) {
-        try {
-          console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-          // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-          const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-          navigator.share({
-            title: title,
-            text: 'Trace liner image share',
-            files: [file]
-          }).catch(error => {
-            if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
-            console.error('Error sharing image:', error)
-          });
-        } catch (error) {
-          utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-          console.error('Error sharing image:', error)
-        }
-      } else {
-        downloadImage(title, blobReady, 'jpeg')
-      }
-
-    } catch (e) {
-      console.log('Error:', e)
-    } finally {
-      addRoundCorner()
-    }
-    // html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
-    //   console.log('canvas: ', canvas)
-    //   canvas.toBlob(function(blob) {
-    //     console.log('navigator.share', navigator.share)
-    //     // const url = URL.createObjectURL(blob);
-    //     let titleImage = utils.getTitleExtension(title, 'jpeg')
-    //     // if(navigator.share) {
-    //     if(navigator.share && utils.isMobile(club, admin)) {
-    //       try {
-    //         console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-    //         // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-    //         const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-    //         navigator.share({
-    //           title: title,
-    //           text: 'Trace liner image share',
-    //           files: [file]
-    //         }).catch(error => {
-    //           if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-    //           console.error('Error sharing image:', error)
-    //         });
-    //       } catch (error) {
-    //         utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+    //   if(navigator.share && utils.isMobile(club, admin)) {
+    //     try {
+    //       console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+    //       // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
+    //       const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+    //       navigator.share({
+    //         title: title,
+    //         text: 'Trace liner image share',
+    //         files: [file]
+    //       }).catch(error => {
+    //         if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
     //         console.error('Error sharing image:', error)
-    //       }
-    //     } else {
-    //       downloadImage(title, blob, 'jpeg')
+    //       });
+    //     } catch (error) {
+    //       utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+    //       console.error('Error sharing image:', error)
     //     }
-    //     // URL.revokeObjectURL(url);
-    //   }, 'image/jpeg');
-    // })
-    // .catch((e) => {
-    //   console.error('Error:', e)
-    // })
-    // .finally(() => {
+    //   } else {
+    //     downloadImage(title, blobReady, 'jpeg')
+    //   }
+
+    // } catch (e) {
+    //   console.log('Error:', e)
+    // } finally {
     //   addRoundCorner()
-    // })
+    // }
+    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(function(blob) {
+        console.log('navigator.share', navigator.share)
+        if(navigator.share && utils.isMobile(club, admin)) {
+          try {
+            console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+            navigator.share({
+              title: title,
+              text: 'Trace liner image share',
+              files: [file]
+            }).catch(error => {
+              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
+              console.error('Error sharing image:', error)
+            });
+          } catch (error) {
+            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+            console.error('Error sharing image:', error)
+          }
+        } else {
+          downloadImage(title, blob, 'jpeg')
+        }
+      }, 'image/jpeg');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      addRoundCorner()
+    })
   }
   const handleDownloadClickPNG = () => {
     let anchor = document.getElementById('printingAnchor')
