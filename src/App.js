@@ -111,6 +111,7 @@ class Homepage extends React.Component{
   }
 
   processGPX(event) {
+    athleteData = undefined
     if(event && event.target && event.target.files && event.target.files.length) {
       const file = event.target.files[0];
       const reader = new FileReader();
