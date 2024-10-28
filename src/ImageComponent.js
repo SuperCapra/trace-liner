@@ -5,7 +5,7 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
-// import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas';
 // import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from './vocabulary.js';
@@ -43,6 +43,7 @@ function ImageComponent(props) {
   const [imageToShare/**, setImagetoShare*/] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
+  const [blobReady, setBlobReady] = useState(null); 
 
   const styleText = {
     color: drawingColor,
@@ -104,6 +105,84 @@ function ImageComponent(props) {
   const classesLogoClub = classesForLogoClub()
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
+
+  const pregenerateImage = useCallback(() => {
+    let anchor = document.getElementById('printingAnchor')
+    removeRoundCorner()
+    console.log('anchor:',anchor)
+    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
+      console.log('canvas: ', canvas)
+      canvas.toBlob(function(blob) {
+        setBlobReady(blob)
+      }, 'image/jpeg');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      addRoundCorner()
+    })
+  },[])
+
+  const handleDownloadClickJPEG = () => {
+    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
+    let anchor = document.getElementById('printingAnchor')
+    removeRoundCorner()
+    console.log('anchor:',anchor)
+    let title = utils.getTitle(activity.beautyName)
+    let titleImage = utils.getTitleExtension(title, 'jpeg')
+    try {
+      // console.log('infoLog: ', infoLog)
+      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+      // saleforceApiUtils.storeLog(process.env,infoLog)
+    } catch (e) {
+      console.log('Error:', e)
+    }
+    try {
+  
+      if(navigator.share && utils.isMobile(club, admin)) {
+        try {
+          console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+          // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
+          const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+          navigator.share({
+            title: title,
+            text: 'Trace liner image share',
+            files: [file]
+          }).catch(error => {
+            if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
+            console.error('Error sharing image:', error)
+          });
+        } catch (error) {
+          utils.consoleAndAlert('Error sharing image:' + error, club, admin)
+          console.error('Error sharing image:', error)
+        }
+      } else {
+        downloadImage(title, blobReady, 'jpeg')
+      }
+
+    } catch (e) {
+      console.log('Error:', e)
+    } finally {
+      addRoundCorner()
+    }
+  }
+  const downloadImage = (title, blob, type) => {
+    try {
+      console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+      console.log('title:', title)
+      console.log('blob:', blob)
+      console.log('type:', type)
+      const url = URL.createObjectURL(blob);
+      const temp = document.createElement('a');
+      temp.href = url;
+      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
+      temp.click();
+      URL.revokeObjectURL(url); // Clean up URL object after use
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  }
 
   // const fetchImage = useCallback(async () => {
   //   const imageUrl = activity.photoUrl;
@@ -217,18 +296,18 @@ function ImageComponent(props) {
   //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
   //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
   // }
-  // const removeRoundCorner = () => {
-  //   document.getElementById('canvasImage').classList.remove('round-corner')
-  //   document.getElementById('canvasFilter').classList.remove('round-corner')
-  //   document.getElementById('canvasSketch').classList.remove('round-corner')
-  //   document.getElementById('printingAnchor').classList.remove('round-corner')
-  // }
-  // const addRoundCorner = () => {
-  //   document.getElementById('canvasImage').classList.add('round-corner')
-  //   document.getElementById('canvasFilter').classList.add('round-corner')
-  //   document.getElementById('canvasSketch').classList.add('round-corner')
-  //   document.getElementById('printingAnchor').classList.add('round-corner')
-  // }
+  const removeRoundCorner = () => {
+    document.getElementById('canvasImage').classList.remove('round-corner')
+    document.getElementById('canvasFilter').classList.remove('round-corner')
+    document.getElementById('canvasSketch').classList.remove('round-corner')
+    document.getElementById('printingAnchor').classList.remove('round-corner')
+  }
+  const addRoundCorner = () => {
+    document.getElementById('canvasImage').classList.add('round-corner')
+    document.getElementById('canvasFilter').classList.add('round-corner')
+    document.getElementById('canvasSketch').classList.add('round-corner')
+    document.getElementById('printingAnchor').classList.add('round-corner')
+  }
   // const addOpacity = () => {
   //   document.getElementById('canvasImage').classList.add('background-opacity')
   //   document.getElementById('printingAnchor').classList.add('background-trasparency')
@@ -329,8 +408,10 @@ function ImageComponent(props) {
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // if(club && club.name === 'dev-admin') returnImage()
+    pregenerateImage()
   },[
     activity.coordinates,
+    pregenerateImage
     // club,
     // returnImage
   ])
@@ -409,6 +490,7 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
+    pregenerateImage()
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -426,7 +508,8 @@ function ImageComponent(props) {
   },[
     activity.altitudeStream,
     activity.distanceStream,
-    ratio
+    ratio,
+    pregenerateImage
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
@@ -492,6 +575,7 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
+    pregenerateImage()
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -509,7 +593,8 @@ function ImageComponent(props) {
   },[
     activity.altitudeStream,
     activity.distanceStream,
-    ratio
+    ratio,
+    pregenerateImage
   ])
 
   // const returnClimbing = (altitudeStream, distanceStream) => {
@@ -597,6 +682,9 @@ function ImageComponent(props) {
 
   const handleClickDispatcher = (data) => {
     console.info('handleClickDispatcher:', data)
+    if(data.type === 'downloadJPEG') {
+      handleDownloadClickJPEG()
+    } else
     if(data.type === 'filterSlider') {
       setValueFilter(data.value)
       drawFilter()

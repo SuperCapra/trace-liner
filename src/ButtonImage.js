@@ -51,7 +51,6 @@ function ButtonImage(props) {
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
   const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
-  const [blobReady, setBlobReady] = useState(null); 
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -87,25 +86,6 @@ function ButtonImage(props) {
     selected: false,
   }]
 
-  const pregenerateImage = () => {
-    let anchor = document.getElementById('printingAnchor')
-    removeRoundCorner()
-    console.log('anchor:',anchor)
-    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(function(blob) {
-
-        setBlobReady(blob)
-      }, 'image/jpeg');
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
-    .finally(() => {
-      addRoundCorner()
-    })
-  }
-
   const showModifySetImage = () => {
     setModifyText(false)
     setModifyImgae(!showModifyImage)
@@ -115,8 +95,11 @@ function ButtonImage(props) {
     setModifyText(!showModifyText)
   }
   const handleClick = (data) => {
-    pregenerateImage()
+    // pregenerateImage()
     handleClickButton(data)
+  }
+  const handleClickShare = () => {
+    handleClickButton({type: 'downloadJPEG'})
   }
   const propagateSquare = () => {
     infoLog.size = 'square'
@@ -914,7 +897,7 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={handleDownloadClickJPEG}>
+        <div style={shareStyle} onClick={() => handleClickShare()}>
           <ShareSVG className="feature"/>
         </div>
         {admin && <div style={shareStyle} onClick={handleDownloadClickPNG}>
