@@ -577,6 +577,47 @@ function ButtonImage(props) {
     )
   }
   const handleDownloadClickJPEG = () => {
+    let anchor = document.getElementById('printingAnchor');
+    removeRoundCorner();
+    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
+  
+    html2canvas(anchor, { backgroundColor: null }).then((canvas) => {
+      canvas.toBlob((blob) => {
+        const title = utils.getTitleExtension(utils.getTitle(activity.beautyName), 'jpeg');
+        const file = new File([blob], title, { type: 'image/jpeg', lastModified: new Date() });
+  
+        const shareImage = () => {
+          console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
+          navigator.share({
+            title: title,
+            text: 'Trace liner image share',
+            files: [file]
+          }).catch((error) => {
+            if (String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg');
+            console.error('Error sharing image:', error);
+          });
+        };
+  
+        if (navigator.share && utils.isMobile(club, admin)) {
+          // Prompt user for the second activation click
+          addShareButton(shareImage);  // display a button that calls shareImage on click
+        } else {
+          downloadImage(title, blob, 'jpeg');
+        }
+      }, 'image/jpeg');
+    }).finally(addRoundCorner);
+  };
+  
+  const addShareButton = (shareImage) => {
+    const shareButton = document.createElement('button');
+    shareButton.innerText = 'Share Image';
+    shareButton.onclick = () => {
+      document.body.removeChild(shareButton); // Remove button after click
+      shareImage();
+    };
+    document.body.appendChild(shareButton);
+  }
+  const handleDownloadClickJPEG2 = () => {
     console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
