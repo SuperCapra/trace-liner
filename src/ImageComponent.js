@@ -110,13 +110,19 @@ function ImageComponent(props) {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     console.log('anchor:',anchor)
-    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(function(blob) {
-        const imgURL = URL.createObjectURL(blob);
-        setImagetoShare(imgURL);
-        setBlobReady(blob)
-      }, 'image/jpeg');
+    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
+      return new Promise((resolve,reject) => {
+        console.log('canvas: ', canvas)
+        canvas.toBlob(function(blob) {
+          if(blob) {
+            const imgURL = URL.createObjectURL(blob);
+            setImagetoShare(imgURL);
+            setBlobReady(blob)
+          } else {
+            console.error('creating blob failed')
+          }
+        }, 'image/jpeg');
+      })
     })
     .catch((e) => {
       console.error('Error:', e)
