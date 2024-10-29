@@ -40,7 +40,7 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [imageToShare, setImagetoShare] = useState(null)
+  // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
   const [blobReady, setBlobReady] = useState(null); 
@@ -111,18 +111,12 @@ function ImageComponent(props) {
     removeRoundCorner()
     console.log('anchor:',anchor)
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
-      return new Promise((resolve,reject) => {
-        console.log('canvas: ', canvas)
-        canvas.toBlob(function(blob) {
-          if(blob) {
-            const imgURL = URL.createObjectURL(blob);
-            setImagetoShare(imgURL);
-            setBlobReady(blob)
-          } else {
-            console.error('creating blob failed')
-          }
-        }, 'image/jpeg');
-      })
+      console.log('canvas: ', canvas)
+      canvas.toBlob(function(blob) {
+        const imgURL = URL.createObjectURL(blob);
+        // setImagetoShare(imgURL);
+        setBlobReady(blob)
+      }, 'image/jpeg');
     })
     .catch((e) => {
       console.error('Error:', e)
@@ -416,7 +410,9 @@ function ImageComponent(props) {
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // if(club && club.name === 'dev-admin') returnImage()
-    pregenerateImage()
+    requestAnimationFrame(() => {
+      pregenerateImage();
+    });
   },[
     activity.coordinates,
     pregenerateImage
@@ -1059,7 +1055,7 @@ function ImageComponent(props) {
           </div>
         }
         <div>
-          {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
+          {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
         <ButtonImage className="indexed-height" athlete={athlete} activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
       </div>
