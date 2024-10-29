@@ -163,7 +163,6 @@ function ImageComponent(props) {
             console.error('Error sharing image:', error)
           });
         } catch (error) {
-          utils.consoleAndAlert('Error sharing image:' + error, club, admin)
           console.error('Error sharing image:', error)
         }
       } else {
@@ -214,93 +213,6 @@ function ImageComponent(props) {
   // },[
   //   activity
   // ]);
-
-  // const handleDownloadClick = async (type) => {
-  //   let anchor = document.getElementById('printingAnchor')
-  //   // let anchor = club && club.name === 'dev-admin' ? document.getElementById('showingImage') : document.getElementById('printingAnchor')
-  //   // if(club && club.name === 'dev-admin') {
-  //   //   document.getElementById('showingImage').classList.remove('round-corner')
-  //   // } else {
-  //     removeRoundCorner()
-  //     if(type === 'contour') addOpacity()
-  //   // }
-  //   console.log('anchor:',anchor)
-  //   let title = utils.getTitle(activity.beautyName)
-  //   html2canvas(anchor, {backgroundColor:null}).then(async function(canvas) {
-  //     console.log('canvas: ', canvas)
-  //     canvas.toBlob(async function(blob) {
-  //       console.log('navigator.share', navigator.share)
-  //       let extension = type === 'contour' ? 'png' : 'jpeg'
-  //       let titleImage = utils.getTitleExtension(title, extension)
-  //       // if(navigator.share) {
-  //       if(navigator.share && utils.isMobile(club, admin)) {
-  //         if(type === 'contour') sharePNG(title, titleImage, blob)
-  //         else shareJPG(title, titleImage, blob)
-  //       } else {
-  //         downloadImage(title, blob, extension)
-  //       }
-  //     }, 'image/png');
-  //   })
-  //   .catch((e) => {
-  //     console.error('Error:', e)
-  //   })
-  //   .finally(() => {
-  //     // if(club && club.name === 'dev-admin') {
-  //     //   document.getElementById('showingImage').classList.add('round-corner')
-  //     // } else {
-  //       addRoundCorner()
-  //       if(type === 'contour') removeOpacity()
-  //     // }
-  //   })
-  // }
-
-  // const sharePNG = async (title, titleImage, blob) => {
-  //   try {
-  //     const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
-  //     navigator.share({
-  //       title: title,
-  //       text: 'Trace liner image share',
-  //       files: [file]
-  //     }).catch(error => {
-  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-  //       console.error('Error sharing image:', error)
-  //     });
-  //   } catch (error) {
-  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-  //     console.error('Error sharing image:', error)
-  //   }
-  // }
-  // const shareJPG = async (title, titleImage, blob) => {
-  //   try {
-  //     const file = new File([blob], titleImage , {type: blob.type, lastModified: new Date().getTime()});
-  //     navigator.share({
-  //       title: title,
-  //       text: 'Trace liner image share',
-  //       files: [file]
-  //     }).catch(error => {
-  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-  //       console.error('Error sharing image:', error)
-  //     });
-  //   } catch (error) {
-  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-  //     console.error('Error sharing image:', error)
-  //   }
-  // }
-  // const downloadImage = (title, blob, type) => {
-  //   try {
-  //     console.log('title:', title)
-  //     console.log('blob:', blob)
-  //     console.log('type:', type)
-  //     const url = URL.createObjectURL(blob);
-  //     const temp = document.createElement('a');
-  //     temp.href = url;
-  //     temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
-  //     temp.click();
-  //     URL.revokeObjectURL(url); // Clean up URL object after use
-  //   } catch (error) {
-  //     console.error('Error downloading image:', error);
-  //   }
-  // }
 
   const removeRoundCorner = () => {
     document.getElementById('canvasImage').classList.remove('round-corner')

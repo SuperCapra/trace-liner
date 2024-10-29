@@ -254,25 +254,14 @@ const utilsFunction = {
             /BlackBerry/i,
             /Windows Phone/i
         ]
-        this.consoleAndAlert(String(navigator.userAgent), club, admin)
         try {
             return navigator.userAgentData.mobile
         } catch (error) {
-            this.consoleAndAlert(String(error), club, admin)
-            this.consoleAndAlert(String(navigator.userAgent), club, admin)
-            this.consoleAndAlert(String(toMatch.some((toMatchItem) => {
-                return navigator.userAgent.match(toMatchItem)
-            })),club, admin)
             if(String(error).includes('navigator')) return toMatch.some((toMatchItem) => {
                 return navigator.userAgent.match(toMatchItem)
             })
         }
         return false
-    },
-
-    consoleAndAlert(message, club, admin) {
-        // if(admin) window.alert(message)
-        console.log(message)
     },
 
     getTitleExtension(text, extension) {
