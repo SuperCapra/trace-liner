@@ -20,14 +20,11 @@ import image5 from './images/image5.jpg'
 import image6 from './images/image6.jpeg'
 import image7 from './images/image7.jpeg'
 import Slider from 'rc-slider';
-import utils from './utils.js'
-import html2canvas from 'html2canvas';
 import 'rc-slider/assets/index.css';
-import saleforceApiUtils from './api/salesforce.js';
 
 function ButtonImage(props) {
 
-  const { athlete, activity, unitMeasure, language, club, admin, handleClickButton } = props
+  const { activity, unitMeasure, language, admin, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -50,7 +47,6 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -98,17 +94,12 @@ function ButtonImage(props) {
     // pregenerateImage()
     handleClickButton(data)
   }
-  const handleClickShare = () => {
-    handleClickButton({type: 'downloadJPEG'})
-  }
   const propagateSquare = () => {
-    infoLog.size = 'square'
     if(rectangle) setRectangle(false)
     setSquare(true)
     handleClick({type: 'square'})
   }
   const propagateRectangle = () => {
-    infoLog.size = 'rectangle'
     if(square) setSquare(false)
     setRectangle(true)
     handleClick({type: 'rectangle'})
@@ -124,54 +115,43 @@ function ButtonImage(props) {
   // }
   const propagateShowHide = (type) => {
     if(type === 'name') {
-      infoLog.showname = !infoLog.showname
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
       if(!showName) {
-        infoLog.showdate = true
         setShowDate(true)
       } else {
-        infoLog.showdate = false
         setShowDate(false)
       }
       setShowName(!showName)
     } else if(type === 'date' && showName) {
-      infoLog.showdate = !infoLog.showdate
       handleClick({type: 'show-hide', subtype: 'date', show: !showDate})
       setShowDate(!showDate)
     } else if(type === 'distance') {
-      infoLog.showdistance = !infoLog.showdistance
       handleClick({type: 'show-hide', subtype: 'distance', show: !showDistance})
       if(!showDistance) setShowCoordinates(false)
       setShowDistance(!showDistance)
     } else if(type === 'duration') {
-      infoLog.showduration = !infoLog.showduration
       handleClick({type: 'show-hide', subtype: 'duration', show: !showDuration})
       if(!showDuration) setShowCoordinates(false)
       setShowDuration(!showDuration)
     } else if(type === 'elevation') {
-      infoLog.showelevation = !infoLog.showelevation
       handleClick({type: 'show-hide', subtype: 'elevation', show: !showElevation})
       if(!showElevation) setShowCoordinates(false)
       setShowElevation(!showElevation)
     } else if(type === 'average') {
-      infoLog.showaverage = !infoLog.showaverage
       handleClick({type: 'show-hide', subtype: 'average', show: !showAverage})
       if(!showAverage) setShowCoordinates(false)
       setShowAverage(!showAverage)
     } else if(type === 'power') {
-      infoLog.showpower = !infoLog.showpower
       handleClick({type: 'show-hide', subtype: 'power', show: !showPower}) 
       if(!showPower) setShowCoordinates(false)
       setShowPower(!showPower)
     } else if(type === 'coordinates') {
-      infoLog.showcoordinates = !infoLog.showcoordinates
       handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
       if(showCoordinates) {
         enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
     } else if(type === 'mode1') {
-      infoLog.mode = 'mode 1'
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
       if(!showMode1) {
@@ -181,7 +161,6 @@ function ButtonImage(props) {
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
-      infoLog.mode = 'mode 2'
       handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
       setShowMode2(!showMode2)
       if(!showMode2) {
@@ -191,7 +170,6 @@ function ButtonImage(props) {
       }
       enableMode2()
     } else if(type === 'mode3') {
-      infoLog.mode = 'mode 3'
       handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
       setShowMode3(!showMode3)
       if(!showMode3) {
@@ -201,7 +179,6 @@ function ButtonImage(props) {
       }
       enableMode3()
     } else if(type === 'mode4') {
-      infoLog.mode = 'mode 4'
       handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
       setShowMode4(!showMode4)
       if(!showMode4) {
@@ -214,7 +191,6 @@ function ButtonImage(props) {
   }
 
   const propagateColor = (info) => {
-    infoLog.color = info.color
     handleClick(info)
   }
 
@@ -229,7 +205,6 @@ function ButtonImage(props) {
     setShowPower(bool)
     setShowAverage(bool)
     setShowCoordinates(!bool)
-    setInfoLog(saleforceApiUtils.setMode1(infoLog))
   }
 
   const enableMode2 = () => {
@@ -238,7 +213,6 @@ function ButtonImage(props) {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
-    setInfoLog(saleforceApiUtils.setMode2(infoLog))
   }
 
   const enableMode3 = () => {
@@ -247,7 +221,6 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    setInfoLog(saleforceApiUtils.setMode1(infoLog))
     // setShowCoordinates(true)
   }
 
@@ -257,7 +230,6 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    setInfoLog(saleforceApiUtils.setMode4(infoLog))
     // setShowCoordinates(true)
   }
 
@@ -337,7 +309,6 @@ function ButtonImage(props) {
   }
 
   const handleChangeValueFilter = (value) => {
-    infoLog.filter = String(value)
     setValueFilter(value);
     handleClick({type: 'filterSlider', value: value})
   }
@@ -447,7 +418,6 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
-    infoLog.image = alt
     deselectImage()
     const elementChosen = document.getElementById(alt)
     const elementChosenSelected = document.getElementById(alt + '-selected')
@@ -457,7 +427,7 @@ function ButtonImage(props) {
     }
     const src = elementChosen.getAttribute('src');
     console.log('elementChosen: ', elementChosen)
-    handleClick({type: 'image', image: src})
+    handleClick({type: 'image', image: src, info: alt})
   }
 
   const handleClickPlus = () => {
@@ -580,310 +550,50 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const handleDownloadClickJPEG2 = () => {
-    let anchor = document.getElementById('printingAnchor');
-    removeRoundCorner();
-    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
-  
-    html2canvas(anchor, { backgroundColor: null }).then((canvas) => {
-      canvas.toBlob((blob) => {
-        const title = utils.getTitleExtension(utils.getTitle(activity.beautyName), 'jpeg');
-        const file = new File([blob], title, { type: 'image/jpeg', lastModified: new Date() });
-  
-        const shareImage = () => {
-          console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
-          navigator.share({
-            title: title,
-            text: 'Trace liner image share',
-            files: [file]
-          }).catch((error) => {
-            if (String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg');
-            console.error('Error sharing image:', error);
-          });
-        };
-  
-        if (navigator.share && utils.isMobile(club, admin)) {
-          // Prompt user for the second activation click
-          addShareButton(shareImage);  // display a button that calls shareImage on click
-        } else {
-          downloadImage(title, blob, 'jpeg');
-        }
-      }, 'image/jpeg');
-    }).finally(addRoundCorner);
-  };
-  
-  const addShareButton = (shareImage) => {
-    const shareButton = document.createElement('button');
-    shareButton.innerText = 'Share Image';
-    shareButton.onclick = () => {
-      document.body.removeChild(shareButton); // Remove button after click
-      shareImage();
-    };
-    document.body.appendChild(shareButton);
-  }
-  const handleDownloadClickJPEG = () => {
-    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
-    let anchor = document.getElementById('printingAnchor')
-    removeRoundCorner()
-    console.log('anchor:',anchor)
-    let title = utils.getTitle(activity.beautyName)
-    let titleImage = utils.getTitleExtension(title, 'jpeg')
-    // try {
-    //   // console.log('infoLog: ', infoLog)
-    //   // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-    //   saleforceApiUtils.storeLog(process.env,infoLog)
-    // } catch (e) {
-    //   console.log('Error:', e)
-    // }
-    // try {
-  
-    //   if(navigator.share && utils.isMobile(club, admin)) {
-    //     try {
-    //       console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-    //       // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-    //       const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-    //       navigator.share({
-    //         title: title,
-    //         text: 'Trace liner image share',
-    //         files: [file]
-    //       }).catch(error => {
-    //         if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
-    //         console.error('Error sharing image:', error)
-    //       });
-    //     } catch (error) {
-    //       utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-    //       console.error('Error sharing image:', error)
-    //     }
-    //   } else {
-    //     downloadImage(title, blobReady, 'jpeg')
-    //   }
 
-    // } catch (e) {
-    //   console.log('Error:', e)
-    // } finally {
-    //   addRoundCorner()
-    // }
-    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(function(blob) {
-        console.log('navigator.share', navigator.share)
-        if(navigator.share && utils.isMobile(club, admin)) {
-          try {
-            console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-            const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-            navigator.share({
-              title: title,
-              text: 'Trace liner image share',
-              files: [file]
-            }).catch(error => {
-              if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-              console.error('Error sharing image:', error)
-            });
-          } catch (error) {
-            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-            console.error('Error sharing image:', error)
-          }
-        } else {
-          downloadImage(title, blob, 'jpeg')
-        }
-      }, 'image/jpeg');
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
-    .finally(() => {
-      addRoundCorner()
-    })
-  }
-  const handleDownloadClickPNG = () => {
-    let anchor = document.getElementById('printingAnchor')
-    console.log('new logic png')
-    removeRoundCorner()
-    addOpacity()
-    try {
-      // console.log('infoLog: ', infoLog)
-      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      saleforceApiUtils.storeLog(process.env,infoLog)
-    } catch (e) {
-      console.log('Error:', e)
-    }
-    console.log('anchor:',anchor)
-    let title = utils.getTitle(activity.beautyName)
-    html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
-      console.log('canvas: ', canvas)
-      canvas.toBlob(function(blob) {
-        console.log('navigator.share', navigator.share)
-        const url = URL.createObjectURL(blob);
-        let titleImage = utils.getTitleExtension(title, 'png')
-        // if(navigator.share) {
-        if(navigator.share && utils.isMobile(club, admin)) {
-          try {
-            captureAndUploadImage(canvas, titleImage, 'png', blob)
-            // const file = new File([url], titleImage , {type: 'image/png', lastModified: new Date()});
-            // navigator.share({
-            //   title: title,
-            //   text: 'Trace liner image share',
-            //   files: [file]
-            // }).catch(error => {
-            //   if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-            //   console.error('Error sharing image:', error)
-            // });
-          } catch (error) {
-            utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-            console.error('Error sharing image:', error)
-          }
-        } else {
-          downloadImage(title, blob, 'png')
-        }
-        URL.revokeObjectURL(url);
-      }, 'image/png');
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
-    .finally(() => {
-      addRoundCorner()
-      removeOpacity()
-    })
-  }
-
-  const captureAndUploadImage = (canvas, titleImage, type, blob) => {
-    try {
-      // Convert canvas to Blob
-      canvas.toBlob(async (blob) => {
-        if (blob) {
-          // Send the blob to the proxy server
-          const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
-          console.log('url:', uploadedImageUrl)
+  // const captureAndUploadImage = (canvas, titleImage, type, blob) => {
+  //   try {
+  //     // Convert canvas to Blob
+  //     canvas.toBlob(async (blob) => {
+  //       if (blob) {
+  //         // Send the blob to the proxy server
+  //         const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
+  //         console.log('url:', uploadedImageUrl)
           
-          // Share the URL once the image is uploaded
-          if (uploadedImageUrl) {
-            shareImageUrl(uploadedImageUrl, titleImage, type, blob);
-          }
-        }
-      }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
-    } catch (error) {
-      console.error('Error capturing and uploading image:', error);
-      downloadImage(titleImage.replace('.' + type, ''), blob, type)
-    }
-  };
-  
-  // Share the uploaded image URL
-  const shareImageUrl = async (url, titleImage, type, blob) => {
-    try {
-      console.log('url:', url)
-      // const file = new File([url], titleImage, {type: 'image/' + type, lastModified: new Date()});
-      await navigator.share({
-        title: titleImage,
-        url: url
-      });
-    } catch (error) {
-      console.error('Error sharing the image:', error);
-      downloadImage(titleImage.replace('.' + type, ''), blob, type)
-    } finally {
-      let filename = url.slice(url.indexOf('/uploads/') + 9)
-      console.log('filename:', filename)
-      await fetch(origin + `/delete/${filename}`, { 
-        method: 'POST',
-      });
-    }
-  };
-
-  const uploadImageToProxy = async (blob, titleImage) => {
-    const formData = new FormData();
-    formData.append('file', blob, titleImage);
-    let origin = window.location.origin
-    console.log('formData:', formData)
-  
-    try {
-      const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
-        method: 'POST',
-        body: formData,
-      });
-  
-      if (response.ok) {
-        const data = await response.json();
-        return data.url;  // Return the uploaded image URL
-      } else {
-        throw new Error('Image upload failed');
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-    }
-  };
-
-  // const sharePNG = async (title, titleImage, blob) => {
-  //   try {
-  //     const file = new File([blob], titleImage , {type: 'image/png', lastModified: new Date().getTime()});
-  //     navigator.share({
-  //       title: utils.getTitle(title),
-  //       text: 'Trace liner image share',
-  //       files: [file]
-  //     }).catch(error => {
-  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'png')
-  //       console.error('Error sharing image:', error)
-  //     });
+  //         // Share the URL once the image is uploaded
+  //         if (uploadedImageUrl) {
+  //           shareImageUrl(uploadedImageUrl, titleImage, type, blob);
+  //         }
+  //       }
+  //     }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
   //   } catch (error) {
-  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-  //     console.error('Error sharing image:', error)
+  //     console.error('Error capturing and uploading image:', error);
+  //     downloadImage(titleImage.replace('.' + type, ''), blob, type)
   //   }
-  // }
-  // const shareJPEG = async (title, titleImage, blob) => {
+  // };
+
+  // const uploadImageToProxy = async (blob, titleImage) => {
+  //   const formData = new FormData();
+  //   formData.append('file', blob, titleImage);
+  //   let origin = window.location.origin
+  //   console.log('formData:', formData)
+  
   //   try {
-  //     const file = new File([blob], titleImage , {type: 'image/jpeg', lastModified: new Date()});
-  //     navigator.share({
-  //       title: (title ? title : 'image'),
-  //       text: 'Trace liner image share',
-  //       files: [file]
-  //     }).catch(error => {
-  //       if(String(error).includes('NotAllowedError')) downloadImage(title, blob, 'jpeg')
-  //       console.error('Error sharing image:', error)
+  //     const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
+  //       method: 'POST',
+  //       body: formData,
   //     });
+  
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       return data.url;  // Return the uploaded image URL
+  //     } else {
+  //       throw new Error('Image upload failed');
+  //     }
   //   } catch (error) {
-  //     utils.consoleAndAlert('Error sharing image:' + error, club, admin)
-  //     console.error('Error sharing image:', error)
+  //     console.error('Error uploading image:', error);
   //   }
-  // }
-  const downloadImage = (title, blob, type) => {
-    try {
-      console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-      console.log('title:', title)
-      console.log('blob:', blob)
-      console.log('type:', type)
-      const url = URL.createObjectURL(blob);
-      const temp = document.createElement('a');
-      temp.href = url;
-      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
-      temp.click();
-      URL.revokeObjectURL(url); // Clean up URL object after use
-    } catch (error) {
-      console.error('Error downloading image:', error);
-    }
-  }
-  // const seeImage = () => {
-  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
-  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
-  // }
-  const removeRoundCorner = () => {
-    document.getElementById('canvasImage').classList.remove('round-corner')
-    document.getElementById('canvasFilter').classList.remove('round-corner')
-    document.getElementById('canvasSketch').classList.remove('round-corner')
-    document.getElementById('printingAnchor').classList.remove('round-corner')
-  }
-  const addRoundCorner = () => {
-    document.getElementById('canvasImage').classList.add('round-corner')
-    document.getElementById('canvasFilter').classList.add('round-corner')
-    document.getElementById('canvasSketch').classList.add('round-corner')
-    document.getElementById('printingAnchor').classList.add('round-corner')
-  }
-  const addOpacity = () => {
-    document.getElementById('canvasImage').classList.add('background-opacity')
-    document.getElementById('printingAnchor').classList.add('background-trasparency')
-  }
-  const removeOpacity = () => {
-    document.getElementById('canvasImage').classList.remove('background-opacity')
-    document.getElementById('printingAnchor').classList.remove('background-trasparency')
-  }
+  // };
 
   return (
     <div className="display-buttons">
@@ -897,10 +607,10 @@ function ButtonImage(props) {
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
           <ModifySVG className="feature" />
         </div>
-        <div style={shareStyle} onClick={() => handleClickShare()}>
+        <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
           <ShareSVG className="feature"/>
         </div>
-        {admin && <div style={shareStyle} onClick={handleDownloadClickPNG}>
+        {admin && <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'png'})}>
           <ShareContour/>
         </div>}
       </div>

@@ -1,15 +1,13 @@
 import './App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import ButtonImage from './ButtonImage.js'
-// import Dropdown from './Dropdown.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import html2canvas from 'html2canvas';
-// import {toJpeg} from 'html-to-image';
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from './vocabulary.js';
-// import brandingPalette from './brandingPalette.js';
+import saleforceApiUtils from './api/salesforce.js';
 
 function ImageComponent(props) {
 
@@ -43,7 +41,9 @@ function ImageComponent(props) {
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
-  const [blobReady, setBlobReady] = useState(null); 
+  const [blobReadyJpeg, setBlobReadyJpeg] = useState(null); 
+  const [blobReadyPng, setBlobReadyPng] = useState(null); 
+  const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
   const styleText = {
     color: drawingColor,
@@ -106,16 +106,12 @@ function ImageComponent(props) {
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
 
-  const pregenerateImage = useCallback(() => {
+  const pregenerateImageJpeg = useCallback(() => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
-    console.log('anchor:',anchor)
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
-      console.log('canvas: ', canvas)
       canvas.toBlob(function(blob) {
-        const imgURL = URL.createObjectURL(blob);
-        // setImagetoShare(imgURL);
-        setBlobReady(blob)
+        setBlobReadyJpeg(blob)
       }, 'image/jpeg');
     })
     .catch((e) => {
@@ -125,34 +121,45 @@ function ImageComponent(props) {
       addRoundCorner()
     })
   },[])
+  const pregenerateImagePng = useCallback(() => {
+    let anchor = document.getElementById('printingAnchor')
+    removeRoundCorner()
+    addOpacity()
+    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
+      canvas.toBlob(function(blob) {
+        setBlobReadyPng(blob)
+      }, 'image/png');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+    .finally(() => {
+      addRoundCorner()
+      removeOpacity()
+    })
+  },[])
 
-  const handleDownloadClickJPEG = () => {
-    console.log('navigator.UserActivation.isActive:', navigator.userActivation.isActive)
+  const handleDownloadShare = (type) => {
+    type = type.toLowerCase()
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     console.log('anchor:',anchor)
     let title = utils.getTitle(activity.beautyName)
-    let titleImage = utils.getTitleExtension(title, 'jpeg')
+    let titleImage = utils.getTitleExtension(title, type)
+    let typeFile = 'image/' + type
+    let b = type === 'png' ? blobReadyPng : blobReadyJpeg
     try {
-      // console.log('infoLog: ', infoLog)
-      // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-      // saleforceApiUtils.storeLog(process.env,infoLog)
-    } catch (e) {
-      console.log('Error:', e)
-    }
-    try {
-  
       if(navigator.share && utils.isMobile(club, admin)) {
         try {
           console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
           // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-          const file = new File([blobReady], titleImage , {type: 'image/jpeg', lastModified: new Date()});
+          const file = new File([b], titleImage , {type: typeFile, lastModified: new Date()});
           navigator.share({
             title: title,
-            text: 'Trace liner image share',
+            text: 'Trace liner image sharing',
             files: [file]
           }).catch(error => {
-            if(String(error).includes('NotAllowedError')) downloadImage(title, blobReady, 'jpeg')
+            if(String(error).includes('NotAllowedError')) downloadImage(title, b, type)
             console.error('Error sharing image:', error)
           });
         } catch (error) {
@@ -160,25 +167,30 @@ function ImageComponent(props) {
           console.error('Error sharing image:', error)
         }
       } else {
-        downloadImage(title, blobReady, 'jpeg')
+        downloadImage(title, b, type)
       }
-
     } catch (e) {
       console.log('Error:', e)
     } finally {
       addRoundCorner()
+      try {
+        console.log('infoLog: ', infoLog)
+        // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+        saleforceApiUtils.storeLog(process.env,infoLog)
+      } catch (e) {
+        console.log('Error:', e)
+      }
     }
   }
   const downloadImage = (title, blob, type) => {
     try {
-      console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
       console.log('title:', title)
       console.log('blob:', blob)
       console.log('type:', type)
       const url = URL.createObjectURL(blob);
       const temp = document.createElement('a');
       temp.href = url;
-      temp.download = title + (type === 'jpeg' ? '.jpeg' : '.png') ;
+      temp.download = title + '.' + type;
       temp.click();
       URL.revokeObjectURL(url); // Clean up URL object after use
     } catch (error) {
@@ -290,14 +302,6 @@ function ImageComponent(props) {
   //   }
   // }
 
-  // const seeHiding = () => {
-  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.remove('no-see')
-  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.add('no-see')
-  // }
-  // const seeImage = () => {
-  //   if(document.getElementById('hidingDiv')) document.getElementById('hidingDiv').classList.add('no-see')
-  //   if(document.getElementById('showingImage')) document.getElementById('showingImage').classList.remove('no-see')
-  // }
   const removeRoundCorner = () => {
     document.getElementById('canvasImage').classList.remove('round-corner')
     document.getElementById('canvasFilter').classList.remove('round-corner')
@@ -310,14 +314,14 @@ function ImageComponent(props) {
     document.getElementById('canvasSketch').classList.add('round-corner')
     document.getElementById('printingAnchor').classList.add('round-corner')
   }
-  // const addOpacity = () => {
-  //   document.getElementById('canvasImage').classList.add('background-opacity')
-  //   document.getElementById('printingAnchor').classList.add('background-trasparency')
-  // }
-  // const removeOpacity = () => {
-  //   document.getElementById('canvasImage').classList.remove('background-opacity')
-  //   document.getElementById('printingAnchor').classList.remove('background-trasparency')
-  // }
+  const addOpacity = () => {
+    document.getElementById('canvasImage').classList.add('background-opacity')
+    document.getElementById('printingAnchor').classList.add('background-trasparency')
+  }
+  const removeOpacity = () => {
+    document.getElementById('canvasImage').classList.remove('background-opacity')
+    document.getElementById('printingAnchor').classList.remove('background-trasparency')
+  }
 
   // const returnImage = useCallback(() => {
   //   removeRoundCorner()
@@ -411,11 +415,13 @@ function ImageComponent(props) {
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // if(club && club.name === 'dev-admin') returnImage()
     requestAnimationFrame(() => {
-      pregenerateImage();
+      pregenerateImageJpeg();
+      pregenerateImagePng();
     });
   },[
     activity.coordinates,
-    pregenerateImage
+    pregenerateImageJpeg,
+    pregenerateImagePng
     // club,
     // returnImage
   ])
@@ -494,7 +500,10 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    pregenerateImage()
+    requestAnimationFrame(() => {
+      pregenerateImageJpeg();
+      pregenerateImagePng();
+    });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -513,7 +522,8 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImage
+    pregenerateImageJpeg,
+    pregenerateImagePng
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
@@ -579,7 +589,10 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    pregenerateImage()
+    requestAnimationFrame(() => {
+      pregenerateImageJpeg();
+      pregenerateImagePng();
+    });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -598,7 +611,8 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImage
+    pregenerateImageJpeg,
+    pregenerateImagePng
   ])
 
   // const returnClimbing = (altitudeStream, distanceStream) => {
@@ -686,10 +700,11 @@ function ImageComponent(props) {
 
   const handleClickDispatcher = (data) => {
     console.info('handleClickDispatcher:', data)
-    if(data.type === 'downloadJPEG') {
-      handleDownloadClickJPEG()
+    if(data.type === 'downloadshare') {
+      handleDownloadShare(data.subtype)
     } else
     if(data.type === 'filterSlider') {
+      infoLog.filter = String(data.value)
       setValueFilter(data.value)
       drawFilter()
     }
@@ -699,6 +714,7 @@ function ImageComponent(props) {
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {
       let ratioText = '9:16'
+      infoLog.size = data.type
       switch (data.type) {
         case 'square':
           ratioText = '1:1'
@@ -713,31 +729,41 @@ function ImageComponent(props) {
       handleCrop(ratioText, imageSrc)
     } else if(data.type === 'show-hide') {
       if(data.subtype === 'name') {
+        infoLog.showname = !infoLog.showname
+        infoLog.showdate = true
         setShowTitle(data.show)
         setShowDate(data.show)
       } else if(data.subtype === 'date') {
+        infoLog.showdate = !infoLog.showdate
         setShowDate(data.show)
       } else if(data.subtype === 'distance') {
+        infoLog.showdistance = !infoLog.showdistance
         setShowDistance(data.show)
         if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'duration') {
+        infoLog.showduration = !infoLog.showduration
         setShowDuration(data.show)
         if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'elevation') {
+        infoLog.showelevation = !infoLog.showelevation
         setShowElevation(data.show)
         if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'average') {
+        infoLog.showaverage = !infoLog.showaverage
         setShowAverage(data.show)
         if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'power') {
+        infoLog.showpower = !infoLog.showpower
         setShowPower(data.show)
         if(data.show) setShowCoordinates(false)
       } else if(data.subtype === 'coordinates') {
+        infoLog.showcoordinates = !infoLog.showcoordinates
         setShowCoordinates(data.show)
         if(data.show) {
           enableMode1(false, false)
         }
       } else if(data.subtype === 'mode1') {
+        setInfoLog(saleforceApiUtils.setMode1(infoLog))
         setShowMode1(data.show)
         if(data.show) {
           setShowMode2(!data.show)
@@ -747,6 +773,7 @@ function ImageComponent(props) {
         }
         if(data.show) enableMode1(true)
       } else if(data.subtype === 'mode2') {
+        setInfoLog(saleforceApiUtils.setMode2(infoLog))
         setShowMode2(data.show)
         if(data.show) {
           setShowMode1(!data.show)
@@ -755,6 +782,7 @@ function ImageComponent(props) {
           enableMode2()
         }
       } else if(data.subtype === 'mode3') {
+        setInfoLog(saleforceApiUtils.setMode4(infoLog))
         setShowMode3(data.show)
         if(data.show) {
           setShowMode1(!data.show)
@@ -763,6 +791,7 @@ function ImageComponent(props) {
           enableMode3()
         }
       } else if(data.subtype === 'mode4') {
+        setInfoLog(saleforceApiUtils.setMode4(infoLog))
         setShowMode4(data.show)
         if(data.show) {
           setShowMode1(!data.show)
@@ -772,8 +801,10 @@ function ImageComponent(props) {
         }
       }
     } else if(data.type === 'image') {
+      infoLog.image = data.info
       setImage(data.image)
     } else if(data.type === 'unit') {
+      infoLog.unit = data.unit
       setUnitMeasureSelected(data.unit)
     }
   }
@@ -826,6 +857,7 @@ function ImageComponent(props) {
   }
 
   const handleColorChange = (color) => {
+    infoLog.color = color
     console.info('color to set:', color)
     setDrawingColor(color)
     if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
@@ -1057,7 +1089,7 @@ function ImageComponent(props) {
         <div>
           {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
-        <ButtonImage className="indexed-height" athlete={athlete} activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );

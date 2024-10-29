@@ -83,6 +83,7 @@ const saleforceApiUtils = {
         if(info.filter) result += `"Filter__c":"${info.filter}",`
         if(info.mode) result += `"Mode__c":"${info.mode}",`
         if(info.color) result += `"Color__c":"${info.color}",`
+        if(info.unit) result += `"UnitOfMeasure__c":"${info.unit}",`
         result += `"LoggedToStrava__c":"${info.stravaId ? true : false}",`
         result += `"ShowDate__c":"${info.showdate}",`
         result += `"ShowElevation__c":"${info.showelevation}",`
@@ -125,9 +126,11 @@ const saleforceApiUtils = {
             userState: atheleinfo ? atheleinfo.state : undefined,
             userCountry: atheleinfo ? atheleinfo.country : undefined,
             userSex: atheleinfo ? atheleinfo.sex : undefined,
+            unit: 'metric',
         }
     },
     setMode1(info) {
+        info.mode = 'mode 1'
         info.showaverage = true
         info.showcoordinates = false
         info.showdate = true
@@ -139,6 +142,7 @@ const saleforceApiUtils = {
         return info
     },
     setMode2(info) {
+        info.mode = 'mode 2'
         info.showaverage = false
         info.showcoordinates = false
         info.showdate = true
@@ -150,6 +154,7 @@ const saleforceApiUtils = {
         return info
     },
     setMode3(info) {
+        info.mode = 'mode 3'
         info.showaverage = true
         info.showcoordinates = false
         info.showdate = false
@@ -161,6 +166,7 @@ const saleforceApiUtils = {
         return info
     },
     setMode4(info) {
+        info.mode = 'mode 4'
         info.showaverage = true
         info.showcoordinates = false
         info.showdate = false
