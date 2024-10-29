@@ -40,7 +40,7 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
-  const [imageToShare/**, setImagetoShare*/] = useState(null)
+  const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
   const [blobReady, setBlobReady] = useState(null); 
@@ -113,6 +113,8 @@ function ImageComponent(props) {
     html2canvas(anchor, {backgroundColor:null}).then(function(canvas) {
       console.log('canvas: ', canvas)
       canvas.toBlob(function(blob) {
+        const imgURL = URL.createObjectURL(blob);
+        setImagetoShare(imgURL);
         setBlobReady(blob)
       }, 'image/jpeg');
     })
@@ -1051,7 +1053,7 @@ function ImageComponent(props) {
           </div>
         }
         <div>
-          {imageToShare && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
+          {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>}
         </div>
         <ButtonImage className="indexed-height" athlete={athlete} activity={activity} unitMeasure={unitMeasureSelected} language={language} club={club} admin={admin} handleClickButton={handleClickDispatcher}/>
       </div>
