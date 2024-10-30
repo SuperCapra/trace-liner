@@ -36,6 +36,11 @@ const vocabulary = {
         IMAGE_COORDINATES: 'Coordinates',
         NAME_APP: 'TRACELINER © ' + new Date().getFullYear(),
         CREATED_BY: 'Created with ❤️ by Giovanni Maggi',
+        MODAL_TEXT: 'Download your preferred version!',
+        MODAL_GUIDE: 'The complete will have the background while the countour will have a trasparent background. Bare in mind that IG do not support sharing directly image with transparent background, you have to save in your library first.',
+        MODAL_COMPLETE: 'COMPLETE',
+        MODAL_CONTOUR: 'CONTOUR',
+        MODAL_ERROR: 'Something went wrong, please regenerate the image!',
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -74,6 +79,11 @@ const vocabulary = {
         IMAGE_COORDINATES: 'Coordinate',
         NAME_APP: 'TRACELINER © ' + new Date().getFullYear(),
         CREATED_BY: 'Creato con ❤️ da Giovanni Maggi',
+        MODAL_TEXT: 'Salva la tua versione preferita!',
+        MODAL_GUIDE: 'Quella con lo sfondo può essere condivisa direttamente su IG mentre quella con sfondo trasparente deve essere prima salvata nella galleria e poi inserita come livello nelle storie!',
+        MODAL_COMPLETE: 'COMPLETA',
+        MODAL_CONTOUR: 'CONTORNO',
+        MODAL_ERROR: 'Qualcosa è andato storto rigenera l\'immagine',
     }
 }
 
