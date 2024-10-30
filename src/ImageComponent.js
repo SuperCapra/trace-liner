@@ -4,6 +4,7 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
+// import Modal from './Modal.js'
 import html2canvas from 'html2canvas';
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from './vocabulary.js';
@@ -38,6 +39,7 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
@@ -118,12 +120,11 @@ function ImageComponent(props) {
       console.error('Error:', e)
     })
     .finally(() => {
-      addRoundCorner()
+      pregenerateImagePng()
     })
   },[])
   const pregenerateImagePng = useCallback(() => {
     let anchor = document.getElementById('printingAnchor')
-    removeRoundCorner()
     addOpacity()
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
       canvas.toBlob(function(blob) {
@@ -140,6 +141,7 @@ function ImageComponent(props) {
   },[])
 
   const handleDownloadShare = (type) => {
+    openModal()
     type = type.toLowerCase()
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
@@ -328,12 +330,10 @@ function ImageComponent(props) {
     // if(club && club.name === 'dev-admin') returnImage()
     requestAnimationFrame(() => {
       pregenerateImageJpeg();
-      pregenerateImagePng();
     });
   },[
     activity.coordinates,
-    pregenerateImageJpeg,
-    pregenerateImagePng
+    pregenerateImageJpeg
     // club,
     // returnImage
   ])
@@ -414,7 +414,6 @@ function ImageComponent(props) {
     ctx.fill()
     requestAnimationFrame(() => {
       pregenerateImageJpeg();
-      pregenerateImagePng();
     });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
@@ -434,8 +433,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImageJpeg,
-    pregenerateImagePng
+    pregenerateImageJpeg
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
@@ -503,7 +501,6 @@ function ImageComponent(props) {
     ctx.fill()
     requestAnimationFrame(() => {
       pregenerateImageJpeg();
-      pregenerateImagePng();
     });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
@@ -523,8 +520,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImageJpeg,
-    pregenerateImagePng
+    pregenerateImageJpeg
   ])
 
   // const returnClimbing = (altitudeStream, distanceStream) => {
@@ -952,9 +948,17 @@ function ImageComponent(props) {
       // activity.photoUrl,
       // fetchImage
     ])
+
+  const openModal = () => {
+    setShowModal(true)
+  }
+  const closeModal = () => {
+    setShowModal(false)
+  }
   
   return (
     <div className="wrapper-main">
+      {/* {showModal && <Modal handleCloseModal={() => closeModal()}/>} */}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-arrow-container">

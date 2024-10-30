@@ -743,6 +743,70 @@ p {
   display: flex;
   align-items: center;
 }
+.modal-dimention-positioning{
+  position: absolute;
+  height: fit-content;
+  top: 25%;
+  bottom: 25%;
+  z-index: 10;
+  background-color: var(--palette-secondary);
+  border-radius: 5px;
+  max-width: 500px;
+  width: 60%;
+  min-height: 5%;
+}
+.modal-close-wrapper{
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 15px;
+  height: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-close-icon{
+  width: 10px;
+  height: 10px;
+}
+.modal-close-wrapper:hover{
+  cursor: pointer;
+}
+.modal-close-wrapper:active{
+  filter: brightness(0.6);
+}
+.modal-text{
+  margin: 7% 5%;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-p{
+  color: var(--palette-background)
+}
+.modal-buttons{
+ display: flex;
+ justify-content: flex-end;
+}
+.modal-buttons-single{
+  background-color: var(--palette-background);
+  color: var(--palette-secondary);
+  border-radius: 5px;
+  margin: 5px 5px;
+  padding: 2px 7.5px;
+}
+.modal-buttons-p{
+  font-size: calc(3vw);
+}
+.modal-buttons-single:hover{
+  cursor: pointer;
+  filter: brightness(0.6);
+}
+.modal-buttons-ahead{
+  background-color: var(--palette-primary);
+  color: var(--palette-background);
+}
 @media print, screen and (max-width: 450px) {
   .text-title{
     width: 72vw !important;
@@ -898,6 +962,30 @@ p {
   .arrow-down-language-selector{
     transform: scale(0.55)
   }
+  .modal-dimention-positioning{
+    width: 50%;
+    min-height: 7%;
+  }
+  .modal-close-wrapper{
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+  }
+  .modal-close-icon{
+    width: 15px;
+    height: 15px;
+  }
+  .modal-text{
+    margin: 7% 5%;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-buttons-p{
+    font-size: calc(2.15vw);
+  }
 }
 @media print, screen and (min-width: 600px) {
   .creator{
@@ -1050,6 +1138,13 @@ p {
   }
   .language-selector-alone{
     right: 4%;
+  }
+  .modal-buttons-single{
+    margin: 5px 5px;
+    padding: 5px 10px;
+  }
+  .modal-buttons-p{
+    font-size: calc(1.5vw);
   }
 }
 @media print, screen and (min-width: 800px) {
@@ -1230,6 +1325,30 @@ p {
   }
   .arrow-down-language-selector{
     transform: scale(0.6)
+  }
+  .modal-dimention-positioning{
+    min-height: 10%;
+  }
+  .modal-close-wrapper{
+    top: 8px;
+    right: 8px;
+    width: 23px;
+    height: 23px;
+  }
+  .modal-close-icon{
+    width: 20px;
+    height: 20px;
+  }
+  .modal-text{
+    margin: 7% 5%;
+    width: 90%;
+  }
+  .modal-buttons-single{
+    margin: 10px 10px;
+    padding: 5px 15px;
+  }
+  .modal-buttons-p{
+    font-size: 18px;
   }
 }
 @media print, screen and (min-width: 1100px) {
