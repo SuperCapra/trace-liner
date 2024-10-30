@@ -787,7 +787,7 @@ p {
 }
 .modal-buttons{
  display: flex;
- justify-content: flex-end;
+ justify-content: center;
 }
 .modal-buttons-single{
   background-color: var(--palette-background);

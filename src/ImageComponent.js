@@ -4,7 +4,7 @@ import ButtonImage from './ButtonImage.js'
 import image1 from './images/image1.jpeg'
 import utils from './utils.js'
 import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
-// import Modal from './Modal.js'
+import Modal from './Modal.js'
 import html2canvas from 'html2canvas';
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from './vocabulary.js';
@@ -34,6 +34,7 @@ function ImageComponent(props) {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
+  const modaldRef = useRef()
   const [valueFilter, setValueFilter] = useState(0);
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
@@ -107,45 +108,52 @@ function ImageComponent(props) {
   const classesLogoClub = classesForLogoClub()
   const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
+  
+  const setLoadedModal = (bj,bp) => {
+    if(modaldRef.current) modaldRef.current.loaded(bj,bp)
+  }
 
-  const pregenerateImageJpeg = useCallback(() => {
-    let anchor = document.getElementById('printingAnchor')
-    removeRoundCorner()
-    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
-      canvas.toBlob(function(blob) {
-        setBlobReadyJpeg(blob)
-      }, 'image/jpeg');
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
-    .finally(() => {
-      pregenerateImagePng()
-    })
-  },[])
-  const pregenerateImagePng = useCallback(() => {
-    let anchor = document.getElementById('printingAnchor')
+  const pregenerateImagePng = useCallback((bj, anchor) => {
     addOpacity()
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
       canvas.toBlob(function(blob) {
         setBlobReadyPng(blob)
+        setLoadedModal(bj,blob)
       }, 'image/png');
     })
     .catch((e) => {
       console.error('Error:', e)
     })
     .finally(() => {
-      addRoundCorner()
       removeOpacity()
+      addRoundCorner()
     })
   },[])
 
-  const handleDownloadShare = (type) => {
-    openModal()
-    type = type.toLowerCase()
+  const pregenerateImageJpeg = useCallback(() => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
-    console.log('anchor:',anchor)
+    console.log('anchor', anchor)
+    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
+      canvas.toBlob(function(blob) {
+        setBlobReadyJpeg(blob)
+        pregenerateImagePng(blob, anchor)
+      }, 'image/jpeg');
+    })
+    .catch((e) => {
+      console.error('Error:', e)
+    })
+  },[
+    pregenerateImagePng
+  ])
+
+  const handleDownloadShare = (type) => {
+    openModal()
+    pregenerateImageJpeg()
+  }
+
+  const share = (type) => {
+    type = type.toLowerCase()
     let title = utils.getTitle(activity.beautyName)
     let titleImage = utils.getTitleExtension(title, type)
     let typeFile = 'image/' + type
@@ -173,7 +181,6 @@ function ImageComponent(props) {
     } catch (e) {
       console.log('Error:', e)
     } finally {
-      addRoundCorner()
       try {
         console.log('infoLog: ', infoLog)
         // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
@@ -328,12 +335,12 @@ function ImageComponent(props) {
     // stroke the final circle
     drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // if(club && club.name === 'dev-admin') returnImage()
-    requestAnimationFrame(() => {
-      pregenerateImageJpeg();
-    });
+    // requestAnimationFrame(() => {
+    //   pregenerateImageJpeg();
+    // });
   },[
     activity.coordinates,
-    pregenerateImageJpeg
+    // pregenerateImageJpeg
     // club,
     // returnImage
   ])
@@ -412,9 +419,9 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    requestAnimationFrame(() => {
-      pregenerateImageJpeg();
-    });
+    // requestAnimationFrame(() => {
+    //   pregenerateImageJpeg();
+    // });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -433,7 +440,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImageJpeg
+    // pregenerateImageJpeg
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
@@ -499,9 +506,9 @@ function ImageComponent(props) {
     ctx.fillStyle = color
     ctx.closePath()
     ctx.fill()
-    requestAnimationFrame(() => {
-      pregenerateImageJpeg();
-    });
+    // requestAnimationFrame(() => {
+    //   pregenerateImageJpeg();
+    // });
     // let climbs = returnClimbing(altitudeStream, distanceStream)
     // for(let i = 0; i < climbs.length; i++) {
     //   let climb = climbs[i]
@@ -520,7 +527,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    pregenerateImageJpeg
+    // pregenerateImageJpeg
   ])
 
   // const returnClimbing = (altitudeStream, distanceStream) => {
@@ -958,7 +965,7 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      {/* {showModal && <Modal handleCloseModal={() => closeModal()}/>} */}
+      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} handleCloseModal={() => closeModal()}/>}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-arrow-container">
