@@ -8,6 +8,7 @@
   --palette-background-complementary: #343028;
   --palette-white: #edf6f9;
   --palette-black: #000000;
+  --dot-typing-color: var(--palette-primary)
 }
 @font-face {
   font-family: 'SourceCodePro';
@@ -18,6 +19,9 @@
 /* iframe{
   display: none;
 } */
+body{
+  overscroll-behavior: none;
+}
 p {
   margin-block-start: 0px; 
   margin-block-end: 0px;
@@ -478,10 +482,10 @@ p {
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: var(--palette-primary);
-    color: var(--palette-primary);
-    box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
     animation: dot-typing 1.5s infinite linear;
+    background-color: var(--dot-typing-color);
+    color: var(--dot-typing-color);
+    box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
 }
 .background-opacity{
   opacity: 0 !important
@@ -491,25 +495,25 @@ p {
 }
 @keyframes dot-typing {
     0% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
     16.667% {
-      box-shadow: 9984px -10px 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px -10px 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
     33.333% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px -10px 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px -10px 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
     50% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px -10px 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px -10px 0 0 var(--dot-typing-color);
     }
     66.667% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
     83.333% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
     100% {
-      box-shadow: 9984px 0 0 0 var(--palette-primary), 9999px 0 0 0 var(--palette-primary), 10014px 0 0 0 var(--palette-primary);
+      box-shadow: 9984px 0 0 0 var(--dot-typing-color), 9999px 0 0 0 var(--dot-typing-color), 10014px 0 0 0 var(--dot-typing-color);
     }
 }
 .dropdown-appear{
@@ -744,16 +748,15 @@ p {
   align-items: center;
 }
 .modal-dimention-positioning{
-  position: absolute;
   height: fit-content;
-  top: 25%;
-  bottom: 25%;
-  z-index: 10;
   background-color: var(--palette-secondary);
   border-radius: 5px;
   max-width: 500px;
   width: 60%;
-  min-height: 5%;
+  /* min-height: 100px; */
+  display: flex;
+  justify-content: center;
+  position: relative;
 }
 .modal-close-wrapper{
   position: absolute;
@@ -806,6 +809,18 @@ p {
 .modal-buttons-ahead{
   background-color: var(--palette-primary);
   color: var(--palette-background);
+}
+.modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: Dim background */
+  z-index: 10; /* Ensure it appears on top */
 }
 @media print, screen and (max-width: 450px) {
   .text-title{
@@ -1145,6 +1160,9 @@ p {
   }
   .modal-buttons-p{
     font-size: calc(1.5vw);
+  }
+  .modal-dimention-positioning{
+    width: 30%;
   }
 }
 @media print, screen and (min-width: 800px) {
