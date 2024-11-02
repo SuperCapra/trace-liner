@@ -36,7 +36,7 @@ const vocabulary = {
         IMAGE_COORDINATES: 'Coordinates',
         NAME_APP: 'TRACELINER © ' + new Date().getFullYear(),
         CREATED_BY: 'Created with ❤️ by Giovanni Maggi',
-        MODAL_TEXT: 'Download your preferred version!',
+        MODAL_TEXT: 'Pick your favorite version!',
         MODAL_GUIDE: 'The complete will have the background while the countour will have a trasparent background. Bare in mind that IG do not support sharing directly image with transparent background, you have to save in your library first.',
         MODAL_COMPLETE: 'COMPLETE',
         MODAL_CONTOUR: 'CONTOUR',

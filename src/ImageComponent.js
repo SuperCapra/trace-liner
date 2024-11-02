@@ -44,8 +44,6 @@ function ImageComponent(props) {
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
-  const [blobReadyJpeg, setBlobReadyJpeg] = useState(null); 
-  const [blobReadyPng, setBlobReadyPng] = useState(null); 
   const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
   const styleText = {
@@ -117,7 +115,6 @@ function ImageComponent(props) {
     addOpacity()
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
       canvas.toBlob(function(blob) {
-        setBlobReadyPng(blob)
         setLoadedModal(bj,blob)
       }, 'image/png');
     })
@@ -136,7 +133,6 @@ function ImageComponent(props) {
     console.log('anchor', anchor)
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
       canvas.toBlob(function(blob) {
-        setBlobReadyJpeg(blob)
         pregenerateImagePng(blob, anchor)
       }, 'image/jpeg');
     })
@@ -150,60 +146,6 @@ function ImageComponent(props) {
   const handleDownloadShare = (type) => {
     openModal()
     pregenerateImageJpeg()
-  }
-
-  const share = (type) => {
-    type = type.toLowerCase()
-    let title = utils.getTitle(activity.beautyName)
-    let titleImage = utils.getTitleExtension(title, type)
-    let typeFile = 'image/' + type
-    let b = type === 'png' ? blobReadyPng : blobReadyJpeg
-    try {
-      if(navigator.share && utils.isMobile(club, admin)) {
-        try {
-          console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
-          // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
-          const file = new File([b], titleImage , {type: typeFile, lastModified: new Date()});
-          navigator.share({
-            title: title,
-            text: 'Trace liner image sharing',
-            files: [file]
-          }).catch(error => {
-            if(String(error).includes('NotAllowedError')) downloadImage(title, b, type)
-            console.error('Error sharing image:', error)
-          });
-        } catch (error) {
-          console.error('Error sharing image:', error)
-        }
-      } else {
-        downloadImage(title, b, type)
-      }
-    } catch (e) {
-      console.log('Error:', e)
-    } finally {
-      try {
-        console.log('infoLog: ', infoLog)
-        // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
-        saleforceApiUtils.storeLog(process.env,infoLog)
-      } catch (e) {
-        console.log('Error:', e)
-      }
-    }
-  }
-  const downloadImage = (title, blob, type) => {
-    try {
-      console.log('title:', title)
-      console.log('blob:', blob)
-      console.log('type:', type)
-      const url = URL.createObjectURL(blob);
-      const temp = document.createElement('a');
-      temp.href = url;
-      temp.download = title + '.' + type;
-      temp.click();
-      URL.revokeObjectURL(url); // Clean up URL object after use
-    } catch (error) {
-      console.error('Error downloading image:', error);
-    }
   }
 
   // const fetchImage = useCallback(async () => {

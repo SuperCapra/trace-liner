@@ -93,6 +93,7 @@ const saleforceApiUtils = {
         result += `"ShowDuration__c":"${info.showduration}",`
         result += `"ShowAverage__c":"${info.showaverage}",`
         result += `"ShowTitle__c":"${info.showname}"}`
+        result += `"ExportType__c":"${info.exportType}"}`
 
         return result
     },
@@ -127,6 +128,7 @@ const saleforceApiUtils = {
             userCountry: atheleinfo ? atheleinfo.country : undefined,
             userSex: atheleinfo ? atheleinfo.sex : undefined,
             unit: 'metric',
+            exportType: 'complete'
         }
     },
     setMode1(info) {

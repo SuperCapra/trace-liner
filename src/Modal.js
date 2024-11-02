@@ -31,6 +31,7 @@ const Modal = forwardRef((props,ref) => {
         let titleImage = utils.getTitleExtension(title, type)
         let typeFile = 'image/' + type
         let b = type === 'png' ? blobCountour : blobComplete
+        if(type === 'png') infoLog.exportType = 'contour'
         try {
           if(navigator.share && utils.isMobile(club, admin)) {
             try {
@@ -83,13 +84,13 @@ const Modal = forwardRef((props,ref) => {
       }
 
     useImperativeHandle(ref, () => ({
-        loaded
+      loaded
     }))
 
     return(
-        // <div className="p-back p-uppercase" id="dropDown">
-        <div className="modal-dimention-positioning" id="modal" tabIndex={0}>
-            {isLoading && <div className="modal-text"><Loader/></div>}
+        <div className="modal-overlay" onClick={(e) => {if(e.target.className === 'modal-overlay') handleCloseModal()}}>
+          <div className="modal-dimention-positioning" id="modal" tabIndex={0}>
+            {isLoading && <div className="modal-text"><Loader color='background'/></div>}
             {!isLoading && isError && <div>
                 <div className="modal-close-wrapper">
                     <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
@@ -99,8 +100,10 @@ const Modal = forwardRef((props,ref) => {
                 </div>
             </div>}
             {!isLoading && !isError && <div>
-                <div className="modal-close-wrapper">
-                    <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
+                <div>
+                  <div className="modal-close-wrapper">
+                      <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
+                  </div>
                 </div>
                 <div className="modal-text">
                     <p className="modal-p p-back">{vocabulary[language]['MODAL_TEXT']}</p>
@@ -110,8 +113,7 @@ const Modal = forwardRef((props,ref) => {
                     <div className="modal-buttons-single modal-buttons-p" onClick={() => share('png')}>{vocabulary[language]['MODAL_CONTOUR']}</div>
                 </div>}
             </div>}
-
-            {/* <div className="p-back p-uppercase" id="dropDown" onBlur={closeDropdown} tabIndex={0}> */}
+          </div>
         </div>
     )
 })
