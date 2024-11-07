@@ -132,7 +132,7 @@ app.post('/api/salesforce-login-and-upsert', async (req, res) => {
     const upsertUrl = `${instanceUrlFromLogin}/services/data/v50.0/sobjects/${object}/${field}/${externalId}`;
 
     console.log('upsertUrl', upsertUrl)
-    console.log('req.body', req.body)
+    console.log('body', body)
 
     const upsertResponse = await fetch(upsertUrl, {
       method: 'PATCH',
