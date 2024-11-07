@@ -92,7 +92,7 @@ const saleforceApiUtils = {
         result += `"ShowDistance__c":"${info.showdistance}",`
         result += `"ShowDuration__c":"${info.showduration}",`
         result += `"ShowAverage__c":"${info.showaverage}",`
-        result += `"ShowTitle__c":"${info.showname}"}`
+        result += `"ShowTitle__c":"${info.showname}",`
         result += `"ExportType__c":"${info.exportType}"}`
 
         return result
