@@ -1,18 +1,18 @@
 import './App.css';
 import React, {useState} from 'react';
-import utils from './utils.js'
-import Loader from './Loader.js'
-import ImageComponent from './ImageComponent.js'
-import Creator from './Creator.js'
-// import Dropdown from './Dropdown.js'
-import {ReactComponent as ArrowDown} from './images/arrowDownSimplified.svg'
-import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
-import brandingPalette from './brandingPalette';
-import {vocabulary, languages} from './vocabulary';
-import clubs from './clubs'
+import utils from './utils/utils.js'
+import Loader from './components/Loader.js'
+import ImageComponent from './components/ImageComponent.js'
+import Creator from './components/Creator.js'
+// import Dropdown from './components/Dropdown.js'
+import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
+import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
+import brandingPalette from './config/brandingPalette';
+import {vocabulary, languages} from './config/vocabulary';
+import clubs from './config/clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
-import saleforceApiUtils from './api/salesforce.js';
+import saleforceApiUtils from './services/salesforce.js';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 

@@ -1,8 +1,8 @@
-import {ReactComponent as LogoHomepageMuraSVG} from './images/logoMuraExtended.svg';
-import {ReactComponent as LogoImageNamaSVG} from './images/logoNama.svg'
-import {ReactComponent as LogoImageMuraSVG} from './images/logoMura.svg'
-import {ReactComponent as LogoImageSEM} from './images/logoSEM.svg'
-import {ReactComponent as LogoHomepageImageSEM} from './images/logoSEMExtended.svg'
+import {ReactComponent as LogoHomepageMuraSVG} from '../assets/images/logoMuraExtended.svg';
+import {ReactComponent as LogoImageNamaSVG} from '../assets/images/logoNama.svg'
+import {ReactComponent as LogoImageMuraSVG} from '../assets/images/logoMura.svg'
+import {ReactComponent as LogoImageSEM} from '../assets/images/logoSEM.svg'
+import {ReactComponent as LogoHomepageImageSEM} from '../assets/images/logoSEMExtended.svg'
 import brandingPalette from './brandingPalette';
 
 const styleLogoSem = {

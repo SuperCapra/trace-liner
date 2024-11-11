@@ -1,4 +1,4 @@
-import {vocabulary, languages, languagesRules} from "./vocabulary"
+import {vocabulary, languages, languagesRules} from "../config/vocabulary"
 
 const utilsFunction = {
     getJsonDate(dateUnparsed, removeZero) {

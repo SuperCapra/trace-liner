@@ -1,11 +1,11 @@
-import './App.css';
+import '../App.css';
 import React, {useState, useImperativeHandle, forwardRef} from 'react';
-import {ReactComponent as Close} from './images/close.svg'
-import brandingPalette from './brandingPalette';
+import {ReactComponent as Close} from '../assets/images/close.svg'
+import brandingPalette from '../config/brandingPalette';
+import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import Loader from './Loader.js'
-import utils from './utils.js'
-import saleforceApiUtils from './api/salesforce.js'
-import { vocabulary/**, languages*/ } from './vocabulary.js';
+import utils from '../utils/utils.js'
+import saleforceApiUtils from '../services/salesforce.js'
 
 const Modal = forwardRef((props,ref) => {
 

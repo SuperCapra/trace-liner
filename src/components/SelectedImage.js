@@ -1,5 +1,5 @@
 import React from 'react';
-import brandingPalette from './brandingPalette';
+import brandingPalette from '../config/brandingPalette';
 function SelectedImage(props) {
     let styleRect = {
         fill: brandingPalette.secondary,

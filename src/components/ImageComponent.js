@@ -1,14 +1,14 @@
-import './App.css';
+import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
+import image1 from '../assets/images/image1.jpeg'
+import {ReactComponent as ArrowLeft} from '../assets/images/arrowLeftSimplified20.svg'
+import utils from '../utils/utils.js'
 import ButtonImage from './ButtonImage.js'
-import image1 from './images/image1.jpeg'
-import utils from './utils.js'
-import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import Modal from './Modal.js'
-import html2canvas from 'html2canvas';
 import Loader from './Loader.js'
-import { vocabulary/**, languages*/ } from './vocabulary.js';
-import saleforceApiUtils from './api/salesforce.js';
+import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
+import saleforceApiUtils from '../services/salesforce.js';
+import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
 
