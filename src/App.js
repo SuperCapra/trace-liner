@@ -211,8 +211,8 @@ class Homepage extends React.Component{
     //   this.getActivities()
     // }
     // window.alert(window.innerHeight + ' and ' + window.clientHeight)
-    console.info('Language navigator:', navigator.language)
-    console.info('Language:', this.props.language)
+    logUtils.loggerText('Language navigator:', navigator.language)
+    logUtils.loggerText('Language:', this.props.language)
     logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false

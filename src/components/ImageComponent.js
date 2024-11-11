@@ -557,7 +557,7 @@ function ImageComponent(props) {
   ])
 
   const handleClickDispatcher = (data) => {
-    console.info('handleClickDispatcher:', data)
+    logUtils.loggerText('handleClickDispatcher:', data)
     if(data.type === 'downloadshare') {
       handleDownloadShare(data.subtype)
     } else
@@ -738,7 +738,7 @@ function ImageComponent(props) {
   // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
-    console.info('Ratio text:', ratioText)
+    logUtils.loggerText('Ratio text:', ratioText)
     if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
     imageReference.onload = () => {
