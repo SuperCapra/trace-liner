@@ -1,4 +1,5 @@
 import {vocabulary, languages, languagesRules} from "../config/vocabulary"
+import logUtils from "./logUtils.js"
 
 const utilsFunction = {
     getJsonDate(dateUnparsed, removeZero) {
@@ -68,7 +69,7 @@ const utilsFunction = {
         result.beautyCoordinatesTextTime = result.beautyCoordinates[0] + ' | ' + result.beautyCoordinates[1]
         result.beautyCoordinatesTextDecimal = Math.abs(result.coordinates[0]).toFixed(5) + '°' + latPolarDirection + ' | ' + Math.abs(result.coordinates[1]).toFixed(5) + '°' + longPolarDirection
 
-        console.log('GetBeautyCoordinates result: ', result)
+        logUtils.loggerText('GetBeautyCoordinates result: ', result)
 
         return result
     },
@@ -107,7 +108,9 @@ const utilsFunction = {
         parsedDuration.hours = Math.floor(durationInSec / 3600)
         parsedDuration.minutes = Math.floor((durationInSec - (parsedDuration.hours * 3600)) / 60)
         parsedDuration.seconds = durationInSec - (parsedDuration.hours * 3600) - (parsedDuration.minutes * 60)
-        console.log('GetJsonDuration result:', parsedDuration)
+
+        logUtils.loggerText('GetJsonDuration result: ', parsedDuration)
+
         return parsedDuration
     },
 
@@ -240,8 +243,9 @@ const utilsFunction = {
         let y = dateTimeJs.getFullYear()
         let m = (String(dateTimeJs.getMonth() + 1)).padStart(2,'0')
         let d = String(dateTimeJs.getDate()).padStart(2,'0')
-        console.log(y + '-' + m + '-' + d)
-        return y + '-' + m + '-' + d
+        let result = y + '-' + m + '-' + d
+        logUtils.logger(result)
+        return result
     },
 
     isMobile(club, admin) {

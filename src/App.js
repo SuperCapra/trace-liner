@@ -1,6 +1,7 @@
 import './App.css';
 import React, {useState} from 'react';
 import utils from './utils/utils.js'
+import logUtils from "./logUtils.js"
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
@@ -119,11 +120,11 @@ class Homepage extends React.Component{
         let gpxFile = e.target.result
         const gpx = new GPXParser()
         gpx.parse(gpxFile)
-        console.log('gpx.metadata.time: ', gpx.metadata.time)
+        logUtils.loggerText('gpx.metadata.time: ', gpx.metadata.time)
         let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
         let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
-        console.log('gpx:', gpx)
-        console.log('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
+        logUtils.loggerText('gpx:', gpx)
+        logUtils.loggerText('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
         const tracks = gpx.tracks.map(track => ({
           average: undefined,
           altitudeStream: [...track.points.map(point => (point.ele))],
@@ -190,7 +191,7 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
-        console.log('activityPreparing ', activityPreparing)
+        logUtils.loggerText('activityPreparing ', activityPreparing)
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
       }
@@ -212,14 +213,14 @@ class Homepage extends React.Component{
     // window.alert(window.innerHeight + ' and ' + window.clientHeight)
     console.info('Language navigator:', navigator.language)
     console.info('Language:', this.props.language)
-    console.log('clubs', clubs)
-    console.log('window.location.hostname:', window.location.pathname)
+    logUtils.loggerText('clubs', clubs)
+    logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     admin = urlCurrent.includes('/admin')
     if(admin) stravaAuthorizeUrl += '/admin'
-    console.log('window.location', window.location.href)
+    logUtils.loggerText('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
     let language = this.props.language
@@ -240,7 +241,7 @@ class Homepage extends React.Component{
     if(code && !called) {
       // queryParameters.forEach((value, key) => {
       //   queryParameters.delete(key)
-      //   console.log(key, value);
+      //   logUtils.loggerText(key, value);
       // });
       called = true
       this.getAccessTokenAndActivities(code)
@@ -382,7 +383,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('res: ', res)
+        logUtils.loggerText('res: ', res)
         if(res && res.errors && res.errors.length) {
           window.history.pushState({}, document.title, window.location.pathname);
           window.location.reload();
@@ -390,7 +391,7 @@ class Homepage extends React.Component{
         accessToken = res.access_token
         athleteData = res.athlete
         let refreshToken = res.refresh_token
-        console.log('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
+        logUtils.loggerText('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
           try {
             saleforceApiUtils.storeRefreshToken(process.env,athleteData.id,utils.getName(athleteData.firstname,athleteData.lastname),refreshToken)
@@ -398,8 +399,8 @@ class Homepage extends React.Component{
             console.error(e)
           }
         }
-        localStorage.setItem('tracelinerkey',accessToken);
-        console.log('athleteData: ', athleteData)
+        // localStorage.setItem('tracelinerkey',accessToken);
+        console.info('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
@@ -422,7 +423,7 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         if(res) {
-          console.log('Athlete data: ', res)
+          console.info('Athlete data: ', res)
           unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
           this.getActivities()
         }
@@ -431,7 +432,7 @@ class Homepage extends React.Component{
   }
   
   getActivities() {
-    console.log('getting all the activities...')
+    console.info('getting all the activities...')
     let urlActivities = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ACTIVITY_DIRECTORY +
       '?access_token=' + accessToken
   
@@ -448,7 +449,7 @@ class Homepage extends React.Component{
         console.info('Row activities: ', res)
         if(res) {
           res.forEach(e => {
-            console.log('Activity: ', e)
+            logUtils.loggerText('Activity: ', e)
             let t = {
               average: utils.getAverageSpeedMetric(e.distance, e.moving_time),
               altitudeStream: [],

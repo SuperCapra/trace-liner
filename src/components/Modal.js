@@ -5,6 +5,7 @@ import brandingPalette from '../config/brandingPalette';
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import Loader from './Loader.js'
 import utils from '../utils/utils.js'
+import logUtils from '../utils/logUtils.js'
 import saleforceApiUtils from '../services/salesforce.js'
 
 const Modal = forwardRef((props,ref) => {
@@ -35,7 +36,7 @@ const Modal = forwardRef((props,ref) => {
         try {
           if(navigator.share && utils.isMobile(club, admin)) {
             try {
-              console.log('navigator.UserActivation.isActive hey:', navigator.userActivation.isActive)
+              console.info('Is user activation: ', navigator.userActivation.isActive)
               // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
               const file = new File([b], titleImage , {type: typeFile, lastModified: new Date()});
               navigator.share({
@@ -53,23 +54,23 @@ const Modal = forwardRef((props,ref) => {
             downloadImage(title, b, type)
           }
         } catch (e) {
-          console.log('Error:', e)
+          console.error('Error:', e)
         } finally {
           try {
-            console.log('infoLog: ', infoLog)
-            // console.log('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
+            logUtils.loggerText('infoLog: ', infoLog)
+            // logUtils.loggerText('infoLog body:', saleforceApiUtils.getBodyLog(infoLog))
             saleforceApiUtils.storeLog(process.env,infoLog)
           } catch (e) {
-            console.log('Error:', e)
+            console.error('Error:', e)
           }
           handleCloseModal()
         }
       }
       const downloadImage = (title, blob, type) => {
         try {
-          console.log('title:', title)
-          console.log('blob:', blob)
-          console.log('type:', type)
+          logUtils.loggerText('title:', title)
+          logUtils.loggerText('blob:', blob)
+          logUtils.loggerText('type:', type)
           const url = URL.createObjectURL(blob);
           const temp = document.createElement('a');
           temp.href = url;

@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState} from 'react';
 import ShareContour from './ShareContour'
 import SelectedImage from './SelectedImage';
+import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import {vocabulary} from '../config/vocabulary';
 import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
@@ -303,7 +304,7 @@ function ButtonImage(props) {
         }
         colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: brandingPalette[color]})}/>)
       }
-      console.log('colors', colors)
+      logUtils.loggerText('colors', colors)
     }
     return (colors)
   }
@@ -558,7 +559,7 @@ function ButtonImage(props) {
   //       if (blob) {
   //         // Send the blob to the proxy server
   //         const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
-  //         console.log('url:', uploadedImageUrl)
+  //         logUtils.loggerText('url:', uploadedImageUrl)
           
   //         // Share the URL once the image is uploaded
   //         if (uploadedImageUrl) {
@@ -576,7 +577,7 @@ function ButtonImage(props) {
   //   const formData = new FormData();
   //   formData.append('file', blob, titleImage);
   //   let origin = window.location.origin
-  //   console.log('formData:', formData)
+  //   logUtils.loggerText('formData:', formData)
   
   //   try {
   //     const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
