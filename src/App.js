@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState} from 'react';
 import utils from './utils/utils.js'
-import logUtils from "./logUtils.js"
+import logUtils from "./utils/logUtils.js"
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
