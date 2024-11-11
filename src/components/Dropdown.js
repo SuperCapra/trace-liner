@@ -1,8 +1,8 @@
-import './App.css';
+import '../App.css';
 import React, {useState} from 'react';
-import {ReactComponent as ArrowDown} from './images/arrowDownSimplified20.svg'
-import {ReactComponent as Tick} from './images/tick.svg'
-import brandingPalette from './brandingPalette';
+import {ReactComponent as ArrowDown} from '../assets/images/arrowDownSimplified20.svg'
+import {ReactComponent as Tick} from '../assets/images/tick.svg'
+import brandingPalette from '../config/brandingPalette';
 
 function Dropdown(props) {
 

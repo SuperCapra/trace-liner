@@ -1,5 +1,5 @@
-import brandingPalette from "../brandingPalette"
-import utils from "../utils.js"
+import brandingPalette from "../config/brandingPalette"
+import utils from "../utils/utils.js"
 
 const saleforceApiUtils = {
     storeRefreshToken(setting, userCode, name, refreshToken) {

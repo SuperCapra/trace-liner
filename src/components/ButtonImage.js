@@ -1,24 +1,25 @@
-import './App.css';
+import '../App.css';
 import React, {useState} from 'react';
-import {ReactComponent as ShareSVG} from './images/share.svg'
 import ShareContour from './ShareContour'
-import {ReactComponent as ModifySVG} from './images/modify.svg'
-import {ReactComponent as TextSVG} from './images/text.svg'
-import {ReactComponent as RectangleSVG} from './images/rectangle.svg'
-import {ReactComponent as SquareSVG} from './images/square.svg'
-import {ReactComponent as ViewSVG} from './images/view.svg'
-import {ReactComponent as HideSVG} from './images/hide.svg'
-import {ReactComponent as UnitMeasureSVG} from './images/unitMeasure.svg'
 import SelectedImage from './SelectedImage';
-import brandingPalette from './brandingPalette';
-import {vocabulary} from './vocabulary';
-import image1 from './images/image1.jpeg'
-import image2 from './images/image2.jpeg'
-import image3 from './images/image3.jpeg'
-import image4 from './images/image4.jpeg'
-import image5 from './images/image5.jpg'
-import image6 from './images/image6.jpeg'
-import image7 from './images/image7.jpeg'
+import logUtils from '../utils/logUtils';
+import brandingPalette from '../config/brandingPalette';
+import {vocabulary} from '../config/vocabulary';
+import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
+import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
+import {ReactComponent as TextSVG} from '../assets/images/text.svg'
+import {ReactComponent as RectangleSVG} from '../assets/images/rectangle.svg'
+import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
+import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
+import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
+import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
+import image1 from '../assets/images/image1.jpeg'
+import image2 from '../assets/images/image2.jpeg'
+import image3 from '../assets/images/image3.jpeg'
+import image4 from '../assets/images/image4.jpeg'
+import image5 from '../assets/images/image5.jpg'
+import image6 from '../assets/images/image6.jpeg'
+import image7 from '../assets/images/image7.jpeg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -303,7 +304,7 @@ function ButtonImage(props) {
         }
         colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: brandingPalette[color]})}/>)
       }
-      console.log('colors', colors)
+      logUtils.loggerText('colors', colors)
     }
     return (colors)
   }
@@ -558,7 +559,7 @@ function ButtonImage(props) {
   //       if (blob) {
   //         // Send the blob to the proxy server
   //         const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
-  //         console.log('url:', uploadedImageUrl)
+  //         logUtils.loggerText('url:', uploadedImageUrl)
           
   //         // Share the URL once the image is uploaded
   //         if (uploadedImageUrl) {
@@ -576,7 +577,7 @@ function ButtonImage(props) {
   //   const formData = new FormData();
   //   formData.append('file', blob, titleImage);
   //   let origin = window.location.origin
-  //   console.log('formData:', formData)
+  //   logUtils.loggerText('formData:', formData)
   
   //   try {
   //     const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL

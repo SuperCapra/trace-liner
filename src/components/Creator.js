@@ -1,6 +1,6 @@
-import './App.css';
+import '../App.css';
 import React from 'react';
-import { vocabulary } from './vocabulary.js';
+import { vocabulary } from '../config/vocabulary.js';
 
 function Creator(props) {
     const {language, classes} = props

@@ -1,5 +1,5 @@
 import React from 'react';
-import brandingPalette from './brandingPalette';
+import brandingPalette from '../config/brandingPalette';
 function ShareContour(props) {
     let styleContour = {
         fill:'none',

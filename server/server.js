@@ -183,17 +183,17 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, '../build')));
 
 // The "catchall" handler: for any request that doesn't match,
 // send back the index.html from the React app.
 roots.forEach(rootKey => {
   app.get(rootKey, (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
   let rootAdmin = '/admin' + rootKey
   app.get(rootAdmin, (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
 })
 

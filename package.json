@@ -22,6 +22,7 @@
     "html2canvas": "^1.4.1",
     "multer": "^1.4.5-lts.1",
     "path": "^0.12.7",
+    "pg": "^8.13.1",
     "rc-slider": "^10.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -39,7 +40,7 @@
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-start": "node server.js",
+    "heroku-start": "node server/server.js",
     "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {

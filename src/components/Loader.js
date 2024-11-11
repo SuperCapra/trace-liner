@@ -1,6 +1,6 @@
-import './App.css';
+import '../App.css';
 import React, { useEffect } from 'react';
-import brandingPalette from './brandingPalette';
+import brandingPalette from '../config/brandingPalette';
 
 function Loader(props) {
     const {color} = props

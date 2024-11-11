@@ -1,14 +1,15 @@
-import './App.css';
+import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
+import image1 from '../assets/images/image1.jpeg'
+import {ReactComponent as ArrowLeft} from '../assets/images/arrowLeftSimplified20.svg'
+import utils from '../utils/utils.js'
+import logUtils from '../utils/logUtils.js';
 import ButtonImage from './ButtonImage.js'
-import image1 from './images/image1.jpeg'
-import utils from './utils.js'
-import {ReactComponent as ArrowLeft} from './images/arrowLeftSimplified20.svg'
 import Modal from './Modal.js'
-import html2canvas from 'html2canvas';
 import Loader from './Loader.js'
-import { vocabulary/**, languages*/ } from './vocabulary.js';
-import saleforceApiUtils from './api/salesforce.js';
+import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
+import saleforceApiUtils from '../services/salesforce.js';
+import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
 
@@ -130,7 +131,7 @@ function ImageComponent(props) {
   const pregenerateImageJpeg = useCallback(() => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
-    console.log('anchor', anchor)
+    logUtils.loggerText('anchor', anchor)
     html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
       canvas.toBlob(function(blob) {
         pregenerateImagePng(blob, anchor)
@@ -154,13 +155,13 @@ function ImageComponent(props) {
   //   // const proxyUrl = `http:localhost:3000/image-proxy?url=${encodeURIComponent(imageUrl)}`;
   
   //   const response = await fetch(proxyUrl);
-  //   console.log('response: ', response)
+  //   logUtils.loggerText('response: ', response)
   //   const blob = await response.blob();
   //   const imageObjectURL = URL.createObjectURL(blob);
     
   //   // Set the image source in your app (for example, in an img element)
   //   activity['photoUrlProxied'] = imageObjectURL.replace('blob:','');
-  //   console.log('activity: ', activity)
+  //   logUtils.loggerText('activity: ', activity)
   // },[
   //   activity
   // ]);
@@ -237,7 +238,7 @@ function ImageComponent(props) {
     let mapCenter = [mapCenterX, mapCenterY]
 
     let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
-    console.log('zoomFactor:', zoomFactor)
+    logUtils.loggerText('zoomFactor:', zoomFactor)
     ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = color 
@@ -325,12 +326,12 @@ function ImageComponent(props) {
 
     let altitudeGap = maxAltitude - minAltitude
 
-    console.log('width:', width)
-    console.log('height:', height)
-    console.log('altitudeStream:', altitudeStream)
-    console.log('maxAltitude:', maxAltitude)
-    console.log('minAltitude:', minAltitude)
-    console.log('altitudeGap:', altitudeGap)
+    logUtils.loggerText('width:', width)
+    logUtils.loggerText('height:', height)
+    logUtils.loggerText('altitudeStream:', altitudeStream)
+    logUtils.loggerText('maxAltitude:', maxAltitude)
+    logUtils.loggerText('minAltitude:', minAltitude)
+    logUtils.loggerText('altitudeGap:', altitudeGap)
 
     ctx.clearRect(0, 0, width, height);
 
@@ -341,8 +342,8 @@ function ImageComponent(props) {
   
     let zoomFactorY = (height * 0.30)/altitudeGap
     let zoomFactorX = width/distanceStream[lengthDistance - 1]
-    console.log('zoomFactorY:', zoomFactorY)
-    console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+    logUtils.loggerText('zoomFactorY:', zoomFactorY)
+    logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
 
     for(let i = 0; i < altitudeStream.length; i++) {
       if(i % Math.floor(lengthDistance/100) === 0) {
@@ -351,8 +352,8 @@ function ImageComponent(props) {
         ctx.lineTo(aX,aY)
       }
     }
-    console.log('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    console.log('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
     
     ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
     ctx.lineTo(width,height)
@@ -409,12 +410,12 @@ function ImageComponent(props) {
 
     let altitudeGap = maxAltitude - minAltitude
 
-    console.log('width:', width)
-    console.log('height:', height)
-    console.log('altitudeStream:', altitudeStream)
-    console.log('maxAltitude:', maxAltitude)
-    console.log('minAltitude:', minAltitude)
-    console.log('altitudeGap:', altitudeGap)
+    logUtils.loggerText('width:', width)
+    logUtils.loggerText('height:', height)
+    logUtils.loggerText('altitudeStream:', altitudeStream)
+    logUtils.loggerText('maxAltitude:', maxAltitude)
+    logUtils.loggerText('minAltitude:', minAltitude)
+    logUtils.loggerText('altitudeGap:', altitudeGap)
 
     ctx.clearRect(0, 0, width, height);
 
@@ -427,8 +428,8 @@ function ImageComponent(props) {
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
     let zoomFactorX = (width * 0.4)/altitudeGap
 
-    console.log('zoomFactorY:', zoomFactorY)
-    console.log('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+    logUtils.loggerText('zoomFactorY:', zoomFactorY)
+    logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
 
     for(let i = 0; i < altitudeStream.length; i++) {
       if(i % Math.floor(lengthDistance/200) === 0) {
@@ -438,8 +439,8 @@ function ImageComponent(props) {
       }
     }
 
-    console.log('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    console.log('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
 
     ctx.lineTo(width - ((altitudeStream[lengthAltitude - 1] - minAltitude * 0.9) * zoomFactorX),0)
     ctx.lineTo(width,0)
@@ -477,7 +478,7 @@ function ImageComponent(props) {
   //   let dsl = distanceStream.length
   //   altitudeStream = altitudeStream.map(x => Math.floor(x))
   //   distanceStream = distanceStream.map(x => Math.floor(x))
-  //   console.log('altitudeStream:', altitudeStream)
+  //   logUtils.loggerText('altitudeStream:', altitudeStream)
   //   let climbs = []
   //   for(let i = 0; i < asl - 1; i++) {
   //     let climb = {
@@ -507,7 +508,7 @@ function ImageComponent(props) {
   //       }
   //     }
   //   }
-  //   console.log('climbs:', climbs)
+  //   logUtils.loggerText('climbs:', climbs)
   //   climbs = climbs.filter(x => x.gradient > 0)
   //   let finalClimbs = []
   //   if(climbs) finalClimbs.push(climbs[0])
@@ -533,7 +534,7 @@ function ImageComponent(props) {
   //       }
   //   }
   //   finalClimbs = finalClimbs.filter(x => x.distance > (distanceStream[dsl - 1] * 0.01) && x.gradient > 0.03)
-  //   console.log('finalClimbs:', finalClimbs)
+  //   logUtils.loggerText('finalClimbs:', finalClimbs)
   //   return finalClimbs
   // }
 
@@ -724,7 +725,7 @@ function ImageComponent(props) {
   }
 
   // const handleBlendMode = (blendModeSetting) => {
-  //   console.log('Blend mode to set:', blendModeSetting)
+  //   logUtils.loggerText('Blend mode to set:', blendModeSetting)
   //   if(drawingColor === '#000000' || (showMode3 && drawingColor === '#282c34')) {
   //     handleColorChange(brandingPalette.primary)
   //   } else {
@@ -789,8 +790,8 @@ function ImageComponent(props) {
       setCanvasHeight(canvasHeight);
 
       // Clear the canvas and draw the image scaled down
-      console.log('canvas.width', canvas.width)
-      console.log('canvas.height', canvas.height)
+      logUtils.loggerText('canvas.width', canvas.width)
+      logUtils.loggerText('canvas.height', canvas.height)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
