@@ -1,5 +1,6 @@
 import brandingPalette from "../config/brandingPalette"
 import utils from "../utils/utils.js"
+import logUtils from "../utils/logUtils.js"
 
 const saleforceApiUtils = {
     storeRefreshToken(setting, userCode, name, refreshToken) {
@@ -7,7 +8,7 @@ const saleforceApiUtils = {
         let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
         let url = `${urlHost}/api/salesforce-login-and-upsert`
-        console.log('url:', url)
+        logUtils.loggerText('url:', url)
         fetch(url, {
             method: 'POST',
             headers: {
@@ -27,7 +28,7 @@ const saleforceApiUtils = {
         let pathname = window.location.pathname + '?'
         let urlHost = href.substring(0,href.indexOf(pathname))
         let url = `${urlHost}/api/salesforce-login-and-upsert`
-        console.log('url:', url)
+        logUtils.loggerText('url:', url)
         fetch(url, {
             method: 'POST',
             headers: {
