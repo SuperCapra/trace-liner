@@ -11,8 +11,12 @@ CREATE TABLE users (
   username VARCHAR(255),
   token VARCHAR(255),
   has_strava BOOLEAN DEFAULT FALSE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  lastmodified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP,
+  created_at_local TIMESTAMP,
+  lastmodified_at TIMESTAMP,
+  lastmodified_at_local TIMESTAMP,
+  timezone_offset VARCHAR(20),
+  timezone_zone VARCHAR(20)
 );
 
 CREATE TABLE activities (
@@ -50,8 +54,12 @@ CREATE TABLE activities (
   start_lng FLOAT,
   summary_map VARCHAR(4000),
   total_elevation_gain INTEGER,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  lastmodified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  created_at TIMESTAMP,
+  created_at_local TIMESTAMP,
+  lastmodified_at TIMESTAMP,
+  lastmodified_at_local TIMESTAMP,
+  timezone_offset VARCHAR(20),
+  timezone_zone VARCHAR(20)
 );
 
 CREATE TABLE exports (
@@ -73,7 +81,10 @@ CREATE TABLE exports (
   show_elevation BOOLEAN DEFAULT FALSE,
   show_power BOOLEAN DEFAULT FALSE,
   show_name BOOLEAN DEFAULT FALSE,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  timestamp TIMESTAMP,
+  timestamp_local TIMESTAMP,
+  timezone_offset VARCHAR(20),
+  timezone_zone VARCHAR(20)
 );
 
 CREATE TABLE visits (
@@ -86,7 +97,10 @@ CREATE TABLE visits (
   has_selected_activity BOOLEAN DEFAULT FALSE,
   has_exported BOOLEAN DEFAULT FALSE,
   type_export VARCHAR(255),
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  timestamp TIMESTAMP,
+  timestamp_local TIMESTAMP,
+  timezone_offset VARCHAR(20),
+  timezone_zone VARCHAR(20)
 );
 
 CREATE TABLE logs (
@@ -97,5 +111,8 @@ CREATE TABLE logs (
   message VARCHAR(255),
   type VARCHAR(255),
   is_error BOOLEAN DEFAULT FALSE,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  timestamp TIMESTAMP,
+  timestamp_local TIMESTAMP,
+  timezone_offset VARCHAR(20),
+  timezone_zone VARCHAR(20)
 );
