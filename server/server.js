@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
+const jwt = require('jsonwebtoken');
 // const axios = require('axios');
 // const cors = require('cors');
 const app = express();
@@ -14,6 +15,17 @@ const roots = [
   '/sem',
 ];
 
+app.use(express.json());
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
+  if (!token) return res.status(403).json({ error: 'Access denied' });
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
 // // enables cors for all routea
 // app.use(cors());
 
@@ -49,7 +61,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Proxy route for handling image upload
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload',authenticateToken, upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
@@ -64,7 +76,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 // Serve and delete image after download
-app.get('/uploads/:filename', (req, res) => {
+app.get('/uploads/:filename', authenticateToken, (req, res) => {
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
   try {
     // navigator.share({
@@ -96,7 +108,7 @@ app.get('/uploads/:filename', (req, res) => {
   }
 });
 
-app.post('/delete/:filename', (req,res) => {
+app.post('/delete/:filename', authenticateToken, (req,res) => {
   console.log('filePath:', req.params.filename)
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
   console.log('filePath:', filePath)
@@ -108,9 +120,7 @@ app.post('/delete/:filename', (req,res) => {
     }
   });
 })
-
-app.use(express.json())
-app.post('/api/editable/:table', async (req, res) => {
+app.post('/api/editable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecordEditable(req.body, table)
@@ -124,7 +134,7 @@ app.post('/api/editable/:table', async (req, res) => {
     res.status(500).json({error: e})
   }
 })
-app.patch('/api/editable/:table/:recordId', async (req, res) => {
+app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const recordId = req.params.recordId
@@ -139,7 +149,7 @@ app.patch('/api/editable/:table/:recordId', async (req, res) => {
     res.status(500).json({error: e})
   }
 })
-app.post('/api/noneditable/:table', async (req, res) => {
+app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecord(req.body, table)
@@ -153,7 +163,7 @@ app.post('/api/noneditable/:table', async (req, res) => {
     res.status(500).json({error: e})
   }
 })
-app.get('/api/:table', async (req, res) => {
+app.get('/api/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const fields = req.body.fields
@@ -176,7 +186,7 @@ app.get('/api/:table', async (req, res) => {
     res.status(500).json({error: e})
   }
 })
-app.get('/api/:table/:field/:value', async (req, res) => {
+app.get('/api/:table/:field/:value', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const fields = req.body.fields
@@ -199,7 +209,7 @@ app.get('/api/:table/:field/:value', async (req, res) => {
   }
 })
 
-app.post('/api/salesforce-login-and-upsert', async (req, res) => {
+app.post('/api/salesforce-login-and-upsert', authenticateToken, async (req, res) => {
   const { username, password, securityToken, clientId, clientSecret, externalId, object, field, body } = req.body;
 
   // Step 1: Get the access token by logging in to Salesforce
