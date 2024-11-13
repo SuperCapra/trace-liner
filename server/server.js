@@ -5,7 +5,7 @@ const multer = require('multer');
 // const cors = require('cors');
 const app = express();
 const helmet = require('helmet');
-const pool = require('./db');
+const db = require('./db');
 const fs = require('fs');
 
 const roots = [
@@ -110,19 +110,94 @@ app.post('/delete/:filename', (req,res) => {
 })
 
 app.use(express.json())
-
-app.get('/api/data', async (req, res) => {
+app.post('/api/editable/:table', async (req, res) => {
   try {
-    console.log('process.env.DB_USER', process.env.DB_USER)
-    console.log('process.env.DB_HOST', process.env.DB_HOST)
-    console.log('process.env.DB_PASSWORD', process.env.DB_PASSWORD)
-    const result = await pool.query('SELECT * FROM users');
-    res.json(result.rows);
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).send('Server Error');
+    const table = req.params.table
+    const id = await db.addRecordEditable(req.body, table)
+    const result = {
+      table: table,
+      id: id
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
   }
-});
+})
+app.patch('/api/editable/:table/:recordId', async (req, res) => {
+  try {
+    const table = req.params.table
+    const recordId = req.params.recordId
+    const updatedUserId = await db.modifyRecord(req.body, table, recordId)
+    const result = {
+      table: table,
+      id: updatedUserId
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception modifying user:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.post('/api/noneditable/:table', async (req, res) => {
+  try {
+    const table = req.params.table
+    const id = await db.addRecord(req.body, table)
+    const result = {
+      table: table,
+      id: id
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.get('/api/:table', async (req, res) => {
+  try {
+    const table = req.params.table
+    const fields = req.body.fields
+    const whereClause = req.body.whereClause
+    console.log('fields:',fields)
+    console.log('Array.isArray(fields):',Array.isArray(fields))
+    let records
+    if(fields && Array.isArray(fields) && fields.length) {
+      records = await db.getRecordsFields(table,fields,whereClause)
+    } else {
+      records = await db.getRecords(table,whereClause)
+    }
+    const result = {
+      table: table,
+      records: records
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.get('/api/:table/:field/:value', async (req, res) => {
+  try {
+    const table = req.params.table
+    const fields = req.body.fields
+    const field = req.params.field
+    const value = req.params.value
+    let record
+    if(fields && Array.isArray(fields) && fields.length) {
+      record = await db.getRecordFields(table,fields,field,value)
+    } else {
+      record = await db.getRecord(table,field,value)
+    }
+    const result = {
+      table: table,
+      record: record
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
 
 app.post('/api/salesforce-login-and-upsert', async (req, res) => {
   const { username, password, securityToken, clientId, clientSecret, externalId, object, field, body } = req.body;

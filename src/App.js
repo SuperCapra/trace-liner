@@ -1,7 +1,7 @@
 import './App.css';
 import React, {useState} from 'react';
 import utils from './utils/utils.js'
-import logUtils from "./utils/logUtils.js"
+import logUtils from './utils/logUtils.js'
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
@@ -203,7 +203,7 @@ class Homepage extends React.Component{
     this.props.changeLanguage(data.value)
   }
 
-  routesToStage() {    
+  routesToStage() {
     // let localKey = localStorage.getItem('tracelinerkey');
     // if(localKey && !accessToken) {
     //   accessToken = localKey
