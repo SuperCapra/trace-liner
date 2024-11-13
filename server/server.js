@@ -5,6 +5,7 @@ const multer = require('multer');
 // const cors = require('cors');
 const app = express();
 const helmet = require('helmet');
+const pool = require('./db');
 const fs = require('fs');
 
 const roots = [
@@ -109,6 +110,19 @@ app.post('/delete/:filename', (req,res) => {
 })
 
 app.use(express.json())
+
+app.get('/api/data', async (req, res) => {
+  try {
+    console.log('process.env.DB_USER', process.env.DB_USER)
+    console.log('process.env.DB_HOST', process.env.DB_HOST)
+    console.log('process.env.DB_PASSWORD', process.env.DB_PASSWORD)
+    const result = await pool.query('SELECT * FROM users');
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 app.post('/api/salesforce-login-and-upsert', async (req, res) => {
   const { username, password, securityToken, clientId, clientSecret, externalId, object, field, body } = req.body;
