@@ -2,6 +2,7 @@ import './App.css';
 import React, {useState} from 'react';
 import utils from './utils/utils.js'
 import logUtils from './utils/logUtils.js'
+import apiUtils from './utils/apiUtils.js';
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
@@ -14,6 +15,7 @@ import clubs from './config/clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
+import dbInteractions from './services/dbInteractions.js';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -22,8 +24,13 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+let sendCreatingVisit = false
 let changedLanguage = false
 let admin = false
+let vId = undefined
+let uId = undefined
+let aId = undefined
+let eId = undefined
 
 let athleteData = {}
 let activities = []
@@ -191,6 +198,22 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+        this.createUserAndActivity({
+          average_speed : activityPreparing.average,
+          distance : activityPreparing.distance,
+          elev_high : Math.max(activityPreparing.altitudeStream),
+          elev_low : Math.min(activityPreparing.altitudeStream),
+          end_lat : activityPreparing.endLatitude,
+          end_lng : activityPreparing.endLongitude,
+          external_id : activityPreparing.external_id,
+          moving_time : activityPreparing.movingTime,
+          name : activityPreparing.name,
+          start_date : activityPreparing.startDate,
+          start_date_local : activityPreparing.startDateLocal,
+          start_lat : activityPreparing.startLatitude,
+          start_lng : activityPreparing.startLongitude,
+          total_elevation_gain : activityPreparing.elevation,
+        })
         logUtils.loggerText('activityPreparing ', activityPreparing)
         activity = activityPreparing
         this.changeStage({stage: 'ShowingActivity'})
@@ -204,6 +227,22 @@ class Homepage extends React.Component{
   }
 
   routesToStage() {
+    let queryParameters = new URLSearchParams(window.location.search)
+    let urlCurrent = window.location.href
+    if(called && urlCurrent.includes('/visitId-')) {
+      vId = utils.getVisitId(urlCurrent)
+      sendCreatingVisit = true
+    }
+    console.log('visitId', vId)
+    if(!vId && !sendCreatingVisit) {
+      sendCreatingVisit = true
+      dbInteractions.createRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitBody()).then(res => {
+        vId = res
+        if(vId) stravaAuthorizeUrl += '/visitId-' + vId
+      }).catch(e => {
+        console.error('error creating the visit:', e)
+      })
+    }
     // let localKey = localStorage.getItem('tracelinerkey');
     // if(localKey && !accessToken) {
     //   accessToken = localKey
@@ -216,8 +255,6 @@ class Homepage extends React.Component{
     logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
-    let queryParameters = new URLSearchParams(window.location.search)
-    let urlCurrent = window.location.href
     admin = urlCurrent.includes('/admin')
     if(admin) stravaAuthorizeUrl += '/admin'
     logUtils.loggerText('window.location', window.location.href)
@@ -339,7 +376,7 @@ class Homepage extends React.Component{
           <div>
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
-                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage} handleExport={this.insertExport}/>
               </div>
               <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>
@@ -390,6 +427,7 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
+        this.upsertUser(athleteData)
         let refreshToken = res.refresh_token
         logUtils.loggerText('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
@@ -407,29 +445,116 @@ class Homepage extends React.Component{
       .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
   }
 
-  getAthleDataComplete() {
-    console.info('getting all the athlete data...')
-    let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
-    '?access_token=' + accessToken
-
-    fetch(urlAthleteData, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Content-Length': '0'
-      },
-    }).then(response => response.json())
-      .then(res => {
-        if(res) {
-          console.info('Athlete data: ', res)
-          unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
-          this.getActivities()
-        }
-      })
-      .catch(e => console.error('Fatal Error: ', e))
+  async upsertUser(athleteData) {
+    dbInteractions.getRecordId('users', process.env.REACT_APP_JWT_TOKEN, 'strava_id', athleteData.id).then(res => {
+      let body = apiUtils.getUserBodyStrava(athleteData,false,false)
+      console.log('res:', res)
+      if(res && res.record && res.record.length && res.record[0].id) {
+        console.log('hey update it!')
+        body = {...body,...apiUtils.getModifiedFields()}
+        dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
+          uId = res
+          this.updateVisit({user_id: uId})
+        }).catch(e => {
+          console.error('error creating the user:', e)
+        })
+      } else {
+        console.log('hey insert it!')
+        body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+        dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+          uId = res
+          this.updateVisit({user_id: uId})
+        }).catch(e => {
+          console.error('error creating the user:', e)
+        })
+      }
+    }).catch(e => {
+      console.error('error getting user info:', e)
+    })
   }
+
+  async createUserAndActivity(activityData) {
+    let bodyUser = {...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+    dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, bodyUser).then(res => {
+      uId = res
+      activityData['user_id'] = uId
+      let bodyActivity = apiUtils.getActivityBody(activityData,true,true,uId)
+      dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, bodyActivity).then(res => {
+        aId = res
+        this.updateVisit({user_id: uId, activity_id: aId})
+      }).catch(e => {
+        console.error('error creating the activity:', e)
+      })
+    }).catch(e => {
+      console.error('error creating the user:', e)
+    })
+  }
+
+  async upsertActivity(activityData) {
+    dbInteractions.getRecordId('activities', process.env.REACT_APP_JWT_TOKEN, 'strava_id', activityData.id).then(res => {
+      let body = apiUtils.getActivityBody(activityData,false,false,uId)
+      console.log('res:', res)
+      if(res && res.record && res.record.length && res.record[0].id) {
+        console.log('hey update it!')
+        body = {...body,...apiUtils.getModifiedFields()}
+        dbInteractions.updateRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
+          aId = res
+          this.updateVisit({activity_id: aId})
+        }).catch(e => {
+          console.error('error creating the activity:', e)
+        })
+      } else {
+        console.log('hey insert it!')
+        body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+        dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+          aId = res
+          this.updateVisit({activity_id: aId})
+        }).catch(e => {
+          console.error('error creating the activity:', e)
+        })
+      }
+    }).catch(e => {
+      console.error('error getting activity info:', e)
+    })
+  }
+
+  async updateVisit(body) {
+    console.log('visit', vId)
+    dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, vId, body)
+  }
+
+  async insertExport(data) {
+    let body = data.body
+    dbInteractions.createRecordEditable('exports', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+      eId = res
+      this.updateVisit({export_id: eId})
+    }).catch(e => {
+      console.error('error creating the activity:', e)
+    })
+  }
+  // getAthleDataComplete() {
+  //   console.info('getting all the athlete data...')
+  //   let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
+  //   '?access_token=' + accessToken
+
+  //   fetch(urlAthleteData, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': '*/*',
+  //       'Accept-Encoding': 'gzip, deflate, br',
+  //       'Content-Length': '0'
+  //     },
+  //   }).then(response => response.json())
+  //     .then(res => {
+  //       if(res) {
+  //         console.info('Athlete data: ', res)
+  //         unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
+  //         this.getActivities()
+  //       }
+  //     })
+  //     .catch(e => console.error('Fatal Error: ', e))
+  // }
   
   getActivities() {
     console.info('getting all the activities...')
@@ -542,6 +667,7 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         console.log('Complete raw activity: ', res)
+        this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline

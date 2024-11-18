@@ -20,7 +20,7 @@ const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
   if (!token) return res.status(403).json({ error: 'Access denied' });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid token' });
     req.user = user;
     next();
@@ -123,7 +123,9 @@ app.post('/delete/:filename', authenticateToken, (req,res) => {
 app.post('/api/editable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    const id = await db.addRecordEditable(req.body, table)
+    console.log('creating record:', table)
+    const id = await db.addRecord(req.body, table)
+    console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -152,7 +154,9 @@ app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) 
 app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
+    console.log('creating record:', table)
     const id = await db.addRecord(req.body, table)
+    console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -160,6 +164,21 @@ app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
     res.status(201).json(result)
   } catch (e) {
     console.log('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const recordId = req.params.recordId
+    const updatedUserId = await db.modifyRecord(req.body, table, recordId)
+    const result = {
+      table: table,
+      id: updatedUserId
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception updating non editable record:', e)
     res.status(500).json({error: e})
   }
 })
@@ -287,14 +306,18 @@ app.use(express.static(path.join(__dirname, '../build')));
 // The "catchall" handler: for any request that doesn't match,
 // send back the index.html from the React app.
 roots.forEach(rootKey => {
-  app.get(rootKey, (req, res) => {
+  app.get([rootKey, `${rootKey}/visitId-:id`], (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
   let rootAdmin = '/admin' + rootKey
-  app.get(rootAdmin, (req, res) => {
+  app.get([rootAdmin, `${rootAdmin}/visitId-:id`], (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
 })
+
+app.get('/visitId-:id', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
 
 // app.get('/api/strava_webhook', (req, res) => {
 //   res.json({ 'hub.mode': 'subscribe','hub.challenge': 'oN6G8xMkPNrJtTd3PRohCLXjJLHxLpymJJwWpDza','hub.verify_token': 'STRAVA_BEAUTYLINER'});
