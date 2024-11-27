@@ -325,7 +325,6 @@ class Homepage extends React.Component{
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
-        console.log('Activities: ', activities)
         let arrowDownStyle = {
           fill: brandingPalette.background
         }
@@ -561,7 +560,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.info('Row activities: ', res)
+        console.info('Raw activities: ', res)
         if(res) {
           res.forEach(e => {
             logUtils.loggerText('Activity: ', e)
