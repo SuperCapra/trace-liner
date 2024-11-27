@@ -8,7 +8,7 @@ import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js'
 import saleforceApiUtils from '../services/salesforce.js'
 import apiUtils from '../utils/apiUtils.js';
-import dbInteractions from './services/dbInteractions.js';
+import dbInteractions from '../services/dbInteractions.js';
 
 const Modal = forwardRef((props,ref) => {
 
