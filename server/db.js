@@ -22,14 +22,13 @@ const addRecord = async (recordData, table) => {
 const modifyRecord = async (recordData, table, id) => {
   const qd = dbUtils.getQueryUpdate(recordData, table, id)
 
-  console.log('qd', qd)
   const result = await pool.query(qd.query, qd.values)
-  console.log('result', result)
+  // console.log('qd', qd)
+  // console.log('result', result)
   return result.rows[0].id
 }
 
 const getRecords = async (table,whereClause) => {
-  console.log('no fields here')
   return (await pool.query(dbUtils.getQuerySelectAll(table,whereClause))).rows
 }
 const getRecordsFields = async (table,fields,whereClause) => {

@@ -171,6 +171,17 @@ const apiUtils = {
             show_name : exportData.showname,
         }
         return {...result, ...this.getTimestampFields()}
+    },
+    getErrorLogsBody(visitId,message,component,f,t) {
+        let result = {
+            visit_id : visitId,
+            component : component,
+            function : f,
+            message : message,
+            type : t,
+            is_error : true,
+        }
+        return {...result, ...this.getTimestampFields()}
     }
 }
 

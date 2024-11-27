@@ -109,9 +109,9 @@ app.get('/uploads/:filename', authenticateToken, (req, res) => {
 });
 
 app.post('/delete/:filename', authenticateToken, (req,res) => {
-  console.log('filePath:', req.params.filename)
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
-  console.log('filePath:', filePath)
+  // console.log('filePath:', req.params.filename)
+  // console.log('filePath:', filePath)
   fs.unlink(filePath, (err) => {
     if (err) {
       console.error('Error deleting the file:', err);
@@ -123,9 +123,9 @@ app.post('/delete/:filename', authenticateToken, (req,res) => {
 app.post('/api/editable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    console.log('creating record:', table)
     const id = await db.addRecord(req.body, table)
-    console.log('creating record id:', id)
+    // console.log('creating record:', table)
+    // console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -139,7 +139,7 @@ app.post('/api/editable/:table', authenticateToken, async (req, res) => {
 app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    console.log('modifying record:', table)
+    // console.log('modifying record:', table)
     const recordId = req.params.recordId
     const updatedUserId = await db.modifyRecord(req.body, table, recordId)
     const result = {
@@ -155,9 +155,9 @@ app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) 
 app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    console.log('creating record:', table)
     const id = await db.addRecord(req.body, table)
-    console.log('creating record id:', id)
+    // console.log('creating record:', table)
+    // console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -188,8 +188,8 @@ app.get('/api/:table', authenticateToken, async (req, res) => {
     const table = req.params.table
     const fields = req.body.fields
     const whereClause = req.body.whereClause
-    console.log('fields:',fields)
-    console.log('Array.isArray(fields):',Array.isArray(fields))
+    // console.log('fields:',fields)
+    // console.log('Array.isArray(fields):',Array.isArray(fields))
     let records
     if(fields && Array.isArray(fields) && fields.length) {
       records = await db.getRecordsFields(table,fields,whereClause)

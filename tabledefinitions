@@ -110,6 +110,7 @@ CREATE TABLE visits (
 CREATE TABLE logs (
   id SERIAL PRIMARY KEY,
   visit_id INTEGER REFERENCES visits(id),
+  info VARCHAR(32768),
   component VARCHAR(255),
   function VARCHAR(255),
   message VARCHAR(255),

@@ -492,9 +492,7 @@ class Homepage extends React.Component{
   async upsertActivity(activityData) {
     dbInteractions.getRecordId('activities', process.env.REACT_APP_JWT_TOKEN, 'strava_id', activityData.id).then(res => {
       let body = apiUtils.getActivityBody(activityData,false,false,uId)
-      console.log('res:', res)
       if(res && res.record && res.record.length && res.record[0].id) {
-        console.log('hey update it!')
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
           aId = res
@@ -503,7 +501,6 @@ class Homepage extends React.Component{
           console.error('error creating the activity:', e)
         })
       } else {
-        console.log('hey insert it!')
         body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
         dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
           aId = res
@@ -518,7 +515,6 @@ class Homepage extends React.Component{
   }
 
   async updateVisit(body) {
-    console.log('visit', vId)
     dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, vId, body)
   }
 
