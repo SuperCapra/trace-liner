@@ -198,6 +198,7 @@ app.get('/api/:table', authenticateToken, async (req, res) => {
     }
     const result = {
       table: table,
+      recordsNumber: records.length ? records.length : 0,
       records: records
     }
     res.status(201).json(result)
@@ -220,6 +221,7 @@ app.get('/api/:table/:field/:value', authenticateToken, async (req, res) => {
     }
     const result = {
       table: table,
+      recordsNumber: record ? 1 : 0,
       record: record
     }
     res.status(201).json(result)
