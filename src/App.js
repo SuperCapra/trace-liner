@@ -30,7 +30,6 @@ let admin = false
 let vId = undefined
 let uId = undefined
 let aId = undefined
-let eId = undefined
 
 let athleteData = {}
 let activities = []
@@ -376,7 +375,7 @@ class Homepage extends React.Component{
           <div>
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
-                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage} handleExport={this.insertExport}/>
+                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
               </div>
               <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>
@@ -523,15 +522,6 @@ class Homepage extends React.Component{
     dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, vId, body)
   }
 
-  async insertExport(data) {
-    let body = data.body
-    dbInteractions.createRecordEditable('exports', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
-      eId = res
-      this.updateVisit({export_id: eId})
-    }).catch(e => {
-      console.error('error creating the activity:', e)
-    })
-  }
   // getAthleDataComplete() {
   //   console.info('getting all the athlete data...')
   //   let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +

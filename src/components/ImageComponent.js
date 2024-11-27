@@ -13,7 +13,7 @@ import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
 
-  const {athlete, activity, club, admin, language, handleBack, handleBubbleLanguage} = props
+  const {athlete, activity, club, admin, language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -908,7 +908,7 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} handleCloseModal={() => closeModal()}/>}
+      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-arrow-container">

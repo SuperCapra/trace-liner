@@ -150,6 +150,28 @@ const apiUtils = {
         if(updating) result = {...result, ...this.getModifiedFields()}
         return result
     },
+    getExportBody(exportData,activityId,userId) {
+        let result = {
+            user_id : userId,
+            activity_id : activityId,
+            color : exportData.color,
+            filter : exportData.filter,
+            image : exportData.image,
+            mode : exportData.mode,
+            size : exportData.size,
+            unit : exportData.unit,
+            type : exportData.exportType,
+            show_average : exportData.showaverage,
+            show_coordinates : exportData.showcoordinates,
+            show_date : exportData.showdate,
+            show_distance : exportData.showdistance,
+            show_duration : exportData.showduration,
+            show_elevation : exportData.showelevation,
+            show_power : exportData.showpower,
+            show_name : exportData.showname,
+        }
+        return {...result, ...this.getCreatedFields()}
+    }
 }
 
 export default apiUtils
