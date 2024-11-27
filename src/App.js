@@ -663,7 +663,7 @@ class Homepage extends React.Component{
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
-          console.log(activity)
+          // console.log(activity)
           // this.getImage(activity.photoUrl)
         }
       })
