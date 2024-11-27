@@ -119,106 +119,111 @@ class Homepage extends React.Component{
 
   processGPX(event) {
     athleteData = undefined
-    if(event && event.target && event.target.files && event.target.files.length) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        let gpxFile = e.target.result
-        const gpx = new GPXParser()
-        gpx.parse(gpxFile)
-        logUtils.loggerText('gpx.metadata.time: ', gpx.metadata.time)
-        let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
-        let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
-        logUtils.loggerText('gpx:', gpx)
-        logUtils.loggerText('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
-        const tracks = gpx.tracks.map(track => ({
-          average: undefined,
-          altitudeStream: [...track.points.map(point => (point.ele))],
-          metric: {
-            beautyAverage: undefined,
-            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos).toFixed(0) + 'm' : undefined,
-            beautyDistance: track.distance && track.distance.total ? (track.distance.total / 1000).toFixed(0) + 'km' : undefined,
-            distance: track.distance && track.distance.total ? Number((track.distance.total / 1000).toFixed(0)) : undefined,
-            subtitle: undefined
-          },
-          imperial: {
-            beautyAverage: undefined,
-            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos * 3.28084).toFixed(0) + 'ft' : undefined,
-            beautyDistance: track.distance && track.distance.total ? ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi' : undefined,
-            distance: track.distance && track.distance.total ? Number(((track.distance.total / 1000) * 0.621371).toFixed(0)) : undefined,
-            subtitle: undefined
-          },
-          beautyCoordinates: undefined,
-          beautyEndCoordinates: undefined,
-          beautyDuration: undefined,
-          beautyName: track.name ? he.decode(track.name) : undefined,
-          beautyPower: undefined,
-          // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
-          beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
-          coordinates: track.points && track.points.length ? track.points.map(point => ([
-            point.lon,
-            point.lat
-          ])) : undefined,
-          durationMoving: undefined,
-          durationElapsed: undefined,
-          endLatitude: undefined,
-          endLongitude: undefined,
-          distance: track.distance && track.distance.total ? track.distance.total : undefined,
-          distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
-          elevation: track.elevation && track.elevation.pos ? track.elevation.pos : undefined,
-          locationCountry: undefined,
-          movingTime: undefined,
-          timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
-          name: track.name ? he.decode(track.name) : undefined,
-          photoUrl: undefined,
-          sportType: undefined,
-          startDate: dateTimeStringified,
-          startDateLocal: dateTimeLocalStringified,
-          startLatitude: undefined,
-          startLongitude: undefined,
-          unitMeasure: unitMeasure,
-          hasAltitudeStream: false,
-          hasCoordinates: false,
-          fromGpx: true,
-        }))
-        let activityPreparing = tracks[0]
-        let averageSpeed = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime)
-        activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
-        activityPreparing.durationMoving = activityPreparing.movingTime
-        activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
-        activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
-        activityPreparing.average = activityPreparing.metric.beautyAverage
-        activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
-        activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
-        activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
-        activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
-        activityPreparing.startLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][1] : undefined
-        activityPreparing.beautyCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.startLatitude, activityPreparing.startLongitude])
-        activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
-        activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
-        activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-        activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
-        this.createUserAndActivity({
-          average_speed : averageSpeed,
-          distance : activityPreparing.distance,
-          elev_high : Math.max(activityPreparing.altitudeStream),
-          elev_low : Math.min(activityPreparing.altitudeStream),
-          end_lat : activityPreparing.endLatitude,
-          end_lng : activityPreparing.endLongitude,
-          external_id : activityPreparing.external_id,
-          moving_time : activityPreparing.movingTime,
-          name : activityPreparing.name,
-          start_date : activityPreparing.startDate,
-          start_date_local : activityPreparing.startDateLocal,
-          start_lat : activityPreparing.startLatitude,
-          start_lng : activityPreparing.startLongitude,
-          total_elevation_gain : Number(activityPreparing.elevation.toFixed(0)),
-        })
-        logUtils.loggerText('activityPreparing ', activityPreparing)
-        activity = activityPreparing
-        this.changeStage({stage: 'ShowingActivity'})
+    try {
+      if(event && event.target && event.target.files && event.target.files.length) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          let gpxFile = e.target.result
+          const gpx = new GPXParser()
+          gpx.parse(gpxFile)
+          logUtils.loggerText('gpx.metadata.time: ', gpx.metadata.time)
+          let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
+          let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
+          logUtils.loggerText('gpx:', gpx)
+          logUtils.loggerText('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
+          const tracks = gpx.tracks.map(track => ({
+            average: undefined,
+            altitudeStream: [...track.points.map(point => (point.ele))],
+            metric: {
+              beautyAverage: undefined,
+              beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos).toFixed(0) + 'm' : undefined,
+              beautyDistance: track.distance && track.distance.total ? (track.distance.total / 1000).toFixed(0) + 'km' : undefined,
+              distance: track.distance && track.distance.total ? Number((track.distance.total / 1000).toFixed(0)) : undefined,
+              subtitle: undefined
+            },
+            imperial: {
+              beautyAverage: undefined,
+              beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos * 3.28084).toFixed(0) + 'ft' : undefined,
+              beautyDistance: track.distance && track.distance.total ? ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi' : undefined,
+              distance: track.distance && track.distance.total ? Number(((track.distance.total / 1000) * 0.621371).toFixed(0)) : undefined,
+              subtitle: undefined
+            },
+            beautyCoordinates: undefined,
+            beautyEndCoordinates: undefined,
+            beautyDuration: undefined,
+            beautyName: track.name ? he.decode(track.name) : undefined,
+            beautyPower: undefined,
+            // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+            beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+            coordinates: track.points && track.points.length ? track.points.map(point => ([
+              point.lon,
+              point.lat
+            ])) : undefined,
+            durationMoving: undefined,
+            durationElapsed: undefined,
+            endLatitude: undefined,
+            endLongitude: undefined,
+            distance: track.distance && track.distance.total ? track.distance.total : undefined,
+            distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
+            elevation: track.elevation && track.elevation.pos ? track.elevation.pos : undefined,
+            locationCountry: undefined,
+            movingTime: undefined,
+            timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
+            name: track.name ? he.decode(track.name) : undefined,
+            photoUrl: undefined,
+            sportType: undefined,
+            startDate: dateTimeStringified,
+            startDateLocal: dateTimeLocalStringified,
+            startLatitude: undefined,
+            startLongitude: undefined,
+            unitMeasure: unitMeasure,
+            hasAltitudeStream: false,
+            hasCoordinates: false,
+            fromGpx: true,
+          }))
+          let activityPreparing = tracks[0]
+          let averageSpeed = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime)
+          activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
+          activityPreparing.durationMoving = activityPreparing.movingTime
+          activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
+          activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
+          activityPreparing.average = activityPreparing.metric.beautyAverage
+          activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
+          activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
+          activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
+          activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
+          activityPreparing.startLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][1] : undefined
+          activityPreparing.beautyCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.startLatitude, activityPreparing.startLongitude])
+          activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
+          activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
+          activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+          activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+          this.createUserAndActivity({
+            average_speed : averageSpeed,
+            distance : activityPreparing.distance,
+            elev_high : Math.max(activityPreparing.altitudeStream),
+            elev_low : Math.min(activityPreparing.altitudeStream),
+            end_lat : activityPreparing.endLatitude,
+            end_lng : activityPreparing.endLongitude,
+            external_id : activityPreparing.external_id,
+            moving_time : activityPreparing.movingTime,
+            name : activityPreparing.name,
+            start_date : activityPreparing.startDate,
+            start_date_local : activityPreparing.startDateLocal,
+            start_lat : activityPreparing.startLatitude,
+            start_lng : activityPreparing.startLongitude,
+            total_elevation_gain : Number(activityPreparing.elevation.toFixed(0)),
+          })
+          logUtils.loggerText('activityPreparing ', activityPreparing)
+          activity = activityPreparing
+          this.changeStage({stage: 'ShowingActivity'})
+        }
+        reader.readAsText(file);
       }
-      reader.readAsText(file);
+    } catch (e) {
+      console.error('Excpetion processGPX:', e)
+      this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','processGPX','exception')})
     }
   }
 
@@ -441,7 +446,10 @@ class Homepage extends React.Component{
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
-      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => {
+        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAccessTokenAndActivities','exception')})
+      })
   }
 
   async upsertUser(athleteData) {
@@ -516,6 +524,11 @@ class Homepage extends React.Component{
 
   async updateVisit(body) {
     dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, vId, body)
+  }
+
+  async insertLogsModal(data) {
+    let body = data.body
+    dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
   }
 
   // getAthleDataComplete() {
@@ -619,7 +632,10 @@ class Homepage extends React.Component{
           })
         }
       })
-      .catch(e => console.error('Fatal Error: ', e))
+      .catch(e => {
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivities','exception')})
+      })
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
@@ -664,7 +680,10 @@ class Homepage extends React.Component{
           // this.getImage(activity.photoUrl)
         }
       })
-      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => {
+        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivity','exception')})
+      })
       .finally(() => {
         // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
@@ -686,7 +705,10 @@ class Homepage extends React.Component{
         activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
       })
-      .catch(e => console.error('Fatal Error: ', e))
+      .catch(e => {
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAltitideStream','exception')})
+      })
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivity'})

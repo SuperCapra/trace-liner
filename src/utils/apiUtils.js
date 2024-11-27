@@ -172,12 +172,13 @@ const apiUtils = {
         }
         return {...result, ...this.getTimestampFields()}
     },
-    getErrorLogsBody(visitId,message,component,f,t) {
+    getErrorLogsBody(visitId,message,info,component,f,t) {
         let result = {
             visit_id : visitId,
+            message : message,
+            info: info,
             component : component,
             function : f,
-            message : message,
             type : t,
             is_error : true,
         }

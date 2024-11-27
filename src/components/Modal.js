@@ -48,6 +48,7 @@ const Modal = forwardRef((props,ref) => {
             }).catch(error => {
               if(String(error).includes('NotAllowedError')) downloadImage(title, b, type)
               console.error('Error sharing image:', error)
+              insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,JSON.stringify(error),JSON.stringify(infoLog),'modal','navigator.share','exception')})
             });
           } catch (error) {
             console.error('Error sharing image:', error)
@@ -57,6 +58,7 @@ const Modal = forwardRef((props,ref) => {
         }
       } catch (e) {
         console.error('Error:', e)
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'modal','share','exception')})
       } finally {
         try {
           logUtils.loggerText('infoLog: ', infoLog)
@@ -89,8 +91,7 @@ const Modal = forwardRef((props,ref) => {
     
     const insertExport = async (data) => {
       console.log('hey insertExport')
-      let body = data.body
-      dbInteractions.createRecordEditable('exports', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+      dbInteractions.createRecordNonEditable('exports', process.env.REACT_APP_JWT_TOKEN, data.body).then(res => {
         updateVisitModal({export_id: res})
       }).catch(e => {
         console.error('error creating the activity:', e)
@@ -98,8 +99,11 @@ const Modal = forwardRef((props,ref) => {
     }
 
     const updateVisitModal = async (body) => {
-      console.log('visit', visitId)
       dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, visitId, body)
+    }
+    const insertLogsModal = async (data) => {
+      let body = data.body
+      dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
     }
 
     useImperativeHandle(ref, () => ({
