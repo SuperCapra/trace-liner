@@ -139,6 +139,7 @@ app.post('/api/editable/:table', authenticateToken, async (req, res) => {
 app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
+    console.log('modifying record:', table)
     const recordId = req.params.recordId
     const updatedUserId = await db.modifyRecord(req.body, table, recordId)
     const result = {
@@ -147,7 +148,7 @@ app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) 
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception modifying user:', e)
+    console.log('Exception modifying record:', e)
     res.status(500).json({error: e})
   }
 })

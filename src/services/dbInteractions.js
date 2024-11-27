@@ -2,6 +2,9 @@ import apiUtils from '../utils/apiUtils'
 const dbInteractions = {
     async createRecordEditable(table,token,body) {
         const url = apiUtils.getUrlHost() + `/api/editable/${table}`
+        console.log('table:', table)
+        console.log('token:', token)
+        console.log('body:', body)
         const id = await fetch(url, {
             method : 'POST',
             headers: {
@@ -19,6 +22,9 @@ const dbInteractions = {
     },
     async createRecordNonEditable(table,token,body) {
         const url = apiUtils.getUrlHost() + `/api/noneditable/${table}`
+        console.log('table:', table)
+        console.log('token:', token)
+        console.log('body:', body)
         const id = await fetch(url, {
             method : 'POST',
             headers: {

@@ -182,10 +182,11 @@ class Homepage extends React.Component{
           fromGpx: true,
         }))
         let activityPreparing = tracks[0]
+        let averageSpeed = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime)
         activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
         activityPreparing.durationMoving = activityPreparing.movingTime
         activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
-        activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
+        activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
         activityPreparing.average = activityPreparing.metric.beautyAverage
         activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
         activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
@@ -198,7 +199,7 @@ class Homepage extends React.Component{
         activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
         activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
         this.createUserAndActivity({
-          average_speed : activityPreparing.average,
+          average_speed : averageSpeed,
           distance : activityPreparing.distance,
           elev_high : Math.max(activityPreparing.altitudeStream),
           elev_low : Math.min(activityPreparing.altitudeStream),
@@ -211,7 +212,7 @@ class Homepage extends React.Component{
           start_date_local : activityPreparing.startDateLocal,
           start_lat : activityPreparing.startLatitude,
           start_lng : activityPreparing.startLongitude,
-          total_elevation_gain : activityPreparing.elevation,
+          total_elevation_gain : Number(activityPreparing.elevation.toFixed(0)),
         })
         logUtils.loggerText('activityPreparing ', activityPreparing)
         activity = activityPreparing

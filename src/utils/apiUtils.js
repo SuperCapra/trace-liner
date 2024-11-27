@@ -170,7 +170,7 @@ const apiUtils = {
             show_power : exportData.showpower,
             show_name : exportData.showname,
         }
-        return {...result, ...this.getCreatedFields()}
+        return {...result, ...this.getTimestampFields()}
     }
 }
 

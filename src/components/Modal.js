@@ -88,6 +88,7 @@ const Modal = forwardRef((props,ref) => {
     }
     
     const insertExport = async (data) => {
+      console.log('hey insertExport')
       let body = data.body
       dbInteractions.createRecordEditable('exports', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
         updateVisitModal({export_id: res})
