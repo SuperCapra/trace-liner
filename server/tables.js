@@ -1,4 +1,4 @@
-const pool = require('./db');
+const db = require('./db');
 
 // Define the SQL for creating tables
 const tableDefinitions = `
@@ -130,7 +130,7 @@ const tableDefinitions = `
 // Function to create tables if they don't exist
 const createTables = async () => {
   try {
-    await pool.query(tableDefinitions);
+    await db.pool.query(tableDefinitions);
     console.log('Tables are ensured to exist!');
   } catch (err) {
     console.error('Error creating tables:', err);
@@ -138,4 +138,4 @@ const createTables = async () => {
   }
 };
 
-module.exports = createTables;
+module.exports = {createTables}
