@@ -234,12 +234,14 @@ class Homepage extends React.Component{
   routesToStage() {
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
-    if(called && urlCurrent.includes('/visitId-')) {
+    if(urlCurrent.includes('/visitId-')) {
+      console.log('created vId')
       vId = utils.getVisitId(urlCurrent)
       sendCreatingVisit = true
     }
     console.log('visitId', vId)
     if(!vId && !sendCreatingVisit) {
+      console.log('creating vId')
       sendCreatingVisit = true
       dbInteractions.createRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitBody()).then(res => {
         vId = res
@@ -457,7 +459,6 @@ class Homepage extends React.Component{
       let body = apiUtils.getUserBodyStrava(athleteData,false,false)
       console.log('res:', res)
       if(res && res.record && res.record.length && res.record[0].id) {
-        console.log('hey update it!')
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
           uId = res
@@ -466,7 +467,6 @@ class Homepage extends React.Component{
           console.error('error creating the user:', e)
         })
       } else {
-        console.log('hey insert it!')
         body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
         dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
           uId = res
