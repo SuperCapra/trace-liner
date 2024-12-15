@@ -254,6 +254,7 @@ function ImageComponent(props) {
     let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
 
     for(let i = 0; i < coordinates.length; i++) {
+      if(i % Math.floor(lengthCoordinates/100) === 0) {
       let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
       if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
         if(!drawing) {
@@ -264,7 +265,7 @@ function ImageComponent(props) {
       } else {
         if(drawing) ctx.stroke()
         drawing = false
-      }
+      }}
       // ctx.lineTo(cd[0],cd[1])
     }
     // stroke the path

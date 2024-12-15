@@ -1,4 +1,5 @@
 const express = require('express');
+const createTables = require('./createTables');
 const path = require('path');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
@@ -16,6 +17,11 @@ const roots = [
 ];
 
 app.use(express.json());
+
+(async () => {
+  await createTables();
+})();
+
 const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
   if (!token) return res.status(403).json({ error: 'Access denied' });
