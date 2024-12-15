@@ -13,7 +13,7 @@ import html2canvas from 'html2canvas';
 
 function ImageComponent(props) {
 
-  const {athlete, activity, club, admin, language, handleBack, handleBubbleLanguage} = props
+  const {athlete, activity, club, admin, language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -254,6 +254,7 @@ function ImageComponent(props) {
     let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
 
     for(let i = 0; i < coordinates.length; i++) {
+      if(i % Math.floor(lengthCoordinates/100) === 0) {
       let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
       if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
         if(!drawing) {
@@ -264,7 +265,7 @@ function ImageComponent(props) {
       } else {
         if(drawing) ctx.stroke()
         drawing = false
-      }
+      }}
       // ctx.lineTo(cd[0],cd[1])
     }
     // stroke the path
@@ -908,7 +909,7 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} handleCloseModal={() => closeModal()}/>}
+      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-arrow-container">

@@ -1,10 +1,13 @@
 const express = require('express');
+const createTables = require('./createTables');
 const path = require('path');
 const multer = require('multer');
+const jwt = require('jsonwebtoken');
 // const axios = require('axios');
 // const cors = require('cors');
 const app = express();
 const helmet = require('helmet');
+const db = require('./db');
 const fs = require('fs');
 
 const roots = [
@@ -13,6 +16,22 @@ const roots = [
   '/sem',
 ];
 
+app.use(express.json());
+
+(async () => {
+  await createTables();
+})();
+
+const authenticateToken = (req, res, next) => {
+  const token = req.headers['authorization'] && req.headers['authorization'].split(' ')[1];
+  if (!token) return res.status(403).json({ error: 'Access denied' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
 // // enables cors for all routea
 // app.use(cors());
 
@@ -48,7 +67,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Proxy route for handling image upload
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload',authenticateToken, upload.single('file'), (req, res) => {
   if (!req.file) {
     return res.status(400).send('No file uploaded.');
   }
@@ -63,7 +82,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 });
 
 // Serve and delete image after download
-app.get('/uploads/:filename', (req, res) => {
+app.get('/uploads/:filename', authenticateToken, (req, res) => {
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
   try {
     // navigator.share({
@@ -95,10 +114,10 @@ app.get('/uploads/:filename', (req, res) => {
   }
 });
 
-app.post('/delete/:filename', (req,res) => {
-  console.log('filePath:', req.params.filename)
+app.post('/delete/:filename', authenticateToken, (req,res) => {
   const filePath = path.join(__dirname, 'uploads', req.params.filename);
-  console.log('filePath:', filePath)
+  // console.log('filePath:', req.params.filename)
+  // console.log('filePath:', filePath)
   fs.unlink(filePath, (err) => {
     if (err) {
       console.error('Error deleting the file:', err);
@@ -107,10 +126,118 @@ app.post('/delete/:filename', (req,res) => {
     }
   });
 })
+app.post('/api/editable/:table', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const id = await db.addRecord(req.body, table)
+    // console.log('creating record:', table)
+    // console.log('creating record id:', id)
+    const result = {
+      table: table,
+      id: id
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    // console.log('modifying record:', table)
+    const recordId = req.params.recordId
+    const updatedUserId = await db.modifyRecord(req.body, table, recordId)
+    const result = {
+      table: table,
+      id: updatedUserId
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception modifying record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const id = await db.addRecord(req.body, table)
+    // console.log('creating record:', table)
+    // console.log('creating record id:', id)
+    const result = {
+      table: table,
+      id: id
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const recordId = req.params.recordId
+    const updatedUserId = await db.modifyRecord(req.body, table, recordId)
+    const result = {
+      table: table,
+      id: updatedUserId
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception updating non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.get('/api/:table', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const fields = req.body.fields
+    const whereClause = req.body.whereClause
+    // console.log('fields:',fields)
+    // console.log('Array.isArray(fields):',Array.isArray(fields))
+    let records
+    if(fields && Array.isArray(fields) && fields.length) {
+      records = await db.getRecordsFields(table,fields,whereClause)
+    } else {
+      records = await db.getRecords(table,whereClause)
+    }
+    const result = {
+      table: table,
+      recordsNumber: records.length ? records.length : 0,
+      records: records
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.get('/api/:table/:field/:value', authenticateToken, async (req, res) => {
+  try {
+    const table = req.params.table
+    const fields = req.body.fields
+    const field = req.params.field
+    const value = req.params.value
+    let record
+    if(fields && Array.isArray(fields) && fields.length) {
+      record = await db.getRecordFields(table,fields,field,value)
+    } else {
+      record = await db.getRecord(table,field,value)
+    }
+    const result = {
+      table: table,
+      recordsNumber: record ? 1 : 0,
+      record: record
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
 
-app.use(express.json())
-
-app.post('/api/salesforce-login-and-upsert', async (req, res) => {
+app.post('/api/salesforce-login-and-upsert', authenticateToken, async (req, res) => {
   const { username, password, securityToken, clientId, clientSecret, externalId, object, field, body } = req.body;
 
   // Step 1: Get the access token by logging in to Salesforce
@@ -188,14 +315,18 @@ app.use(express.static(path.join(__dirname, '../build')));
 // The "catchall" handler: for any request that doesn't match,
 // send back the index.html from the React app.
 roots.forEach(rootKey => {
-  app.get(rootKey, (req, res) => {
+  app.get([rootKey, `${rootKey}/visitId-:id`], (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
   let rootAdmin = '/admin' + rootKey
-  app.get(rootAdmin, (req, res) => {
+  app.get([rootAdmin, `${rootAdmin}/visitId-:id`], (req, res) => {
     res.sendFile(path.join(__dirname, '../build', 'index.html'));
   });
 })
+
+app.get('/visitId-:id', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
 
 // app.get('/api/strava_webhook', (req, res) => {
 //   res.json({ 'hub.mode': 'subscribe','hub.challenge': 'oN6G8xMkPNrJtTd3PRohCLXjJLHxLpymJJwWpDza','hub.verify_token': 'STRAVA_BEAUTYLINER'});

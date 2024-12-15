@@ -1,7 +1,8 @@
 import './App.css';
 import React, {useState} from 'react';
 import utils from './utils/utils.js'
-import logUtils from "./utils/logUtils.js"
+import logUtils from './utils/logUtils.js'
+import apiUtils from './utils/apiUtils.js';
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
@@ -14,6 +15,7 @@ import clubs from './config/clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
+import dbInteractions from './services/dbInteractions.js';
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -22,8 +24,12 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 
 let unitMeasure = 'metric'
 let called = false 
+let sendCreatingVisit = false
 let changedLanguage = false
 let admin = false
+let vId = undefined
+let uId = undefined
+let aId = undefined
 
 let athleteData = {}
 let activities = []
@@ -113,89 +119,111 @@ class Homepage extends React.Component{
 
   processGPX(event) {
     athleteData = undefined
-    if(event && event.target && event.target.files && event.target.files.length) {
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        let gpxFile = e.target.result
-        const gpx = new GPXParser()
-        gpx.parse(gpxFile)
-        logUtils.loggerText('gpx.metadata.time: ', gpx.metadata.time)
-        let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
-        let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
-        logUtils.loggerText('gpx:', gpx)
-        logUtils.loggerText('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
-        const tracks = gpx.tracks.map(track => ({
-          average: undefined,
-          altitudeStream: [...track.points.map(point => (point.ele))],
-          metric: {
-            beautyAverage: undefined,
-            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos).toFixed(0) + 'm' : undefined,
-            beautyDistance: track.distance && track.distance.total ? (track.distance.total / 1000).toFixed(0) + 'km' : undefined,
-            distance: track.distance && track.distance.total ? Number((track.distance.total / 1000).toFixed(0)) : undefined,
-            subtitle: undefined
-          },
-          imperial: {
-            beautyAverage: undefined,
-            beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos * 3.28084).toFixed(0) + 'ft' : undefined,
-            beautyDistance: track.distance && track.distance.total ? ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi' : undefined,
-            distance: track.distance && track.distance.total ? Number(((track.distance.total / 1000) * 0.621371).toFixed(0)) : undefined,
-            subtitle: undefined
-          },
-          beautyCoordinates: undefined,
-          beautyEndCoordinates: undefined,
-          beautyDuration: undefined,
-          beautyName: track.name ? he.decode(track.name) : undefined,
-          beautyPower: undefined,
-          // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
-          beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
-          coordinates: track.points && track.points.length ? track.points.map(point => ([
-            point.lon,
-            point.lat
-          ])) : undefined,
-          durationMoving: undefined,
-          durationElapsed: undefined,
-          endLatitude: undefined,
-          endLongitude: undefined,
-          distance: track.distance && track.distance.total ? track.distance.total : undefined,
-          distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
-          elevation: track.elevation && track.elevation.pos ? track.elevation.pos : undefined,
-          locationCountry: undefined,
-          movingTime: undefined,
-          timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
-          name: track.name ? he.decode(track.name) : undefined,
-          photoUrl: undefined,
-          sportType: undefined,
-          startDate: dateTimeStringified,
-          startDateLocal: dateTimeLocalStringified,
-          startLatitude: undefined,
-          startLongitude: undefined,
-          unitMeasure: unitMeasure,
-          hasAltitudeStream: false,
-          hasCoordinates: false,
-          fromGpx: true,
-        }))
-        let activityPreparing = tracks[0]
-        activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
-        activityPreparing.durationMoving = activityPreparing.movingTime
-        activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
-        activityPreparing.metric.beautyAverage = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime) + 'km/h'
-        activityPreparing.average = activityPreparing.metric.beautyAverage
-        activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
-        activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
-        activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
-        activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
-        activityPreparing.startLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][1] : undefined
-        activityPreparing.beautyCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.startLatitude, activityPreparing.startLongitude])
-        activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
-        activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
-        activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
-        activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
-        logUtils.loggerText('activityPreparing ', activityPreparing)
-        activity = activityPreparing
-        this.changeStage({stage: 'ShowingActivity'})
+    try {
+      if(event && event.target && event.target.files && event.target.files.length) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          let gpxFile = e.target.result
+          const gpx = new GPXParser()
+          gpx.parse(gpxFile)
+          logUtils.loggerText('gpx.metadata.time: ', gpx.metadata.time)
+          let dateTimeLocalStringified = gpx && gpx.tracks && gpx.tracks.length && gpx.tracks[0].points && gpx.tracks[0].points.length && gpx.tracks[0].points[0].time ? utils.returnDatetimeStringified(gpx.tracks[0].points[0].time) + 'T' + gpx.tracks[0].points[0].time.toLocaleTimeString() : undefined
+          let dateTimeStringified = gpx && gpx.metadata && gpx.metadata.time ? gpx.metadata.time : undefined
+          logUtils.loggerText('gpx:', gpx)
+          logUtils.loggerText('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
+          const tracks = gpx.tracks.map(track => ({
+            average: undefined,
+            altitudeStream: [...track.points.map(point => (point.ele))],
+            metric: {
+              beautyAverage: undefined,
+              beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos).toFixed(0) + 'm' : undefined,
+              beautyDistance: track.distance && track.distance.total ? (track.distance.total / 1000).toFixed(0) + 'km' : undefined,
+              distance: track.distance && track.distance.total ? Number((track.distance.total / 1000).toFixed(0)) : undefined,
+              subtitle: undefined
+            },
+            imperial: {
+              beautyAverage: undefined,
+              beautyElevation: track.elevation && track.elevation.pos ? (track.elevation.pos * 3.28084).toFixed(0) + 'ft' : undefined,
+              beautyDistance: track.distance && track.distance.total ? ((track.distance.total / 1000) * 0.621371).toFixed(0) + 'mi' : undefined,
+              distance: track.distance && track.distance.total ? Number(((track.distance.total / 1000) * 0.621371).toFixed(0)) : undefined,
+              subtitle: undefined
+            },
+            beautyCoordinates: undefined,
+            beautyEndCoordinates: undefined,
+            beautyDuration: undefined,
+            beautyName: track.name ? he.decode(track.name) : undefined,
+            beautyPower: undefined,
+            // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+            beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
+            coordinates: track.points && track.points.length ? track.points.map(point => ([
+              point.lon,
+              point.lat
+            ])) : undefined,
+            durationMoving: undefined,
+            durationElapsed: undefined,
+            endLatitude: undefined,
+            endLongitude: undefined,
+            distance: track.distance && track.distance.total ? track.distance.total : undefined,
+            distanceStream: track.distance && track.distance.cumul.length ? [...track.distance.cumul] : undefined,
+            elevation: track.elevation && track.elevation.pos ? track.elevation.pos : undefined,
+            locationCountry: undefined,
+            movingTime: undefined,
+            timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
+            name: track.name ? he.decode(track.name) : undefined,
+            photoUrl: undefined,
+            sportType: undefined,
+            startDate: dateTimeStringified,
+            startDateLocal: dateTimeLocalStringified,
+            startLatitude: undefined,
+            startLongitude: undefined,
+            unitMeasure: unitMeasure,
+            hasAltitudeStream: false,
+            hasCoordinates: false,
+            fromGpx: true,
+          }))
+          let activityPreparing = tracks[0]
+          let averageSpeed = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime)
+          activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
+          activityPreparing.durationMoving = activityPreparing.movingTime
+          activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
+          activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
+          activityPreparing.average = activityPreparing.metric.beautyAverage
+          activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
+          activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
+          activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
+          activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
+          activityPreparing.startLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][1] : undefined
+          activityPreparing.beautyCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.startLatitude, activityPreparing.startLongitude])
+          activityPreparing.beautyCoordinates = activityPreparing.beautyCoordinatesComplete.beautyCoordinatesTextTime
+          activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
+          activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+          activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+          this.createUserAndActivity({
+            average_speed : averageSpeed,
+            distance : activityPreparing.distance,
+            elev_high : Math.max(activityPreparing.altitudeStream),
+            elev_low : Math.min(activityPreparing.altitudeStream),
+            end_lat : activityPreparing.endLatitude,
+            end_lng : activityPreparing.endLongitude,
+            external_id : activityPreparing.external_id,
+            moving_time : activityPreparing.movingTime,
+            name : activityPreparing.name,
+            start_date : activityPreparing.startDate,
+            start_date_local : activityPreparing.startDateLocal,
+            start_lat : activityPreparing.startLatitude,
+            start_lng : activityPreparing.startLongitude,
+            total_elevation_gain : Number(activityPreparing.elevation.toFixed(0)),
+          })
+          logUtils.loggerText('activityPreparing ', activityPreparing)
+          activity = activityPreparing
+          this.changeStage({stage: 'ShowingActivity'})
+        }
+        reader.readAsText(file);
       }
-      reader.readAsText(file);
+    } catch (e) {
+      console.error('Excpetion processGPX:', e)
+      this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','processGPX','exception')})
     }
   }
 
@@ -203,7 +231,23 @@ class Homepage extends React.Component{
     this.props.changeLanguage(data.value)
   }
 
-  routesToStage() {    
+  routesToStage() {
+    let queryParameters = new URLSearchParams(window.location.search)
+    let urlCurrent = window.location.href
+    if(called && urlCurrent.includes('/visitId-')) {
+      vId = utils.getVisitId(urlCurrent)
+      sendCreatingVisit = true
+    }
+    console.log('visitId', vId)
+    if(!vId && !sendCreatingVisit) {
+      sendCreatingVisit = true
+      dbInteractions.createRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitBody()).then(res => {
+        vId = res
+        if(vId) stravaAuthorizeUrl += '/visitId-' + vId
+      }).catch(e => {
+        console.error('error creating the visit:', e)
+      })
+    }
     // let localKey = localStorage.getItem('tracelinerkey');
     // if(localKey && !accessToken) {
     //   accessToken = localKey
@@ -216,8 +260,6 @@ class Homepage extends React.Component{
     logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
-    let queryParameters = new URLSearchParams(window.location.search)
-    let urlCurrent = window.location.href
     admin = urlCurrent.includes('/admin')
     if(admin) stravaAuthorizeUrl += '/admin'
     logUtils.loggerText('window.location', window.location.href)
@@ -289,7 +331,6 @@ class Homepage extends React.Component{
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
-        console.log('Activities: ', activities)
         let arrowDownStyle = {
           fill: brandingPalette.background
         }
@@ -339,7 +380,7 @@ class Homepage extends React.Component{
           <div>
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
-                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
               </div>
               <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>
@@ -390,6 +431,7 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
+        this.upsertUser(athleteData)
         let refreshToken = res.refresh_token
         logUtils.loggerText('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
@@ -404,32 +446,114 @@ class Homepage extends React.Component{
         if(accessToken) this.getActivities()
         // if(accessToken) this.getAthleDataComplete()
       })
-      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
-  }
-
-  getAthleDataComplete() {
-    console.info('getting all the athlete data...')
-    let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
-    '?access_token=' + accessToken
-
-    fetch(urlAthleteData, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Content-Length': '0'
-      },
-    }).then(response => response.json())
-      .then(res => {
-        if(res) {
-          console.info('Athlete data: ', res)
-          unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
-          this.getActivities()
-        }
+      .catch(e => {
+        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAccessTokenAndActivities','exception')})
       })
-      .catch(e => console.error('Fatal Error: ', e))
   }
+
+  async upsertUser(athleteData) {
+    dbInteractions.getRecordId('users', process.env.REACT_APP_JWT_TOKEN, 'strava_id', athleteData.id).then(res => {
+      let body = apiUtils.getUserBodyStrava(athleteData,false,false)
+      console.log('res:', res)
+      if(res && res.record && res.record.length && res.record[0].id) {
+        console.log('hey update it!')
+        body = {...body,...apiUtils.getModifiedFields()}
+        dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
+          uId = res
+          this.updateVisit({user_id: uId})
+        }).catch(e => {
+          console.error('error creating the user:', e)
+        })
+      } else {
+        console.log('hey insert it!')
+        body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+        dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+          uId = res
+          this.updateVisit({user_id: uId})
+        }).catch(e => {
+          console.error('error creating the user:', e)
+        })
+      }
+    }).catch(e => {
+      console.error('error getting user info:', e)
+    })
+  }
+
+  async createUserAndActivity(activityData) {
+    let bodyUser = {...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+    dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, bodyUser).then(res => {
+      uId = res
+      activityData['user_id'] = uId
+      let bodyActivity = apiUtils.getActivityBody(activityData,true,true,uId)
+      dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, bodyActivity).then(res => {
+        aId = res
+        this.updateVisit({user_id: uId, activity_id: aId})
+      }).catch(e => {
+        console.error('error creating the activity:', e)
+      })
+    }).catch(e => {
+      console.error('error creating the user:', e)
+    })
+  }
+
+  async upsertActivity(activityData) {
+    dbInteractions.getRecordId('activities', process.env.REACT_APP_JWT_TOKEN, 'strava_id', activityData.id).then(res => {
+      let body = apiUtils.getActivityBody(activityData,false,false,uId)
+      if(res && res.record && res.record.length && res.record[0].id) {
+        body = {...body,...apiUtils.getModifiedFields()}
+        dbInteractions.updateRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
+          aId = res
+          this.updateVisit({activity_id: aId})
+        }).catch(e => {
+          console.error('error creating the activity:', e)
+        })
+      } else {
+        body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+        dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+          aId = res
+          this.updateVisit({activity_id: aId})
+        }).catch(e => {
+          console.error('error creating the activity:', e)
+        })
+      }
+    }).catch(e => {
+      console.error('error getting activity info:', e)
+    })
+  }
+
+  async updateVisit(body) {
+    dbInteractions.updateRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, vId, body)
+  }
+
+  async insertLogsModal(data) {
+    let body = data.body
+    dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
+  }
+
+  // getAthleDataComplete() {
+  //   console.info('getting all the athlete data...')
+  //   let urlAthleteData = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_ATHLETE_DIRECTORY +
+  //   '?access_token=' + accessToken
+
+  //   fetch(urlAthleteData, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       'Accept': '*/*',
+  //       'Accept-Encoding': 'gzip, deflate, br',
+  //       'Content-Length': '0'
+  //     },
+  //   }).then(response => response.json())
+  //     .then(res => {
+  //       if(res) {
+  //         console.info('Athlete data: ', res)
+  //         unitMeasure = !res.measurement_preference || res.measurement_preference === 'meters' ? 'meter' : 'imperial'
+  //         this.getActivities()
+  //       }
+  //     })
+  //     .catch(e => console.error('Fatal Error: ', e))
+  // }
   
   getActivities() {
     console.info('getting all the activities...')
@@ -446,7 +570,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.info('Row activities: ', res)
+        console.info('Raw activities: ', res)
         if(res) {
           res.forEach(e => {
             logUtils.loggerText('Activity: ', e)
@@ -508,7 +632,10 @@ class Homepage extends React.Component{
           })
         }
       })
-      .catch(e => console.error('Fatal Error: ', e))
+      .catch(e => {
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivities','exception')})
+      })
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
@@ -542,17 +669,21 @@ class Homepage extends React.Component{
     }).then(response => response.json())
       .then(res => {
         console.log('Complete raw activity: ', res)
+        this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
           activities[indexActivity].polyline = res.map.polyline
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
-          console.log(activity)
+          // console.log(activity)
           // this.getImage(activity.photoUrl)
         }
       })
-      .catch(e => console.error('Fatal Error: ', JSON.parse(JSON.stringify(e))))
+      .catch(e => {
+        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivity','exception')})
+      })
       .finally(() => {
         // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
@@ -574,7 +705,10 @@ class Homepage extends React.Component{
         activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
       })
-      .catch(e => console.error('Fatal Error: ', e))
+      .catch(e => {
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAltitideStream','exception')})
+      })
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivity'})

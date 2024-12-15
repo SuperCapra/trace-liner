@@ -280,6 +280,11 @@ const utilsFunction = {
     getName(firstName, lastName) {
         return firstName && lastName ? firstName + ' ' + lastName : firstName ? firstName : lastName ? lastName : 'name'
     },
+
+    getVisitId(u) {
+        const match = u.match(/visitId-(\w+)/)
+        return match ? match[1] : undefined
+    }
 }
 
 export default utilsFunction

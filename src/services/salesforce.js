@@ -12,7 +12,8 @@ const saleforceApiUtils = {
         fetch(url, {
             method: 'POST',
             headers: {
-               'Content-Type': 'application/json',
+                'Authorization': `Bearer ${setting.REACT_APP_JWT_TOKEN}`,
+                'Content-Type': 'application/json',
             },
             body: this.getBodyStringified(setting, userCode, 'Token__c', 'StravaUserId__c', this.getBodyTokens(name, refreshToken))
         }).then(response => response.json())
@@ -32,7 +33,8 @@ const saleforceApiUtils = {
         fetch(url, {
             method: 'POST',
             headers: {
-               'Content-Type': 'application/json',
+                'Authorization': `Bearer ${setting.REACT_APP_JWT_TOKEN}`,
+                'Content-Type': 'application/json',
             },
             body: this.getBodyStringified(setting, this.getExternalId(infoLog), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
         }).then(response => response.json())
