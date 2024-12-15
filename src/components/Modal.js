@@ -91,7 +91,7 @@ const Modal = forwardRef((props,ref) => {
     
     const insertExport = async (data) => {
       dbInteractions.createRecordNonEditable('exports', process.env.REACT_APP_JWT_TOKEN, data.body).then(res => {
-        updateVisitModal({export_id: res})
+        updateVisitModal({export_id: res, has_exported: true, type_export: data.body.type})
       }).catch(e => {
         console.error('error creating the activity:', e)
       })

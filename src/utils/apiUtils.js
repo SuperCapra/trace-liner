@@ -81,7 +81,7 @@ const apiUtils = {
             has_selected_activity : false,
             has_exported : false,
             type_export : null,
-            is_mobile : false,
+            is_mobile : utils.isMobile(),
         }
         result = {...result,...this.getTimestampFields()}
         return result

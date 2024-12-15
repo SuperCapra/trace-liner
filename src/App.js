@@ -462,7 +462,9 @@ class Homepage extends React.Component{
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
           uId = res
-          this.updateVisit({user_id: uId})
+          let bodyVisit = {user_id: uId}
+          if(body.has_strava) bodyVisit['has_strava_login'] = true
+          this.updateVisit(bodyVisit)
         }).catch(e => {
           console.error('error creating the user:', e)
         })
@@ -481,14 +483,15 @@ class Homepage extends React.Component{
   }
 
   async createUserAndActivity(activityData) {
-    let bodyUser = {...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+    let bodyUser = {has_loaded_gpx: true, ...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
     dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, bodyUser).then(res => {
       uId = res
       activityData['user_id'] = uId
       let bodyActivity = apiUtils.getActivityBody(activityData,true,true,uId)
       dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, bodyActivity).then(res => {
         aId = res
-        this.updateVisit({user_id: uId, activity_id: aId})
+        let bodyVisit = {user_id: uId, activity_id: aId, has_selected_activity: true}
+        this.updateVisit(bodyVisit)
       }).catch(e => {
         console.error('error creating the activity:', e)
       })
