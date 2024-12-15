@@ -457,7 +457,6 @@ class Homepage extends React.Component{
       let body = apiUtils.getUserBodyStrava(athleteData,false,false)
       console.log('res:', res)
       if(res && res.record && res.record.length && res.record[0].id) {
-        console.log('hey update it!')
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
           uId = res
@@ -466,7 +465,6 @@ class Homepage extends React.Component{
           console.error('error creating the user:', e)
         })
       } else {
-        console.log('hey insert it!')
         body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
         dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
           uId = res
