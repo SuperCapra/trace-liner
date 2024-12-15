@@ -1,5 +1,5 @@
 const express = require('express');
-const createTables = require('./createTables');
+const tables = require('./tables');
 const path = require('path');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
@@ -19,7 +19,7 @@ const roots = [
 app.use(express.json());
 
 (async () => {
-  await createTables();
+  await tables.createTables();
 })();
 
 const authenticateToken = (req, res, next) => {
