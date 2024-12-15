@@ -507,7 +507,8 @@ class Homepage extends React.Component{
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
           aId = res
-          this.updateVisit({activity_id: aId})
+          let bodyVisit = {activity_id: aId, has_selected_activity: true}
+          this.updateVisit(bodyVisit)
         }).catch(e => {
           console.error('error creating the activity:', e)
         })
@@ -515,7 +516,8 @@ class Homepage extends React.Component{
         body = {...body,...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
         dbInteractions.createRecordEditable('activities', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
           aId = res
-          this.updateVisit({activity_id: aId})
+          let bodyVisit = {activity_id: aId, has_selected_activity: true}
+          this.updateVisit(bodyVisit)
         }).catch(e => {
           console.error('error creating the activity:', e)
         })
