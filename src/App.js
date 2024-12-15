@@ -234,12 +234,14 @@ class Homepage extends React.Component{
   routesToStage() {
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
-    if(called && urlCurrent.includes('/visitId-')) {
+    if(urlCurrent.includes('/visitId-')) {
+      console.log('created vId')
       vId = utils.getVisitId(urlCurrent)
       sendCreatingVisit = true
     }
     console.log('visitId', vId)
     if(!vId && !sendCreatingVisit) {
+      console.log('creating vId')
       sendCreatingVisit = true
       dbInteractions.createRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitBody()).then(res => {
         vId = res
