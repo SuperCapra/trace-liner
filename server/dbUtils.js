@@ -1,7 +1,6 @@
-import logUtils from '../utils/logUtils.js'
 const dbUtils = {
     getQueryInsert(data,table) {
-        logUtils.loggerText('data', data)
+        this.loggerText('data', data)
       
         const columns = Object.keys(data)
         const values = Object.values(data)
@@ -19,12 +18,12 @@ const dbUtils = {
         return result
     },
     getQueryUpdate(data,table,id) {
-        logUtils.loggerText('data', data)
+        this.loggerText('data', data)
         
         const columns = Object.keys(data)
         const values = Object.values(data)
         const columnsPlaceHolders = columns.map((e,i) => `${e} = $${i + 1}`)
-        logUtils.loggerText('columnsPlaceHolders:', columnsPlaceHolders)
+        this.loggerText('columnsPlaceHolders:', columnsPlaceHolders)
         
         const query = `UPDATE ${table}
             SET ${columnsPlaceHolders.join(',')}
@@ -53,6 +52,12 @@ const dbUtils = {
     getQuerySelectFieldsRecord(table,fields,field,value) {
         console.log('query:', `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`)
         return `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`
+    },
+    logger(message) {
+        if(process.env.NODE_ENV === 'development') console.log(message)
+    },
+    loggerText(text,message) {
+        if(process.env.NODE_ENV === 'development') console.log(text,message)
     }
 }
 
