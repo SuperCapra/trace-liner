@@ -43,6 +43,13 @@ const getRecord = async (table,field,value) => {
 const getRecordFields = async (table,fields,field,value) => {
   return (await pool.query(dbUtils.getQuerySelectFieldsRecord(table,fields,field,value))).rows
 }
+const getQueryResult = async (query) => {
+  // const trimmedQuery = query.trim().toUpperCase();
+  // if (!trimmedQuery.startsWith('SELECT')) {
+  //   throw new Error('Only SELECT queries are allowed.');
+  // }
+  return (await pool.query(query))
+}
 
 module.exports = {
   addRecord,
@@ -51,5 +58,6 @@ module.exports = {
   getRecordsFields,
   getRecord,
   getRecordFields,
-  pool
+  pool,
+  getQueryResult
 };

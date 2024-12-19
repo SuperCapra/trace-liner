@@ -189,6 +189,24 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
     res.status(500).json({error: e})
   }
 })
+app.get('/api/query', authenticateToken, async (req, res) => {
+  try {
+    const query = req.params.query
+    // console.log('fields:',fields)
+    // console.log('Array.isArray(fields):',Array.isArray(fields))
+    let records
+    if(query) {
+      records = await db.getQueryResult(query)
+    }
+    const result = {
+      records: records
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
 app.get('/api/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
@@ -258,8 +276,8 @@ app.post('/api/salesforce-login-and-upsert', authenticateToken, async (req, res)
     // Step 2: Perform the upsert using the access token obtained
     const upsertUrl = `${instanceUrlFromLogin}/services/data/v50.0/sobjects/${object}/${field}/${externalId}`;
 
-    console.log('upsertUrl', upsertUrl)
-    console.log('body', body)
+    // console.log('upsertUrl', upsertUrl)
+    // console.log('body', body)
 
     const upsertResponse = await fetch(upsertUrl, {
       method: 'PATCH',
@@ -271,7 +289,7 @@ app.post('/api/salesforce-login-and-upsert', authenticateToken, async (req, res)
     });
 
     const upsertData = await upsertResponse.json();
-    console.log('upsertData:', upsertData)
+    // console.log('upsertData:', upsertData)
     if (!upsertResponse.ok) {
       throw new Error(`Salesforce upsert failed: ${upsertData.message}`);
     }
