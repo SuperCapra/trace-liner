@@ -53,8 +53,7 @@ const dbUtils = {
     getQuerySelectFieldsRecord(table,fields,field,value) {
         console.log('query:', `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`)
         return `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`
-    },
-
+    }
 }
 
 module.exports = dbUtils;

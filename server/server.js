@@ -189,6 +189,24 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
     res.status(500).json({error: e})
   }
 })
+app.get('/api/query', authenticateToken, async (req, res) => {
+  try {
+    const query = req.params.query
+    // console.log('fields:',fields)
+    // console.log('Array.isArray(fields):',Array.isArray(fields))
+    let records
+    if(query) {
+      records = await db.getQueryResult(query)
+    }
+    const result = {
+      records: records
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
 app.get('/api/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
