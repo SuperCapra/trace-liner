@@ -1,6 +1,7 @@
+import logUtils from '../utils/logUtils.js'
 const dbUtils = {
     getQueryInsert(data,table) {
-        console.log('data', data)
+        logUtils.loggerText('data', data)
       
         const columns = Object.keys(data)
         const values = Object.values(data)
@@ -18,12 +19,12 @@ const dbUtils = {
         return result
     },
     getQueryUpdate(data,table,id) {
-        console.log('data', data)
+        logUtils.loggerText('data', data)
         
         const columns = Object.keys(data)
         const values = Object.values(data)
         const columnsPlaceHolders = columns.map((e,i) => `${e} = $${i + 1}`)
-        console.log('columnsPlaceHolders:', columnsPlaceHolders)
+        logUtils.loggerText('columnsPlaceHolders:', columnsPlaceHolders)
         
         const query = `UPDATE ${table}
             SET ${columnsPlaceHolders.join(',')}
