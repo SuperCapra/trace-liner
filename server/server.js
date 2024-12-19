@@ -191,7 +191,7 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
 })
 app.get('/api/query', authenticateToken, async (req, res) => {
   try {
-    const query = req.params.query
+    const query = req.body.query
     // console.log('fields:',fields)
     // console.log('Array.isArray(fields):',Array.isArray(fields))
     let records

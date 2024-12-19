@@ -48,7 +48,7 @@ const getQueryResult = async (query) => {
   // if (!trimmedQuery.startsWith('SELECT')) {
   //   throw new Error('Only SELECT queries are allowed.');
   // }
-  return (await pool.query(query))
+  return (await pool.query(query)).rows
 }
 
 module.exports = {
