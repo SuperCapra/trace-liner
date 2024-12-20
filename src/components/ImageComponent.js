@@ -23,6 +23,7 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
+  const [resolution, setResolution] = useState(undefined);
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showDate, setShowDate] = useState(true);
@@ -205,7 +206,7 @@ function ImageComponent(props) {
   //     })
   // },[])
 
-  const drawLine = useCallback((color, canvasWidth, canvasHeight) => {
+  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
     if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
@@ -244,46 +245,66 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
+    let resolutionUsing = resolutionChanging ? resolutionChanging : ( resolution ? resolution : setResolution(lengthCoordinates)) / 12
+    console.log('lengthCoordinates:', lengthCoordinates)
+    let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
+    console.log('scaleFactor:', scaleFactor)
     let drawing = true
     let dimentionCircleStart = width * 0.005
     let dimentionCircleFinish = width * 0.02
+    let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
+    let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
+    let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
+    let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
+    // stroke the initial circle only if the intersection it's null with the final circle
+    drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
+    // stroke the final circle
+    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
     ctx.beginPath()
   
-    let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
-    let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
 
     for(let i = 0; i < coordinates.length; i++) {
-      if(i % Math.floor(lengthCoordinates/100) === 0) {
+      // if(i>200) break
       let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
-      if(utils.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && utils.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)) {
-        if(!drawing) {
+      // let cdMinus
+      let cdPlus
+      // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
+      if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter)
+      if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
+        if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+          if(!drawing) {
+            drawing = true
+            ctx.beginPath()
+          }
+          ctx.lineTo(cd[0],cd[1])
+        } else {
+          if(drawing) ctx.stroke()
+          drawing = false
+        }
+      } else {
+        if(!drawing && cdPlus && utils.comingOutsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
           drawing = true
           ctx.beginPath()
+          ctx.lineTo(cdPlus[0],cdPlus[1])
+        } 
+        else if(drawing && cdPlus && utils.comingInsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+          ctx.lineTo(cd[0],cd[1])
+          ctx.stroke()
+          drawing = false
         }
-        ctx.lineTo(cd[0],cd[1])
-      } else {
-        if(drawing) ctx.stroke()
-        drawing = false
-      }}
+      }
       // ctx.lineTo(cd[0],cd[1])
     }
     // stroke the path
     ctx.stroke()
-    // stroke the initial circle only if the intersection it's null with the final circle
-    if(utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2) {
-      drawCircle(ctx, startCoordinates, dimentionCircleStart * 2, true, color)
-    } else {
-      drawCircle(ctx, endCoordinates, dimentionCircleStart, true, color)
-    }
-    // stroke the final circle
-    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
     // if(club && club.name === 'dev-admin') returnImage()
     // requestAnimationFrame(() => {
     //   pregenerateImageJpeg();
     // });
   },[
     activity.coordinates,
+    resolution
     // pregenerateImageJpeg
     // club,
     // returnImage
@@ -566,6 +587,13 @@ function ImageComponent(props) {
       infoLog.filter = String(data.value)
       setValueFilter(data.value)
       drawFilter()
+    }
+    else if(data.type === 'resolutionChanger') {
+      infoLog.resolution = String(data.value)
+      setResolution(data.value)
+      if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
+      else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
+      else drawLine(drawingColor, canvasWidth, canvasHeight, data.value)
     }
     // else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'share-contour') handleDownloadClick('contour')

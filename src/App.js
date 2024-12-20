@@ -6,6 +6,7 @@ import apiUtils from './utils/apiUtils.js';
 import Loader from './components/Loader.js'
 import ImageComponent from './components/ImageComponent.js'
 import Creator from './components/Creator.js'
+import Statistics from './components/Statistics.js';
 // import Dropdown from './components/Dropdown.js'
 import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
@@ -234,6 +235,7 @@ class Homepage extends React.Component{
   routesToStage() {
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
+    if(urlCurrent.includes('/statistics')) return <Statistics/>
     if(urlCurrent.includes('/visitId-')) {
       console.log('created vId')
       vId = utils.getVisitId(urlCurrent)
