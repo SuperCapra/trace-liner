@@ -75,6 +75,7 @@ const tableDefinitions = `
         activity_id INTEGER REFERENCES activities(id),
         color VARCHAR(255),
         filter INTEGER,
+        resolution INTEGER,
         image VARCHAR(255),
         mode VARCHAR(255),
         size VARCHAR(255),

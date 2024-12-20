@@ -239,6 +239,30 @@ const utilsFunction = {
         return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
     },
 
+    getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
+        return this.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && this.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)
+    },
+
+    comingOutsideMinus(cd,cdMinus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
+        return this.getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) && !this.getOufCircle(cdMinus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart)
+    },
+
+    comingInsideMinus(cd,cdMinus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
+        return !this.getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) && this.getOufCircle(cdMinus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart)
+    },
+
+    comingOutsidePlus(cd,cdPlus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
+        return !this.getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) && this.getOufCircle(cdPlus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart)
+    },
+
+    comingInsidePlus(cd,cdPlus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
+        return this.getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) && !this.getOufCircle(cdPlus,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart)
+    },
+
+    getHalf(a,b) {
+        return [(a[0]+b[0])/2,(a[1]+b[1])/2]
+    },
+
     returnDatetimeStringified(dateTimeJs) {
         let y = dateTimeJs.getFullYear()
         let m = (String(dateTimeJs.getMonth() + 1)).padStart(2,'0')

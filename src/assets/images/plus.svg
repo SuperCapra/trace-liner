@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="45px" height="45px">
+   <rect style="stroke-width:2.00275;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke" width="35" height="8" x="5" y="18.5" />
+   <rect style="stroke-width:2.00275;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke" width="35" height="8" x="5" y="-26.5" transform="rotate(90)" />
+</svg>
