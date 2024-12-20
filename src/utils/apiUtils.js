@@ -156,6 +156,7 @@ const apiUtils = {
             activity_id : activityId,
             color : exportData.color,
             filter : exportData.filter,
+            resolution : exportData.resolution,
             image : exportData.image,
             mode : exportData.mode,
             size : exportData.size,
