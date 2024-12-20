@@ -23,7 +23,6 @@ function ImageComponent(props) {
   const [yCrop, setYCrop] = useState(0);
   const [drawingColor, setDrawingColor] = useState('white');
   const [filterColor] = useState('white');
-  const [resolution, setResolution] = useState(undefined);
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
   const [showDate, setShowDate] = useState(true);
@@ -37,6 +36,7 @@ function ImageComponent(props) {
   const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
   const modaldRef = useRef()
+  const [valueResolution, setValueResolution] = useState(100);
   const [valueFilter, setValueFilter] = useState(0);
   const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
@@ -245,8 +245,9 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
-    let resolutionUsing = resolutionChanging ? resolutionChanging : ( resolution ? resolution : setResolution(lengthCoordinates)) / 12
-    console.log('lengthCoordinates:', lengthCoordinates)
+    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
+    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / 10
+    // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
     let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
     console.log('scaleFactor:', scaleFactor)
     let drawing = true
@@ -304,7 +305,7 @@ function ImageComponent(props) {
     // });
   },[
     activity.coordinates,
-    resolution
+    valueResolution
     // pregenerateImageJpeg
     // club,
     // returnImage
@@ -324,7 +325,7 @@ function ImageComponent(props) {
     return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
   }
 
-  const drawElevation = useCallback((color, canvasWidth, canvasHeight) => {
+  const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
@@ -360,6 +361,9 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
+
+    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 10
     ctx.beginPath()
   
     let zoomFactorY = (height * 0.30)/altitudeGap
@@ -368,7 +372,7 @@ function ImageComponent(props) {
     logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
 
     for(let i = 0; i < altitudeStream.length; i++) {
-      if(i % Math.floor(lengthDistance/100) === 0) {
+      if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
         let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
         let aX = distanceStream[i] * zoomFactorX
         ctx.lineTo(aX,aY)
@@ -405,10 +409,11 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
+    valueResolution
     // pregenerateImageJpeg
   ])
 
-  const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight) => {
+  const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
@@ -445,6 +450,8 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
     let lengthAltitude = altitudeStream.length
+    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 20
     ctx.beginPath()
   
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
@@ -454,7 +461,7 @@ function ImageComponent(props) {
     logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
 
     for(let i = 0; i < altitudeStream.length; i++) {
-      if(i % Math.floor(lengthDistance/200) === 0) {
+      if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
         let aX = width - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorX)
         let aY = height - distanceStream[i] * zoomFactorY
         ctx.lineTo(aX,aY)
@@ -492,6 +499,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
+    valueResolution
     // pregenerateImageJpeg
   ])
 
@@ -588,13 +596,27 @@ function ImageComponent(props) {
       setValueFilter(data.value)
       drawFilter()
     }
-    else if(data.type === 'resolutionChanger') {
+    else if(data.type === 'resolutionSlider') {
       infoLog.resolution = String(data.value)
-      setResolution(data.value)
+      setValueResolution(data.value)
       if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
       else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
       else drawLine(drawingColor, canvasWidth, canvasHeight, data.value)
     }
+    // else if(data.type === 'filter') {
+    //   if(data.direction === 'plus' && valueFilter < 100) setValueFilter(valueFilter + 1)
+    //   else if(data.direction === 'minus' && valueFilter > 1) setValueFilter(valueFilter - 1)
+    //   drawFilter()
+    // }
+    // else if(data.type === 'resolution') {
+    //   let factor = showMode4 || showMode3 ? Number((activity.altitudeStream.length / 50).toFixed(0)) : Number((activity.coordinates.length / 50).toFixed(0))
+    //   let maxResolution = showMode4 || showMode3 ? activity.altitudeStream.length : activity.coordinates.length
+    //   if(data.direction === 'plus' && valueResolution < maxResolution - factor) setValueResolution(valueResolution + factor)
+    //   else if(data.direction === 'minus' && valueResolution > 1) setValueResolution(valueResolution - factor)
+    //   if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
+    //   else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+    //   else drawLine(drawingColor, canvasWidth, canvasHeight)
+    // }
     // else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'share-contour') handleDownloadClick('contour')
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
