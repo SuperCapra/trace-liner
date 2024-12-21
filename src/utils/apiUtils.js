@@ -5,7 +5,7 @@ const apiUtils = {
         let pathname = window.location.pathname + '?'
         return href.substring(0,href.indexOf(pathname))
     },
-    // GMT datetime formatted to "yyyy-MM-dd HH:mm:ss.SSS"
+    // GMT datetime formatted to "yyyy-MM-ddTHH:mm:ss.SSSZ"
     getTimestampGMT() {
         const now = new Date();
 
@@ -17,9 +17,9 @@ const apiUtils = {
         const seconds = String(now.getUTCSeconds()).padStart(2, '0');
         const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0');
     
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
     },
-    // Local datetime formatted to "yyyy-MM-dd HH:mm:ss.SSS"
+    // Local datetime formatted to "yyyy-MM-ddTHH:mm:ss.SSS+00:00"
     getTimestampLocal() {
         const now = new Date();
 
@@ -30,8 +30,8 @@ const apiUtils = {
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-    
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
     },
     getTimezoneOffset() {
         const now = new Date();

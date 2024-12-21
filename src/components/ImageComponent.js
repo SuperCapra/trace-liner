@@ -247,6 +247,7 @@ function ImageComponent(props) {
     let lengthCoordinates = coordinates.length
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
     let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / 10
+    console.log('lengthCoordinates', lengthCoordinates)
     // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
     let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
     console.log('scaleFactor:', scaleFactor)
@@ -363,7 +364,7 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
 
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 10
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 80
     ctx.beginPath()
   
     let zoomFactorY = (height * 0.30)/altitudeGap
@@ -451,7 +452,7 @@ function ImageComponent(props) {
     let lengthDistance = distanceStream.length
     let lengthAltitude = altitudeStream.length
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 20
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 160
     ctx.beginPath()
   
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
