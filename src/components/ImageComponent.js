@@ -33,6 +33,7 @@ function ImageComponent(props) {
   const [showPower, setShowPower] = useState(true);
   const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [textUp, setTextUp] = useState(false);
   const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
   const modaldRef = useRef()
@@ -42,6 +43,7 @@ function ImageComponent(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+  const [showMode5, setShowMode5] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
@@ -73,31 +75,75 @@ function ImageComponent(props) {
   }
 
   const classesForLogoClub = () => {
+    let result = 'logo-club-wrapper-scale'
     if(showMode3 || showMode4) {
       if(showMode3) {
-        if(ratio === '1:1') return ('logo-club-wrapper-mode-3')
-        else return ('logo-club-wrapper-mode-3-rect')
+        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3'
+        else return result + ' logo-club-wrapper-mode-3-rect'
       } else {
-        if(ratio === '1:1') return ('logo-club-wrapper-mode-4')
-        else return ('logo-club-wrapper-mode-4-rect')
+        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-4'
+        else return result + ' logo-club-wrapper-mode-4-rect'
       }
+    } else if(showMode5 && !textUp) {
+      if(ratio === '1:1') return result + ' logo-club-wrapper-mode-5-down'
+      else return result + ' logo-club-wrapper-mode-5-down-rect'
     } else {
-      if(ratio === '1:1') return ('logo-club-wrapper')
-      else return ('logo-club-wrapper-rect')
+      if(ratio === '1:1') return result + ' logo-club-wrapper'
+      else return result + ' logo-club-wrapper-rect'
     }
   }
 
   const classesForSketch = () => {
+    let result = 'round-corner canvas-position canvas-filter'
     if(showMode3 || showMode4) {
-      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch-mode3')
-      else return ('round-corner canvas-position canvas-filter canvas-sketch-mode3-rect')
+      if(ratio === '1:1') return result + ' canvas-sketch-mode-3'
+      else return result + ' canvas-sketch-mode-3-rect'
+    } else if(showMode5) {
+      if(textUp) {
+        if(ratio === '1:1') return result + ' canvas-sketch-mode-5'
+        else return result + ' canvas-sketch-mode-5-rect'
+      } else {
+        if(ratio === '1:1') return result + ' canvas-sketch-mode-5-down'
+        else return result + ' canvas-sketch-mode-5-down-rect'
+      }
     } else {
-      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch')
-      else return ('round-corner canvas-position canvas-filter canvas-sketch-rect')
+      if(ratio === '1:1') return result + ' canvas-sketch'
+      else return result + ' canvas-sketch-rect'
+    }
+  }
+  const classesForName = () => {
+    if(showMode5) {
+      let result = 'text-overlay text-title-props-mode-5 text-name-props'
+      if(textUp) {
+        if(ratio === '1:1') return result + ' text-title-props-mode-5-up'
+        else return result + ' text-title-props-mode-5-up-rect'
+      } else {
+        if(ratio === '1:1') return result + ' text-title-props-mode-5-down'
+        else return result + ' text-title-props-mode-5-down-rect'
+      }
+    } else {
+      if(ratio === '1:1') return ('text-overlay text-title-props text-name-props')
+      else return ('text-overlay text-title-props-rect text-name-props')
+    }
+  }
+  const classesForMode5 = () => {
+    let result = 'width-left-mode-5 text-overlay-mode-5'
+    if(textUp) {
+      if(ratio === '1:1') {
+        return (result + ' position-mode-5-up')
+      } else {
+        return (result + ' position-mode-5-up-rect')
+      }
+    } else {
+      if(ratio === '1:1') {
+        return (result + ' position-mode-5-down')
+      } else {
+        return (result + ' position-mode-5-down-rect')
+      }
     }
   }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
-  const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
+  const classesName = classesForName()
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = classesForSketch()
@@ -106,8 +152,10 @@ function ImageComponent(props) {
   const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
   const classesDataPLittle = 'data-p-little'
   const classesLogoClub = classesForLogoClub()
-  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
-  const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
+  const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
+  const classMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
+  const classMode5 = classesForMode5()
+  const classWrapperMode5 = ratio === '1:1' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
   
   const setLoadedModal = (bj,bp) => {
     if(modaldRef.current) modaldRef.current.loaded(bj,bp)
@@ -679,6 +727,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
           setShowMode4(!data.show)
+          setShowMode5(!data.show)
           enableMode1(data.show, true)
         }
         if(data.show) enableMode1(true)
@@ -689,6 +738,7 @@ function ImageComponent(props) {
           setShowMode1(!data.show)
           setShowMode3(!data.show)
           setShowMode4(!data.show)
+          setShowMode5(!data.show)
           enableMode2()
         }
       } else if(data.subtype === 'mode3') {
@@ -698,6 +748,7 @@ function ImageComponent(props) {
           setShowMode1(!data.show)
           setShowMode2(!data.show)
           setShowMode4(!data.show)
+          setShowMode5(!data.show)
           enableMode3()
         }
       } else if(data.subtype === 'mode4') {
@@ -707,9 +758,22 @@ function ImageComponent(props) {
           setShowMode1(!data.show)
           setShowMode2(!data.show)
           setShowMode3(!data.show)
+          setShowMode5(!data.show)
           enableMode4()
         }
+      } else if(data.subtype === 'mode5') {
+        setInfoLog(saleforceApiUtils.setMode5(infoLog))
+        setShowMode5(data.show)
+        if(data.show) {
+          setShowMode1(!data.show)
+          setShowMode2(!data.show)
+          setShowMode3(!data.show)
+          setShowMode4(!data.show)
+          enableMode5()
+        }
       }
+    } else if(data.type === 'switch-text') {
+      setTextUp(!textUp)
     } else if(data.type === 'image') {
       infoLog.image = data.info
       setImage(data.image)
@@ -764,6 +828,14 @@ function ImageComponent(props) {
     // setShowPower(true)
     // setShowAverage(true)
     // setShowCoordinates(true)
+  }
+
+  const enableMode5 = () => {
+    setShowTitle(true)
+    setShowDate(false)
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
   }
 
   const handleColorChange = (color) => {
@@ -901,32 +973,41 @@ function ImageComponent(props) {
   }
 
   const returnMode2Disposition = () => {
-    let dataToDisplay = ''
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay += activity[unitMeasureSelected].beautyDistance
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + activity[unitMeasureSelected].beautyElevation
-    if(activity.beautyDuration && showDuration) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + activity.beautyDuration
-    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataToDisplay}</div>)
+    let dataDisplaying = ''
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying += activity[unitMeasureSelected].beautyDistance
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity[unitMeasureSelected].beautyElevation
+    if(activity.beautyDuration && showDuration) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity.beautyDuration
+    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataDisplaying}</div>)
   }
 
   const returnMode3Disposition = () => {
-    let dataToDisplay = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
-    if(activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-    // if(activity.beautyCoordinates && showCoordinates) dataToDisplay.push(<div key="coordinates" className="element-mode-3"><p>{activity.beautyCoordinates}</p></div>)
-    return (<div id="canvasText" className={styleMode3} style={styleText}>{dataToDisplay}</div>)
+    let dataDisplaying = []
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
+    if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    // if(activity.beautyCoordinates && showCoordinates) dataDisplaying.push(<div key="coordinates" className="element-mode-3"><p>{activity.beautyCoordinates}</p></div>)
+    return (<div id="canvasText" className={classMode3} style={styleText}>{dataDisplaying}</div>)
   }
 
   const returnMode4Disposition = () => {
-    let dataToDisplay = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-4"><p>{activity.beautyDuration}</p></div>)
-    // if(activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-4"><p>{activity.beautyPower}</p></div>)
-    // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-    return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
+    let dataDisplaying = []
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-4"><p>{activity.beautyDuration}</p></div>)
+      // if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-4"><p>{activity.beautyPower}</p></div>)
+    // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    return (<div id="canvasText" className={classMode4} style={styleText}>{dataDisplaying}</div>)
+  }
+  
+  const returnMode5Disposition = () => {
+    let dataDisplaying = []
+    
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DISTANCE}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_ELEVATION}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
+    return (<div id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
   }
 
   // const bubbleChangeLanguage = (value) => {
@@ -984,10 +1065,15 @@ function ImageComponent(props) {
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
-            {showTitle && (
+            {showTitle && !showMode5 && (
               <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
                 {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+              </div>
+            )}
+            {showTitle && showMode5 && (
+              <div className="width-general text-overlay text-title">
+                <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
               </div>
             )}
             {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
@@ -995,6 +1081,7 @@ function ImageComponent(props) {
             {showMode2 && returnMode2Disposition()}
             {showMode3 && returnMode3Disposition()}
             {showMode4 && returnMode4Disposition()}
+            {showMode5 && returnMode5Disposition()}
           </div>
         </div>
         {isLoading && 

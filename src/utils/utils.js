@@ -297,7 +297,7 @@ const utilsFunction = {
     },
 
     getTitle(text) {
-        text = this.removeEmoji(text).replaceAll(' ', '_').toLowerCase()
+        text = this.removeEmoji(text).trim().replaceAll(' ', '_').toLowerCase()
         return (text && text.length) ? text : 'image'
     },
 

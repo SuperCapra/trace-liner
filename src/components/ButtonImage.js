@@ -15,8 +15,9 @@ import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
 import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
 import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
 import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
-import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
-import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
+import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
+// import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
+// import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
 import image1 from '../assets/images/image1.jpeg'
 import image2 from '../assets/images/image2.jpeg'
 import image3 from '../assets/images/image3.jpeg'
@@ -25,7 +26,6 @@ import image5 from '../assets/images/image5.jpg'
 import image6 from '../assets/images/image6.jpeg'
 import image7 from '../assets/images/image7.jpeg'
 import Slider from 'rc-slider';
-import SliderRes from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
@@ -44,6 +44,7 @@ function ButtonImage(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [textUp, setTextUp] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
@@ -54,6 +55,7 @@ function ButtonImage(props) {
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+  const [showMode5, setShowMode5] = useState(false);
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -158,6 +160,9 @@ function ButtonImage(props) {
         enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
+    } else if(type === 'switchText') {
+      handleClick({type: 'switch-text', textUp: textUp})
+      setTextUp(!textUp)
     } else if(type === 'mode1') {
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
@@ -165,6 +170,7 @@ function ButtonImage(props) {
         setShowMode2(false)
         setShowMode3(false)
         setShowMode4(false)
+        setShowMode5(false)
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
@@ -174,6 +180,7 @@ function ButtonImage(props) {
         setShowMode1(false)
         setShowMode3(false)
         setShowMode4(false)
+        setShowMode5(false)
       }
       enableMode2()
     } else if(type === 'mode3') {
@@ -183,6 +190,7 @@ function ButtonImage(props) {
         setShowMode1(false)
         setShowMode2(false)
         setShowMode4(false)
+        setShowMode5(false)
       }
       enableMode3()
     } else if(type === 'mode4') {
@@ -192,6 +200,17 @@ function ButtonImage(props) {
         setShowMode1(false)
         setShowMode2(false)
         setShowMode3(false)
+        setShowMode5(false)
+      }
+      enableMode4()
+    } else if(type === 'mode5') {
+      handleClick({type: 'show-hide', subtype: 'mode5', show: !showMode5})
+      setShowMode5(!showMode5)
+      if(!showMode5) {
+        setShowMode1(false)
+        setShowMode2(false)
+        setShowMode3(false)
+        setShowMode4(false)
       }
       enableMode4()
     }
@@ -271,6 +290,15 @@ function ButtonImage(props) {
   const subEyeStyle = {
     fill: brandingPalette.tertiary,
     transform: 'scale(0.55)'
+  }
+  const subSwitchStyle = {
+    fill: brandingPalette.tertiary,
+    transform: 'scale(0.55)',
+  }
+  const subSwitchStyleDown = {
+    fill: brandingPalette.tertiary,
+    transform: 'scale(0.55)',
+    rotate: '180deg'
   }
   // const unsetBlendModeStyle = {
   //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.primary,
@@ -412,6 +440,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const switchController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {textUp && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchText')} />)}
+          {!textUp && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchText')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_SWITCH}</p>
+      </div>
+    )
+  }
 
   const returnImages = () => {
     // if(props.activity.photoUrlProxied) {
@@ -510,6 +549,12 @@ function ButtonImage(props) {
           <p>MODE 4</p>
         </div>
         {showMode4 && displayMode4()}
+        <div className="wrapper-buttons-left">
+          {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
+          {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
+          <p>MODE 5</p>
+        </div>
+        {showMode5 && displayMode5()}
       </div>
     )
   }
@@ -561,18 +606,28 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const minusFilter = () => {
-    handleClick({type: 'filter', direction: 'minus'})
+  const displayMode5 = () => {    
+    return (
+      <div className="width-mode-sub">
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {switchController()}
+      </div>
+    )
   }
-  const plusFilter = () => {
-    handleClick({type: 'filter', direction: 'plus'})
-  }
-  const minusResolution = () => {
-    handleClick({type: 'resolution', direction: 'minus'})
-  }
-  const plusResolution = () => {
-    handleClick({type: 'resolution', direction: 'plus'})
-  }
+  // const minusFilter = () => {
+  //   handleClick({type: 'filter', direction: 'minus'})
+  // }
+  // const plusFilter = () => {
+  //   handleClick({type: 'filter', direction: 'plus'})
+  // }
+  // const minusResolution = () => {
+  //   handleClick({type: 'resolution', direction: 'minus'})
+  // }
+  // const plusResolution = () => {
+  //   handleClick({type: 'resolution', direction: 'plus'})
+  // }
 
   // const captureAndUploadImage = (canvas, titleImage, type, blob) => {
   //   try {

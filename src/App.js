@@ -154,6 +154,7 @@ class Homepage extends React.Component{
             beautyEndCoordinates: undefined,
             beautyDuration: undefined,
             beautyName: track.name ? he.decode(track.name) : undefined,
+            beautyNameNoEmoji: track.name ? utils.removeEmoji(he.decode(track.name)) : undefined,
             beautyPower: undefined,
             // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
@@ -304,8 +305,6 @@ class Homepage extends React.Component{
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
-        let urlWithoutParams = window.location.pathname
-        if(urlCurrent !== urlWithoutParams && !urlCurrent.includes('192.168.1.69')) window.history.replaceState({}, '', urlWithoutParams);
         return (
           <div className="quadratic-wrapper">
             {/* <div className="buttons-wrapper">
@@ -600,6 +599,7 @@ class Homepage extends React.Component{
               beautyEndCoordinates: undefined,
               beautyDuration: utils.getBeautyDuration(e.moving_time),
               beautyName: e.name,
+              beautyNameNoEmoji: utils.removeEmoji(e.name),
               beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
               // beautyDate: utils.getBeautyDatetime(e.start_date_local),
               beautyDatetimeLanguages: utils.getBeautyDatetime(e.start_date_local),
