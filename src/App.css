@@ -10,6 +10,47 @@
   --palette-black: #000000;
   --dot-typing-color: var(--palette-primary)
 }
+.main-mode-color{
+  fill:var(--palette-primary);
+}
+.secondary-mode-color{
+  stroke:var(--palette-background);
+}
+.secondary-mode-color-fill{
+  fill:var(--palette-background);
+}
+.wrapper-list-selector{
+  display: flex;
+  flex-direction: column;
+}
+.row-selector{
+  display: flex;
+  flex-direction: row;
+}
+.position-mode{
+  width: 70px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.padding-mode-selector{
+  padding: 10px;
+}
+.wrapper-mode-selector{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.wrapper-mode-selector:hover{
+  cursor: pointer;
+}
+.wrapper-mode-selector:active{
+  filter: brightness(0.6);
+}
+.scale-mode{
+  transform: scale(2);
+}
 @font-face {
   font-family: 'SourceCodePro';
   src: local('SourceCodePro'),
