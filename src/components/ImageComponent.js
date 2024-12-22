@@ -10,6 +10,7 @@ import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
+import Selector from './Selector.js';
 
 function ImageComponent(props) {
 
@@ -39,14 +40,15 @@ function ImageComponent(props) {
   const modaldRef = useRef()
   const [valueResolution, setValueResolution] = useState(100);
   const [valueFilter, setValueFilter] = useState(0);
-  const [showMode1, setShowMode1] = useState(true);
+  const [modeSelected, setModeSelected] = useState(undefined);
+  const [showMode1, setShowMode1] = useState(false);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
   const [showMode5, setShowMode5] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [imageToShare, setImagetoShare] = useState(null)
-  const [isLoading/**, setIsLoading*/] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
   const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
@@ -728,9 +730,9 @@ function ImageComponent(props) {
           setShowMode3(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
-          enableMode1(data.show, true)
+          enableMode1(data.show, true, data.start)
         }
-        if(data.show) enableMode1(true)
+        // if(data.show) enableMode1(true, false, data.start)
       } else if(data.subtype === 'mode2') {
         setInfoLog(saleforceApiUtils.setMode2(infoLog))
         setShowMode2(data.show)
@@ -739,7 +741,7 @@ function ImageComponent(props) {
           setShowMode3(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
-          enableMode2()
+          enableMode2(data.start)
         }
       } else if(data.subtype === 'mode3') {
         setInfoLog(saleforceApiUtils.setMode4(infoLog))
@@ -749,7 +751,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
-          enableMode3()
+          enableMode3(data.start)
         }
       } else if(data.subtype === 'mode4') {
         setInfoLog(saleforceApiUtils.setMode4(infoLog))
@@ -759,7 +761,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
           setShowMode5(!data.show)
-          enableMode4()
+          enableMode4(data.start)
         }
       } else if(data.subtype === 'mode5') {
         setInfoLog(saleforceApiUtils.setMode5(infoLog))
@@ -769,7 +771,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
           setShowMode4(!data.show)
-          enableMode5()
+          enableMode5(data.start)
         }
       }
     } else if(data.type === 'switch-text') {
@@ -783,8 +785,8 @@ function ImageComponent(props) {
     }
   }
 
-  const enableMode1 = (bool, isStart) => {
-    drawLine(drawingColor, canvasWidth, canvasHeight)
+  const enableMode1 = (bool, isStart, start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     if(isStart) {
       setShowTitle(bool)
       setShowDate(bool)
@@ -797,8 +799,8 @@ function ImageComponent(props) {
     setShowCoordinates(!bool)
   }
 
-  const enableMode2 = () => {
-    drawLine(drawingColor, canvasWidth, canvasHeight)
+  const enableMode2 = (start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(true)
     setShowDate(true)
     setShowDistance(true)
@@ -806,8 +808,8 @@ function ImageComponent(props) {
     setShowDuration(true)
   }
 
-  const enableMode3 = () => {
-    drawElevation(drawingColor, canvasWidth, canvasHeight)
+  const enableMode3 = (start) => {
+    if(!start) drawElevation(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(false)
     setShowDate(false)
     setShowDistance(true)
@@ -818,8 +820,8 @@ function ImageComponent(props) {
     setShowCoordinates(true)
   }
 
-  const enableMode4 = () => {
-    drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+  const enableMode4 = (start) => {
+    if(!start) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(false)
     setShowDate(false)
     // setShowDistance(true)
@@ -830,7 +832,8 @@ function ImageComponent(props) {
     // setShowCoordinates(true)
   }
 
-  const enableMode5 = () => {
+  const enableMode5 = (start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(true)
     setShowDate(false)
     setShowDistance(true)
@@ -862,6 +865,7 @@ function ImageComponent(props) {
   // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
+    if(!modeSelected) return
     logUtils.loggerText('Ratio text:', ratioText)
     if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
@@ -936,7 +940,8 @@ function ImageComponent(props) {
     showMode3,
     showMode4,
     xCrop,
-    yCrop
+    yCrop,
+    modeSelected
   ])
 
   const setImage = (newImage) => {
@@ -1028,6 +1033,7 @@ function ImageComponent(props) {
       handleCrop,
       imageSrc,
       club,
+      modeSelected,
       // activity.photoUrl,
       // fetchImage
     ])
@@ -1037,6 +1043,13 @@ function ImageComponent(props) {
   }
   const closeModal = () => {
     setShowModal(false)
+  }
+  const setMode = (mode) => {
+    console.log('mode:', mode)
+    // setIsLoading(true)
+    setModeSelected(mode)
+    handleClickDispatcher({type: 'show-hide', subtype: mode, show: true, start: true})
+    // setIsLoading(false)
   }
   
   return (
@@ -1059,7 +1072,8 @@ function ImageComponent(props) {
         <ArrowLeft className="back-image"/>
         <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
       </div> */}
-      <div className="width-wrapper-main">
+      {!modeSelected && <Selector vocabulary={vocabulary} handleSelectMode={setMode}/>}
+      {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
@@ -1095,7 +1109,7 @@ function ImageComponent(props) {
           {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
         <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
-      </div>
+      </div>}
     </div>
   );
 }
