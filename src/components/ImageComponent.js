@@ -1108,7 +1108,7 @@ function ImageComponent(props) {
         <div>
           {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} modeselected={modeSelected} handleClickButton={handleClickDispatcher}/>
       </div>}
     </div>
   );
