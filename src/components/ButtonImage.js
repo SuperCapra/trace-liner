@@ -164,6 +164,7 @@ function ButtonImage(props) {
       handleClick({type: 'switch-text', textUp: textUp})
       setTextUp(!textUp)
     } else if(type === 'mode1') {
+      if(showMode1) return
       handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
       setShowMode1(!showMode1)
       if(!showMode1) {
@@ -174,6 +175,7 @@ function ButtonImage(props) {
       }
       enableMode1(true, true)
     } else if(type === 'mode2') {
+      if(showMode2) return
       handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
       setShowMode2(!showMode2)
       if(!showMode2) {
@@ -184,6 +186,7 @@ function ButtonImage(props) {
       }
       enableMode2()
     } else if(type === 'mode3') {
+      if(showMode3) return
       handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
       setShowMode3(!showMode3)
       if(!showMode3) {
@@ -194,6 +197,7 @@ function ButtonImage(props) {
       }
       enableMode3()
     } else if(type === 'mode4') {
+      if(showMode4) return
       handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
       setShowMode4(!showMode4)
       if(!showMode4) {
@@ -204,6 +208,7 @@ function ButtonImage(props) {
       }
       enableMode4()
     } else if(type === 'mode5') {
+      if(showMode5) return
       handleClick({type: 'show-hide', subtype: 'mode5', show: !showMode5})
       setShowMode5(!showMode5)
       if(!showMode5) {
