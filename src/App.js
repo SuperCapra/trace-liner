@@ -380,7 +380,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
-          <div>
+          <div className="wrapper-of-warpper">
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
                 <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>

@@ -22,6 +22,8 @@
 .wrapper-list-selector{
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: 90vh;
 }
 .row-selector{
   display: flex;
@@ -111,9 +113,17 @@ p {
 .image-creator{
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  min-height: 96vh;
 }
 .image-creator-wrapper-1{
   height: auto
+}
+.wrapper-of-warpper{
+  display: flex;
+  min-height: 96vh;
+  justify-content: space-between;
+  flex-direction: column;
 }
 .image-creator-wrapper-2{
   height: 10%;
