@@ -116,8 +116,14 @@ p {
   height: auto
 }
 .image-creator-wrapper-2{
-  height: 10%
+  height: 10%;
+  /* display: flex;
+  justify-content: center; */
 }
+/* .creator-800{
+  position: absolute;
+  bottom: 1vh;
+} */
 .back-button{
   display: flex;
   flex-direction: row;

@@ -627,10 +627,12 @@ class Homepage extends React.Component{
               hasAltitudeStream: false,
               hasCoordinates: false
             }
-            t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
-            t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
-            t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
-            t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+            if(t.startLatitude && t.startLongitude && t.endLatitude && t.endLongitude) {
+              t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
+              t.beautyCoordinates = t.beautyCoordinatesComplete ? t.beautyCoordinatesComplete.beautyCoordinatesTextTime : undefined
+              t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
+              t.beautyEndCoordinates = t.beautyEndCoordinatesComplete ? t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime : undefined
+            }
             t.metric.subtitle = utils.getSubTitle(t, 'metric')
             // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
             t.imperial.subtitle = utils.getSubTitle(t, 'imperial')
@@ -679,6 +681,18 @@ class Homepage extends React.Component{
         this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
+          if(!activities[indexActivity].startLatitude) activities[indexActivity].startLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][1] : undefined
+          if(!activities[indexActivity].startLongitude) activities[indexActivity].startLongitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][0] : undefined
+          if(!activities[indexActivity].endLatitude) activities[indexActivity].endLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1].length ? activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1][1] : undefined
+          if(!activities[indexActivity].endLongitude) activities[indexActivity].endLongitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1].length ? activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1][0] : undefined
+          if(!activities[indexActivity].beautyCoordinatesComplete && !activities[indexActivity].beautyEndCoordinatesComplete
+              && activities[indexActivity].startLatitude && activities[indexActivity].startLongitude
+              && activities[indexActivity].endLatitude && activities[indexActivity].endLongitude) {
+            activities[indexActivity].beautyCoordinatesComplete = utils.getBeautyCoordinates([activities[indexActivity].startLatitude, activities[indexActivity].startLongitude])
+            activities[indexActivity].beautyCoordinates = activities[indexActivity].beautyCoordinatesComplete ? activities[indexActivity].beautyCoordinatesComplete.beautyCoordinatesTextTime : undefined
+            activities[indexActivity].beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activities[indexActivity].endLatitude, activities[indexActivity].endLongitude])
+            activities[indexActivity].beautyEndCoordinates = activities[indexActivity].beautyEndCoordinatesComplete ? activities[indexActivity].beautyEndCoordinatesComplete.beautyCoordinatesTextTime  : undefined
+          }
           activities[indexActivity].polyline = res.map.polyline
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]

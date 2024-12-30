@@ -29,6 +29,7 @@ const utilsFunction = {
     },
 
     getBeautyCoordinates(coordinates) {
+        if(!coordinates[0] || !coordinates[1]) return undefined
         let result = {
             coordinates: coordinates,
             beautyCoordinates: [],
