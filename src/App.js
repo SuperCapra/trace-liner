@@ -450,8 +450,8 @@ class Homepage extends React.Component{
         // if(accessToken) this.getAthleDataComplete()
       })
       .catch(e => {
-        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAccessTokenAndActivities','exception')})
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getAccessTokenAndActivities','exception')})
       })
   }
 
@@ -484,7 +484,7 @@ class Homepage extends React.Component{
   }
 
   async createUserAndActivity(activityData) {
-    let bodyUser = {has_loaded_gpx: true, ...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+    let bodyUser = {has_strava: false, ...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
     dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, bodyUser).then(res => {
       uId = res
       activityData['user_id'] = uId
@@ -643,7 +643,7 @@ class Homepage extends React.Component{
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivities','exception')})
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivities','exception')})
       })
       .finally(() => {
         isLoading = false
@@ -702,8 +702,8 @@ class Homepage extends React.Component{
         }
       })
       .catch(e => {
-        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivity','exception')})
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivity','exception')})
       })
       .finally(() => {
         // isLoading = false
@@ -728,7 +728,7 @@ class Homepage extends React.Component{
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAltitideStream','exception')})
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getAltitideStream','exception')})
       })
       .finally(() => {
         isLoading = false
