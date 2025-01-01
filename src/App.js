@@ -190,8 +190,10 @@ class Homepage extends React.Component{
           activityPreparing.durationMoving = activityPreparing.movingTime
           activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
           activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
+          activityPreparing.metric.beautyAverageSpeed = averageSpeed + ' km/h'
           activityPreparing.average = activityPreparing.metric.beautyAverage
           activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
+          activityPreparing.imperial.beautyAverageSpeed = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + ' mi/h'
           activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
           activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
           activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
@@ -201,6 +203,7 @@ class Homepage extends React.Component{
           activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
           activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
           activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+          activityPreparing.beautyMovingTime = utils.getBeautyMovingTime(activityPreparing.movingTime)
           this.createUserAndActivity({
             average_speed : averageSpeed,
             distance : activityPreparing.distance,
@@ -585,22 +588,30 @@ class Homepage extends React.Component{
               altitudeStream: [],
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
+                beautyAverageSpeed: utils.getAverageSpeedMetric(e.distance, e.moving_time, 1) + ' km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
+                beautyElevationGain: e.total_elevation_gain + ' m',
                 beautyDistance: (e.distance / 1000).toFixed(0) + 'km',
+                beautyDistanceSpaced: (e.distance / 1000).toFixed(2) + ' km',
                 distance: Number((e.distance / 1000).toFixed(0)),
               },
               imperial: {
                 beautyAverage: utils.getAverageSpeedImperial(e.distance, e.moving_time) + 'mi/h',
+                beautyAverageSpeed: utils.getAverageSpeedImperial(e.distance, e.moving_time, 1) + ' mi/h',
                 beautyElevation: (e.total_elevation_gain * 3.28084).toFixed(0) + 'ft',
+                beautyElevationGain: (e.total_elevation_gain * 3.28084).toFixed(0) + ' ft',
                 beautyDistance: ((e.distance / 1000) * 0.621371).toFixed(0) + 'mi',
+                beautyDistanceSpaced: ((e.distance / 1000) * 0.621371).toFixed(2) + ' mi',
                 distance: Number(((e.distance / 1000) * 0.621371).toFixed(0)),
               },
               beautyCoordinates: undefined,
               beautyEndCoordinates: undefined,
               beautyDuration: utils.getBeautyDuration(e.moving_time),
+              beautyMovingTime: utils.getBeautyMovingTime(e.moving_time),
               beautyName: e.name,
               beautyNameNoEmoji: utils.removeEmoji(e.name),
               beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
+              beautyPowerSpaced: e.average_watts ? (Math.round(e.average_watts) + ' W') : undefined,
               // beautyDate: utils.getBeautyDatetime(e.start_date_local),
               beautyDatetimeLanguages: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
@@ -681,6 +692,8 @@ class Homepage extends React.Component{
         this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
+          activities[indexActivity].calories = res.calories
+          activities[indexActivity].beautyCalories = utils.getBeautyCalories(res.calories)
           if(!activities[indexActivity].startLatitude) activities[indexActivity].startLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][1] : undefined
           if(!activities[indexActivity].startLongitude) activities[indexActivity].startLongitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][0] : undefined
           if(!activities[indexActivity].endLatitude) activities[indexActivity].endLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1].length ? activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1][1] : undefined

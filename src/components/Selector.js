@@ -5,6 +5,7 @@ import {ReactComponent as Mode2SVG} from '../assets/images/mode2.svg'
 import {ReactComponent as Mode3SVG} from '../assets/images/mode3.svg'
 import {ReactComponent as Mode4SVG} from '../assets/images/mode4.svg'
 import {ReactComponent as Mode5SVG} from '../assets/images/mode5.svg'
+import {ReactComponent as Mode6SVG} from '../assets/images/mode6.svg'
 
 function Selector(props) {
     const {vocabulary, handleSelectMode} = props
@@ -52,6 +53,14 @@ function Selector(props) {
                     <p className="p-back">MODE 5</p>
                     <div className="position-mode">
                         <Mode5SVG className="scale-mode" />
+                    </div>
+                </div>
+            </div>
+            <div className="padding-mode-selector">
+                <div className="wrapper-mode-selector" onClick={() => handleSelectMode('mode6')}>
+                    <p className="p-back">MODE 6</p>
+                    <div className="position-mode">
+                        <Mode6SVG className="scale-mode" />
                     </div>
                 </div>
             </div>

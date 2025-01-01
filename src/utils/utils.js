@@ -84,6 +84,11 @@ const utilsFunction = {
         return result
     },
 
+    getBeautyCalories(calories) {
+        if(!calories) return undefined
+        return new Intl.NumberFormat('en-US').format(calories) + ' Cal'
+    },
+
     getBeautyDatetime(dateUnparsed) {
         let parsedDateZeroByLanguages = this.getJsonDate(dateUnparsed, false)
         let parsedDateByLanguages = this.getJsonDate(dateUnparsed, true)
@@ -120,9 +125,23 @@ const utilsFunction = {
         let result = (parsedDuration 
             && parsedDuration.hours !== undefined 
             && parsedDuration.minutes !== undefined) ? (parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm') : undefined
-        if(parsedDuration.days) result = parsedDuration.days + 'd ' + result
-        if(parsedDuration.months) result = parsedDuration.months + 'M ' + result
-        if(parsedDuration.years) result = parsedDuration.years + 'M ' + result
+        if(parsedDuration.days && result) result = parsedDuration.days + ' d ' + result
+        if(parsedDuration.months && result) result = parsedDuration.months + ' M ' + result
+        if(parsedDuration.years && result) result = parsedDuration.years + ' Y ' + result
+        return result
+        // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
+    },
+
+    getBeautyMovingTime(durationInSec) {
+        let parsedDuration = this.getJsonDuration(durationInSec)
+        console.log('parsedDuration:', parsedDuration)
+        let result = (parsedDuration 
+            && parsedDuration.hours !== undefined 
+            && parsedDuration.minutes !== undefined
+            && parsedDuration.seconds !== undefined) ? (parsedDuration.hours + ':' + String(parsedDuration.minutes).padStart(2,"0") + ':' + String(parsedDuration.seconds).padStart(2,"0")) : undefined
+        if(parsedDuration.days && result) result = parsedDuration.days + ' d ' + result
+        if(parsedDuration.months && result) result = parsedDuration.months + ' M ' + result
+        if(parsedDuration.years && result) result = parsedDuration.years + ' Y ' + result
         return result
         // return parsedDuration.hours + 'h ' + parsedDuration.minutes + 'm ' + parsedDuration.seconds + 's'
     },
@@ -207,12 +226,12 @@ const utilsFunction = {
             .trim(); //
     },
 
-    getAverageSpeedMetric(distance, duration) {
-        return (!distance || !duration) ? 0 : Number(((distance / duration) * 3.6).toFixed(0))
+    getAverageSpeedMetric(distance, duration, mantissa) {
+        return (!distance || !duration) ? 0 : Number(((distance / duration) * 3.6).toFixed(mantissa ? mantissa : 0))
     },
 
-    getAverageSpeedImperial(distance, duration) {
-        return (!distance || !duration) ? 0 : Number((((distance / duration) * 3.6) * 0.621371).toFixed(0))
+    getAverageSpeedImperial(distance, duration, mantissa) {
+        return (!distance || !duration) ? 0 : Number((((distance / duration) * 3.6) * 0.621371).toFixed(mantissa ? mantissa : 0))
     },
 
     getSubTitle(element, unitOfMeasure) {

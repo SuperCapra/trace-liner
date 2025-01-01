@@ -1,6 +1,6 @@
 import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
-import image1 from '../assets/images/image1.jpeg'
+import image1 from '../assets/images/image1.jpg'
 import {ReactComponent as ArrowLeft} from '../assets/images/arrowLeftSimplified20.svg'
 import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js';
@@ -34,6 +34,7 @@ function ImageComponent(props) {
   const [showPower, setShowPower] = useState(true);
   const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [showCalories, setShowCalories] = useState(false);
   const [textUp, setTextUp] = useState(false);
   const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
@@ -46,13 +47,18 @@ function ImageComponent(props) {
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
   const [showMode5, setShowMode5] = useState(false);
+  const [showMode6, setShowMode6] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
   const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
-  const styleText = {
+  const styleText = showMode6 ? {
+    color: drawingColor,
+    top: '50%',
+    transform: 'translateY(-50%)'
+  } : {
     color: drawingColor,
     // mixBlendMode: blendMode,
   }
@@ -144,14 +150,23 @@ function ImageComponent(props) {
       }
     }
   }
+  const classesForDataElement = () => {
+    if(showMode6) {
+      return 'wrapper-data-element-mode-6'
+    } else {
+      if(ratio === '1:1') return 'wrapper-data-element'
+      else return 'wrapper-data-element-rect'
+    }
+  }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = classesForName()
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = classesForSketch()
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
+  const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
-  const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
+  const classesDataElement = classesForDataElement()
   const classesDataPLittle = 'data-p-little'
   const classesLogoClub = classesForLogoClub()
   const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
@@ -258,6 +273,10 @@ function ImageComponent(props) {
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging),100)
+      return
+    }
     if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
@@ -357,7 +376,7 @@ function ImageComponent(props) {
     // });
   },[
     activity.coordinates,
-    valueResolution
+    valueResolution,
     // pregenerateImageJpeg
     // club,
     // returnImage
@@ -379,6 +398,10 @@ function ImageComponent(props) {
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawElevation(color, canvasWidth, canvasHeight, resolutionChanging), 100)
+      return
+    }
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
@@ -461,12 +484,16 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    valueResolution
+    valueResolution,
     // pregenerateImageJpeg
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawElevationVertical(color, canvasWidth, canvasHeight, resolutionChanging),100)
+      return
+    }
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
@@ -552,7 +579,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    valueResolution
+    valueResolution,
     // pregenerateImageJpeg
   ])
 
@@ -732,6 +759,7 @@ function ImageComponent(props) {
           setShowMode3(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
+          setShowMode6(!data.show)
           enableMode1(data.show, true, data.start)
         }
         // if(data.show) enableMode1(true, false, data.start)
@@ -743,6 +771,7 @@ function ImageComponent(props) {
           setShowMode3(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
+          setShowMode6(!data.show)
           enableMode2(data.start)
         }
       } else if(data.subtype === 'mode3') {
@@ -753,6 +782,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode4(!data.show)
           setShowMode5(!data.show)
+          setShowMode6(!data.show)
           enableMode3(data.start)
         }
       } else if(data.subtype === 'mode4') {
@@ -763,6 +793,7 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
           setShowMode5(!data.show)
+          setShowMode6(!data.show)
           enableMode4(data.start)
         }
       } else if(data.subtype === 'mode5') {
@@ -773,7 +804,19 @@ function ImageComponent(props) {
           setShowMode2(!data.show)
           setShowMode3(!data.show)
           setShowMode4(!data.show)
+          setShowMode6(!data.show)
           enableMode5(data.start)
+        }
+      } else if(data.subtype === 'mode6') {
+        setInfoLog(saleforceApiUtils.setMode6(infoLog))
+        setShowMode6(data.show)
+        if(data.show) {
+          setShowMode1(!data.show)
+          setShowMode2(!data.show)
+          setShowMode3(!data.show)
+          setShowMode4(!data.show)
+          setShowMode5(!data.show)
+          enableMode6(data.start)
         }
       }
     } else if(data.type === 'switch-text') {
@@ -841,6 +884,14 @@ function ImageComponent(props) {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
+  }
+  const enableMode6 = (start) => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    setShowCalories(true)
   }
 
   const handleColorChange = (color) => {
@@ -928,7 +979,7 @@ function ImageComponent(props) {
 
       if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
       else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-      else drawLine(drawingColor, canvasWidth, canvasHeight);
+      else if(showMode1 || showMode2 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
@@ -939,8 +990,11 @@ function ImageComponent(props) {
     drawLine,
     drawElevation,
     drawElevationVertical,
+    showMode1,
+    showMode2,
     showMode3,
     showMode4,
+    showMode5,
     xCrop,
     yCrop,
     modeSelected
@@ -1016,6 +1070,36 @@ function ImageComponent(props) {
     if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
     return (<div id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
   }
+  const returnMode6Disposition = () => {
+    let dataShowing = []
+    if(activity[unitMeasureSelected].beautyDistanceSpaced && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistanceSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevationGain && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_ELEVATION_GAIN}</p><p>{activity[unitMeasureSelected].beautyElevationGain}</p></div>)
+    if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
+    if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverageSpeed && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
+    if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
+    let lines = []
+    if (dataShowing.length > 0) {
+      lines.push([...dataShowing.slice(0, 2)]);
+      if (dataShowing.length > 2) {
+        lines.push([...dataShowing.slice(2, 4)]);
+        if (dataShowing.length > 4) {
+          lines.push([...dataShowing.slice(4)]);
+        }
+      }
+    }      
+    let elementReturning = lines.length > 0 ? (
+      <div id="canvasText" style={styleText} className={classesDataWrapper3Lines}>
+        {lines.map((line, index) => (
+          <div key={index} className={classesDataWrapperLine}>
+            {line}
+          </div>
+        ))}
+      </div>
+    ) : <div></div>
+    console.log('elementReturning:', elementReturning)
+    return(<div>{elementReturning}</div>)
+  }
 
   // const bubbleChangeLanguage = (value) => {
   //   handleBubbleLanguage(value)
@@ -1035,7 +1119,7 @@ function ImageComponent(props) {
       handleCrop,
       imageSrc,
       club,
-      modeSelected,
+      modeSelected
       // activity.photoUrl,
       // fetchImage
     ])
@@ -1080,14 +1164,14 @@ function ImageComponent(props) {
           <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
-            {showTitle && !showMode5 && (
+            {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
+            {showTitle && !showMode5 && !showMode6 && (
               <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
                 {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
               </div>
             )}
-            {showTitle && showMode5 && (
+            {showTitle && showMode5 && !showMode6 && (
               <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
               </div>
@@ -1098,6 +1182,7 @@ function ImageComponent(props) {
             {showMode3 && returnMode3Disposition()}
             {showMode4 && returnMode4Disposition()}
             {showMode5 && returnMode5Disposition()}
+            {showMode6 && returnMode6Disposition()}
           </div>
         </div>
         {isLoading && 
