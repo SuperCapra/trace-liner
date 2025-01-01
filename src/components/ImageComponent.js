@@ -295,8 +295,9 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
+    let ratioForResolution = Math.round(lengthCoordinates / 200)
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / 10
+    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
     console.log('lengthCoordinates', lengthCoordinates)
     // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
     let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
@@ -412,9 +413,9 @@ function ImageComponent(props) {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
-
+    let ratioForResolution = Math.round(lengthDistance / 125)
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 80
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
     ctx.beginPath()
   
     let zoomFactorY = (height * 0.30)/altitudeGap
@@ -501,8 +502,9 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
     let lengthAltitude = altitudeStream.length
+    let ratioForResolution = Math.round(lengthDistance / 250)
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 160
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
     ctx.beginPath()
   
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
