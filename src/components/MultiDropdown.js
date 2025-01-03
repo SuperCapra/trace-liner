@@ -5,17 +5,19 @@ import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
-function Dropdown(props) {
-    const {value, values, type, text, hasBorder, handleChangeValue} = props
+function MultiDropdown(props) {
+    const {valuesSelected, valuesAvailable, type, hasBorder, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
-    const [valueSelected, setValueSelected] = useState(value)
+    const [textSelected, setTextSelected] = useState('(' + (valuesSelected && valuesSelected.length ? valuesSelected.length : '0') + ')');
+    const [valueSelectedPrivate, setValueSelectedPrivate] = useState(valuesSelected);
 
     const returnValues = () => {
         let resultHTML = []
-        for(let v of values) {
-            let classesForvalue = v === valueSelected ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
-            let classeForTick = v === valueSelected ? "see-selected padding-5" : "no-see-selected padding-5"
+        for(let v of valuesAvailable) {
+            let index = valuesSelected.findIndex(x => x === v)
+            let classesForvalue =  index === -1 ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
+            let classeForTick = index !== -1 ? "see-selected padding-5" : "no-see-selected padding-5"
             let styleTick = {
                 fill: brandingPalette.background
             }
@@ -49,12 +51,17 @@ function Dropdown(props) {
     }
 
     const changeValue = (valueSetting) => {
-        console.log('valueSelected:',valueSelected)
-        console.log('text:',text)
-        if(valueSetting === valueSelected) return
-        setValueSelected(valueSetting)
-        handleChangeValue({type: type, value: valueSetting})
-        closeDropdown()
+        let index = valuesSelected.findIndex(x => x === valueSetting)
+        if(index === -1) {
+            valuesSelected.push(valueSetting)
+        } else {
+            valuesSelected.splice(index,1)
+        }
+        setTextSelected('('+ valuesSelected.length +')')
+        setValueSelectedPrivate(valuesSelected)
+        // if(valueSetting === valueSelected) return
+        // setValueSelected(valueSetting)
+        handleChangeValue({type: type, valuesSelected: valuesSelected})
     }
 
     const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
@@ -69,9 +76,8 @@ function Dropdown(props) {
         // <div className="p-back p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} onBlur={closeDropdown} tabIndex={0} ref={dropdownRef}>
             <div className="dropdown-selected-value" onClick={hideShowDropDown}>
-                {valueSelected && <p style={styleText}>{valueSelected}</p>}
-                {!valueSelected && text && <p style={styleText}>{text}</p>}
-                {!valueSelected && !text && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
+                {textSelected && <p style={styleText}>{textSelected}</p>}
+                {!textSelected && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
                 <ArrowDown className="padding-5" style={styleArrowDown20}/>
             </div>
             <div id="dropdownValues" style={styleDropdown} className="dropdown-appear dropdown-values no-see-dropdown-values">
@@ -81,4 +87,4 @@ function Dropdown(props) {
     )
 }
 
-export default Dropdown;
+export default MultiDropdown;

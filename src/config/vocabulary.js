@@ -53,6 +53,7 @@ const vocabulary = {
         MODAL_COMPLETE: 'COMPLETE',
         MODAL_CONTOUR: 'CONTOUR',
         MODAL_ERROR: 'Something went wrong, please regenerate the image!',
+        DROPDOWN_SELECT: ' - ',
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -108,6 +109,7 @@ const vocabulary = {
         MODAL_COMPLETE: 'COMPLETA',
         MODAL_CONTOUR: 'CONTORNO',
         MODAL_ERROR: 'Qualcosa è andato storto rigenera l\'immagine',
+        DROPDOWN_SELECT: ' - ',
     }
 }
 

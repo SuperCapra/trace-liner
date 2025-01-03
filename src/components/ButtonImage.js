@@ -569,7 +569,7 @@ function ButtonImage(props) {
     // }
     let htmlImages = []
     for(let element of images) {
-      let classesForSelected = element.selected ? "selected-image see-selected-image" : "selected-image no-see-selected-image"
+      let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
       htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
     }
     return(htmlImages)

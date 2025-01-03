@@ -312,7 +312,7 @@ class Homepage extends React.Component{
           <div className="quadratic-wrapper">
             {/* <div className="buttons-wrapper">
               <div className="language-selector-alone">
-                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
+                <Dropdown value={this.props.language} values={languages} type="language" handleChangeValue={this.setLanguage}/>
               </div>
             </div> */}
             <div className={mainWrapperClasses}>
@@ -363,7 +363,7 @@ class Homepage extends React.Component{
                 </div>
               </div>
               <div className="language-selector">
-                {/* <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/> */}
+                {/* <Dropdown value={this.props.language} values={languages} type="language" handleChangeValue={this.setLanguage}/> */}
               </div>
             </div>
             <div style={styleSelectActivity}>
