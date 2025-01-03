@@ -50,6 +50,7 @@ function ButtonImage(props) {
   const [showCoordinates, setShowCoordinates] = useState(false);
   const [showCalories, setShowCalories] = useState(true);
   const [textUp, setTextUp] = useState(false);
+  const [altitudeVertical, setAltitudeVertical] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
@@ -170,81 +171,69 @@ function ButtonImage(props) {
       handleClick({type: 'show-hide', subtype: 'calories', show: !showCalories})
       setShowCalories(!showCalories)
     } else if(type === 'switchText') {
-      handleClick({type: 'switch-text', textUp: textUp})
+      handleClick({type: 'switch-text', textUp: !textUp})
       setTextUp(!textUp)
+    } else if(type === 'switchAltitude') {
+      handleClick({type: 'switch-altitude', altitudeVertical: !altitudeVertical})
+      setAltitudeVertical(!altitudeVertical)
     } else if(type === 'mode1') {
       if(showMode1) return
-      handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
-      setShowMode1(!showMode1)
-      if(!showMode1) {
-        setShowMode2(false)
-        setShowMode3(false)
-        setShowMode4(false)
-        setShowMode5(false)
-        setShowMode6(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
+        setShowMode1(true)
+        enableMode1(true, true)
+        setFalseOthermode(type)
       }
-      enableMode1(true, true)
     } else if(type === 'mode2') {
       if(showMode2) return
-      handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
-      setShowMode2(!showMode2)
-      if(!showMode2) {
-        setShowMode1(false)
-        setShowMode3(false)
-        setShowMode4(false)
-        setShowMode5(false)
-        setShowMode6(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
+        setShowMode2(true)
+        setFalseOthermode(type)
+        enableMode2()
       }
-      enableMode2()
     } else if(type === 'mode3') {
       if(showMode3) return
-      handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
-      setShowMode3(!showMode3)
-      if(!showMode3) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode4(false)
-        setShowMode5(false)
-        setShowMode6(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
+        setFalseOthermode(type)
+        setShowMode3(true)
+        enableMode3()
       }
-      enableMode3()
     } else if(type === 'mode4') {
       if(showMode4) return
-      handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
-      setShowMode4(!showMode4)
-      if(!showMode4) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode3(false)
-        setShowMode5(false)
-        setShowMode6(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
+        setFalseOthermode(type)
+        setShowMode4(true)
+        enableMode4()
       }
-      enableMode4()
     } else if(type === 'mode5') {
       if(showMode5) return
-      handleClick({type: 'show-hide', subtype: 'mode5', show: !showMode5})
-      setShowMode5(!showMode5)
-      if(!showMode5) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode3(false)
-        setShowMode4(false)
-        setShowMode6(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode5', show: !showMode5})
+        setShowMode5(true)
+        setFalseOthermode(type)
+        enableMode5()
       }
-      enableMode5()
     } else if(type === 'mode6') {
       if(showMode6) return
-      handleClick({type: 'show-hide', subtype: 'mode6', show: !showMode6})
-      setShowMode6(!showMode6)
-      if(!showMode6) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode3(false)
-        setShowMode4(false)
-        setShowMode5(false)
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode6', show: !showMode6})
+        setShowMode6(true)
+        setFalseOthermode(type)
+        enableMode6()
       }
-      enableMode6()
     }
+  }
+
+  const setFalseOthermode = (mode) => {
+    if(mode !== 'mode1') setShowMode1(false)
+    if(mode !== 'mode2') setShowMode2(false)
+    if(mode !== 'mode3') setShowMode3(false)
+    if(mode !== 'mode4') setShowMode4(false)
+    if(mode !== 'mode5') setShowMode5(false)
+    if(mode !== 'mode6') setShowMode6(false)
   }
 
   const propagateColor = (info) => {
@@ -278,16 +267,12 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    // setShowCoordinates(true)
   }
 
   const enableMode4 = () => {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
-    setShowPower(true)
-    setShowAverage(true)
-    // setShowCoordinates(true)
   }
 
   const enableMode5 = () => {
@@ -563,6 +548,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const switchAltitudeController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {altitudeVertical && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchAltitude')} />)}
+          {!altitudeVertical && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchAltitude')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_SWITCH_ALTITUDE}</p>
+      </div>
+    )
+  }
 
   const returnImages = () => {
     // if(props.activity.photoUrlProxied) {
@@ -709,8 +705,9 @@ function ButtonImage(props) {
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
-        {activity[unitMeasure].beautyAverage && averageController()}
+        {!altitudeVertical && activity.beautyPower && powerController()}
+        {!altitudeVertical && activity[unitMeasure].beautyAverage && averageController()}
+        {switchAltitudeController()}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )

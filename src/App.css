@@ -632,12 +632,12 @@ p {
   top: 16%;
   left: 3%;
 }
-.logo-club-wrapper-mode-4{
+.logo-club-wrapper-mode-3-vertical{
   position: absolute;
   bottom: 1%;
   left: 3%;
 }
-.logo-club-wrapper-mode-4-rect{
+.logo-club-wrapper-mode-3-vertical-rect{
   position: absolute;
   bottom: 1%;
   left: 3%;
@@ -734,7 +734,7 @@ p {
   top: 15%;
   width: 50%;
 }
-.element-mode-4{
+.element-mode-3-vertical{
   padding: 2%;
   margin: 3%;
 }
@@ -821,7 +821,7 @@ p {
   top: 20%;
   left: 9%;
 }
-.text-overlay-mode-4{
+.text-overlay-mode-3-vertical{
   border-left: calc(2vmin) solid;
   position: absolute;
   font-family: 'Helvetica';
@@ -830,12 +830,12 @@ p {
   color: transparent;
   font-weight: bold;
 }
-.mode-4-text{
+.mode-3-vertical-text{
   left: 0;
   top: 5%;
   width: 45%;
 }
-.mode-4-text-rect{
+.mode-3-vertical-text-rect{
   left: 0;
   top: 15%;
   width: 50%;
@@ -1101,11 +1101,11 @@ p {
     top: 16%;
     left: 0%;
   }
-  .logo-club-wrapper-mode-4{
+  .logo-club-wrapper-mode-3-vertical{
     bottom: -1%;
     left: 1%;
   }
-  .logo-club-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-3-vertical-rect{
     bottom: -1%;
     left: 1%;
   }
@@ -1132,7 +1132,7 @@ p {
   .text-overlay-mode-3{
     border-right: calc(1.5vw) solid;
   }
-  .text-overlay-mode-4{
+  .text-overlay-mode-3-vertical{
     border-left: calc(1.5vw) solid;
     font-size: calc(6vw);
   }
@@ -1328,11 +1328,11 @@ p {
     top: 13%;
     left: -5%;
   }
-  .logo-club-wrapper-mode-4{
+  .logo-club-wrapper-mode-3-vertical{
     bottom: -4%;
     left: -2%;
   }
-  .logo-club-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-3-vertical-rect{
     position: absolute;
     bottom: -4%;
     left: -2%;
@@ -1362,7 +1362,7 @@ p {
   .text-overlay-mode-3{
     border-right: calc(1vw) solid;
   }
-  .text-overlay-mode-4{
+  .text-overlay-mode-3-vertical{
     border-left: calc(1vw) solid;
     font-size: calc(4vw);
   }
@@ -1533,11 +1533,11 @@ p {
     top: 17%;
     left: 2%;
   }
-  .logo-club-wrapper-mode-4{
+  .logo-club-wrapper-mode-3-vertical{
     bottom: 0%;
     left: 0%;
   }
-  .logo-club-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-3-vertical-rect{
     bottom: 0%;
     left: 0%;
   }
@@ -1595,7 +1595,7 @@ p {
     border-right: calc(1vw) solid;
     font-size: calc(2vw);
   }
-  .text-overlay-mode-4{
+  .text-overlay-mode-3-vertical{
     border-left: calc(2vw) solid;
   }
   .text-overlay-mode-3-dimention{
@@ -1735,11 +1735,11 @@ p {
     top: 15.5%;
     left: 2%;
   }
-  .logo-club-wrapper-mode-4{
+  .logo-club-wrapper-mode-3-vertical{
     bottom: -2%;
     left: 0%;
   }
-  .logo-club-wrapper-mode-4-rect{
+  .logo-club-wrapper-mode-3-vertical-rect{
     bottom: -2%;
     left: 0%;
   }
@@ -1786,7 +1786,7 @@ p {
   .text-overlay-mode-3{
     border-right: 16px solid;
   }
-  .text-overlay-mode-4{
+  .text-overlay-mode-3-vertical{
     border-left: 16px solid;
     font-size: 32px;
   }
