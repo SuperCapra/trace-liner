@@ -750,10 +750,16 @@ class Homepage extends React.Component{
       })
   }
 
+  getClassesForApp() {
+    let urlCurrent = window.location.href
+    if(urlCurrent.includes('/statistics')) return 'App-body-statistics'
+    else return 'App-body'
+  }
+
   render() {
     return (   
       <div className="App">
-        <div className="App-body">
+        <div className={this.getClassesForApp()}>
           {this.routesToStage()}
         </div>
       </div>

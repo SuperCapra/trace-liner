@@ -1,12 +1,12 @@
 import '../App.css';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, forwardRef, useImperativeHandle} from 'react';
 import {ReactComponent as ArrowDown} from '../assets/images/arrowDownSimplified20.svg'
 import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
-function Dropdown(props) {
-    const {value, values, type, text, hasBorder, handleChangeValue} = props
+const Dropdown = forwardRef((props,ref) => {
+    const {value, values, type, text, hasBorder, size, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
     const [valueSelected, setValueSelected] = useState(value)
@@ -59,11 +59,20 @@ function Dropdown(props) {
 
     const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
-        width: hasBorder ? '200px' : 'unset'
+        width: hasBorder ? (size ? size : '200px') : 'unset'
     } 
     const styleDropdown = {
-        width: '200px'
+        width: size ? size : '200px'
     }
+
+    const resetSelect = () => {
+        console.log('hey dal resetselect')
+        setValueSelected(undefined)
+    }
+
+    useImperativeHandle(ref, () => ({
+        resetSelect,
+    }));
 
     return(
         // <div className="p-back p-uppercase" id="dropDown">
@@ -79,6 +88,6 @@ function Dropdown(props) {
             </div>
         </div>
     )
-}
+})
 
 export default Dropdown;

@@ -1,12 +1,12 @@
 import '../App.css';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, forwardRef, useImperativeHandle} from 'react';
 import {ReactComponent as ArrowDown} from '../assets/images/arrowDownSimplified20.svg'
 import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
-function MultiDropdown(props) {
-    const {valuesSelected, valuesAvailable, type, hasBorder, handleChangeValue} = props
+const MultiDropdown = forwardRef((props,ref) => {
+    const {valuesSelected, valuesAvailable, type, hasBorder, size, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
     const [textSelected, setTextSelected] = useState('(' + (valuesSelected && valuesSelected.length ? valuesSelected.length : '0') + ')');
@@ -14,14 +14,16 @@ function MultiDropdown(props) {
 
     const returnValues = () => {
         let resultHTML = []
-        for(let v of valuesAvailable) {
-            let index = valuesSelected.findIndex(x => x === v)
-            let classesForvalue =  index === -1 ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
-            let classeForTick = index !== -1 ? "see-selected padding-5" : "no-see-selected padding-5"
-            let styleTick = {
-                fill: brandingPalette.background
+        if(valuesAvailable && valuesAvailable.length) {
+            for(let v of valuesAvailable) {
+                let index = valuesSelected.findIndex(x => x === v)
+                let classesForvalue =  index === -1 ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
+                let classeForTick = index !== -1 ? "see-selected padding-5" : "no-see-selected padding-5"
+                let styleTick = {
+                    fill: brandingPalette.background
+                }
+                resultHTML.push(<div className={classesForvalue} key={v} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
             }
-            resultHTML.push(<div className={classesForvalue} key={v} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
         }
         return resultHTML
     }
@@ -66,11 +68,18 @@ function MultiDropdown(props) {
 
     const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
-        width: hasBorder ? '200px' : 'unset'
+        width: hasBorder ? (size ? size : '200px') : 'unset'
     } 
     const styleDropdown = {
-        width: '200px'
+        width: size ? size : '200px'
     }
+    const resetSelect = () => {
+        setTextSelected('(0)')
+    }
+
+    useImperativeHandle(ref, () => ({
+        resetSelect,
+    }));
 
     return(
         // <div className="p-back p-uppercase" id="dropDown">
@@ -85,6 +94,6 @@ function MultiDropdown(props) {
             </div>
         </div>
     )
-}
+})
 
 export default MultiDropdown;
