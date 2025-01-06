@@ -66,7 +66,6 @@ const Dropdown = forwardRef((props,ref) => {
     }
 
     const resetSelect = () => {
-        console.log('hey dal resetselect')
         setValueSelected(undefined)
     }
 
