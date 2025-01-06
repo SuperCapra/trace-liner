@@ -38,11 +38,11 @@ const dbUtils = {
         return result
     },
     getQuerySelectAll(table,whereClause) {
-        console.log('query:', `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : ''))
+        console.log('query:', `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')  + ' ORDER BY id')
         return `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')
     },
     getQuerySelectFieldsAll(table,fields,whereClause) {
-        console.log('query:', `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : ''))
+        console.log('query:', `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '') + ' ORDER BY id')
         return `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')
     },
     getQuerySelectRecord(table,field,value) {
