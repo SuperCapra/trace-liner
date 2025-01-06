@@ -73,72 +73,115 @@ const Table= forwardRef((props,ref) => {
         return <tbody>{rows}</tbody>
     }
 
-    const returnGroupedRecords = (arrayRecordsJson, indexValueGroupBy1) => {
+    const compareValues = (a,b,ascending) => {
+        if(ascending) {
+            if ((a === null || a === undefined) && (b !== null || b !== undefined)) return -1;
+            if ((b === null || b === undefined) && (a !== null || a !== undefined)) return 1;
+            if ((a === null || a === undefined) && (b === null || b === undefined)) return 0;
+            
+            return a - b;
+        } else {
+            if ((a === null || a === undefined) && (b !== null || b !== undefined)) return 1;
+            if ((b === null || b === undefined) && (a !== null || a !== undefined)) return -1;
+            if ((a === null || a === undefined) && (b === null || b === undefined)) return 0;
+            
+            return a + b;
+        }
+    }
+
+    const returnArrayFromJson = (arrayRecordsJson) => {
         let arrayRecords = []
-        console.log('arrayRecordsJson', arrayRecordsJson)
         for(let record of arrayRecordsJson) {
             let row = []
-            for(let column in record) {
-                console.log('column', column)
-                console.log('record[column]', record[column])
-                row.push(record[column])
-            }
+            for(let column in record) row.push(record[column])
             arrayRecords.push(row)
         }
+        console.log('arrayRecords',arrayRecords)
+        return arrayRecords
+    }
 
-        let result = []
-        console.log('arrayRecords', arrayRecords)
-        console.log('indexValueGroupBy1', indexValueGroupBy1)
-        console.log('columnsData', columnsData)
-        console.log('valueGroupBy1', valueGroupBy1)
+    const sortAndSetFirstColumnSortedFormatted = (arrayRecords,name,indexSorting,settings,data) => {
         arrayRecords = arrayRecords.sort((a,b) => {
-            const valA = String(a[indexValueGroupBy1]);
-            const valB = String(b[indexValueGroupBy1]);
-            if(settingGroupBy1.ascending) {
-                if (valA === null && valB !== null) return -1;
-                if (valB === null && valA !== null) return 1;
-                if (valA === null && valB === null) return 0;
-                
-                return valA - valB;
-            } else {
-                if (valA === null && valB !== null) return 1;
-                if (valB === null && valA !== null) return -1;
-                if (valA === null && valB === null) return 0;
-                
-                return valA + valB;
-            }
+            const valA = String(a[indexSorting]);
+            const valB = String(b[indexSorting]);
+            return compareValues(valA,valB,settings.ascending)
         }).map(x => {
-            let sortedValue = x[indexValueGroupBy1]
-            let unsortedValue = x.filter((_, index) => index !== indexValueGroupBy1)
+            let sortedValue = x[indexSorting]
+            let unsortedValue = x.filter((_, index) => index !== indexSorting)
+            let isTimestamp = data[name].data_type.startsWith('timestamp')
+            if(isTimestamp) {
+                if(settings.timestamp === 'day') sortedValue = statisticsUtils.getFormattedDay(sortedValue)
+                else if(settings.timestamp === 'month') sortedValue = statisticsUtils.getFormattedMonth(sortedValue)
+                else sortedValue = statisticsUtils.getFormattedYear(sortedValue)
+            } else {
+                sortedValue = String(sortedValue)
+            }
             return [sortedValue,...unsortedValue]
         })
-        console.log('arrayRecords', arrayRecords)
-        console.log('settingGroupBy1', settingGroupBy1)
-        let isTimeStamp = columnsData[valueGroupBy1].data_type.startsWith('timestamp')
-        if(isTimeStamp) {
-            if(settingGroupBy1.timestamp === 'day') arrayRecords.forEach((element,index) => {
-                arrayRecords[index][0] = statisticsUtils.getFormattedDay(element[0])
-            })
-            else if(settingGroupBy1.timestamp === 'month') arrayRecords.forEach((element,index) => {
-                arrayRecords[index][0] = statisticsUtils.getFormattedMonth(element[0])
-            })
-            else arrayRecords.forEach((element,index) => {
-                arrayRecords[index][0] = statisticsUtils.getFormattedYear(element[0])
-            })
-        } else {
-            arrayRecords.forEach((element,index) => {arrayRecords[index][0] = String(element[0])})
-        }
+        return arrayRecords
+    }
+
+    const returnGroupedRecords = (arrayRecordsJson, indexValueGroupBy1) => {
+        let arrayRecords = returnArrayFromJson(arrayRecordsJson)
+        let result = []
+
+        arrayRecords = sortAndSetFirstColumnSortedFormatted(arrayRecords,valueGroupBy1,indexValueGroupBy1,settingGroupBy1,columnsData)
+
         for(let i = 0; i < arrayRecords.length; i++) {
             let value = arrayRecords[i][0]
             let filterdRecords = arrayRecords.filter(x => x[0] === value)
-            filterdRecords.forEach((e,i) => {
-                filterdRecords[i].shift()
+            filterdRecords.forEach((_,j) => {
+                filterdRecords[j].shift()
             })
             value += ' (' + filterdRecords.length + ')'
             result.push([value, filterdRecords])
-            i = i + filterdRecords.length - 1
+            i += filterdRecords.length - 1
         }
         console.log('result grouped:', result)
+        return result
+    }
+
+    const returnDoubleGroupedRecords = (arrayRecordsJson,indexValueGroupBy1,indexValueGroupBy2) => {
+        console.log('arrayRecordsJson:', arrayRecordsJson)
+        let arrayRecords = returnArrayFromJson(arrayRecordsJson)
+        let result = []
+
+        arrayRecords = sortAndSetFirstColumnSortedFormatted(arrayRecords,valueGroupBy1,indexValueGroupBy1,settingGroupBy1,columnsData)
+        console.log('arrayRecords:', arrayRecords)
+        for(let i = 0; i < arrayRecords.length; i++) {
+            let value = arrayRecords[i][0]
+            let filterdRecords = arrayRecords.filter(x => x[0] === value)
+            filterdRecords.forEach((_,j) => {
+                filterdRecords[j].shift()
+            })
+            value += ' (' + filterdRecords.length + ')'
+            result.push([value, filterdRecords])
+            i += filterdRecords.length - 1
+        }
+        console.log('indexValueGroupBy1:', indexValueGroupBy1)
+        console.log('indexValueGroupBy2:', indexValueGroupBy2)
+        if(indexValueGroupBy2 > indexValueGroupBy1) indexValueGroupBy2 -= 1
+        console.log('indexValueGroupBy2:', indexValueGroupBy2)
+        console.log('result:', result)
+        for(let i = 0; i < result.length; i++) {
+            let subRecords = result[i][1]
+            console.log('subRecords:', subRecords)
+            subRecords = sortAndSetFirstColumnSortedFormatted(subRecords,valueGroupBy2,indexValueGroupBy2,settingGroupBy2,columnsData)
+            console.log('subRecords:', subRecords)
+            result[i][1] = []
+            for(let j = 0; j < subRecords.length; j++) {
+                let subValue = subRecords[j][0]
+                let subFilterdRecords = subRecords.filter(x => x[0] === subValue)
+                subFilterdRecords.forEach((_,k) => {
+                    subFilterdRecords[k].shift()
+                })
+                subValue += ' (' + subFilterdRecords.length + ')'
+                result[i][1].push([subValue, subFilterdRecords])
+                j += subFilterdRecords.length - 1
+            }
+
+        }
+        console.log('result double grouped:', result)
         return result
     }
 
@@ -148,13 +191,15 @@ const Table= forwardRef((props,ref) => {
         let rows = []
 
         console.log('valueGroupBy1', valueGroupBy1)
-        console.log('valueGroup2', valueGroupBy2)
+        console.log('valueGroupBy2', valueGroupBy2)
         console.log('columnsData', columnsData)
 
         if(!valueGroupBy1 && !valueGroupBy2) {
+            console.log('no grouping')
             header = returnHeader(columns)
             rows = returnBody(records)
         } else if(valueGroupBy1 && !valueGroupBy2) {
+            console.log('grouping by 1')
             let indexValueGroupBy1 = columns.findIndex(x => x === valueGroupBy1)
             if(indexValueGroupBy1 === -1) {
                 setNeedsRefresh(true)
@@ -162,11 +207,23 @@ const Table= forwardRef((props,ref) => {
             }
             let filterdColumns = columns.filter(x => x !== valueGroupBy1)
             let arrayColumns = [valueGroupBy1,...filterdColumns]
-            let recordsByvalueGroupBy1 = returnGroupedRecords(records,indexValueGroupBy1)
+            let recordsByValueGroupBy1 = returnGroupedRecords(records,indexValueGroupBy1)
             header = returnHeader(arrayColumns)
-            rows = returnBodyGroupedBy1(recordsByvalueGroupBy1,arrayColumns)
+            rows = returnBodyGroupedBy1(recordsByValueGroupBy1,arrayColumns)
         } else if(valueGroupBy1 && valueGroupBy2) {
+            console.log('grouping by 1 and 2')
+            let indexValueGroupBy1 = columns.findIndex(x => x === valueGroupBy1)
+            let indexValueGroupBy2 = columns.findIndex(x => x === valueGroupBy2)
+            if(indexValueGroupBy1 === -1 || indexValueGroupBy2 === -1) {
+                setNeedsRefresh(true)
+                return <div></div>
+            }
+            let filterdColumns = columns.filter(x => x !== valueGroupBy1 && x !== valueGroupBy2)
+            let arrayColumns = [valueGroupBy1,valueGroupBy2,...filterdColumns]
+            let recordsByValueGroupBy2ByValueGroupBy1 = returnDoubleGroupedRecords(records,indexValueGroupBy1,indexValueGroupBy2)
 
+            // header = returnHeader(arrayColumns)
+            // rows = returnBodyGroupedBy1(recordsByValueGroupBy2ByValueGroupBy1,arrayColumns)
         }
 
         table = [header,rows]
