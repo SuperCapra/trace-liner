@@ -26,7 +26,7 @@ function Statistics(props) {
     const [columns, setColumns] = useState([]);
     const [tableColumns, setTableColumns] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [numberRecords, setNumberRecords] = useState(0);
+    const [numberRecords, setNumberRecords] = useState(undefined);
     const [records, setRecords] = useState([]);
     const [numberVisits, setNumberVisits] = useState(undefined);
     const [numberUsers, setNumberUsers] = useState(undefined);
@@ -40,6 +40,30 @@ function Statistics(props) {
     const [valueGroupBy2, setValueGroupBy2] = useState(undefined);
     const [settingGroupBy2, setSettingGroupBy2] = useState({timestamp: 'day', ascending: true});
     const [refreshed, setRefreshed] = useState(false)
+
+    const resetFilterChild = () => {
+        if(columnFilter && childFilterRef.current) {
+            setColumnFilter(undefined)
+            setValueMinorFilter(undefined)
+            setValueMajorFilter(undefined)
+            childFilterRef.current.resetSelect(); // Call the function exposed by the child
+        }
+    }
+
+    const resetGroupBy1Child = () => {
+        if(valueGroupBy1 && childGroupBy1Ref.current) {
+            setValueGroupBy1(undefined)
+            setSettingGroupBy1({timestamp: 'day', ascending: true})
+            childGroupBy1Ref.current.resetSelect();
+        }
+    }
+    const resetGroupBy2Child = () => {
+        if(valueGroupBy2 && childGroupBy2Ref.current) {
+            setValueGroupBy2(undefined)
+            setSettingGroupBy2({timestamp: 'day', ascending: true})
+            childGroupBy2Ref.current.resetSelect();
+        }
+    }
 
     const retrieveTables = () => {
         dbInteractions.processQuery(queries.tables, process.env.REACT_APP_JWT_TOKEN).then(res => {
@@ -132,18 +156,12 @@ function Statistics(props) {
             setColumns([])
             childColumnsRef.current.resetSelect(); // Call the function exposed by the child
         }
-        if(columnFilter && childFilterRef.current) {
-            setColumnFilter(undefined)
-            childFilterRef.current.resetSelect(); // Call the function exposed by the child
-        }
+        resetFilterChild()
+        resetGroupBy1Child()
+        resetGroupBy2Child()
         setRecords([])
         retrieveColumns(data.value)
-        setValueMinorFilter(undefined)
-        setValueMajorFilter(undefined)
-        setValueGroupBy1(undefined)
-        setSettingGroupBy1({timestamp: 'day', ascending: true})
-        setValueGroupBy2(undefined)
-        setSettingGroupBy2({timestamp: 'day', ascending: true})
+        setNumberRecords(undefined)
         setRefreshed(false)
         // setIsLoading(true)
     }
@@ -156,15 +174,18 @@ function Statistics(props) {
     }
     const defineFilter = (data) => {
         console.log('valuesSelected:', data.value)
-        setColumnFilter(data.value)
+        if(data.value === columnFilter) resetFilterChild()
+        else setColumnFilter(data.value)
     }
     const defineGroupBy1 = (data) => {
         console.log('valuesSelected:', data.value)
-        setValueGroupBy1(data.value)
+        if(data.value === valueGroupBy1) resetGroupBy1Child()
+        else setValueGroupBy1(data.value)
     }
     const defineGroupBy2 = (data) => {
         console.log('valuesSelected:', data.value)
-        setValueGroupBy2(data.value)
+        if(data.value === valueGroupBy2) resetGroupBy2Child()
+        else setValueGroupBy2(data.value)
     }
 
     const refreshStyle = {
@@ -230,7 +251,7 @@ function Statistics(props) {
                 <div className="wrapper-margin-dropdown-statistics">
                     <div className="filter-wrapper">
                         <p className="p-back align-left">FILTER</p>
-                        <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" handleChangeValue={defineFilter}/>
+                        <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineFilter}/>
                         <div className="filter-wrapper-constrains">
                             <input type="text" value={valueMinorFilter} className="input-constrain p-back minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
                             <input type="text" value={valueMajorFilter} className="input-constrain p-back major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
@@ -240,10 +261,10 @@ function Statistics(props) {
                 <div className="wrapper-margin-dropdown-statistics">
                     <div className="filter-wrapper">
                         <p className="p-back align-left">GROUP BY</p>
-                        <Dropdown ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy1" hasBorder="true" size="300px" handleChangeValue={defineGroupBy1}/>
-                        <div className="margin-dropdown">
-                            <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailable} type="groupBy2" hasBorder="true" size="300px" handleChangeValue={defineGroupBy2}/>
-                        </div>
+                        <Dropdown ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy1" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
+                        {valueGroupBy1 && <div className="margin-dropdown">
+                            <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailable} type="groupBy2" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
+                        </div>}
                     </div>
                 </div>
                 <div className="wrapper-refresh" onClick={() => launchRefresh()}>

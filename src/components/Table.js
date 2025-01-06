@@ -53,17 +53,18 @@ const Table= forwardRef((props,ref) => {
             let row = []
             row.push(<td className="cell-table">{record[0]}</td>)
             let transposedMatrix = record[1][0].map((_, colIndex) => record[1].map(row => row[colIndex]));
-            console.log('record:', record)
+            // console.log('record:', record)
             for(let indexRowTransposed in transposedMatrix) {
                 let rowTransposed = transposedMatrix[indexRowTransposed]
                 let subRow = []
-                console.log('rowTransposed:', rowTransposed)
+                // console.log('rowTransposed:', rowTransposed)
                 for(let indexColumnTransposed in rowTransposed) {
-                    let value = rowTransposed[indexColumnTransposed] !== null ? String(rowTransposed[indexColumnTransposed]) : rowTransposed[indexColumnTransposed]
+                    let value = rowTransposed[indexColumnTransposed] !== null ? String(rowTransposed[indexColumnTransposed]) : 'null'
+                    let classInvisibleCell = (rowTransposed[indexColumnTransposed]  !== null ? '' : ' invisible-null')
                     if(columnsData[columnsReordered[Number(indexRowTransposed) + 1]].data_type.startsWith('timestamp')) value = statisticsUtils.getFormattedDateTime(value)
                     // subRow.push()
                     // subTable.push()
-                    subRow.push(<tr><td>{value}</td></tr>)
+                    subRow.push(<tr><td className={classInvisibleCell}>{value}</td></tr>)
                 }
                 row.push(<td className="cell-table">{subRow}</td>)
             }
@@ -74,9 +75,12 @@ const Table= forwardRef((props,ref) => {
 
     const returnGroupedRecords = (arrayRecordsJson, indexValueGroupBy1) => {
         let arrayRecords = []
+        console.log('arrayRecordsJson', arrayRecordsJson)
         for(let record of arrayRecordsJson) {
             let row = []
             for(let column in record) {
+                console.log('column', column)
+                console.log('record[column]', record[column])
                 row.push(record[column])
             }
             arrayRecords.push(row)

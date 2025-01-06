@@ -177,6 +177,9 @@ td {
 .cell-table {
   padding: 5px;
 }
+.invisible-null{
+  color: var(--palette-background);
+}
 .p-uppercase{
   text-transform: uppercase;
 }

@@ -11,10 +11,10 @@ const queryUtils = {
         console.log('whereClause', whereClause)
         console.log('fields', fields)
         let fieldsStringified = fields && fields.length ? fields.join(',') : '*'
-        if(groupBy1 && fields && fields.length && !fieldsStringified.includes(groupBy1)) fieldsStringified += ',' + groupBy1
-        if(groupBy2 && fields && fields.length && !fieldsStringified.includes(groupBy2)) fieldsStringified += ',' + groupBy2
+        if(groupBy1 && fields && fields.length && fields.indexOf(x => x === groupBy1) === -1) fieldsStringified += ',' + groupBy1
+        if(groupBy2 && fields && fields.length && groupBy1 !== groupBy2 && fields.indexOf(x => x === groupBy2) === -1) fieldsStringified += ',' + groupBy2
         console.log('query:', `SELECT ${fieldsStringified} FROM ${table}` + (whereClause && whereClause.length ? ' WHERE ' + whereClause : ''))
-        return `SELECT ${fieldsStringified} FROM ${table}` + (whereClause && whereClause.length ? ' WHERE ' + whereClause : '')
+        return `SELECT ${fieldsStringified} FROM ${table}` + (whereClause && whereClause.length ? ' WHERE ' + whereClause : '') + ' ORDER BY id'
     },
     getWhereClause(column,minor,major,columnsData) {
         let whereClause = ''

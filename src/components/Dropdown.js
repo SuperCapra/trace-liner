@@ -6,7 +6,7 @@ import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
 const Dropdown = forwardRef((props,ref) => {
-    const {value, values, type, text, hasBorder, size, handleChangeValue} = props
+    const {value, values, type, text, hasBorder, size, possibilityDeselect, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
     const [valueSelected, setValueSelected] = useState(value)
@@ -51,7 +51,7 @@ const Dropdown = forwardRef((props,ref) => {
     const changeValue = (valueSetting) => {
         console.log('valueSelected:',valueSelected)
         console.log('text:',text)
-        if(valueSetting === valueSelected) return
+        if(!possibilityDeselect && valueSetting === valueSelected) return
         setValueSelected(valueSetting)
         handleChangeValue({type: type, value: valueSetting})
         closeDropdown()
