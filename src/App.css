@@ -59,7 +59,7 @@
 .coming-soon-positioning{
   position: absolute;
   transform: rotate(-45deg) translate(-50px, 50px);
-  color: var(--palette-secondary);
+  color: var(--palette-secondary) !important;
   z-index: 10;
 }
 .padding-mode-selector{
