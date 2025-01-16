@@ -234,24 +234,36 @@ function ImageComponent(props) {
   // ]);
 
   const removeRoundCorner = () => {
-    document.getElementById('canvasImage').classList.remove('round-corner')
-    document.getElementById('canvasFilter').classList.remove('round-corner')
-    document.getElementById('canvasSketch').classList.remove('round-corner')
-    document.getElementById('printingAnchor').classList.remove('round-corner')
+    const canvasImageElement = document.getElementById('canvasImage')
+    const canvasFilterElement = document.getElementById('canvasFilter')
+    const canvasSketchElement = document.getElementById('canvasSketch')
+    const canvasAnchorElement = document.getElementById('printingAnchor')
+    if(canvasImageElement) canvasImageElement.classList.remove('round-corner')
+    if(canvasFilterElement) canvasFilterElement.classList.remove('round-corner')
+    if(canvasSketchElement) canvasSketchElement.classList.remove('round-corner')
+    if(canvasAnchorElement) canvasAnchorElement.classList.remove('round-corner')
   }
   const addRoundCorner = () => {
-    document.getElementById('canvasImage').classList.add('round-corner')
-    document.getElementById('canvasFilter').classList.add('round-corner')
-    document.getElementById('canvasSketch').classList.add('round-corner')
-    document.getElementById('printingAnchor').classList.add('round-corner')
+    const canvasImageElement = document.getElementById('canvasImage')
+    const canvasFilterElement = document.getElementById('canvasFilter')
+    const canvasSketchElement = document.getElementById('canvasSketch')
+    const canvasAnchorElement = document.getElementById('printingAnchor')
+    if(canvasImageElement) canvasImageElement.classList.add('round-corner')
+    if(canvasFilterElement) canvasFilterElement.classList.add('round-corner')
+    if(canvasSketchElement) canvasSketchElement.classList.add('round-corner')
+    if(canvasAnchorElement) canvasAnchorElement.classList.add('round-corner')
   }
   const addOpacity = () => {
-    document.getElementById('canvasImage').classList.add('background-opacity')
-    document.getElementById('printingAnchor').classList.add('background-trasparency')
+    const canvasImageElement = document.getElementById('canvasImage')
+    const canvasAnchorElement = document.getElementById('printingAnchor')
+    if(canvasImageElement) canvasImageElement.classList.add('background-opacity')
+    if(canvasAnchorElement) canvasAnchorElement.classList.add('background-trasparency')
   }
   const removeOpacity = () => {
-    document.getElementById('canvasImage').classList.remove('background-opacity')
-    document.getElementById('printingAnchor').classList.remove('background-trasparency')
+    const canvasImageElement = document.getElementById('canvasImage')
+    const canvasAnchorElement = document.getElementById('printingAnchor')
+    if(canvasImageElement) canvasImageElement.classList.remove('background-opacity')
+    if(canvasAnchorElement) canvasAnchorElement.classList.remove('background-trasparency')
   }
 
   // const returnImage = useCallback(() => {
