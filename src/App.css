@@ -2062,4 +2062,5 @@ td {
   display: flex;
   justify-content: center;
   max-height: 250px;
+  height: 20vmin;
 }
