@@ -1992,3 +1992,8 @@ td {
 .margin-top-29{
   margin-top: 29px;
 }
+.center-logo-homepage{
+  display: flex;
+  justify-content: center;
+  max-height: 250px;
+}
