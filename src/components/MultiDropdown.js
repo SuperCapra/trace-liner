@@ -10,7 +10,7 @@ const MultiDropdown = forwardRef((props,ref) => {
     
     const dropdownRef = useRef(null);
     const [textSelected, setTextSelected] = useState('(' + (valuesSelected && valuesSelected.length ? valuesSelected.length : '0') + ')');
-    const [valueSelectedPrivate, setValueSelectedPrivate] = useState(valuesSelected);
+    // const [valueSelectedPrivate, setValueSelectedPrivate] = useState(valuesSelected);
 
     const returnValues = () => {
         let resultHTML = []
@@ -55,12 +55,13 @@ const MultiDropdown = forwardRef((props,ref) => {
     const changeValue = (valueSetting) => {
         let index = valuesSelected.findIndex(x => x === valueSetting)
         if(index === -1) {
-            valuesSelected.push(valueSetting)
+            let correctIndex = valuesAvailable.findIndex(x => x === valueSetting);
+            valuesSelected.splice(correctIndex, 0, valueSetting);
         } else {
             valuesSelected.splice(index,1)
         }
         setTextSelected('('+ valuesSelected.length +')')
-        setValueSelectedPrivate(valuesSelected)
+        // setValueSelectedPrivate(valuesSelected)
         // if(valueSetting === valueSelected) return
         // setValueSelected(valueSetting)
         handleChangeValue({type: type, valuesSelected: valuesSelected})

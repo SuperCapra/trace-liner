@@ -59,7 +59,7 @@ const Dropdown = forwardRef((props,ref) => {
 
     const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
-        width: hasBorder ? (size ? size : '200px') : 'unset'
+        width: hasBorder ? (size ? (Number(size.replace('px','')) < 200 ? (Number(size.replace('px','')) * 0.75) + 'px' : size) : '200px') : 'unset'
     } 
     const styleDropdown = {
         width: size ? size : '200px'
