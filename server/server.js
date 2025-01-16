@@ -14,6 +14,7 @@ const roots = [
   '/nama-crew',
   '/mura-sunset-ride',
   '/sem',
+  '/ph'
 ];
 
 app.use(express.json());
