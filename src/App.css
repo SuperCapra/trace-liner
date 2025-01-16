@@ -24,10 +24,30 @@
   flex-direction: column;
   justify-content: center;
   min-height: 90vh;
+  align-items: center;
 }
 .row-selector{
   display: flex;
   flex-direction: row;
+  justify-content: center;
+}
+.row-selector-column{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.row-selector-width{
+  width: 50vw;
+}
+.opacity-deactivated{
+  opacity: 0.3
+}
+.mode-cursor-deacitaved:hover{
+  cursor: default !important
+}
+.mode-cursor-deacitaved:active{
+  cursor: default !important;
+  filter: unset !important
 }
 .position-mode{
   width: 91px;
@@ -35,6 +55,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.coming-soon-positioning{
+  position: absolute;
+  transform: rotate(-45deg) translate(-50px, 50px);
+  color: var(--palette-secondary);
+  z-index: 10;
 }
 .padding-mode-selector{
   padding: 15px 25px;
@@ -149,6 +175,16 @@ p {
   color: var(--palette-primary);
   justify-content: left;
   font-size: calc(4vw);
+}
+.p-back-xl{
+  color: var(--palette-primary);
+  justify-content: left;
+  font-size: calc(6vw);
+}
+.p-back-xs{
+  color: var(--palette-primary);
+  justify-content: left;
+  font-size: calc(3vw);
 }
 table{
   margin:20px;
@@ -1043,6 +1079,16 @@ td {
   .p-back{
     font-size: calc(3.25vw);
   }
+  .p-back-xl{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: calc(4.5vw);
+  }
+  .p-back-xs{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: calc(2.35vw);
+  }
   .p-select{
     font-size: calc(3.75vw);
   }
@@ -1261,6 +1307,16 @@ td {
   }
   .p-back{
     font-size: calc(2vw);
+  }
+  .p-back-xl{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: calc(3vw);
+  }
+  .p-back-xs{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: calc(1.5vw);
   }
   .p-select{
     font-size: calc(2.5vw);
@@ -1482,6 +1538,16 @@ td {
   }
   .p-back{
     font-size: 24px;
+  }
+  .p-back-xl{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: 36px;
+  }
+  .p-back-xs{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: 18px;
   }
   .p-select{
     font-size: 40px;

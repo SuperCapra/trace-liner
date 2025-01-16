@@ -8,9 +8,13 @@ import {ReactComponent as Mode5SVG} from '../assets/images/mode5.svg'
 import {ReactComponent as Mode6SVG} from '../assets/images/mode6.svg'
 
 function Selector(props) {
-    const {vocabulary, handleSelectMode} = props
+    const {vocabulary, language, handleSelectMode} = props
 
     return (<div className="wrapper-list-selector">
+        <div className="row-selector-column row-selector-width">
+            <p className="p-back-xl">{vocabulary[language].SELECTOR_TEXT}</p>
+            <p className="p-back-xs">{vocabulary[language].SELECTOR_TEXT_HINT}</p>
+        </div>
         <div className="row-selector">
             <div className="padding-mode-selector">
                 <div className="wrapper-mode-selector" onClick={() => handleSelectMode('mode1')}>
@@ -39,9 +43,11 @@ function Selector(props) {
                 </div>
             </div>
             <div className="padding-mode-selector">
-                <div className="wrapper-mode-selector" onClick={() => handleSelectMode('mode4')}>
-                    <p className="p-back">MODE 4</p>
-                    <div className="position-mode">
+                <div className="wrapper-mode-selector mode-cursor-deacitaved">
+                {/* <div className="wrapper-mode-selector" onClick={() => handleSelectMode('mode4')}> */}
+                    <p className="p-back opacity-deactivated">MODE 4</p>
+                    <p className="p-back coming-soon-positioning">{vocabulary[language].COMING_SOON}</p>
+                    <div className="position-mode opacity-deactivated">
                         <Mode4SVG className="scale-mode" />
                     </div>
                 </div>

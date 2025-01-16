@@ -1150,7 +1150,7 @@ function ImageComponent(props) {
         <ArrowLeft className="back-image"/>
         <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
       </div> */}
-      {!modeSelected && <Selector vocabulary={vocabulary} handleSelectMode={setMode}/>}
+      {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
       {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">

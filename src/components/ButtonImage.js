@@ -651,12 +651,12 @@ function ButtonImage(props) {
           <p>MODE 3</p>
         </div>
         {showMode3 && displayMode3()}
-        <div className="wrapper-buttons-left">
+        {/* <div className="wrapper-buttons-left">
           {showMode4 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
           {!showMode4 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
           <p>MODE 4</p>
         </div>
-        {showMode4 && displayMode4()}
+        {showMode4 && displayMode4()} */}
         <div className="wrapper-buttons-left">
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}

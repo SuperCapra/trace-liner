@@ -54,6 +54,9 @@ const vocabulary = {
         MODAL_CONTOUR: 'CONTOUR',
         MODAL_ERROR: 'Something went wrong, please regenerate the image!',
         DROPDOWN_SELECT: ' - ',
+        SELECTOR_TEXT: 'SELECT YOUR MODE',
+        SELECTOR_TEXT_HINT: '(YOU CAN CHANGE IT LATER WITH THE "A" ICON)',
+        COMING_SOON: 'COMING SOON'
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -110,6 +113,9 @@ const vocabulary = {
         MODAL_CONTOUR: 'CONTORNO',
         MODAL_ERROR: 'Qualcosa è andato storto rigenera l\'immagine',
         DROPDOWN_SELECT: ' - ',
+        SELECTOR_TEXT: 'SELEZIONA LA MODE CHE PREFERISCI',
+        SELECTOR_TEXT_HINT: '(LA PUOI CAMBIARE ANCHE DOPO CON L\'ICONA "A")',
+        COMING_SOON: 'COMING SOON'
     }
 }
 
