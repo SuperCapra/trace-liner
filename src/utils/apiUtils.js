@@ -5,7 +5,7 @@ const apiUtils = {
         let pathname = window.location.pathname + '?'
         return href.substring(0,href.indexOf(pathname))
     },
-    // GMT datetime formatted to "yyyy-MM-dd HH:mm:ss.SSS"
+    // GMT datetime formatted to "yyyy-MM-ddTHH:mm:ss.SSSZ"
     getTimestampGMT() {
         const now = new Date();
 
@@ -17,9 +17,9 @@ const apiUtils = {
         const seconds = String(now.getUTCSeconds()).padStart(2, '0');
         const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0');
     
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
     },
-    // Local datetime formatted to "yyyy-MM-dd HH:mm:ss.SSS"
+    // Local datetime formatted to "yyyy-MM-ddTHH:mm:ss.SSS+00:00"
     getTimestampLocal() {
         const now = new Date();
 
@@ -30,8 +30,8 @@ const apiUtils = {
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
-    
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
+
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
     },
     getTimezoneOffset() {
         const now = new Date();
@@ -122,7 +122,7 @@ const apiUtils = {
             device_watts : activityData.device_watts,
             display_hide_heartrate_option : activityData.display_hide_heartrate_option,
             distance : activityData.distance,
-            elapsed_time : activityData.elapsed_time,
+            elapsed_time : Math.round(activityData.elapsed_time),
             elev_high : activityData.elev_high,
             elev_low : activityData.elev_low,
             end_lat : activityData.end_latlng && activityData.end_latlng.length ? activityData.end_latlng[0] : undefined,
@@ -136,7 +136,7 @@ const apiUtils = {
             location_state : activityData.location_state,
             max_heartrate : activityData.max_heartrate,
             max_speed : activityData.max_speed,
-            moving_time : activityData.moving_time,
+            moving_time : Math.round(activityData.moving_time),
             name : activityData.name,
             sport_type : activityData.sport_type,
             start_date : activityData.start_date,
@@ -144,7 +144,7 @@ const apiUtils = {
             start_lat : activityData.start_latlng && activityData.start_latlng.length ? activityData.start_latlng[0] : undefined,
             start_lng : activityData.start_latlng && activityData.start_latlng.length ? activityData.start_latlng[1] : undefined,
             summary_map : activityData.map && activityData.map.summary_map ? activityData.map.summary_map : undefined,
-            total_elevation_gain : activityData.total_elevation_gain,
+            total_elevation_gain : Math.round(activityData.total_elevation_gain),
         }
         if(creating) result = {...result, ...this.getCreatedFields()}
         if(updating) result = {...result, ...this.getModifiedFields()}

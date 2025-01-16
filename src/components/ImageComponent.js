@@ -1,6 +1,6 @@
 import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
-import image1 from '../assets/images/image1.jpeg'
+import image1 from '../assets/images/image1.jpg'
 import {ReactComponent as ArrowLeft} from '../assets/images/arrowLeftSimplified20.svg'
 import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js';
@@ -10,6 +10,7 @@ import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
+import Selector from './Selector.js';
 
 function ImageComponent(props) {
 
@@ -33,22 +34,32 @@ function ImageComponent(props) {
   const [showPower, setShowPower] = useState(true);
   const [unitMeasureSelected, setUnitMeasureSelected] = useState('metric');
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [showCalories, setShowCalories] = useState(false);
+  const [textUp, setTextUp] = useState(false);
+  const [altitudeVertical, setAltitudeVertical] = useState(false);
   const [imageSrc, setImageSrc] = useState(image1);
   const canvasRef = useRef(null)
   const modaldRef = useRef()
   const [valueResolution, setValueResolution] = useState(100);
   const [valueFilter, setValueFilter] = useState(0);
-  const [showMode1, setShowMode1] = useState(true);
+  const [modeSelected, setModeSelected] = useState(undefined);
+  const [showMode1, setShowMode1] = useState(false);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
+  const [showMode5, setShowMode5] = useState(false);
+  const [showMode6, setShowMode6] = useState(false);
   const [showModal, setShowModal] = useState(false);
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
   const [infoLog, setInfoLog] = useState(saleforceApiUtils.inizializeInfo(athlete,activity))
 
-  const styleText = {
+  const styleText = showMode6 ? {
+    color: drawingColor,
+    top: '50%',
+    transform: 'translateY(-50%)'
+  } : {
     color: drawingColor,
     // mixBlendMode: blendMode,
   }
@@ -73,41 +84,96 @@ function ImageComponent(props) {
   }
 
   const classesForLogoClub = () => {
-    if(showMode3 || showMode4) {
-      if(showMode3) {
-        if(ratio === '1:1') return ('logo-club-wrapper-mode-3')
-        else return ('logo-club-wrapper-mode-3-rect')
+    let result = 'logo-club-wrapper-scale'
+    if(showMode3) {
+      if(!altitudeVertical) {
+        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3'
+        else return result + ' logo-club-wrapper-mode-3-rect'
       } else {
-        if(ratio === '1:1') return ('logo-club-wrapper-mode-4')
-        else return ('logo-club-wrapper-mode-4-rect')
+        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3-vertical'
+        else return result + ' logo-club-wrapper-mode-3-vertical-rect'
       }
+    } else if(showMode5 && !textUp) {
+      if(ratio === '1:1') return result + ' logo-club-wrapper-mode-5-down'
+      else return result + ' logo-club-wrapper-mode-5-down-rect'
     } else {
-      if(ratio === '1:1') return ('logo-club-wrapper')
-      else return ('logo-club-wrapper-rect')
+      if(ratio === '1:1') return result + ' logo-club-wrapper'
+      else return result + ' logo-club-wrapper-rect'
     }
   }
 
   const classesForSketch = () => {
+    let result = 'round-corner canvas-position canvas-filter'
     if(showMode3 || showMode4) {
-      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch-mode3')
-      else return ('round-corner canvas-position canvas-filter canvas-sketch-mode3-rect')
+      if(ratio === '1:1') return result + ' canvas-sketch-mode-3'
+      else return result + ' canvas-sketch-mode-3-rect'
+    } else if(showMode5) {
+      if(textUp) {
+        if(ratio === '1:1') return result + ' canvas-sketch-mode-5'
+        else return result + ' canvas-sketch-mode-5-rect'
+      } else {
+        if(ratio === '1:1') return result + ' canvas-sketch-mode-5-down'
+        else return result + ' canvas-sketch-mode-5-down-rect'
+      }
     } else {
-      if(ratio === '1:1') return ('round-corner canvas-position canvas-filter canvas-sketch')
-      else return ('round-corner canvas-position canvas-filter canvas-sketch-rect')
+      if(ratio === '1:1') return result + ' canvas-sketch'
+      else return result + ' canvas-sketch-rect'
+    }
+  }
+  const classesForName = () => {
+    if(showMode5) {
+      let result = 'text-overlay text-title-props-mode-5 text-name-props'
+      if(textUp) {
+        if(ratio === '1:1') return result + ' text-title-props-mode-5-up'
+        else return result + ' text-title-props-mode-5-up-rect'
+      } else {
+        if(ratio === '1:1') return result + ' text-title-props-mode-5-down'
+        else return result + ' text-title-props-mode-5-down-rect'
+      }
+    } else {
+      if(ratio === '1:1') return ('text-overlay text-title-props text-name-props')
+      else return ('text-overlay text-title-props-rect text-name-props')
+    }
+  }
+  const classesForMode5 = () => {
+    let result = 'width-left-mode-5 text-overlay-mode-5'
+    if(textUp) {
+      if(ratio === '1:1') {
+        return (result + ' position-mode-5-up')
+      } else {
+        return (result + ' position-mode-5-up-rect')
+      }
+    } else {
+      if(ratio === '1:1') {
+        return (result + ' position-mode-5-down')
+      } else {
+        return (result + ' position-mode-5-down-rect')
+      }
+    }
+  }
+  const classesForDataElement = () => {
+    if(showMode6) {
+      return 'wrapper-data-element-mode-6'
+    } else {
+      if(ratio === '1:1') return 'wrapper-data-element'
+      else return 'wrapper-data-element-rect'
     }
   }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
-  const classesName = ratio === '1:1' ? 'text-overlay text-title-props text-name-props' : 'text-overlay text-title-props-rect text-name-props'
+  const classesName = classesForName()
   const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
   const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
   const classesSketch = classesForSketch()
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
+  const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
-  const classesDataElement = ratio === '1:1' ? 'wrapper-data-element' : 'wrapper-data-element-rect'
+  const classesDataElement = classesForDataElement()
   const classesDataPLittle = 'data-p-little'
   const classesLogoClub = classesForLogoClub()
-  const styleMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
-  const styleMode4 = ratio === '1:1' ? 'position-mode-4 text-overlay-mode-4 mode-4-text' : 'position-mode-4-rect text-overlay-mode-4 mode-4-text-rect'
+  const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
+  const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
+  const classMode5 = classesForMode5()
+  const classWrapperMode5 = ratio === '1:1' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
   
   const setLoadedModal = (bj,bp) => {
     if(modaldRef.current) modaldRef.current.loaded(bj,bp)
@@ -206,8 +272,108 @@ function ImageComponent(props) {
   //     })
   // },[])
 
-  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
+  const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
+    return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
+  }
+
+  const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled), 100)
+      return
+    }
+    if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
+      (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
+    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+    let canvasSketchWidth = 500
+    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
+    let altitudeStream = activity.altitudeStream
+    let distanceStream = activity.distanceStream
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+    let height = canvasSketchHeight
+    setDrawingWidth(width)
+    setDrawingHeight(canvasSketchHeight)
+    let ctx = canvasSketch.getContext('2d')
+    // Setup line properties to avoid spikes
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+
+    let maxAltitude = Math.max(...altitudeStream)
+    let minAltitude = Math.min(...altitudeStream)
+
+    let altitudeGap = maxAltitude - minAltitude
+
+    logUtils.loggerText('width:', width)
+    logUtils.loggerText('height:', height)
+    logUtils.loggerText('altitudeStream:', altitudeStream)
+    logUtils.loggerText('maxAltitude:', maxAltitude)
+    logUtils.loggerText('minAltitude:', minAltitude)
+    logUtils.loggerText('altitudeGap:', altitudeGap)
+    console.log('mode4Enabled from drawElevation:', mode4Enabled)
+    if(!mode4Enabled) ctx.clearRect(0, 0, width, height);
+
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.005
+    let lengthDistance = distanceStream.length
+    let ratioForResolution = Math.round(lengthDistance / 125)
+    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
+    ctx.beginPath()
+  
+    let zoomFactorY = (height * 0.30)/altitudeGap
+    let zoomFactorX = width/distanceStream[lengthDistance - 1]
+    logUtils.loggerText('zoomFactorY:', zoomFactorY)
+    logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+
+    for(let i = 0; i < altitudeStream.length; i++) {
+      if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
+        let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
+        let aX = distanceStream[i] * zoomFactorX
+        ctx.lineTo(aX,aY)
+      }
+    }
+    logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+    logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+    
+    ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
+    ctx.lineTo(width,height)
+    ctx.lineTo(0,height)
+    ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
+    ctx.fillStyle = color
+    ctx.closePath()
+    ctx.fill()
+    // requestAnimationFrame(() => {
+    //   pregenerateImageJpeg();
+    // });
+    // let climbs = returnClimbing(altitudeStream, distanceStream)
+    // for(let i = 0; i < climbs.length; i++) {
+    //   let climb = climbs[i]
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = color
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    //   ctx.beginPath()
+    //   ctx.strokeStyle = brandingPalette.secondary
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
+    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
+    //   ctx.stroke()
+    // }
+  },[
+    activity.altitudeStream,
+    activity.distanceStream,
+    ratio,
+    valueResolution
+    // pregenerateImageJpeg
+  ])
+
+  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
+    let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled),100)
+      return
+    }
     if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
@@ -238,15 +404,18 @@ function ImageComponent(props) {
     let mapCenterY = (minY + maxY) / 2
     let mapCenter = [mapCenterX, mapCenterY]
 
-    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * 0.95
+    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
     logUtils.loggerText('zoomFactor:', zoomFactor)
+    console.log('mode4Enabled from drawLine:', mode4Enabled)
     ctx.clearRect(0, 0, width, height);
 
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     let lengthCoordinates = coordinates.length
+    let ratioForResolution = Math.round(lengthCoordinates / 200)
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / 10
+    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
+    console.log('lengthCoordinates', lengthCoordinates)
     // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
     let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
     console.log('scaleFactor:', scaleFactor)
@@ -299,13 +468,15 @@ function ImageComponent(props) {
     }
     // stroke the path
     ctx.stroke()
+    if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     // if(club && club.name === 'dev-admin') returnImage()
     // requestAnimationFrame(() => {
     //   pregenerateImageJpeg();
     // });
   },[
     activity.coordinates,
-    valueResolution
+    valueResolution,
+    drawElevation
     // pregenerateImageJpeg
     // club,
     // returnImage
@@ -321,100 +492,12 @@ function ImageComponent(props) {
     }
   }
 
-  const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
-    return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
-  }
-
-  const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
-    let canvasSketch = document.getElementById('canvasSketch')
-    if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
-      (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
-    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = 500
-    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
-    let altitudeStream = activity.altitudeStream
-    let distanceStream = activity.distanceStream
-    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
-    let height = canvasSketchHeight
-    setDrawingWidth(width)
-    setDrawingHeight(canvasSketchHeight)
-    let ctx = canvasSketch.getContext('2d')
-    // Setup line properties to avoid spikes
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-
-    let maxAltitude = Math.max(...altitudeStream)
-    let minAltitude = Math.min(...altitudeStream)
-
-    let altitudeGap = maxAltitude - minAltitude
-
-    logUtils.loggerText('width:', width)
-    logUtils.loggerText('height:', height)
-    logUtils.loggerText('altitudeStream:', altitudeStream)
-    logUtils.loggerText('maxAltitude:', maxAltitude)
-    logUtils.loggerText('minAltitude:', minAltitude)
-    logUtils.loggerText('altitudeGap:', altitudeGap)
-
-    ctx.clearRect(0, 0, width, height);
-
-    ctx.strokeStyle = color 
-    ctx.lineWidth = width * 0.005
-    let lengthDistance = distanceStream.length
-
-    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 10
-    ctx.beginPath()
-  
-    let zoomFactorY = (height * 0.30)/altitudeGap
-    let zoomFactorX = width/distanceStream[lengthDistance - 1]
-    logUtils.loggerText('zoomFactorY:', zoomFactorY)
-    logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
-
-    for(let i = 0; i < altitudeStream.length; i++) {
-      if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
-        let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
-        let aX = distanceStream[i] * zoomFactorX
-        ctx.lineTo(aX,aY)
-      }
-    }
-    logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
-    
-    ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
-    ctx.lineTo(width,height)
-    ctx.lineTo(0,height)
-    ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
-    ctx.fillStyle = color
-    ctx.closePath()
-    ctx.fill()
-    // requestAnimationFrame(() => {
-    //   pregenerateImageJpeg();
-    // });
-    // let climbs = returnClimbing(altitudeStream, distanceStream)
-    // for(let i = 0; i < climbs.length; i++) {
-    //   let climb = climbs[i]
-    //   ctx.beginPath()
-    //   ctx.strokeStyle = color
-    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
-    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
-    //   ctx.stroke()
-    //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.secondary
-    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
-    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
-    //   ctx.stroke()
-    // }
-  },[
-    activity.altitudeStream,
-    activity.distanceStream,
-    ratio,
-    valueResolution
-    // pregenerateImageJpeg
-  ])
-
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
+    if(!canvasSketch) {
+      setTimeout(() => drawElevationVertical(color, canvasWidth, canvasHeight, resolutionChanging),100)
+      return
+    }
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
@@ -450,8 +533,9 @@ function ImageComponent(props) {
     ctx.lineWidth = width * 0.005
     let lengthDistance = distanceStream.length
     let lengthAltitude = altitudeStream.length
+    let ratioForResolution = Math.round(lengthDistance / 250)
     let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / 20
+    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
     ctx.beginPath()
   
     let zoomFactorY = height/distanceStream[lengthDistance - 1]
@@ -499,7 +583,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    valueResolution
+    valueResolution,
     // pregenerateImageJpeg
   ])
 
@@ -599,24 +683,11 @@ function ImageComponent(props) {
     else if(data.type === 'resolutionSlider') {
       infoLog.resolution = String(data.value)
       setValueResolution(data.value)
-      if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
-      else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
-      else drawLine(drawingColor, canvasWidth, canvasHeight, data.value)
+      if(showMode3) {
+        if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
+        else drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value)
     }
-    // else if(data.type === 'filter') {
-    //   if(data.direction === 'plus' && valueFilter < 100) setValueFilter(valueFilter + 1)
-    //   else if(data.direction === 'minus' && valueFilter > 1) setValueFilter(valueFilter - 1)
-    //   drawFilter()
-    // }
-    // else if(data.type === 'resolution') {
-    //   let factor = showMode4 || showMode3 ? Number((activity.altitudeStream.length / 50).toFixed(0)) : Number((activity.coordinates.length / 50).toFixed(0))
-    //   let maxResolution = showMode4 || showMode3 ? activity.altitudeStream.length : activity.coordinates.length
-    //   if(data.direction === 'plus' && valueResolution < maxResolution - factor) setValueResolution(valueResolution + factor)
-    //   else if(data.direction === 'minus' && valueResolution > 1) setValueResolution(valueResolution - factor)
-    //   if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
-    //   else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-    //   else drawLine(drawingColor, canvasWidth, canvasHeight)
-    // }
     // else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'share-contour') handleDownloadClick('contour')
     // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
@@ -675,40 +746,51 @@ function ImageComponent(props) {
         setInfoLog(saleforceApiUtils.setMode1(infoLog))
         setShowMode1(data.show)
         if(data.show) {
-          setShowMode2(!data.show)
-          setShowMode3(!data.show)
-          setShowMode4(!data.show)
-          enableMode1(data.show, true)
+          setFalseOthermode(data)
+          enableMode1(data.show, true, data.start)
         }
-        if(data.show) enableMode1(true)
+        // if(data.show) enableMode1(true, false, data.start)
       } else if(data.subtype === 'mode2') {
         setInfoLog(saleforceApiUtils.setMode2(infoLog))
         setShowMode2(data.show)
         if(data.show) {
-          setShowMode1(!data.show)
-          setShowMode3(!data.show)
-          setShowMode4(!data.show)
-          enableMode2()
+          setFalseOthermode(data)
+          enableMode2(data.start)
         }
       } else if(data.subtype === 'mode3') {
         setInfoLog(saleforceApiUtils.setMode4(infoLog))
         setShowMode3(data.show)
         if(data.show) {
-          setShowMode1(!data.show)
-          setShowMode2(!data.show)
-          setShowMode4(!data.show)
-          enableMode3()
+          setFalseOthermode(data)
+          enableMode3(data.start)
         }
       } else if(data.subtype === 'mode4') {
         setInfoLog(saleforceApiUtils.setMode4(infoLog))
         setShowMode4(data.show)
         if(data.show) {
-          setShowMode1(!data.show)
-          setShowMode2(!data.show)
-          setShowMode3(!data.show)
-          enableMode4()
+          setFalseOthermode(data)
+          enableMode4(data.start)
+        }
+      } else if(data.subtype === 'mode5') {
+        setInfoLog(saleforceApiUtils.setMode5(infoLog))
+        setShowMode5(data.show)
+        if(data.show) {
+          setFalseOthermode(data)
+          enableMode5(data.start)
+        }
+      } else if(data.subtype === 'mode6') {
+        setInfoLog(saleforceApiUtils.setMode6(infoLog))
+        setShowMode6(data.show)
+        if(data.show) {
+          setFalseOthermode(data)
+          enableMode6(data.start)
         }
       }
+    } else if(data.type === 'switch-text') {
+      setTextUp(data.textUp)
+    } else if(data.type === 'switch-altitude') {
+      setAltitudeVertical(data.altitudeVertical)
+      drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
     } else if(data.type === 'image') {
       infoLog.image = data.info
       setImage(data.image)
@@ -718,8 +800,17 @@ function ImageComponent(props) {
     }
   }
 
-  const enableMode1 = (bool, isStart) => {
-    drawLine(drawingColor, canvasWidth, canvasHeight)
+  const setFalseOthermode = (data) => {
+    if(data.subtype !== 'mode1') setShowMode1(!data.show)
+    if(data.subtype !== 'mode2') setShowMode2(!data.show)
+    if(data.subtype !== 'mode3') setShowMode3(!data.show)
+    if(data.subtype !== 'mode4') setShowMode4(!data.show)
+    if(data.subtype !== 'mode5') setShowMode5(!data.show)
+    if(data.subtype !== 'mode6') setShowMode6(!data.show)
+  }
+
+  const enableMode1 = (bool, isStart, start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     if(isStart) {
       setShowTitle(bool)
       setShowDate(bool)
@@ -732,8 +823,8 @@ function ImageComponent(props) {
     setShowCoordinates(!bool)
   }
 
-  const enableMode2 = () => {
-    drawLine(drawingColor, canvasWidth, canvasHeight)
+  const enableMode2 = (start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     setShowTitle(true)
     setShowDate(true)
     setShowDistance(true)
@@ -741,8 +832,11 @@ function ImageComponent(props) {
     setShowDuration(true)
   }
 
-  const enableMode3 = () => {
-    drawElevation(drawingColor, canvasWidth, canvasHeight)
+  const enableMode3 = (start) => {
+    if(!start) {
+      if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
+      else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+    }
     setShowTitle(false)
     setShowDate(false)
     setShowDistance(true)
@@ -753,8 +847,10 @@ function ImageComponent(props) {
     setShowCoordinates(true)
   }
 
-  const enableMode4 = () => {
-    drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+  const enableMode4 = (start) => {
+    if(!start) {
+      drawLine(drawingColor, canvasWidth, canvasHeight, undefined, true)
+    }
     setShowTitle(false)
     setShowDate(false)
     // setShowDistance(true)
@@ -765,13 +861,31 @@ function ImageComponent(props) {
     // setShowCoordinates(true)
   }
 
+  const enableMode5 = (start) => {
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
+    setShowTitle(true)
+    setShowDate(false)
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+  }
+  const enableMode6 = (start) => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+    setShowPower(true)
+    setShowAverage(true)
+    setShowCalories(true)
+  }
+
   const handleColorChange = (color) => {
     infoLog.color = color
     console.info('color to set:', color)
     setDrawingColor(color)
-    if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
-    else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-    else drawLine(drawingColor, canvasWidth, canvasHeight)
+    if(showMode3) {
+      if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
+      else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+    } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4)
     drawFilter()
   }
 
@@ -789,6 +903,7 @@ function ImageComponent(props) {
   // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
+    if(!modeSelected) return
     logUtils.loggerText('Ratio text:', ratioText)
     if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
@@ -847,9 +962,10 @@ function ImageComponent(props) {
       ctx.drawImage(imageReference, xCrop, yCrop, canvasWidth * scaleFactorHeight, canvasHeight * scaleFactorWidth, 0, 0, canvasWidth, canvasHeight);
       drawFilter(canvasWidth, canvasHeight);
 
-      if(showMode3) drawElevation(drawingColor, canvasWidth, canvasHeight)
-      else if(showMode4) drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-      else drawLine(drawingColor, canvasWidth, canvasHeight);
+      if(showMode3) {
+        if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
+        else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
@@ -860,10 +976,15 @@ function ImageComponent(props) {
     drawLine,
     drawElevation,
     drawElevationVertical,
+    showMode1,
+    showMode2,
     showMode3,
     showMode4,
+    showMode5,
+    altitudeVertical,
     xCrop,
-    yCrop
+    yCrop,
+    modeSelected
   ])
 
   const setImage = (newImage) => {
@@ -900,32 +1021,76 @@ function ImageComponent(props) {
   }
 
   const returnMode2Disposition = () => {
-    let dataToDisplay = ''
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay += activity[unitMeasureSelected].beautyDistance
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + activity[unitMeasureSelected].beautyElevation
-    if(activity.beautyDuration && showDuration) dataToDisplay += (dataToDisplay.length ? ' x ' : '') + activity.beautyDuration
-    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataToDisplay}</div>)
+    let dataDisplaying = ''
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying += activity[unitMeasureSelected].beautyDistance
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity[unitMeasureSelected].beautyElevation
+    if(activity.beautyDuration && showDuration) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity.beautyDuration
+    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataDisplaying}</div>)
   }
 
   const returnMode3Disposition = () => {
-    let dataToDisplay = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
-    if(activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-    // if(activity.beautyCoordinates && showCoordinates) dataToDisplay.push(<div key="coordinates" className="element-mode-3"><p>{activity.beautyCoordinates}</p></div>)
-    return (<div id="canvasText" className={styleMode3} style={styleText}>{dataToDisplay}</div>)
+    let dataDisplaying = []
+    if(!altitudeVertical) {
+
+      if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+      if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+      if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
+      if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
+      if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+      // if(activity.beautyCoordinates && showCoordinates) dataDisplaying.push(<div key="coordinates" className="element-mode-3"><p>{activity.beautyCoordinates}</p></div>)
+      return (<div id="canvasText" className={classMode3} style={styleText}>{dataDisplaying}</div>)
+    } else {
+      if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+      if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+      if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3-vertical"><p>{activity.beautyDuration}</p></div>)
+      // if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3-vertical"><p>{activity.beautyPower}</p></div>)
+      // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+      return (<div id="canvasText" className={classMode3Vertical} style={styleText}>{dataDisplaying}</div>)
+    }
   }
 
   const returnMode4Disposition = () => {
-    let dataToDisplay = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataToDisplay.push(<div key="distance" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataToDisplay.push(<div key="elevation" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataToDisplay.push(<div key="duration" className="element-mode-4"><p>{activity.beautyDuration}</p></div>)
-    // if(activity.beautyPower && showPower) dataToDisplay.push(<div key="power" className="element-mode-4"><p>{activity.beautyPower}</p></div>)
-    // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataToDisplay.push(<div key="average" className="element-mode-4"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-    return (<div id="canvasText" className={styleMode4} style={styleText}>{dataToDisplay}</div>)
+    // let dataDisplaying = []
+    return (<div id="canvasText"></div>)
+  }
+  
+  const returnMode5Disposition = () => {
+    let dataDisplaying = []
+    
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DISTANCE}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_ELEVATION}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
+    return (<div id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
+  }
+  const returnMode6Disposition = () => {
+    let dataShowing = []
+    if(activity[unitMeasureSelected].beautyDistanceSpaced && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistanceSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevationGain && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_ELEVATION_GAIN}</p><p>{activity[unitMeasureSelected].beautyElevationGain}</p></div>)
+    if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
+    if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverageSpeed && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
+    if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
+    let lines = []
+    if (dataShowing.length > 0) {
+      lines.push([...dataShowing.slice(0, 2)]);
+      if (dataShowing.length > 2) {
+        lines.push([...dataShowing.slice(2, 4)]);
+        if (dataShowing.length > 4) {
+          lines.push([...dataShowing.slice(4)]);
+        }
+      }
+    }      
+    let elementReturning = lines.length > 0 ? (
+      <div id="canvasText" style={styleText} className={classesDataWrapper3Lines}>
+        {lines.map((line, index) => (
+          <div key={index} className={classesDataWrapperLine}>
+            {line}
+          </div>
+        ))}
+      </div>
+    ) : <div></div>
+    console.log('elementReturning:', elementReturning)
+    return(<div>{elementReturning}</div>)
   }
 
   // const bubbleChangeLanguage = (value) => {
@@ -946,6 +1111,7 @@ function ImageComponent(props) {
       handleCrop,
       imageSrc,
       club,
+      modeSelected
       // activity.photoUrl,
       // fetchImage
     ])
@@ -955,6 +1121,13 @@ function ImageComponent(props) {
   }
   const closeModal = () => {
     setShowModal(false)
+  }
+  const setMode = (mode) => {
+    console.log('mode:', mode)
+    // setIsLoading(true)
+    setModeSelected(mode)
+    handleClickDispatcher({type: 'show-hide', subtype: mode, show: true, start: true})
+    // setIsLoading(false)
   }
   
   return (
@@ -970,23 +1143,30 @@ function ImageComponent(props) {
           </div>
         </div>
         <div className="language-selector">
-          {/* <Dropdown value={language} values={languages} handleChangeValue={bubbleChangeLanguage}/> */}
+          {/* <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/> */}
         </div>
       </div>
       {/* <div className="back-button" onClick={() => handleBack()}>
         <ArrowLeft className="back-image"/>
         <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
       </div> */}
-      <div className="width-wrapper-main">
+      {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
+      {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div className={classesCanvasContainer} id="printingAnchor">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>
-            {showTitle && (
+            {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
+            {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
+            {showTitle && !showMode5 && !showMode6 && (
               <div className="width-general text-overlay text-title">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
                 {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+              </div>
+            )}
+            {showTitle && showMode5 && !showMode6 && (
+              <div className="width-general text-overlay text-title">
+                <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
               </div>
             )}
             {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
@@ -994,6 +1174,8 @@ function ImageComponent(props) {
             {showMode2 && returnMode2Disposition()}
             {showMode3 && returnMode3Disposition()}
             {showMode4 && returnMode4Disposition()}
+            {showMode5 && returnMode5Disposition()}
+            {showMode6 && returnMode6Disposition()}
           </div>
         </div>
         {isLoading && 
@@ -1006,8 +1188,8 @@ function ImageComponent(props) {
         <div>
           {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
-      </div>
+        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} modeselected={modeSelected} handleClickButton={handleClickDispatcher}/>
+      </div>}
     </div>
   );
 }

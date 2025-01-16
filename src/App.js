@@ -154,6 +154,7 @@ class Homepage extends React.Component{
             beautyEndCoordinates: undefined,
             beautyDuration: undefined,
             beautyName: track.name ? he.decode(track.name) : undefined,
+            beautyNameNoEmoji: track.name ? utils.removeEmoji(he.decode(track.name)) : undefined,
             beautyPower: undefined,
             // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
@@ -189,8 +190,10 @@ class Homepage extends React.Component{
           activityPreparing.durationMoving = activityPreparing.movingTime
           activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
           activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
+          activityPreparing.metric.beautyAverageSpeed = averageSpeed + ' km/h'
           activityPreparing.average = activityPreparing.metric.beautyAverage
           activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
+          activityPreparing.imperial.beautyAverageSpeed = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + ' mi/h'
           activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
           activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
           activityPreparing.startLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[0].length ? activityPreparing.coordinates[0][0] : undefined
@@ -200,6 +203,7 @@ class Homepage extends React.Component{
           activityPreparing.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activityPreparing.endLatitude, activityPreparing.endLongitude])
           activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
           activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
+          activityPreparing.beautyMovingTime = utils.getBeautyMovingTime(activityPreparing.movingTime)
           this.createUserAndActivity({
             average_speed : averageSpeed,
             distance : activityPreparing.distance,
@@ -304,13 +308,11 @@ class Homepage extends React.Component{
       )
     } else {
       if(this.state.stage === 'RequestedLogin') {
-        let urlWithoutParams = window.location.pathname
-        if(urlCurrent !== urlWithoutParams && !urlCurrent.includes('192.168.1.69')) window.history.replaceState({}, '', urlWithoutParams);
         return (
           <div className="quadratic-wrapper">
             {/* <div className="buttons-wrapper">
               <div className="language-selector-alone">
-                <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/>
+                <Dropdown value={this.props.language} values={languages} type="language" handleChangeValue={this.setLanguage}/>
               </div>
             </div> */}
             <div className={mainWrapperClasses}>
@@ -361,7 +363,7 @@ class Homepage extends React.Component{
                 </div>
               </div>
               <div className="language-selector">
-                {/* <Dropdown value={this.props.language} values={languages} handleChangeValue={this.setLanguage}/> */}
+                {/* <Dropdown value={this.props.language} values={languages} type="language" handleChangeValue={this.setLanguage}/> */}
               </div>
             </div>
             <div style={styleSelectActivity}>
@@ -381,7 +383,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
-          <div>
+          <div className="wrapper-of-warpper">
             <div className="image-creator">
               <div className="image-creator-wrapper-1">
                 <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
@@ -451,8 +453,8 @@ class Homepage extends React.Component{
         // if(accessToken) this.getAthleDataComplete()
       })
       .catch(e => {
-        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAccessTokenAndActivities','exception')})
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getAccessTokenAndActivities','exception')})
       })
   }
 
@@ -485,7 +487,7 @@ class Homepage extends React.Component{
   }
 
   async createUserAndActivity(activityData) {
-    let bodyUser = {has_loaded_gpx: true, ...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
+    let bodyUser = {has_strava: false, ...apiUtils.getCreatedFields(),...apiUtils.getModifiedFields()}
     dbInteractions.createRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, bodyUser).then(res => {
       uId = res
       activityData['user_id'] = uId
@@ -586,21 +588,30 @@ class Homepage extends React.Component{
               altitudeStream: [],
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
+                beautyAverageSpeed: utils.getAverageSpeedMetric(e.distance, e.moving_time, 1) + ' km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
+                beautyElevationGain: e.total_elevation_gain + ' m',
                 beautyDistance: (e.distance / 1000).toFixed(0) + 'km',
+                beautyDistanceSpaced: (e.distance / 1000).toFixed(2) + ' km',
                 distance: Number((e.distance / 1000).toFixed(0)),
               },
               imperial: {
                 beautyAverage: utils.getAverageSpeedImperial(e.distance, e.moving_time) + 'mi/h',
+                beautyAverageSpeed: utils.getAverageSpeedImperial(e.distance, e.moving_time, 1) + ' mi/h',
                 beautyElevation: (e.total_elevation_gain * 3.28084).toFixed(0) + 'ft',
+                beautyElevationGain: (e.total_elevation_gain * 3.28084).toFixed(0) + ' ft',
                 beautyDistance: ((e.distance / 1000) * 0.621371).toFixed(0) + 'mi',
+                beautyDistanceSpaced: ((e.distance / 1000) * 0.621371).toFixed(2) + ' mi',
                 distance: Number(((e.distance / 1000) * 0.621371).toFixed(0)),
               },
               beautyCoordinates: undefined,
               beautyEndCoordinates: undefined,
               beautyDuration: utils.getBeautyDuration(e.moving_time),
+              beautyMovingTime: utils.getBeautyMovingTime(e.moving_time),
               beautyName: e.name,
+              beautyNameNoEmoji: utils.removeEmoji(e.name),
               beautyPower: e.average_watts ? (e.average_watts + 'W') : undefined,
+              beautyPowerSpaced: e.average_watts ? (Math.round(e.average_watts) + ' W') : undefined,
               // beautyDate: utils.getBeautyDatetime(e.start_date_local),
               beautyDatetimeLanguages: utils.getBeautyDatetime(e.start_date_local),
               durationMoving: e.moving_time,
@@ -627,10 +638,12 @@ class Homepage extends React.Component{
               hasAltitudeStream: false,
               hasCoordinates: false
             }
-            t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
-            t.beautyCoordinates = t.beautyCoordinatesComplete.beautyCoordinatesTextTime
-            t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
-            t.beautyEndCoordinates = t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
+            if(t.startLatitude && t.startLongitude && t.endLatitude && t.endLongitude) {
+              t.beautyCoordinatesComplete = utils.getBeautyCoordinates([t.startLatitude, t.startLongitude])
+              t.beautyCoordinates = t.beautyCoordinatesComplete ? t.beautyCoordinatesComplete.beautyCoordinatesTextTime : undefined
+              t.beautyEndCoordinatesComplete = utils.getBeautyCoordinates([t.endLatitude, t.endLongitude])
+              t.beautyEndCoordinates = t.beautyEndCoordinatesComplete ? t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime : undefined
+            }
             t.metric.subtitle = utils.getSubTitle(t, 'metric')
             // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
             t.imperial.subtitle = utils.getSubTitle(t, 'imperial')
@@ -641,7 +654,7 @@ class Homepage extends React.Component{
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivities','exception')})
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivities','exception')})
       })
       .finally(() => {
         isLoading = false
@@ -679,6 +692,20 @@ class Homepage extends React.Component{
         this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
+          activities[indexActivity].calories = res.calories
+          activities[indexActivity].beautyCalories = utils.getBeautyCalories(res.calories)
+          if(!activities[indexActivity].startLatitude) activities[indexActivity].startLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][1] : undefined
+          if(!activities[indexActivity].startLongitude) activities[indexActivity].startLongitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[0].length ? activities[indexActivity].coordinates[0][0] : undefined
+          if(!activities[indexActivity].endLatitude) activities[indexActivity].endLatitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1].length ? activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1][1] : undefined
+          if(!activities[indexActivity].endLongitude) activities[indexActivity].endLongitude = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length && activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1].length ? activities[indexActivity].coordinates[activities[indexActivity].coordinates.length - 1][0] : undefined
+          if(!activities[indexActivity].beautyCoordinatesComplete && !activities[indexActivity].beautyEndCoordinatesComplete
+              && activities[indexActivity].startLatitude && activities[indexActivity].startLongitude
+              && activities[indexActivity].endLatitude && activities[indexActivity].endLongitude) {
+            activities[indexActivity].beautyCoordinatesComplete = utils.getBeautyCoordinates([activities[indexActivity].startLatitude, activities[indexActivity].startLongitude])
+            activities[indexActivity].beautyCoordinates = activities[indexActivity].beautyCoordinatesComplete ? activities[indexActivity].beautyCoordinatesComplete.beautyCoordinatesTextTime : undefined
+            activities[indexActivity].beautyEndCoordinatesComplete = utils.getBeautyCoordinates([activities[indexActivity].endLatitude, activities[indexActivity].endLongitude])
+            activities[indexActivity].beautyEndCoordinates = activities[indexActivity].beautyEndCoordinatesComplete ? activities[indexActivity].beautyEndCoordinatesComplete.beautyCoordinatesTextTime  : undefined
+          }
           activities[indexActivity].polyline = res.map.polyline
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
@@ -688,8 +715,8 @@ class Homepage extends React.Component{
         }
       })
       .catch(e => {
-        console.error('Fatal Error: ', JSON.parse(JSON.stringify(e)))
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getActivity','exception')})
+        console.error('Fatal Error: ', e)
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivity','exception')})
       })
       .finally(() => {
         // isLoading = false
@@ -714,7 +741,7 @@ class Homepage extends React.Component{
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
-        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','getAltitideStream','exception')})
+        this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getAltitideStream','exception')})
       })
       .finally(() => {
         isLoading = false
@@ -723,10 +750,16 @@ class Homepage extends React.Component{
       })
   }
 
+  getClassesForApp() {
+    let urlCurrent = window.location.href
+    if(urlCurrent.includes('/statistics')) return 'App-body-statistics'
+    else return 'App-body'
+  }
+
   render() {
     return (   
       <div className="App">
-        <div className="App-body">
+        <div className={this.getClassesForApp()}>
           {this.routesToStage()}
         </div>
       </div>

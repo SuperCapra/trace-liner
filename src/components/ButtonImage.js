@@ -4,6 +4,7 @@ import ShareContour from './ShareContour'
 import SelectedImage from './SelectedImage';
 import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
+import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
 import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
 import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
@@ -15,22 +16,25 @@ import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
 import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
 import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
 import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
-import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
-import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
-import image1 from '../assets/images/image1.jpeg'
-import image2 from '../assets/images/image2.jpeg'
-import image3 from '../assets/images/image3.jpeg'
-import image4 from '../assets/images/image4.jpeg'
+import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
+// import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
+// import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
+import image1 from '../assets/images/image1.jpg'
+import image2 from '../assets/images/image2.jpg'
+import image3 from '../assets/images/image3.jpg'
+import image4 from '../assets/images/image4.jpg'
 import image5 from '../assets/images/image5.jpg'
-import image6 from '../assets/images/image6.jpeg'
-import image7 from '../assets/images/image7.jpeg'
+import image6 from '../assets/images/image6.jpg'
+import image7 from '../assets/images/image7.jpg'
+// import image8 from '../assets/images/image8.jpeg'
+// import image9 from '../assets/images/image9.jpeg'
+// import image10 from '../assets/images/image10.jpg'
 import Slider from 'rc-slider';
-import SliderRes from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, admin, handleClickButton } = props
+  const { activity, unitMeasure, language, admin, modeselected, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -44,16 +48,21 @@ function ButtonImage(props) {
   const [showAverage, setShowAverage] = useState(true);
   const [showPower, setShowPower] = useState(true);
   const [showCoordinates, setShowCoordinates] = useState(false);
+  const [showCalories, setShowCalories] = useState(true);
+  const [textUp, setTextUp] = useState(false);
+  const [altitudeVertical, setAltitudeVertical] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
   const [additionalImages, setAdditionalImages] = useState([]);
   const [additionalImagesInfo, setAdditionalImagesInfo] = useState([]);
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
-  const [showMode1, setShowMode1] = useState(true);
-  const [showMode2, setShowMode2] = useState(false);
-  const [showMode3, setShowMode3] = useState(false);
-  const [showMode4, setShowMode4] = useState(false);
+  const [showMode1, setShowMode1] = useState(modeselected === 'mode1' ? true : false);
+  const [showMode2, setShowMode2] = useState(modeselected === 'mode2' ? true : false);
+  const [showMode3, setShowMode3] = useState(modeselected === 'mode3' ? true : false);
+  const [showMode4, setShowMode4] = useState(modeselected === 'mode4' ? true : false);
+  const [showMode5, setShowMode5] = useState(modeselected === 'mode5' ? true : false);
+  const [showMode6, setShowMode6] = useState(modeselected === 'mode6' ? true : false);
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -158,43 +167,73 @@ function ButtonImage(props) {
         enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
+    } else if(type === 'calories') {
+      handleClick({type: 'show-hide', subtype: 'calories', show: !showCalories})
+      setShowCalories(!showCalories)
+    } else if(type === 'switchText') {
+      handleClick({type: 'switch-text', textUp: !textUp})
+      setTextUp(!textUp)
+    } else if(type === 'switchAltitude') {
+      handleClick({type: 'switch-altitude', altitudeVertical: !altitudeVertical})
+      setAltitudeVertical(!altitudeVertical)
     } else if(type === 'mode1') {
-      handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
-      setShowMode1(!showMode1)
-      if(!showMode1) {
-        setShowMode2(false)
-        setShowMode3(false)
-        setShowMode4(false)
+      if(showMode1) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode1', show: !showMode1})
+        setShowMode1(true)
+        enableMode1(true, true)
+        setFalseOthermode(type)
       }
-      enableMode1(true, true)
     } else if(type === 'mode2') {
-      handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
-      setShowMode2(!showMode2)
-      if(!showMode2) {
-        setShowMode1(false)
-        setShowMode3(false)
-        setShowMode4(false)
+      if(showMode2) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode2', show: !showMode2})
+        setShowMode2(true)
+        setFalseOthermode(type)
+        enableMode2()
       }
-      enableMode2()
     } else if(type === 'mode3') {
-      handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
-      setShowMode3(!showMode3)
-      if(!showMode3) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode4(false)
+      if(showMode3) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode3', show: !showMode3})
+        setFalseOthermode(type)
+        setShowMode3(true)
+        enableMode3()
       }
-      enableMode3()
     } else if(type === 'mode4') {
-      handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
-      setShowMode4(!showMode4)
-      if(!showMode4) {
-        setShowMode1(false)
-        setShowMode2(false)
-        setShowMode3(false)
+      if(showMode4) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode4', show: !showMode4})
+        setFalseOthermode(type)
+        setShowMode4(true)
+        enableMode4()
       }
-      enableMode4()
+    } else if(type === 'mode5') {
+      if(showMode5) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode5', show: !showMode5})
+        setShowMode5(true)
+        setFalseOthermode(type)
+        enableMode5()
+      }
+    } else if(type === 'mode6') {
+      if(showMode6) return
+      else {
+        handleClick({type: 'show-hide', subtype: 'mode6', show: !showMode6})
+        setShowMode6(true)
+        setFalseOthermode(type)
+        enableMode6()
+      }
     }
+  }
+
+  const setFalseOthermode = (mode) => {
+    if(mode !== 'mode1') setShowMode1(false)
+    if(mode !== 'mode2') setShowMode2(false)
+    if(mode !== 'mode3') setShowMode3(false)
+    if(mode !== 'mode4') setShowMode4(false)
+    if(mode !== 'mode5') setShowMode5(false)
+    if(mode !== 'mode6') setShowMode6(false)
   }
 
   const propagateColor = (info) => {
@@ -228,16 +267,27 @@ function ButtonImage(props) {
     setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    // setShowCoordinates(true)
   }
 
   const enableMode4 = () => {
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
+  }
+
+  const enableMode5 = () => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
+  }
+
+  const enableMode6 = () => {
+    setShowDistance(true)
+    setShowElevation(true)
+    setShowDuration(true)
     setShowPower(true)
     setShowAverage(true)
-    // setShowCoordinates(true)
+    setShowCalories(true)
   }
 
   const unitMeasureStyle = {
@@ -272,6 +322,15 @@ function ButtonImage(props) {
     fill: brandingPalette.tertiary,
     transform: 'scale(0.55)'
   }
+  const subSwitchStyle = {
+    fill: brandingPalette.tertiary,
+    transform: 'scale(0.55)',
+  }
+  const subSwitchStyleDown = {
+    fill: brandingPalette.tertiary,
+    transform: 'scale(0.55)',
+    rotate: '180deg'
+  }
   // const unsetBlendModeStyle = {
   //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.primary,
   //   backgroundColor: selectedUnsetBlendMode ? brandingPalette.secondary : 'unset',
@@ -298,17 +357,17 @@ function ButtonImage(props) {
 
   const returnsColors = () => {
     if(!colors.length) {
-      for(let color in brandingPalette) {
+      for(let color in colorText) {
         // if(!selectedUnsetBlendMode && color === 'black') continue
         // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
         let styleColor = {
-          backgroundColor: brandingPalette[color],
+          backgroundColor: colorText[color],
           width: '20px',
           height: '20px',
           borderRadius: '20px',
           border: '2px solid ' + brandingPalette['background']
         }
-        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: brandingPalette[color]})}/>)
+        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>)
       }
       logUtils.loggerText('colors', colors)
     }
@@ -357,6 +416,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const distanceSpacedController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
+          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistanceSpaced}</p>
+      </div>
+    )
+  }
   const durationController = () => {
     return(
       <div className="wrapper-buttons-left">
@@ -365,6 +435,17 @@ function ButtonImage(props) {
           {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
         </div>
         <p>{vocabulary[language].BUTTON_DURATION}: {activity.beautyDuration}</p>
+      </div>
+    )
+  }
+  const movingTimeController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
+          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_MOVING_TIME}: {activity.beautyMovingTime}</p>
       </div>
     )
   }
@@ -379,6 +460,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const elevationGainController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_ELEVATION_GAIN}: {activity[unitMeasure].beautyElevationGain}</p>
+      </div>
+    )
+  }
   const averageController = () => {
     return(
       <div className="wrapper-buttons-left">
@@ -387,6 +479,17 @@ function ButtonImage(props) {
           {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
         </div>
         <p>{vocabulary[language].BUTTON_AVERAGE}: {activity[unitMeasure].beautyAverage}</p>
+      </div>
+    )
+  }
+  const averageSpeedController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
+          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_AVERAGE_SPEED}: {activity[unitMeasure].beautyAverageSpeed}</p>
       </div>
     )
   }
@@ -401,6 +504,17 @@ function ButtonImage(props) {
       </div>
     )
   }
+  const powerSpacedController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
+          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_AVERAGE_POWER}: {activity.beautyPowerSpaced}</p>
+      </div>
+    )
+  }
   const coordinatesController = () => {
     return(
       <div className="wrapper-buttons-left">
@@ -409,6 +523,39 @@ function ButtonImage(props) {
           {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
         </div>
         <p>{vocabulary[language].BUTTON_COORDINATES}: {activity.beautyCoordinates}</p>
+      </div>
+    )
+  }
+  const caloriesController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {showCalories && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
+          {!showCalories && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_CALORIES}: {activity.beautyCalories}</p>
+      </div>
+    )
+  }
+  const switchController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {textUp && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchText')} />)}
+          {!textUp && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchText')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_SWITCH}</p>
+      </div>
+    )
+  }
+  const switchAltitudeController = () => {
+    return(
+      <div className="wrapper-buttons-left">
+        <div>
+          {altitudeVertical && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchAltitude')} />)}
+          {!altitudeVertical && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchAltitude')} />)}
+        </div>
+        <p>{vocabulary[language].BUTTON_SWITCH_ALTITUDE}</p>
       </div>
     )
   }
@@ -422,7 +569,7 @@ function ButtonImage(props) {
     // }
     let htmlImages = []
     for(let element of images) {
-      let classesForSelected = element.selected ? "selected-image see-selected-image" : "selected-image no-see-selected-image"
+      let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
       htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
     }
     return(htmlImages)
@@ -504,12 +651,24 @@ function ButtonImage(props) {
           <p>MODE 3</p>
         </div>
         {showMode3 && displayMode3()}
-        <div className="wrapper-buttons-left">
+        {/* <div className="wrapper-buttons-left">
           {showMode4 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
           {!showMode4 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
           <p>MODE 4</p>
         </div>
-        {showMode4 && displayMode4()}
+        {showMode4 && displayMode4()} */}
+        <div className="wrapper-buttons-left">
+          {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
+          {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
+          <p>MODE 5</p>
+        </div>
+        {showMode5 && displayMode5()}
+        <div className="wrapper-buttons-left">
+          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          <p>MODE 6</p>
+        </div>
+        {showMode6 && displayMode6()}
       </div>
     )
   }
@@ -546,8 +705,9 @@ function ButtonImage(props) {
         {activity[unitMeasure].beautyDistance && distanceController()}
         {activity[unitMeasure].beautyElevation && elevationController()}
         {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
-        {activity[unitMeasure].beautyAverage && averageController()}
+        {!altitudeVertical && activity.beautyPower && powerController()}
+        {!altitudeVertical && activity[unitMeasure].beautyAverage && averageController()}
+        {switchAltitudeController()}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )
@@ -561,18 +721,40 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const minusFilter = () => {
-    handleClick({type: 'filter', direction: 'minus'})
+  const displayMode5 = () => {    
+    return (
+      <div className="width-mode-sub">
+        {activity[unitMeasure].beautyDistance && distanceController()}
+        {activity[unitMeasure].beautyElevation && elevationController()}
+        {activity.beautyDuration && durationController()}
+        {switchController()}
+      </div>
+    )
   }
-  const plusFilter = () => {
-    handleClick({type: 'filter', direction: 'plus'})
+  const displayMode6 = () => {    
+    return (
+      <div className="width-mode-sub">
+        {activity[unitMeasure].beautyDistance && distanceSpacedController()}
+        {activity[unitMeasure].beautyElevation && elevationGainController()}
+        {activity.beautyDuration && movingTimeController()}
+        {activity[unitMeasure].beautyAverage && averageSpeedController()}
+        {activity.beautyPower && powerSpacedController()}
+        {activity.beautyCalories && caloriesController()}
+      </div>
+    )
   }
-  const minusResolution = () => {
-    handleClick({type: 'resolution', direction: 'minus'})
-  }
-  const plusResolution = () => {
-    handleClick({type: 'resolution', direction: 'plus'})
-  }
+  // const minusFilter = () => {
+  //   handleClick({type: 'filter', direction: 'minus'})
+  // }
+  // const plusFilter = () => {
+  //   handleClick({type: 'filter', direction: 'plus'})
+  // }
+  // const minusResolution = () => {
+  //   handleClick({type: 'resolution', direction: 'minus'})
+  // }
+  // const plusResolution = () => {
+  //   handleClick({type: 'resolution', direction: 'plus'})
+  // }
 
   // const captureAndUploadImage = (canvas, titleImage, type, blob) => {
   //   try {
@@ -673,7 +855,7 @@ function ButtonImage(props) {
           <div className="wrapper-sub-buttons colors-background">
             {returnsColors()}
           </div>
-          <div className="wrapper-sub-buttons wrapper-images">
+          <div className="wrapper-sub-buttons wrapper-images image-background">
             {returnImages()}
             {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="35px"
+   height="45px">
+  <rect class="main-mode-color"
+     style="fill-opacity:1;stroke-width:2.13481;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+     width="33"
+     height="43"
+     x="1"
+     y="1" />
+  <path class="secondary-mode-color"
+     style="fill:none;fill-opacity:1;stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+     d="m 17.4,9.2672221 c 1.012278,-0.7538236 2.024487,-1.5075958 2.972293,-1.4750358 0.947805,0.03256 1.830775,0.8509234 2.864376,0.9475656 1.033602,0.096642 2.218072,-0.5278966 3.133539,-0.5814862 0.915466,-0.05359 1.561544,0.4632742 2.455167,0.4737857 0.893624,0.010512 2.035024,-0.484813 3.176225,-0.9800513"/>
+  <path class="secondary-mode-color"
+     style="fill:none;fill-opacity:1;stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+     d="m 17.41323,13.315991 c 1.012278,-0.753824 2.024487,-1.507596 2.972293,-1.475036 0.947805,0.03256 1.830775,0.850924 2.864376,0.947566 1.033602,0.09664 2.218072,-0.527897 3.133539,-0.581486 0.915466,-0.05359 1.561544,0.463274 2.455167,0.473785 0.893624,0.01051 2.035024,-0.484813 3.176225,-0.980051"/>
+  <path class="secondary-mode-color"
+     style="fill:none;fill-opacity:1;stroke-width:0.8;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+     d="m 17.41324,17.537306 c 1.012278,-0.753823 2.024488,-1.507595 2.972293,-1.475035 0.947806,0.03256 1.830775,0.850923 2.864376,0.947565 1.033601,0.09664 2.218072,-0.527896 3.133539,-0.581486 0.915466,-0.05359 1.561544,0.463274 2.455167,0.473785 0.893623,0.01051 2.035023,-0.484813 3.176225,-0.980051"/>
+  <path class="secondary-mode-color secondary-mode-color-fill"
+     style="fill-opacity:1;stroke-width:0.942875;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;stroke-dasharray:none;stroke-opacity:1;paint-order:markers fill stroke"
+     d="m 3.2997581,40.018158 c 1.642818,-0.38972 3.28329,-1.842869 3.28329,-1.842869 l 2.298307,1.842869 4.2682759,-9.04681 2.462476,9.214344 3.611613,-2.848071 2.7908,-4.020803 0.98498,5.193539 2.46247,1.675335 3.93995,-1.340268 2.62663,-3.518205 V 42.02856 H 2.9714291 Z"/>
+</svg>

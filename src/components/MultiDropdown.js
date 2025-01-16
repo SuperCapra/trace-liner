@@ -5,21 +5,25 @@ import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
-const Dropdown = forwardRef((props,ref) => {
-    const {value, values, type, text, hasBorder, size, possibilityDeselect, handleChangeValue} = props
+const MultiDropdown = forwardRef((props,ref) => {
+    const {valuesSelected, valuesAvailable, type, hasBorder, size, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
-    const [valueSelected, setValueSelected] = useState(value)
+    const [textSelected, setTextSelected] = useState('(' + (valuesSelected && valuesSelected.length ? valuesSelected.length : '0') + ')');
+    // const [valueSelectedPrivate, setValueSelectedPrivate] = useState(valuesSelected);
 
     const returnValues = () => {
         let resultHTML = []
-        for(let v of values) {
-            let classesForvalue = v === valueSelected ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
-            let classeForTick = v === valueSelected ? "see-selected padding-5" : "no-see-selected padding-5"
-            let styleTick = {
-                fill: brandingPalette.background
+        if(valuesAvailable && valuesAvailable.length) {
+            for(let v of valuesAvailable) {
+                let index = valuesSelected.findIndex(x => x === v)
+                let classesForvalue =  index === -1 ? "dropdown-value" : "dropdown-value dropdown-unselected-value"
+                let classeForTick = index !== -1 ? "see-selected padding-5" : "no-see-selected padding-5"
+                let styleTick = {
+                    fill: brandingPalette.background
+                }
+                resultHTML.push(<div className={classesForvalue} key={v} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
             }
-            resultHTML.push(<div className={classesForvalue} key={v} onClick={() => changeValue(v)}><div key={v} className="display-flex-dropdown-value padding-5"><p>{v}</p><Tick className={classeForTick} style={styleTick}/></div></div>)
         }
         return resultHTML
     }
@@ -49,24 +53,29 @@ const Dropdown = forwardRef((props,ref) => {
     }
 
     const changeValue = (valueSetting) => {
-        console.log('valueSelected:',valueSelected)
-        console.log('text:',text)
-        if(!possibilityDeselect && valueSetting === valueSelected) return
-        setValueSelected(valueSetting)
-        handleChangeValue({type: type, value: valueSetting})
-        closeDropdown()
+        let index = valuesSelected.findIndex(x => x === valueSetting)
+        if(index === -1) {
+            let correctIndex = valuesAvailable.findIndex(x => x === valueSetting);
+            valuesSelected.splice(correctIndex, 0, valueSetting);
+        } else {
+            valuesSelected.splice(index,1)
+        }
+        setTextSelected('('+ valuesSelected.length +')')
+        // setValueSelectedPrivate(valuesSelected)
+        // if(valueSetting === valueSelected) return
+        // setValueSelected(valueSetting)
+        handleChangeValue({type: type, valuesSelected: valuesSelected})
     }
 
     const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
-        width: hasBorder ? (size ? (Number(size.replace('px','')) < 200 ? (Number(size.replace('px','')) * 0.75) + 'px' : size) : '200px') : 'unset'
+        width: hasBorder ? (size ? size : '200px') : 'unset'
     } 
     const styleDropdown = {
         width: size ? size : '200px'
     }
-
     const resetSelect = () => {
-        setValueSelected(undefined)
+        setTextSelected('(0)')
     }
 
     useImperativeHandle(ref, () => ({
@@ -77,9 +86,8 @@ const Dropdown = forwardRef((props,ref) => {
         // <div className="p-back p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} onBlur={closeDropdown} tabIndex={0} ref={dropdownRef}>
             <div className="dropdown-selected-value" onClick={hideShowDropDown}>
-                {valueSelected && <p style={styleText}>{valueSelected}</p>}
-                {!valueSelected && text && <p style={styleText}>{text}</p>}
-                {!valueSelected && !text && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
+                {textSelected && <p style={styleText}>{textSelected}</p>}
+                {!textSelected && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
                 <ArrowDown className="padding-5" style={styleArrowDown20}/>
             </div>
             <div id="dropdownValues" style={styleDropdown} className="dropdown-appear dropdown-values no-see-dropdown-values">
@@ -89,4 +97,4 @@ const Dropdown = forwardRef((props,ref) => {
     )
 })
 
-export default Dropdown;
+export default MultiDropdown;

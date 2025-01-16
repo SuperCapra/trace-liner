@@ -89,6 +89,23 @@ const dbInteractions = {
             console.error(`Error querying ${table} record with fields ${field} equal to ${value}:`, e)
         })
         return data
+    },
+    async processQuery(query,token) {
+        const url = apiUtils.getUrlHost() + `/api/query`
+        const data = await fetch(url, {
+            method : 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({query: query})
+        }).then(response => response.json())
+        .then(data => {
+            return data
+        }).catch(e => {
+            console.error(`Error querying ${query}:`, e)
+        })
+        return data
     }
 }
 

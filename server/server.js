@@ -189,7 +189,7 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
     res.status(500).json({error: e})
   }
 })
-app.get('/api/query', authenticateToken, async (req, res) => {
+app.post('/api/query', authenticateToken, async (req, res) => {
   try {
     const query = req.body.query
     // console.log('fields:',fields)
@@ -343,6 +343,10 @@ roots.forEach(rootKey => {
 })
 
 app.get('/visitId-:id', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
+
+app.get('/statistics', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 

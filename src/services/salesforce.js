@@ -182,6 +182,32 @@ const saleforceApiUtils = {
         info.showname = false
         return info
     },
+    setMode5(info) {
+        info.mode = 'mode 5'
+        info.showaverage = false
+        info.showcoordinates = false
+        info.showdate = false
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = false
+        info.showpower = false
+        info.showtitle = true
+        return info
+    },
+    setMode6(info) {
+        info.mode = 'mode 6'
+        info.showcoordinates = false
+        info.showdate = false
+        info.showaverage = true
+        info.showcoordinates = false
+        info.showdistance = true
+        info.showduration = true
+        info.showelevation = true
+        info.showpower = true
+        info.showtitle = false
+        // info.showcalories = true
+        return info
+    },
     getSalesforceFormattedDate() {
         const now = new Date();
 

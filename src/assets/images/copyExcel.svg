@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="45px"
+   height="45px">
+   <path
+      id="rect18342"
+      style="fill-opacity:1;stroke:none;stroke-width:10.0714;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      d="M 4.5,9.1601562 V 34.5 H 17 V 12 H 29.5 V 4.5 H 9.1601562 Z" />
+   <path
+      id="rect18342-0"
+      style="fill-opacity:1;stroke:none;stroke-width:10.0714;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      d="m 15.5,10.5 v 30 h 25 v -30 z M 17,12 H 39 V 39 H 17 Z" />
+   <rect
+      style="fill-opacity:1;stroke:none;stroke-width:5.86507;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      id="rect20065"
+      width="1"
+      height="28"
+      x="27.5"
+      y="11.5" />
+   <rect
+      style="fill-opacity:1;stroke:none;stroke-width:5.15734;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      id="rect20067-6"
+      width="23.093605"
+      height="1"
+      x="16.5"
+      y="18" />
+   <rect
+      style="fill-opacity:1;stroke:none;stroke-width:5.15734;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      id="rect20067-6-1"
+      width="23.093605"
+      height="1"
+      x="16.5"
+      y="25" />
+   <rect
+      style="fill-opacity:1;stroke:none;stroke-width:5.15734;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+      id="rect20067-6-3"
+      width="23.093605"
+      height="1"
+      x="16.5"
+      y="32" />
+</svg>
