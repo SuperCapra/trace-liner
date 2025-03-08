@@ -1,30 +1,21 @@
 import '../App.css';
-import React, {useState, forwardRef, useImperativeHandle, useCallback} from 'react';
+import React, {useState, forwardRef, useImperativeHandle} from 'react';
 import statisticsUtils from '../utils/statisticsUtils';
 import brandingPalette from '../config/brandingPalette';
 
-const Table = forwardRef((props,ref) => {
-
-    const {/*columns, columnsData, records, valueGroupBy1, valueGroupBy2,**/ settingGroupBy1, settingGroupBy2} = props
+const Table = forwardRef((_,ref) => {
 
     const [needsRefresh,setNeedsRefresh] = useState(false)
     const [groupedData,setGroupedData] = useState([])
-    // const [maxCardinalityGroup1,setMaxCardinalityGroup1] = useState(undefined)
-    // const [hasRendered, setHasRendered] = useState(false);
     const [table, setTable] = useState(<div></div>)
     const [graph, setGraph] = useState(<div></div>)
-    // const [counter, setCounter] = useState(0)
-    // const [tableRendered, setTableRendered] = useState(false)
-    // const [graphRendered, setGraphRendered] = useState(false)
 
     const setRefreshNeeded = () => {
-        if(needsRefresh) setNeedsRefresh(false)
+        setNeedsRefresh(true)
     }
 
     const resetGroupedData = () => {
         setGroupedData([])
-        // setTableRendered(false)
-        // setGraphRendered(false)
     }
 
     const returnHeader = (arrayHeader) => {
@@ -35,8 +26,7 @@ const Table = forwardRef((props,ref) => {
 
     // const returnRow = (record, value)
 
-    const returnBody = useCallback((arrayRecords) => {
-        // console.log('columnsData', columnsData)
+    const returnBody = (arrayRecords) => {
         console.log('arrayRecords', arrayRecords)
         let rows = []
         for(let record of arrayRecords) {
@@ -47,30 +37,34 @@ const Table = forwardRef((props,ref) => {
             rows.push(<tr className="row-table">{row}</tr>)
         }
         return <tbody>{rows}</tbody>
-    },[
-        // groupedData
-    ])
+    }
 
     const returnBodyGroupedBy1 = (arrayRecordsGrouped,columnsReordered) => {
         let rows = []
         console.log('arrayRecordsGrouped:', arrayRecordsGrouped)
         console.log('columnsReordered:', columnsReordered)
         for(let record of arrayRecordsGrouped) {
-            let row = []
-            row.push(<td className="cell-table">{record[0]}</td>)
-            let transposedMatrix = record[1][0].map((_, colIndex) => record[1].map(row => row[colIndex]));
-            for(let indexRowTransposed in transposedMatrix) {
-                let rowTransposed = transposedMatrix[indexRowTransposed]
-                // console.log('rowTransposed:', rowTransposed)
+            let firstRow = []
+            let otherRows = []
+            firstRow.push(<td className="cell-table" rowSpan={record[0].cardinality + 1}>{record[0].valueDisplayed}</td>)
+            for(let indexGroup in record[1]) {
+                let elementGroup = record[1][indexGroup]
                 let subRow = []
-                for(let indexColumnTransposed in rowTransposed) {
-                    let valueDisplayed = rowTransposed[indexColumnTransposed] !== undefined ? rowTransposed[indexColumnTransposed].valueDisplayed : undefined
-                    let classInvisibleCell = rowTransposed[indexColumnTransposed] !== undefined && rowTransposed[indexColumnTransposed].value !== null ? '' : ' invisible-null'
-                    subRow.push(<tr><td className={classInvisibleCell}>{valueDisplayed}</td></tr>)
+                console.log('record[1]:', record[1])
+                for(let indexElement in elementGroup) {
+                    let element = elementGroup[indexElement]
+                    console.log('element: ', element)
+                    // console.log('element !== undefined ? element.valueDisplayed : undefined: ', element !== undefined ? element.valueDisplayed : undefined)
+                    // console.log('element !== undefined && element.value !== null ? \'\' : \' invisible-null\': ', element !== undefined && element.value !== null ? '' : ' invisible-null')
+                    let valueDisplayed = element !== undefined ? element.valueDisplayed : undefined
+                    let callCell = element !== undefined && element.value !== null ? 'cell-table-horizontal' : 'cell-table-horizontal invisible-null'
+                    if(indexGroup === 0) firstRow.push(<td className={callCell}>{valueDisplayed}</td>)
+                    else subRow.push(<td className={callCell}>{valueDisplayed}</td>)
                 }
-                row.push(<td className="cell-table">{subRow}</td>)
+                otherRows.push(<tr className="row-table">{subRow}</tr>)
             }
-            rows.push(<tr className="row-table">{row}</tr>)
+            rows.push(<tr className="row-table">{firstRow}</tr>)
+            rows.push(...otherRows)
         }
         return <tbody>{rows}</tbody>
     }
@@ -80,33 +74,70 @@ const Table = forwardRef((props,ref) => {
         console.log('arrayRecordsGrouped:', arrayRecordsGrouped)
         console.log('columnsReordered:', columnsReordered)
         for(let record of arrayRecordsGrouped) {
-            let row = []
-            row.push(<td className="cell-table">{record[0]}</td>)
-            let transposedMatrix = record[1][0].map((_, colIndex) => record[1].map(row => row[colIndex]));
-            let columnGrouping = []
-            for(let groupingElement of transposedMatrix[0]) {
-                columnGrouping.push(<tr className="cell-table"><td>{groupingElement}</td></tr>)
+            let firstRow = []
+            let otherRows = []
+            firstRow.push(<td className="cell-table" rowspan={record[0].cardinality}>{record[0].valueDisplayed}</td>)
+            for(let indexElement in record[1]) {
+                let element = record[1][indexElement]
+                let subFirstRow = []
+                let otherSubRows = []
+                // let subQuadroRow = []
+                console.log('element:', element)
+                if(Number(indexElement) === 0) firstRow.push(<td className="cell-table" rowspan={element[0].cardinality}>{element[0].valueDisplayed}</td>)
+                    else subFirstRow.push(<td className="cell-table" rowspan={element[0].cardinality}>{element[0].valueDisplayed}</td>)
+                console.log('indexElement:', indexElement)
+                for(let indexSubElementGroup in element[1]) {
+                    let elementSubElementGroup = element[1][indexSubElementGroup]
+                    // console.log('elementSubElementGroup:', elementSubElementGroup)
+                    let otherSubRow = []
+                    for(let indexElementSubElement in elementSubElementGroup) {
+                        let elementSubElement = elementSubElementGroup[indexElementSubElement]
+                        // console.log('elementSubElement:', elementSubElement)
+                        let valueDisplayed = elementSubElement !== undefined ? elementSubElement.valueDisplayed : undefined
+                        let classInvisibleCell = elementSubElement !== undefined && elementSubElement.value !== null ? '' : ' invisible-null'
+                        console.log('indexElement:', indexElement)
+                        if(Number(indexSubElementGroup) === 0 && Number(indexElement) === 0) firstRow.push(<td className={classInvisibleCell}>{valueDisplayed}</td>)
+                        else if(Number(indexSubElementGroup) === 0) subFirstRow.push(<td className={classInvisibleCell}>{valueDisplayed}</td>)
+                        else otherSubRow.push(<td className={classInvisibleCell}>{valueDisplayed}</td>)
+                    }
+                    // otherSubRows.push(<tr className="row-table">{subQuadroRow}</tr>)
+                    // if(Number(indexSubElementGroup) === 0 && Number(indexElement) !== 0) rows.push(<tr className="row-table">{firstSubRow}</tr>)
+                    // else rows.push(<tr className="row-table">{otherSubRow}</tr>)
+                    if(Number(indexElement) !== 0 && Number(indexSubElementGroup) !== 0) otherSubRows.push(<tr className="row-table">{otherSubRow}</tr>)
+                }
+                // otherRows.push(<tr className="row-table">{subRow}</tr>)
+                otherRows.push(<tr className="row-table">{subFirstRow}</tr>)
+                otherRows.push(...otherSubRows)
             }
-            row.push(<td className="cell-table">{columnGrouping}</td>)
+            console.log('firstRow:', firstRow)
+            rows.push(<tr className="row-table">{firstRow}</tr>)
+            rows.push(...otherRows)
 
-            let flatteredMatrix = []
-            for(let i in transposedMatrix[1]) {
-                for(let j in transposedMatrix[1][i]) {
-                    flatteredMatrix.push(transposedMatrix[1][i][j])
-                }
-            }
-            let retransposedMatrix = flatteredMatrix[0].map((_, colIndex) => flatteredMatrix.map(row => row[colIndex]));
-            for(let indexRowTransposed in retransposedMatrix) {
-                let rowTransposed = retransposedMatrix[indexRowTransposed]
-                let subColumn = []
-                for(let indexColumnTransposed in rowTransposed) {
-                    let valueDisplayed = rowTransposed[indexColumnTransposed] ? rowTransposed[indexColumnTransposed].valueDisplayed : undefined
-                    let classInvisibleCell = (rowTransposed[indexColumnTransposed] && rowTransposed[indexColumnTransposed].value !== null ? '' : ' invisible-null')
-                    subColumn.push(<tr><td className={classInvisibleCell}>{valueDisplayed}</td></tr>)
-                }
-                row.push(<td className="cell-table">{subColumn}</td>)
-            }
-            rows.push(<tr className="row-table">{row}</tr>)
+            // let transposedMatrix = record[1][0].map((_, colIndex) => record[1].map(row => row[colIndex]));
+            // let columnGrouping = []
+            // for(let groupingElement of transposedMatrix[0]) {
+            //     columnGrouping.push(<tr className="cell-table"><td>{groupingElement}</td></tr>)
+            // }
+            // row.push(<td className="cell-table">{columnGrouping.valueDisplayed}</td>)
+
+            // let flatteredMatrix = []
+            // for(let i in transposedMatrix[1]) {
+            //     for(let j in transposedMatrix[1][i]) {
+            //         flatteredMatrix.push(transposedMatrix[1][i][j])
+            //     }
+            // }
+            // let retransposedMatrix = flatteredMatrix[0].map((_, colIndex) => flatteredMatrix.map(row => row[colIndex]));
+            // for(let indexRowTransposed in retransposedMatrix) {
+            //     let rowTransposed = retransposedMatrix[indexRowTransposed]
+            //     let subColumn = []
+            //     for(let indexColumnTransposed in rowTransposed) {
+            //         let valueDisplayed = rowTransposed[indexColumnTransposed] ? rowTransposed[indexColumnTransposed].valueDisplayed : undefined
+            //         let classInvisibleCell = (rowTransposed[indexColumnTransposed] && rowTransposed[indexColumnTransposed].value !== null ? '' : ' invisible-null')
+            //         subColumn.push(<tr><td className={classInvisibleCell}>{valueDisplayed}</td></tr>)
+            //     }
+            //     row.push(<td className="cell-table">{subColumn}</td>)
+            // }
+            // rows.push(<tr className="row-table">{row}</tr>)
         }
         return <tbody>{rows}</tbody>
     }
@@ -131,7 +162,7 @@ const Table = forwardRef((props,ref) => {
         }
     }
 
-    const sortAndSetFirstColumnSortedFormatted = useCallback((arrayRecords,indexSorting,settings) => {
+    const sortAndSetFirstColumnSortedFormatted = (arrayRecords,indexSorting,settings) => {
         arrayRecords = arrayRecords.sort((a,b) => {
             // const valA = String(a[indexSorting] ? a[indexSorting].value : undefined);
             const valA = a[indexSorting] ? a[indexSorting].value : undefined;
@@ -148,9 +179,9 @@ const Table = forwardRef((props,ref) => {
             return [sortedElement,...unsortedElements]
         })
         return arrayRecords
-    },[])
+    }
 
-    const returnGraph = useCallback((_groupedData,_value2,_maxCardinality1) => {
+    const returnGraph = (_groupedData,_value2,_maxCardinality1) => {
         console.log('groupedData', _groupedData)
         let graph = []
         let cardinalityArray1 = []
@@ -221,12 +252,9 @@ const Table = forwardRef((props,ref) => {
         // graph.push(<div className="labels-wrapper">{labels}</div>)
         // setGraphRendered(true)
         return <div className="graph-wrapper">{graph}</div>
-    },[
-        // valueGroupBy2,
-        // groupedData,
-    ])
+    }
 
-    const returnGroupedRecords = useCallback((arrayRecords, indexValueGroupBy1,_settingValue1) => {
+    const returnGroupedRecords = (arrayRecords, indexValueGroupBy1,_settingValue1) => {
         // let arrayRecords = returnArrayFromJson(arrayRecordsJson)
         let result = []
         let groupedDataTemp = []
@@ -239,102 +267,90 @@ const Table = forwardRef((props,ref) => {
         for(let i = 0; i < arrayRecords.length; i++) {
             let element = arrayRecords[i][0]
             let value = element.valueDisplayed
-            let filterdRecords = arrayRecords.filter(x => x[0].valueDisplayed === value)
-            filterdRecords.forEach((_,j) => {
-                filterdRecords[j].shift()
-            })
+            let filterdRecords = arrayRecords
+            .filter(x => x[0].valueDisplayed === value)
+            .map(record => record.slice(1));
             groupedDataTemp.push({value: value, cardinality: filterdRecords.length, records: filterdRecords })
+            let elementGrouping = {
+                value: value,
+                valueDisplayed: value + ` (${filterdRecords.length})`,
+                cardinality: filterdRecords.length
+            }
             if(_maxCardinality1 < filterdRecords.length) _maxCardinality1 = filterdRecords.length
-            value += ' (' + filterdRecords.length + ')'
-            result.push([value, filterdRecords])
-            i += filterdRecords.length - 1
+            result.push([elementGrouping, [...filterdRecords]])
+            i += elementGrouping.cardinality - 1
         }
         if(!groupedData.length) setGroupedData(groupedDataTemp)
         setGraph(returnGraph(groupedDataTemp, undefined, _maxCardinality1))
         console.log('groupedDataTemp:', groupedDataTemp)
         console.log('result grouped:', result)
         return result
-    },[
-        groupedData,
-        // maxCardinalityGroup1,
-        // settingGroupBy1,
-        sortAndSetFirstColumnSortedFormatted,
-        returnGraph
-    ])
+    }
 
-    const returnDoubleGroupedRecords = useCallback((arrayRecords,indexValueGroupBy1,indexValueGroupBy2,_value2,_settingValue1,_settingValue2) => {
-        // console.log('arrayRecordsJson:', arrayRecordsJson)
-        // let arrayRecords = returnArrayFromJson(arrayRecordsJson)
+    const returnDoubleGroupedRecords = (arrayRecords,indexValueGroupBy1,indexValueGroupBy2,_value2,_settingValue1,_settingValue2) => {
         let result = []
         let groupedDataTemp = []
         let _maxCardinality1 = 0
+        console.log('arrayRecords', arrayRecords)
 
         arrayRecords = sortAndSetFirstColumnSortedFormatted(arrayRecords,indexValueGroupBy1,_settingValue1)
         for(let i = 0; i < arrayRecords.length; i++) {
             let element = arrayRecords[i][0]
             let value = element.valueDisplayed
-            let filterdRecords = arrayRecords.filter(x => x[0].valueDisplayed === value)
-            filterdRecords.forEach((_,j) => {
-                filterdRecords[j].shift()
-            })
+            let filterdRecords = arrayRecords
+                                    .filter(x => x[0].valueDisplayed === value)
+                                    .map(record => record.slice(1));
+            let elementGrouping = {
+                value: value,
+                valueDisplayed: value + ` (${filterdRecords.length})`,
+                cardinality: filterdRecords.length,
+                cardinalitySubGroup: 0
+            }
             groupedDataTemp.push({value: value, cardinality: filterdRecords.length, subGroupedData: [] })
             if(_maxCardinality1 < filterdRecords.length) _maxCardinality1 = filterdRecords.length
-            value += ' (' + filterdRecords.length + ')'
-            result.push([value, filterdRecords])
+            result.push([elementGrouping, [...filterdRecords]])
             i += filterdRecords.length - 1
         }
         if(indexValueGroupBy2 > indexValueGroupBy1) indexValueGroupBy2 -= 1
         for(let i = 0; i < result.length; i++) {
             let subRecords = result[i][1]
-            // console.log('subRecords:', subRecords)
             subRecords = sortAndSetFirstColumnSortedFormatted(subRecords,indexValueGroupBy2,_settingValue2)
-            // console.log('subRecords:', subRecords)
             result[i][1] = []
             for(let j = 0; j < subRecords.length; j++) {
                 let subElement = subRecords[j][0]
                 let subValue = subElement.valueDisplayed
-                let subFilterdRecords = subRecords.filter(x => x[0] === subValue)
-                subFilterdRecords.forEach((_,k) => {
-                    subFilterdRecords[k].shift()
-                })
+                let subFilterdRecords = subRecords
+                                            .filter(x => x[0].valueDisplayed === subValue)
+                                            .map(record => record.slice(1));
+                let subElementGrouping = {
+                    value: subValue,
+                    valueDisplayed: subValue + ` (${subFilterdRecords.length})`,
+                    cardinality: subFilterdRecords.length
+                }
                 groupedDataTemp[i]['subGroupedData'].push({labelValue: subValue, value: subValue, cardinality: subFilterdRecords.length, records: subFilterdRecords })
-
-                subValue += ' (' + subFilterdRecords.length + ')'
-                result[i][1].push([subValue, subFilterdRecords])
+                result[i][0].cardinalitySubGroup = result[i][0].cardinalitySubGroup + subFilterdRecords.length + 1
+                result[i][1].push([subElementGrouping, [...subFilterdRecords]])
                 j += subFilterdRecords.length - 1
             }
-
         }
         if(!groupedData.length) setGroupedData(groupedDataTemp)
         setGraph(returnGraph(groupedDataTemp,_value2,_maxCardinality1))
         console.log('groupedDataTemp:', groupedDataTemp)
         console.log('result double grouped:', result)
         return result
-    },[
-        groupedData,
-        // settingGroupBy1,
-        // settingGroupBy2,
-        // maxCardinalityGroup1,
-        sortAndSetFirstColumnSortedFormatted,
-        setGraph,
-        returnGraph
-    ])
+    }
 
-    const returnTable = useCallback((_columns, _records, _value1, _settingValue1, _value2, _settingValue2) => {
+    const returnTable = (_columns, _records, _value1, _settingValue1, _value2, _settingValue2) => {
         let table
         let header = []
         let rows = []
+        setNeedsRefresh(false)
         if(groupedData.length) {
             setGroupedData([])
-            // setMaxCardinalityGroup1(undefined)
         }
-        // if(counter > 10) return (<div></div>)
-        // else setCounter(counter+1)
-        // console.log('counter:', counter)
 
         console.log('valueGroupBy1', _value1)
         console.log('valueGroupBy2', _value2)
-        // console.log('columnsData', columnsData)
         console.log('columns', _columns)
         console.log('setting 1', _settingValue1)
         console.log('setting 2', _settingValue2)
@@ -367,22 +383,8 @@ const Table = forwardRef((props,ref) => {
             rows = returnBodyGroupedBy1AndBy2(recordsByValueGroupBy2ByValueGroupBy1,arrayColumns)
         }
         table = [header,rows]
-        // setTableRendered(true)
-        return <table className="table-statistics font-statistics">{table}</table>
-    },[
-        // columns,
-        // records,
-        // valueGroupBy1,
-        // valueGroupBy2,
-        // columnsData,
-        returnBody,
-        returnGroupedRecords,
-        returnDoubleGroupedRecords,
-        groupedData
-        // settingGroupBy1,
-        // settingGroupBy2,
-        // counter
-    ])
+        return <table id="statsTable" className="table-statistics font-statistics">{table}</table>
+    }
 
     const resetTable = (_columns, _records, _value1, _settingValue1, _value2, _settingValue2) => {
         setTable(returnTable(_columns, _records, _value1, _settingValue1, _value2, _settingValue2))
@@ -393,26 +395,6 @@ const Table = forwardRef((props,ref) => {
         resetGroupedData,
         resetTable
     }));
-
-    // useEffect(() => {
-    //     console.log('useEffect!', tableRendered)
-    //     if(!tableRendered && records && columns) {
-    //         console.log('inside Table!')
-    //         setTable(returnTable())
-    //     }
-    //     if(!graphRendered && groupedData.length) {
-    //         setGraph(returnGraph())
-    //     }
-    // }, [
-    //     returnGraph,
-    //     returnTable,
-    //     table,
-    //     groupedData,
-    //     graphRendered,
-    //     tableRendered,
-    //     records,
-    //     columns
-    // ]);
 
     return (<div className="statistics-wrapper">
         {needsRefresh && <p className="p-back">PLEASE REFRESH</p>}

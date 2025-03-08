@@ -1165,7 +1165,7 @@ function ImageComponent(props) {
       {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
       {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
-          <div className={classesCanvasContainer} id="printingAnchor">
+          <div className={classesCanvasContainer} id="printingAnchor" translate="no">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
@@ -1200,7 +1200,7 @@ function ImageComponent(props) {
         <div>
           {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
-        <ButtonImage className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} modeselected={modeSelected} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} modeselected={modeSelected} handleClickButton={handleClickDispatcher}/>
       </div>}
     </div>
   );

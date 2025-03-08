@@ -758,7 +758,7 @@ class Homepage extends React.Component{
 
   render() {
     return (   
-      <div className="App">
+      <div className="App" translate="no">
         <div className={this.getClassesForApp()}>
           {this.routesToStage()}
         </div>

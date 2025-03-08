@@ -10,6 +10,9 @@
   --palette-black: #000000;
   --dot-typing-color: var(--palette-primary)
 }
+.no-translate{
+  translate: no
+}
 .main-mode-color{
   fill:var(--palette-primary);
 }
@@ -217,6 +220,9 @@ td {
 }
 .cell-table {
   padding: 5px;
+}
+.cell-table-horizontal {
+  padding: 0px 5px;
 }
 .invisible-null{
   color: var(--palette-background);
