@@ -28,232 +28,21 @@ function Statistics(props) {
     const [groupBy2DateSetting,setGroupBy2DateSetting] = useState('day');
     const [groupBy1AscendingSetting,setGroupBy1AscendingSetting] = useState('asc');
     const [groupBy2AscendingSetting,setGroupBy2AscendingSetting] = useState('asc');
-    const [tables, setTables] = useState([]);
-    // const [tables, setTables] = useState(['visits','exports']);
     const [table, setTable] = useState('visits');
+    const [tables, setTables] = useState([]);
     const [columnsAvailable, setColumnsAvailable] = useState([]);
-    // const [columnsAvailable, setColumnsAvailable] = useState(['id', 'user_id', 'activity_id', 'color', 'filter', 'image', 'mode', 'size', 'unit', 'type', 'show_average', 'show_coordinates', 'show_date', 'show_distance', 'show_duration', 'show_elevation', 'show_power', 'show_name', 'timestamp', 'timestamp_local', 'timezone_offset', 'timezone_name', 'resolution']);
     const [columnsAvailableData, setColumnsAvailableData] = useState([]);
-    // const [columnsAvailableData, setColumnsAvailableData] = useState({
-    //     "id": {
-    //         "column_name": "id",
-    //         "data_type": "integer",
-    //         "is_nullable": "NO",
-    //         "character_maximum_length": null
-    //     },
-    //     "user_id": {
-    //         "column_name": "user_id",
-    //         "data_type": "integer",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "activity_id": {
-    //         "column_name": "activity_id",
-    //         "data_type": "integer",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "color": {
-    //         "column_name": "color",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "filter": {
-    //         "column_name": "filter",
-    //         "data_type": "integer",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "image": {
-    //         "column_name": "image",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "mode": {
-    //         "column_name": "mode",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "size": {
-    //         "column_name": "size",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "unit": {
-    //         "column_name": "unit",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "type": {
-    //         "column_name": "type",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 255
-    //     },
-    //     "show_average": {
-    //         "column_name": "show_average",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_coordinates": {
-    //         "column_name": "show_coordinates",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_date": {
-    //         "column_name": "show_date",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_distance": {
-    //         "column_name": "show_distance",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_duration": {
-    //         "column_name": "show_duration",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_elevation": {
-    //         "column_name": "show_elevation",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_power": {
-    //         "column_name": "show_power",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "show_name": {
-    //         "column_name": "show_name",
-    //         "data_type": "boolean",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "timestamp": {
-    //         "column_name": "timestamp",
-    //         "data_type": "timestamp without time zone",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "timestamp_local": {
-    //         "column_name": "timestamp_local",
-    //         "data_type": "timestamp without time zone",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     },
-    //     "timezone_offset": {
-    //         "column_name": "timezone_offset",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 20
-    //     },
-    //     "timezone_name": {
-    //         "column_name": "timezone_name",
-    //         "data_type": "character varying",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": 100
-    //     },
-    //     "resolution": {
-    //         "column_name": "resolution",
-    //         "data_type": "integer",
-    //         "is_nullable": "YES",
-    //         "character_maximum_length": null
-    //     }
-    // });
     const [columns, setColumns] = useState([]);
-    // const [columns, setColumns] = useState(['id', 'user_id', 'activity_id', 'color', 'filter', 'image', 'mode', 'size', 'unit', 'type', 'show_average', 'show_coordinates', 'show_date', 'show_distance', 'show_duration', 'show_elevation', 'show_power', 'show_name', 'timestamp', 'timestamp_local', 'timezone_offset', 'timezone_name', 'resolution']);
     const [tableColumns, setTableColumns] = useState([]);
-    // const [tableColumns, setTableColumns] = useState([
-    //     "id",
-    //     "user_id",
-    //     "type",
-    //     "timestamp",
-    //     "timestamp_local",
-    //     "timezone_name"
-    // ]);
+    const [records, setRecords] = useState([]);
+    // const [tables, setTables] = useState(['visits','exports']);
+    // const [columnsAvailable, setColumnsAvailable] = useState(['id', 'user_id', 'activity_id', 'color', 'filter', 'image', 'mode', 'size', 'unit', 'type', 'show_average', 'show_coordinates', 'show_date', 'show_distance', 'show_duration', 'show_elevation', 'show_power', 'show_name', 'timestamp', 'timestamp_local', 'timezone_offset', 'timezone_name', 'resolution']);
+    // const [columnsAvailableData, setColumnsAvailableData] = useState({"id": {"column_name": "id","data_type": "integer","is_nullable": "NO","character_maximum_length": null},"user_id": {"column_name": "user_id","data_type": "integer","is_nullable": "YES","character_maximum_length": null},"activity_id": {"column_name": "activity_id","data_type": "integer","is_nullable": "YES","character_maximum_length": null},"color": {"column_name": "color","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"filter": {"column_name": "filter","data_type": "integer","is_nullable": "YES","character_maximum_length": null},"image": {"column_name": "image","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"mode": {"column_name": "mode","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"size": {"column_name": "size","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"unit": {"column_name": "unit","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"type": {"column_name": "type","data_type": "character varying","is_nullable": "YES","character_maximum_length": 255},"show_average": {"column_name": "show_average","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_coordinates": {"column_name": "show_coordinates","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_date": {"column_name": "show_date","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_distance": {"column_name": "show_distance","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_duration": {"column_name": "show_duration","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_elevation": {"column_name": "show_elevation","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_power": {"column_name": "show_power","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"show_name": {"column_name": "show_name","data_type": "boolean","is_nullable": "YES","character_maximum_length": null},"timestamp": {"column_name": "timestamp","data_type": "timestamp without time zone","is_nullable": "YES","character_maximum_length": null},"timestamp_local": {"column_name": "timestamp_local","data_type": "timestamp without time zone","is_nullable": "YES","character_maximum_length": null},"timezone_offset": {"column_name": "timezone_offset","data_type": "character varying","is_nullable": "YES","character_maximum_length": 20},"timezone_name": {"column_name": "timezone_name","data_type": "character varying","is_nullable": "YES","character_maximum_length": 100},"resolution": {"column_name": "resolution","data_type": "integer","is_nullable": "YES","character_maximum_length": null}});
+    // const [columns, setColumns] = useState(["id","user_id","type_export","timestamp","timestamp_local","timezone_name"]);
+    // const [tableColumns, setTableColumns] = useState(["id","user_id","type_export","timestamp","timestamp_local","timezone_name"]);
+    // const [records, setRecords] = useState([{"id": 9,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Europe/Rome"},{"id": 10,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 11,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 12,"user_id": 2,"type_export": "contour","timestamp": "2024-11-27T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 13,"user_id": 2,"type_export": "contour","timestamp": "2024-11-27T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 1,"user_id": 2,"type_export": "contour","timestamp": "2024-11-26T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Europe/Rome"},{"id": 2,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:00:08.227Z","timestamp_local": "2024-11-27T01:00:08.227Z","timezone_name": "Europe/Rome",},{"id": 3,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:01:29.747Z","timestamp_local": "2024-11-27T01:01:29.747Z","timezone_name": "Europe/Rome",},{"id": 4,"user_id": 2,"type_export": "complete","timestamp": "2024-11-27T00:04:36.140Z","timestamp_local": "2024-11-27T01:04:36.140Z","timezone_name": "Europe/Rome",},{"id": 5,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:05:30.276Z","timestamp_local": "2024-11-27T01:05:30.277Z","timezone_name": "Europe/Rome",},{"id": 6,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:36:31.004Z","timestamp_local": "2024-11-27T01:36:31.004Z","timezone_name": "Europe/Rome",},{"id": 7,"user_id": 2,"type_export": "contour","timestamp": "2024-12-15T09:06:14.732Z","timestamp_local": "2024-12-15T13:06:14.732Z","timezone_name": "Asia/Dubai",},{"id": 8,"user_id": null,"type_export": "contour","timestamp": "2024-12-15T21:34:35.145Z","timestamp_local": "2024-12-16T04:34:35.145Z","timezone_name": "Asia/Bangkok",}]);
     const [isLoading, setIsLoading] = useState(false);
     const [numberRecords, setNumberRecords] = useState(undefined);
-    const [records, setRecords] = useState([]);
-    // const [records, setRecords] = useState([
-    //     {
-    //         "id": 1,
-    //         "user_id": 2,
-    //         "type": "contour",
-    //         "timestamp": "2024-11-26T23:53:40.393Z",
-    //         "timestamp_local": "2024-11-27T00:53:40.393Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 2,
-    //         "user_id": null,
-    //         "type": "contour",
-    //         "timestamp": "2024-11-27T00:00:08.227Z",
-    //         "timestamp_local": "2024-11-27T01:00:08.227Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 3,
-    //         "user_id": null,
-    //         "type": "contour",
-    //         "timestamp": "2024-11-27T00:01:29.747Z",
-    //         "timestamp_local": "2024-11-27T01:01:29.747Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 4,
-    //         "user_id": 2,
-    //         "type": "complete",
-    //         "timestamp": "2024-11-27T00:04:36.140Z",
-    //         "timestamp_local": "2024-11-27T01:04:36.140Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 5,
-    //         "user_id": null,
-    //         "type": "contour",
-    //         "timestamp": "2024-11-27T00:05:30.276Z",
-    //         "timestamp_local": "2024-11-27T01:05:30.277Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 6,
-    //         "user_id": null,
-    //         "type": "contour",
-    //         "timestamp": "2024-11-27T00:36:31.004Z",
-    //         "timestamp_local": "2024-11-27T01:36:31.004Z",
-    //         "timezone_name": "Europe/Rome",
-    //     },
-    //     {
-    //         "id": 7,
-    //         "user_id": 2,
-    //         "type": "contour",
-    //         "timestamp": "2024-12-15T09:06:14.732Z",
-    //         "timestamp_local": "2024-12-15T13:06:14.732Z",
-    //         "timezone_name": "Asia/Dubai",
-    //     },
-    //     {
-    //         "id": 8,
-    //         "user_id": null,
-    //         "type": "contour",
-    //         "timestamp": "2024-12-15T21:34:35.145Z",
-    //         "timestamp_local": "2024-12-16T04:34:35.145Z",
-    //         "timezone_name": "Asia/Bangkok",
-    //     }
-    // ]);
     const [numberVisits, setNumberVisits] = useState(undefined);
     const [numberUsers, setNumberUsers] = useState(undefined);
     const [numberExports, setNumberExports] = useState(undefined);
@@ -378,7 +167,7 @@ function Statistics(props) {
         setTable(data.value)
         if(columns.length && childColumnsRef.current) {
             setColumns([])
-            childColumnsRef.current.resetSelect(); // Call the function exposed by the child
+            childColumnsRef.current.resetSelect();
         }
         resetFilterChild()
         resetGroupBy1Child()
@@ -387,37 +176,46 @@ function Statistics(props) {
         retrieveColumns(data.value)
         setNumberRecords(undefined)
         setRefreshed(false)
+        if(childTableRef.current) childTableRef.current.setRefreshNeeded()
         // setIsLoading(true)
     }
 
     const defineColumn = (data) => {
         console.log('valuesSelected:', data.valuesSelected)
+        if(childTableRef.current) childTableRef.current.setRefreshNeeded()
         setColumns(data.valuesSelected)
     }
     const defineFilter = (data) => {
         console.log('valuesSelected:', data.value)
+        if(childTableRef.current) childTableRef.current.setRefreshNeeded()
         if(data.value === columnFilter) resetFilterChild()
         else setColumnFilter(data.value)
     }
     const defineGroupBy1 = (data) => {
         console.log('valuesSelected:', data.value)
         console.log('columnsAvailable[data.value].data_type.startsWith(\'timestamp\')d:', columnsAvailableData[data.value].data_type.startsWith('timestamp'))
-        if(data.value === valueGroupBy1) resetGroupBy1Child()
-        else {
+        if(data.value === valueGroupBy1) {
+            launchRefreshLight()
+            resetGroupBy1Child()
+        } else {
+            let set1 = columnsAvailableData[data.value].data_type.startsWith('timestamp') ? {isTimestamp: true, timestamp: 'day', ascending: true} : {isTimestamp: false, timestamp: undefined, ascending: true}
+            launchRefreshLight(false,set1)
             setValueGroupBy1(data.value)
-            if(columnsAvailableData[data.value].data_type.startsWith('timestamp')) setSettingGroupBy1({isTimestamp: true, timestamp: 'day', ascending: true})
-            else setSettingGroupBy1({isTimestamp: false, timestamp: undefined, ascending: true})
+            setSettingGroupBy1(set1)
         }
         if(valueGroupBy2) resetGroupBy2Child()
         if(childTableRef.current) childTableRef.current.resetGroupedData()
     }
     const defineGroupBy2 = (data) => {
         console.log('valuesSelected:', data.value)
-        if(data.value === valueGroupBy2) resetGroupBy2Child(columnsAvailableData[data.value].data_type.startsWith('timestamp'))
-        else {
+        if(data.value === valueGroupBy2) {
+            launchRefreshLight(valueGroupBy1,settingGroupBy1,undefined,undefined)
+            resetGroupBy2Child(columnsAvailableData[data.value].data_type.startsWith('timestamp'))
+        } else {
+            let set2 = columnsAvailableData[data.value].data_type.startsWith('timestamp') ? {isTimestamp: true, timestamp: 'day', ascending: true} : {isTimestamp: false, timestamp: undefined, ascending: true}
+            launchRefreshLight(valueGroupBy1,settingGroupBy1,data.value,set2)
             setValueGroupBy2(data.value)
-            if(columnsAvailableData[data.value].data_type.startsWith('timestamp')) setSettingGroupBy2({isTimestamp: true, timestamp: 'day', ascending: true})
-            else setSettingGroupBy2({isTimestamp: false, timestamp: undefined, ascending: true})
+            setSettingGroupBy2(set2)
         }
         if(childTableRef.current) childTableRef.current.resetGroupedData()
     }
@@ -429,10 +227,13 @@ function Statistics(props) {
 
     const processRecords = (rawData) => {
         let result = []
+        console.log('columnsAvailableData:', columnsAvailableData)
         for(let i in rawData) {
             let record = []
             for(let n in rawData[i]) {
                 let valueDisplayed = rawData[i][n] !== null ? String(rawData[i][n]) : rawData[i][n]
+                console.log('n', n)
+                console.log('columnsAvailableData[n]', columnsAvailableData[n])
                 if(columnsAvailableData[n] && columnsAvailableData[n].data_type.startsWith('timestamp')) valueDisplayed = statisticsUtils.getFormattedDateTime(valueDisplayed)
                 record.push({
                     name: n,
@@ -446,8 +247,16 @@ function Statistics(props) {
         }
         return result
     }
+    const launchRefreshLight = (upperValue1,settingValue1,upperValue2,settingValue2) => {
+        if(childTableRef.current) childTableRef.current.resetTable(tableColumns, records, upperValue1, settingValue1, upperValue2, settingValue2)
+    }
 
     const launchRefresh = () => {
+        let processedRecords = records
+        console.log('processedRecords', processedRecords)
+        if(processedRecords.length && !Array.isArray(processedRecords[0])) processedRecords = processRecords(records)
+        setRecords(processedRecords)
+        if(childTableRef.current) childTableRef.current.resetTable(columns, processedRecords, valueGroupBy1, settingGroupBy1, valueGroupBy2, settingGroupBy2)
         let query = queryUtils.getQuerySelectFieldsWithFilter(table,columns,columnFilter,valueMinorFilter,valueMajorFilter,columnsAvailableData,valueGroupBy1,valueGroupBy2)
         dbInteractions.processQuery(query, process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:', res)
@@ -461,11 +270,8 @@ function Statistics(props) {
             let tempTableColumns = [...columns]
             console.log('settingValue1', settingGroupBy1)
             console.log('settingValue2', settingGroupBy2)
-            // if(!columns.includes(valueGroupBy1) && valueGroupBy1 !== undefined) tempTableColumns.push(valueGroupBy1)
-            // if(!columns.includes(valueGroupBy2) && valueGroupBy2 !== undefined) tempTableColumns.push(valueGroupBy2)
             setTableColumns(tempTableColumns)
             setRefreshed(true)
-            // if(childTableRef.current) childTableRef.current.setRefreshNeeded()
             if(childTableRef.current) childTableRef.current.resetTable(tempTableColumns, processedRecords, valueGroupBy1, settingGroupBy1, valueGroupBy2, settingGroupBy2)
         }).catch(e => {
         console.error('error querying columns:', e)
@@ -475,62 +281,111 @@ function Statistics(props) {
     const onChangeMinor = (event) => {
         console.log(event.target.value)
         setValueMinorFilter(event.target.value)
+        if(childTableRef.current) childTableRef.current.setRefreshNeeded()
     }
 
     const onChangeMajor = (event) => {
         console.log(event.target.value)
         setValueMajorFilter(event.target.value)
+        if(childTableRef.current) childTableRef.current.setRefreshNeeded()
     }
 
-    const setGroupBy1SettingHelper = (timestamp,ascending) => {
-        console.log('timestamp', timestamp)
-        let jsonSeting = {
-            isTimestamp : timestamp ? true : false,
-            timestamp : (timestamp ? timestamp : settingGroupBy1.timestamp).toLowerCase(),
-            ascending : ascending !== undefined ? ascending : settingGroupBy1.ascending
-        }
-        setSettingGroupBy1(jsonSeting)
-    }
-    const setGroupBy2SettingHelper = (timestamp,ascending) => {
-        let jsonSeting = {
-            isTimestamp : timestamp ? true : false,
-            timestamp : (timestamp ? timestamp : settingGroupBy2.timestamp).toLowerCase(),
-            ascending : ascending !== undefined ? ascending : settingGroupBy2.ascending
-        }
-        setSettingGroupBy2(jsonSeting)
-    }
+    // const setGroupBy1SettingHelper = (timestamp,ascending) => {
+    //     console.log('timestamp', timestamp)
+    //     let jsonSeting = {
+    //         isTimestamp : timestamp ? true : false,
+    //         timestamp : settingGroupBy1.timestamp,
+    //         ascending : ascending !== undefined ? ascending : settingGroupBy1.ascending
+    //     }
+    //     launchRefreshLight(valueGroupBy1,jsonSeting)
+    //     setSettingGroupBy1(jsonSeting)
+    // }
+    // const setGroupBy2SettingHelper = (timestamp,ascending) => {
+    //     let jsonSeting = {
+    //         isTimestamp : timestamp ? true : false,
+    //         timestamp : settingGroupBy2.timestamp,
+    //         ascending : ascending !== undefined ? ascending : settingGroupBy2.ascending
+    //     }
+    //     launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
+    //     setSettingGroupBy2(jsonSeting)
+    // }
 
     const defineGroupBy1DateSetting = (event) => {
         console.log(event.value)
+        let jsonSeting = {
+            isTimestamp : settingGroupBy2.isTimestamp,
+            timestamp : settingGroupBy2.isTimestamp ? event.value : undefined,
+            ascending : settingGroupBy2.ascending
+        }
         setGroupBy1DateSetting(event.value)
-        setGroupBy1SettingHelper(event.value, undefined)
+        launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
+        setSettingGroupBy2(jsonSeting)
     }
 
     const defineGroupBy2DateSetting = (event) => {
         console.log(event.value)
+        let jsonSeting = {
+            isTimestamp : settingGroupBy2.isTimestamp,
+            timestamp : settingGroupBy2.isTimestamp ? event.value : undefined,
+            ascending : settingGroupBy2.ascending
+        }
         setGroupBy2DateSetting(event.value)
-        setGroupBy2SettingHelper(event.value, undefined)
+        launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
+        setSettingGroupBy2(jsonSeting)
     }
 
     const defineGroupBy1AcendingSetting = (event) => {
         console.log(event.value)
+        let jsonSeting = {
+            isTimestamp : settingGroupBy1.isTimestamp,
+            timestamp : settingGroupBy1.timestamp,
+            ascending : event.value === 'asc'
+        }
         setGroupBy1AscendingSetting(event.value === 'asc')
-        setGroupBy1SettingHelper(undefined, event.value === 'asc')
+        launchRefreshLight(valueGroupBy1,jsonSeting,valueGroupBy2,settingGroupBy2)
+        setSettingGroupBy2(jsonSeting)
     }
 
     const defineGroupBy2AcendingSetting = (event) => {
         console.log(event.value)
+        let jsonSeting = {
+            isTimestamp : settingGroupBy2.isTimestamp,
+            timestamp : settingGroupBy2.timestamp,
+            ascending : event.value === 'asc'
+        }
         setGroupBy2AscendingSetting(event.value === 'asc')
-        setGroupBy2SettingHelper(undefined, event.value === 'asc')
+        launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
+        setSettingGroupBy2(jsonSeting)
     }
 
-
+    const copyTableToClipboard = () => {
+        let table = document.querySelector("#statsTable");
+        let text = "";
+        console.log('table:', table)
+        console.log('table.rows:', table.rows)
+    
+        for (let row of table.rows) {
+            let rowData = [];
+            for (let cell of row.cells) {
+                rowData.push(cell.innerText);
+            }
+            text += rowData.join("\t") + "\n";
+        }
+    
+        navigator.clipboard.writeText(text).then(() => {
+            console.error("Table copied!");
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    }
 
     useEffect(() => {
         retrieveTables()
         retrieveColumns('visits')
         if(!numberVisits) retrieveNumbers()
-    },[numberVisits])
+    },[
+        numberVisits
+    ])
 
     return (<div className="statistics-wrapper">
         {isLoading &&  <div className="translate-loading">
@@ -589,15 +444,15 @@ function Statistics(props) {
                         </div>}
                     </div>
                 </div>
-                <div className="wrapper-refresh" onClick={() => launchRefresh()}>
-                    <Refresh style={refreshStyle}/>
-                    <CopyExcel style={refreshStyle}/>
+                <div className="wrapper-refresh">
+                    <Refresh style={refreshStyle} onClick={() => launchRefresh()}/>
+                    <CopyExcel style={refreshStyle} onClick={() => copyTableToClipboard()}/>
                 </div>
                 <div className="wrapper-margin-dropdown-statistics">
                     <p className="p-back margin-top-29">{numberRecords}</p>
                 </div>
             </div>
-            {refreshed && <div><Table ref={childTableRef} columns={tableColumns} columnsData={columnsAvailableData} records={records} valueGroupBy1={valueGroupBy1} valueGroupBy2={valueGroupBy2} settingGroupBy1={settingGroupBy1} settingGroupBy2={settingGroupBy2}/></div>}
+            {refreshed && <div><Table ref={childTableRef}/></div>}
         </div>}
     </div>)
 }
