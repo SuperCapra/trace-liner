@@ -12,6 +12,7 @@ import {ReactComponent as CopyExcel} from '../assets/images/copyExcel.svg'
 import brandingPalette from '../config/brandingPalette.js';
 import queryUtils from '../utils/queryUtils.js';
 import statisticsUtils from '../utils/statisticsUtils';
+import './Statistics.css'
 
 function Statistics(props) {
     const childColumnsRef = useRef();
@@ -253,10 +254,16 @@ function Statistics(props) {
 
     const launchRefresh = () => {
         let processedRecords = records
+        let processingColumns = columns
         console.log('processedRecords', processedRecords)
         if(processedRecords.length && !Array.isArray(processedRecords[0])) processedRecords = processRecords(records)
         setRecords(processedRecords)
         if(childTableRef.current) childTableRef.current.resetTable(columns, processedRecords, valueGroupBy1, settingGroupBy1, valueGroupBy2, settingGroupBy2)
+        if(!processingColumns.length) {
+            if(childColumnsRef.current) childColumnsRef.current.selectAll()
+            processingColumns = columnsAvailable
+            setColumns(columnsAvailable)
+        }
         let query = queryUtils.getQuerySelectFieldsWithFilter(table,columns,columnFilter,valueMinorFilter,valueMajorFilter,columnsAvailableData,valueGroupBy1,valueGroupBy2)
         dbInteractions.processQuery(query, process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:', res)
@@ -267,12 +274,12 @@ function Statistics(props) {
                 setNumberRecords(res.records.length)
                 setRecords(processedRecords)
             }
-            let tempTableColumns = [...columns]
+            // let tempTableColumns = [...columns]
             console.log('settingValue1', settingGroupBy1)
             console.log('settingValue2', settingGroupBy2)
-            setTableColumns(tempTableColumns)
+            setTableColumns(processingColumns)
             setRefreshed(true)
-            if(childTableRef.current) childTableRef.current.resetTable(tempTableColumns, processedRecords, valueGroupBy1, settingGroupBy1, valueGroupBy2, settingGroupBy2)
+            if(childTableRef.current) childTableRef.current.resetTable(processingColumns, processedRecords, valueGroupBy1, settingGroupBy1, valueGroupBy2, settingGroupBy2)
         }).catch(e => {
         console.error('error querying columns:', e)
       })
@@ -387,7 +394,7 @@ function Statistics(props) {
         numberVisits
     ])
 
-    return (<div className="statistics-wrapper">
+    return (<div className="wrapper-statistics">
         {isLoading &&  <div className="translate-loading">
             <Loader/>
         </div>}
