@@ -4,6 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './assets/fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf';
+import brandingPalette from './config/brandingPalette';
+
+Object.entries(brandingPalette).forEach(([key, value]) => {
+  document.documentElement.style.setProperty(`--palette-${key}`, value);
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

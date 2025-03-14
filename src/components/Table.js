@@ -2,6 +2,7 @@ import '../App.css';
 import React, {useState, forwardRef, useImperativeHandle} from 'react';
 import statisticsUtils from '../utils/statisticsUtils';
 import brandingPalette from '../config/brandingPalette';
+import './Table.css'
 
 const Table = forwardRef((_,ref) => {
 
