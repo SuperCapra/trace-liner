@@ -181,7 +181,10 @@ function ImageComponent(props) {
 
   const pregenerateImagePng = useCallback((bj, anchor) => {
     addOpacity()
-    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
+    html2canvas(anchor, {
+      backgroundColor:null,
+      scale: 10
+    }).then((canvas) => {
       canvas.toBlob(function(blob) {
         setLoadedModal(bj,blob)
       }, 'image/png');
@@ -199,7 +202,10 @@ function ImageComponent(props) {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     logUtils.loggerText('anchor', anchor)
-    html2canvas(anchor, {backgroundColor:null}).then((canvas) => {
+    html2canvas(anchor, {
+      backgroundColor: null,
+      scale: 10
+    }).then((canvas) => {
       canvas.toBlob(function(blob) {
         pregenerateImagePng(blob, anchor)
       }, 'image/jpeg');
@@ -298,12 +304,12 @@ function ImageComponent(props) {
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = 500
-    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
+    let canvasSketchWidth = 500 * 10
+    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500 * 10
     let altitudeStream = activity.altitudeStream
     let distanceStream = activity.distanceStream
-    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
-    let height = canvasSketchHeight
+    let width = Math.min(canvasSketchHeight, canvasSketchWidth) * 10
+    let height = canvasSketchHeight * 10
     setDrawingWidth(width)
     setDrawingHeight(canvasSketchHeight)
     let ctx = canvasSketch.getContext('2d')
@@ -389,10 +395,10 @@ function ImageComponent(props) {
     if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
     // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
     // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = 500
-    let canvasSketchHeight = 500
-    canvasSketchWidth = 500
-    canvasSketchHeight = 500
+    let canvasSketchWidth = 500 * 10
+    let canvasSketchHeight = 500 * 10
+    canvasSketchWidth = 500 * 10
+    canvasSketchHeight = 500 * 10
     let coordinates = activity.coordinates
     let width = Math.min(canvasSketchHeight, canvasSketchWidth)
     let height = Math.min(canvasSketchHeight, canvasSketchWidth)

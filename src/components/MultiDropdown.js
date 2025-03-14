@@ -77,9 +77,13 @@ const MultiDropdown = forwardRef((props,ref) => {
     const resetSelect = () => {
         setTextSelected('(0)')
     }
+    const selectAll = () => {
+        setTextSelected('(' + valuesAvailable.length + ')')
+    }
 
     useImperativeHandle(ref, () => ({
         resetSelect,
+        selectAll
     }));
 
     return(

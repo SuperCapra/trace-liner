@@ -5,6 +5,7 @@ const brandingPalette = {
     tertiary: '#00bbf9',
     quaternary: '#00f5d4',
     background: '#282c34',
+    backgroundcomplementary: '#343028',
     white: '#edf6f9',
     black: '#000000'
 }

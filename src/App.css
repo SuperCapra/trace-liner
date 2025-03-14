@@ -1,13 +1,14 @@
 :root{
-  --palette-ancestral: #9b5de5;
-  --palette-primary: #f15bb5;
+  /* this are fallback color, they are defined into the branding palette file (./config/brandingPalette.js)*/
+  /* --palette-ancestral: #9b5de5;
+  --palette-primary: red;
   --palette-secondary: #fee440;
   --palette-tertiary: #00bbf9;
   --palette-quaternary: #00f5d4;
   --palette-background: #282c34;
-  --palette-background-complementary: #343028;
+  --palette-backgroundcomplementary: #343028;
   --palette-white: #edf6f9;
-  --palette-black: #000000;
+  --palette-black: #000000; */
   --dot-typing-color: var(--palette-primary)
 }
 .no-translate{
@@ -188,44 +189,6 @@ p {
   color: var(--palette-primary);
   justify-content: left;
   font-size: calc(3vw);
-}
-table{
-  margin:20px;
-  border-collapse: collapse;
-  height: 100%;
-}
-tr {
-  height: 100%; /* Make rows take full height */
-}
-td {
-  height: 100%;
-  height: 16.5px
-}
-.font-statistics{
-  font-size: calc(1vw);
-}
-.font-statistics-graph{
-  font-size: calc(0.7vw);
-}
-.table-statistics{
-  color: var(--palette-primary);
-  text-align: left;
-}
-.header-table-statistics{
-  font-weight: 900;
-  text-transform: uppercase;
-}
-.row-table {
-  border-bottom: 1px solid var(--palette-primary);
-}
-.cell-table {
-  padding: 5px;
-}
-.cell-table-horizontal {
-  padding: 0px 5px;
-}
-.invisible-null{
-  color: var(--palette-background);
 }
 .p-uppercase{
   text-transform: uppercase;
@@ -429,7 +392,7 @@ td {
   left: 0;
 }
 .canvas-container-general{
-  background-color: var(--palette-background-complementary);
+  background-color: var(--palette-backgroundcomplementary);
   position: relative;
   min-width: 80vw;
 }
@@ -495,7 +458,7 @@ td {
   z-index: 5;
 }
 #dropDown{
-  z-index: 6;
+  /* z-index: 6; with this the overflow it's not guaranted */
   position: relative;
 }
 #dropdownValues{
@@ -1971,98 +1934,10 @@ td {
 .no-see-selected{
   display: none;
 }
-.see-dropdown-values{
-  display: block;
-}
-.no-see-dropdown-values{
-  display: none;
-}
-.wrapper-margin-dropdown-statistics{
-  margin: 10px;
-}
-.position-dropdown-statistics{
-  display: flex;
-  flex-direction: row;
-}
-.wrapper-statistics{
-  display: flex;
-  flex-direction: column;
-}
 .App-body-statistics{
   display: flex;
   align-items: unset;
   justify-content: flex-start;
-}
-.wrapper-refresh{
-  display: flex;
-  align-items: center;
-  height: 110px;
-}
-.wrapper-refresh:hover{
-  cursor: pointer;
-}
-.wrapper-numbers{
-  display: flex;
-  flex-direction: row;
-}
-.filter-wrapper{
-  display: flex;
-  flex-direction: column;
-}
-.filter-wrapper-constrains{
-  display: flex;
-  flex-direction: row;
-}
-.input-constrain{
-  font-family: 'SourceCodePro';
-  font-size: 16px;
-  padding: 5px 5px;
-  border: 1px solid var(--palette-primary);
-  outline: none;
-  transition: all 0.3s ease;
-  width: 136px;
-  background: none;
-}
-.minor-input{
-  margin: 5px 2.5px 5px 0px;
-}
-.major-input{
-  margin: 5px 0px 5px 2.5px;
-}
-.margin-dropdown{
-  margin: 5px 0px 0px 0px;
-}
-.align-left{
-  text-align: left;
-}
-.graph-wrapper{
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-}
-.bars-wrapper{
-  display: flex;
-  height: 300px;
-  align-items: flex-end;
-}
-.labels-wrapper {
-  display: flex;
-}
-.sub-bar-wrapper{
-  display: flex;
-  flex-direction: column;
-}
-.light-bar:hover{
-  filter: brightness(0.6);
-}
-.primary-fill{
-  fill: var(--palette-primary)
-}
-.secondary-fill{
-  fill: var(--palette-secondary)
-}
-.margin-top-29{
-  margin-top: 29px;
 }
 .center-logo-homepage{
   display: flex;
