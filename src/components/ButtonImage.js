@@ -51,10 +51,7 @@ function ButtonImage(props) {
   const [showCalories, setShowCalories] = useState(true);
   const [textUp, setTextUp] = useState(false);
   const [altitudeVertical, setAltitudeVertical] = useState(false);
-  const [imageLoading, setImageLoading] = useState(false);
   const [enableUploading, setEnableUploading] = useState(true)
-  const [additionalImages, setAdditionalImages] = useState([]);
-  const [additionalImagesInfo, setAdditionalImagesInfo] = useState([]);
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
   const [showMode1, setShowMode1] = useState(modeselected === 'mode1' ? true : false);
@@ -68,7 +65,7 @@ function ButtonImage(props) {
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
   // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
   const colors = []
-  let images = [{
+  const [images,setImages] = useState([{
     photo: image1, 
     alt: 'default-1',
     selected: true,
@@ -96,7 +93,7 @@ function ButtonImage(props) {
     photo: image7, 
     alt: 'default-7',
     selected: false,
-  }]
+  }])
 
   const showModifySetImage = () => {
     setModifyText(false)
@@ -567,8 +564,10 @@ function ButtonImage(props) {
     //     alt: 'activity'
     //   },...images]
     // }
+    console.log('images:', images)
     let htmlImages = []
     for(let element of images) {
+
       let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
       htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
     }
@@ -576,7 +575,8 @@ function ButtonImage(props) {
   }
 
   const resetImage = (alt) => {
-    deselectImage()
+    selectImage(alt)
+    // deselectImage()
     const elementChosen = document.getElementById(alt)
     const elementChosenSelected = document.getElementById(alt + '-selected')
     if(elementChosenSelected) {
@@ -603,18 +603,19 @@ function ButtonImage(props) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageDataURL = e.target.result;
-        returnImages(imageDataURL)
-        let key = additionalImages.length + 1
+        // returnImages(imageDataURL)
+        let tempImages = images
+        let key = images.length + 1
         let alt = 'loaded-images-' + key
-        deselectImage()
-        setImageLoading(true)
-        setAdditionalImagesInfo([...additionalImagesInfo, {
+        let indexSelected = tempImages.findIndex(x => x.selected === true)
+        if(indexSelected !== -1) tempImages[indexSelected].selected = false
+        tempImages.push({
           photo: imageDataURL, 
           alt: alt,
-          selected: true}])
-        setAdditionalImages([...additionalImages, <div key={key + 'wrapper'} className="wrapper-image-selected"><div key={alt + '-selected'} id={alt + '-selected'} className="selected-image see-selected-image"><SelectedImage/></div><img src={imageDataURL} id={alt} key={key} onClick={() => resetImage(alt)} className="image-props" alt={alt} width="40px" height="40px"/></div>])
+          selected: true})
+        setImages(tempImages)
         handleClick({type: 'image', image: imageDataURL})
-        if(additionalImages.length > 2) {
+        if(tempImages.length > 11) {
           setEnableUploading(false)
         }
       };
@@ -622,12 +623,13 @@ function ButtonImage(props) {
     }
   }
 
-  const deselectImage = () => {
-    const selectedImages = document.getElementsByClassName('see-selected-image')
-    for(let selectedImage of selectedImages) {
-      selectedImage.classList.remove('see-selected-image')
-      selectedImage.classList.add('no-see-selected-image')
-    }
+  const selectImage = (alt) => {
+    let tempImages = images
+    let indexSelected = tempImages.findIndex(x => x.selected === true)
+    let indexSelecting = tempImages.findIndex(x => x.alt === alt)
+    if(indexSelected !== -1) tempImages[indexSelected].selected = false
+    if(indexSelecting !== -1) tempImages[indexSelecting].selected = true
+    setImages(tempImages)
   }
 
   const modeController = () => {
@@ -841,13 +843,13 @@ function ButtonImage(props) {
             <PlusSVG onClick={() => plusResolution()}/>
           </div> */}
           <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders">
+            <div className="wrapper-icon-sliders display-flex">
               <ResolutionSVG style={shareStyle}></ResolutionSVG>
             </div> 
             <Slider value={valueResolution} onChange={handleChangeValueResolution} />
           </div>
           <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders">
+            <div className="wrapper-icon-sliders display-flex">
               <FilterSVG style={shareStyle}></FilterSVG>
             </div> 
             <Slider value={valueFilter} onChange={handleChangeValueFilter} />
@@ -857,7 +859,6 @@ function ButtonImage(props) {
           </div>
           <div className="wrapper-sub-buttons wrapper-images image-background">
             {returnImages()}
-            {imageLoading && additionalImages}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
