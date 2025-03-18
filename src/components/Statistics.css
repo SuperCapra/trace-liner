@@ -23,7 +23,7 @@
     flex-direction: row;
 }
 .input-constrain{
-    font-family: 'SourceCodePro';
+    font-family: var(--font);
     font-size: 16px;
     padding: 5px 5px;
     border: 1px solid var(--palette-primary);
