@@ -10,12 +10,18 @@
   --palette-white: #edf6f9;
   --palette-black: #000000; */
   --dot-typing-color: var(--palette-primary);
-  --font: 'SourceCodePro'
+  --font: 'OffBit'
 }
 @font-face {
   font-family: 'SourceCodePro';
   src: local('SourceCodePro'),
    url('./assets/fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf') format('truetype');
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'OffBit';
+  src: local('OffBit'),
+   url('./assets/fonts/OffBit/OffBit-Bold.ttf') format('truetype');
   font-weight: bold;
 }
 .no-translate{
@@ -236,7 +242,6 @@ p {
 .button-login {
   padding: 1vw;
   background-color: var(--palette-primary);
-  border-radius: 5px;
   margin: 0 15%;
   width: 60%;
   max-width: 500px;
@@ -293,13 +298,15 @@ p {
   font-family: var(--font);
   font-size: calc(4vmin);
 }
+.button-border {
+  border-radius: 0px 10px 0px 0px;
+}
 .button-activity {
   text-align: left;
   width: 90vmin;
   min-height: 6.5vh;
   margin: 1.5vw;
   background-color: var(--palette-secondary);
-  border-radius: 5px;
 }
 .button-activity:active{
   filter: brightness(0.6);
@@ -1010,12 +1017,14 @@ p {
  display: flex;
  justify-content: center;
 }
+.modal-buttons-single-wrapper{
+  padding: 2px 7.5px;
+}
 .modal-buttons-single{
   background-color: var(--palette-background);
   color: var(--palette-secondary);
-  border-radius: 5px;
+  /* border-radius: 5px; */
   margin: 5px 5px;
-  padding: 2px 7.5px;
 }
 .modal-buttons-p{
   font-size: calc(3vw);

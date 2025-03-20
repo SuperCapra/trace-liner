@@ -319,13 +319,13 @@ class Homepage extends React.Component{
               <div className="margin-title">
                 <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
               </div>
-              <div className="button-login justify-center-column" onClick={() => {
+              <div className="button-login button-border justify-center-column" onClick={() => {
                 window.location.href = stravaAuthorizeUrl
               }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
               <div className="margin-or">
                 <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
               </div>
-              <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
+              <div className="button-login button-border justify-center-column" onClick={() => this.loadGPX()}>
                 <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
                 <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
               </div>
@@ -341,7 +341,7 @@ class Homepage extends React.Component{
           fill: brandingPalette.background
         }
         let activitiesButton = activities.map(element => 
-          <div key={element.id} className="button-activity justify-center-column" onClick={() => {
+          <div key={element.id} className="button-activity button-border justify-center-column" onClick={() => {
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>

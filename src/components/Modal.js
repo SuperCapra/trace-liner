@@ -131,8 +131,12 @@ const Modal = forwardRef((props,ref) => {
                     <p className="modal-p p-back">{vocabulary[language]['MODAL_TEXT']}</p>
                 </div>
                 {!showButtons && <div className="modal-buttons">
-                    <div className="modal-buttons-single modal-buttons-p" onClick={() => share('jpeg')}>{vocabulary[language]['MODAL_COMPLETE']}</div>
-                    <div className="modal-buttons-single modal-buttons-p" onClick={() => share('png')}>{vocabulary[language]['MODAL_CONTOUR']}</div>
+                    <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
+                      <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_COMPLETE']}</div>
+                    </div>
+                    <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
+                      <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_CONTOUR']}</div>
+                    </div>
                 </div>}
             </div>}
           </div>
