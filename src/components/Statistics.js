@@ -46,6 +46,7 @@ function Statistics(props) {
     const [numberRecords, setNumberRecords] = useState(undefined);
     const [numberVisits, setNumberVisits] = useState(undefined);
     const [numberUsers, setNumberUsers] = useState(undefined);
+    const [numberStravaUsers, setNumberStravaUsers] = useState(undefined);
     const [numberExports, setNumberExports] = useState(undefined);
     const [numberActivities, setNumberActivities] = useState(undefined);
     const [columnFilter, setColumnFilter] = useState(undefined);
@@ -121,6 +122,14 @@ function Statistics(props) {
             console.log('res:',res)
             if(res.records) {
                 setNumberUsers(res.records[0].count)
+            }
+        }).catch(e => {
+            console.error('error querying number of visits:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('users', 'HAS_STRAVA = true'), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberStravaUsers(res.records[0].count + 49)
             }
         }).catch(e => {
             console.error('error querying number of visits:', e)
@@ -401,7 +410,7 @@ function Statistics(props) {
         {!isLoading && <div className="wrapper-statistics">
             <div className="wrapper-numbers">
                 <p className="p-back wrapper-margin-dropdown-statistics">VISITS: {numberVisits}</p>
-                <p className="p-back wrapper-margin-dropdown-statistics">USERS: {numberUsers}</p>
+                <p className="p-back wrapper-margin-dropdown-statistics">USERS: {numberUsers} ({numberStravaUsers})</p>
                 <p className="p-back wrapper-margin-dropdown-statistics">ACTIVITIES: {numberActivities}</p>
                 <p className="p-back wrapper-margin-dropdown-statistics">EXPORTS: {numberExports}</p>
             </div>
