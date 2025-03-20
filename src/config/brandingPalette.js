@@ -1,5 +1,6 @@
 const brandingPalette = {
     ancestral: '#9b5de5',
+    // primary: '#DEFF7A',
     primary: '#f15bb5',
     secondary: '#fee440',
     tertiary: '#00bbf9',

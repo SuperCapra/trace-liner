@@ -9,7 +9,14 @@
   --palette-backgroundcomplementary: #343028;
   --palette-white: #edf6f9;
   --palette-black: #000000; */
-  --dot-typing-color: var(--palette-primary)
+  --dot-typing-color: var(--palette-primary);
+  --font: 'SourceCodePro'
+}
+@font-face {
+  font-family: 'SourceCodePro';
+  src: local('SourceCodePro'),
+   url('./assets/fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf') format('truetype');
+  font-weight: bold;
 }
 .no-translate{
   translate: no
@@ -83,12 +90,6 @@
 .scale-mode{
   transform: scale(2.6);
 }
-@font-face {
-  font-family: 'SourceCodePro';
-  src: local('SourceCodePro'),
-   url('./assets/fonts/SourceCodePro/SourceCodePro-VariableFont_wght.ttf') format('truetype');
-  font-weight: bold;
-}
 /* iframe{
   display: none;
 } */
@@ -102,6 +103,9 @@ p {
 .wrapper-icon-sliders{
   height: 45px;
 }
+.display-flex{
+  display: flex;
+}
 .code-inactive {
   background: var(--palette-primary); 
   color: var(--palette-background);
@@ -110,7 +114,7 @@ p {
   background-color: var(--palette-background);
   font-size: calc(4vmin);
   text-align: center;
-  font-family: 'SourceCodePro';
+  font-family: var(--font);
 }
 .App-logo {
   height: 40vmin;
@@ -286,7 +290,7 @@ p {
   color: var(--palette-primary);
 }
 .p-login-or-size{
-  font-family: 'SourceCodePro';
+  font-family: var(--font);
   font-size: calc(4vmin);
 }
 .button-activity {
@@ -306,14 +310,14 @@ p {
 }
 .title-activity {
   padding: 1vh 3vw 0.25vh 3vw;
-  font-family: 'SourceCodePro';
+  font-family: var(--font);
   font-size: calc(3.5vmin);
   font-weight: bold;
   color: var(--palette-background);
 }
 .subtitle-activity {
   padding: 0vh 3vw 1vh 3vw;
-  font-family: 'SourceCodePro';
+  font-family: var(--font);
   font-size: calc(2.5vmin);
   color: var(--palette-background);
 }
@@ -913,7 +917,7 @@ p {
 .p-select{
   font-size: calc(5vw);
   color: var(--palette-primary);
-  font-family: 'SourceCodePro';
+  font-family: var(--font);
 }
 .blend-text{
   color: var(--palette-primary)
@@ -1924,6 +1928,12 @@ p {
 }
 .see-selected-image{
   display: block;
+}
+@media print, screen and (min-width: 1200px) {
+  .position-0{
+    position: absolute;
+    top: 0.5;
+  }
 }
 .no-see-selected-image{
   display: none;

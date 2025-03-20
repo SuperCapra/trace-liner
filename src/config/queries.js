@@ -5,6 +5,9 @@ const queries = {
     },
     getQueryCount(table) {
         return "SELECT count(id) FROM " + table
+    },
+    getQueryCountFilter(table,filter) {
+        return "SELECT count(id) FROM " + table + " WHERE " + filter
     }
 }
 
