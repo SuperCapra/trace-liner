@@ -234,7 +234,7 @@ p {
   margin: 20px;
 }
 .margin-title{
-  margin: 30px;
+  margin: 40px 30px;
 }
 .margin-x{
   margin: 20px;
@@ -242,9 +242,16 @@ p {
 .button-login {
   padding: 1vw;
   background-color: var(--palette-primary);
-  margin: 0 15%;
+  margin: 2% 2%;
   width: 60%;
-  max-width: 500px;
+  max-width: 400px;
+}
+.wrapper-buttons-login{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center
 }
 .button-login:active{
   filter: brightness(0.6);
@@ -299,7 +306,7 @@ p {
   font-size: calc(4vmin);
 }
 .button-border {
-  border-radius: 0px 10px 0px 0px;
+  border-radius: 0px 0px 0px 0px;
 }
 .button-activity {
   text-align: left;
@@ -333,6 +340,7 @@ p {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+
 }
 .wrapper-sub-buttons{
   display:flex;
@@ -1049,6 +1057,9 @@ p {
   background-color: rgba(0, 0, 0, 0.5); /* Optional: Dim background */
   z-index: 10; /* Ensure it appears on top */
 }
+.width-logo-extended{
+  width: 80vw;
+}
 @media print, screen and (max-width: 450px) {
   .text-title{
     width: 72vw !important;
@@ -1084,7 +1095,7 @@ p {
   }
   .button-login {
     padding: 0.75vw;
-    margin: 0 22.5%;
+    /* margin: 20px 22.5%; */
   }
   .p-login{
     padding: 0.75vh 2.25vw 0.75vh 2.25vw;
@@ -1313,7 +1324,7 @@ p {
   }
   .button-login {
     padding: 0.5vw;
-    margin: 0 25%;
+    /* margin: 20px 25%; */
   }
   .p-login{
     padding: 0.5vh 1.5vw 0.5vh 1.5vw;

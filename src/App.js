@@ -4,12 +4,14 @@ import utils from './utils/utils.js'
 import logUtils from './utils/logUtils.js'
 import apiUtils from './utils/apiUtils.js';
 import Loader from './components/Loader.js'
+import LoaderLogo from './components/LoaderLogo.js'
 import ImageComponent from './components/ImageComponent.js'
-import Creator from './components/Creator.js'
+// import Creator from './components/Creator.js'
 import Statistics from './components/Statistics.js';
 // import Dropdown from './components/Dropdown.js'
 import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
+import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
 import brandingPalette from './config/brandingPalette';
 import {vocabulary, languages} from './config/vocabulary';
 import clubs from './config/clubs'
@@ -303,7 +305,7 @@ class Homepage extends React.Component{
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
         <div className={mainWrapperClasses}>
-          <Loader/>
+          <LoaderLogo/>
         </div>
       )
     } else {
@@ -317,23 +319,28 @@ class Homepage extends React.Component{
             </div> */}
             <div className={mainWrapperClasses}>
               <div className="margin-title">
-                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
+                <LogoExtendedSVG className="text-title"></LogoExtendedSVG>
               </div>
-              <div className="button-login button-border justify-center-column" onClick={() => {
-                window.location.href = stravaAuthorizeUrl
-              }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
-              <div className="margin-or">
-                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
+              <div className="wrapper-buttons-login">
+                <div className="button-login button-border justify-center-column" onClick={() => {
+                  window.location.href = stravaAuthorizeUrl
+                }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
+                {/* <div className="margin-or">
+                  <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
+                </div> */}
+                <div className="button-login button-border justify-center-column" onClick={() => this.loadGPX()}>
+                  <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
+                  <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+                </div>
               </div>
-              <div className="button-login button-border justify-center-column" onClick={() => this.loadGPX()}>
-                <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
-                <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-              </div>
-              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)}
+              {/* {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)} */}
             </div>
-            <div className="creator-justify-center">
+            {/* <div className="creator-justify-center">
               <Creator language={this.props.language} classes="creator creator-homepage"/>
-            </div>
+            </div> */}
+                    <div className={mainWrapperClasses}>
+          <LoaderLogo/>
+        </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -375,7 +382,7 @@ class Homepage extends React.Component{
                 <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
-            <Creator language={this.props.language} classes="creator"/>
+            {/* <Creator language={this.props.language} classes="creator"/> */}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}/>
             </div>
@@ -388,9 +395,9 @@ class Homepage extends React.Component{
               <div className="image-creator-wrapper-1">
                 <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
               </div>
-              <div className="image-creator-wrapper-2">
+              {/* <div className="image-creator-wrapper-2">
                 <Creator language={this.props.language} classes="creator creator-800"/>
-              </div>
+              </div> */}
             </div>
           </div>
         )

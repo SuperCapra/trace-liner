@@ -2,18 +2,18 @@
 <svg
    id="Livello_1"
    data-name="Livello 1"
-   viewBox="0 0 100 100"
+   viewBox="0 0 815 100"
    version="1.1">
   <defs
      id="defs134">
     <style
        id="style132">
       .cls-1 {
-        fill: #E4FF3C;
+        fill: #d2d627;
       }
 
       .cls-2 {
-        fill: #645BC2;
+        fill: #5c5aa0;
       }
     </style>
   </defs>
@@ -26,10 +26,19 @@
      id="rect136"
      x="0"
      y="0"
-     style="stroke-width:0.912962" />
+     style="stroke-width:0.912962;fill:#645bc2;fill-opacity:1" />
   <path
      class="cls-1"
      d="m 35.87368,42.93456 c 2.084814,0 3.778443,0.651222 5.080887,1.953665 1.302443,1.301313 1.953665,2.994942 1.953665,5.078626 v 7.033421 H 14.808823 V 42.93456 Z m 14.066842,0 c -2.084814,0 -3.776181,-0.651222 -5.078625,-1.953665 -1.302443,-1.302444 -1.953665,-2.996072 -1.953665,-5.079756 V 14.868297 H 56.972813 V 42.93456 Z m 7.032291,14.065712 V 85.131695 H 42.908232 V 57.000272 Z m 28.218355,-7.033421 c 0,2.083683 -0.651221,3.777312 -1.953665,5.079756 -1.302443,1.302443 -2.996072,1.953665 -5.078625,1.953665 H 56.972813 V 42.93456 h 28.218355 z"
      id="path138"
-     style="stroke-width:0.912962" />
+     style="stroke-width:0.912962;fill:#e4ff3c;fill-opacity:1" />
+  <text
+     style="font-weight:bold;font-size:128.571px;line-height:1.02;font-family:'Arial Black';-inkscape-font-specification:'Arial Black,  Bold';text-align:justify;fill:#e4ff3c;fill-opacity:1;stroke-width:10.8736;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+     x="125.92858"
+     y="94.999702"
+     id="text359"><tspan
+       id="tspan357"
+       x="125.92858"
+       y="94.999702"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:128.571px;font-family:OffBit;-inkscape-font-specification:'OffBit Bold';fill:#e4ff3c;fill-opacity:1;stroke-width:10.8736">TRACELINER</tspan></text>
 </svg>
