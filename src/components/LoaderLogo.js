@@ -1,11 +1,16 @@
 import '../App.css';
 import React from 'react';
-import {ReactComponent as LogoSVG} from '../assets/images/logo.svg'
+import {ReactComponent as LogoRotatingSVG} from '../assets/images/logoRotating.svg'
 import './LoaderLogo.css'
 
 function LoaderLogo(props) {
+
+    const {position} = props
+
+    const classes = position === 'homepage' ? 'logo-animation-homepage logo-width-homepage' : 'logo-animation logo-width'
+
     return(
-        <LogoSVG width="10%" className="logo-animations"></LogoSVG>
+        <LogoRotatingSVG className={classes}></LogoRotatingSVG>
     )
 }
 

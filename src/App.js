@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import utils from './utils/utils.js'
 import logUtils from './utils/logUtils.js'
 import apiUtils from './utils/apiUtils.js';
-import Loader from './components/Loader.js'
 import LoaderLogo from './components/LoaderLogo.js'
 import ImageComponent from './components/ImageComponent.js'
 // import Creator from './components/Creator.js'
@@ -12,6 +11,8 @@ import Statistics from './components/Statistics.js';
 import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
 import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
+import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
+import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
 import brandingPalette from './config/brandingPalette';
 import {vocabulary, languages} from './config/vocabulary';
 import clubs from './config/clubs'
@@ -318,29 +319,34 @@ class Homepage extends React.Component{
               </div>
             </div> */}
             <div className={mainWrapperClasses}>
-              <div className="margin-title">
-                <LogoExtendedSVG className="text-title"></LogoExtendedSVG>
+              <div className="wrapper-title-logo margin-title-logo">
+                <LogoExtendedSVG className="width-title-logo"></LogoExtendedSVG>
               </div>
               <div className="wrapper-buttons-login">
-                <div className="button-login button-border justify-center-column" onClick={() => {
+                <div className="wrapper-button-login" onClick={() => {
                   window.location.href = stravaAuthorizeUrl
-                }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
-                {/* <div className="margin-or">
-                  <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
-                </div> */}
+                }}>
+                  <ButtonStravaSVG className="homepage-button"></ButtonStravaSVG>
+                </div>
+                <div className="wrapper-button-login" onClick={() => this.loadGPX()}>
+                  <ButtonGpxSVG className="homepage-button"></ButtonGpxSVG>
+                  <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+                </div>
+                {/* <div className="button-login button-border justify-center-column" onClick={() => {
+                  window.location.href = stravaAuthorizeUrl
+                }}>
+                  <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p>
+
+                </div>
                 <div className="button-login button-border justify-center-column" onClick={() => this.loadGPX()}>
                   <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
                   <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-                </div>
+                </div> */}
               </div>
-              {/* {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)} */}
             </div>
-            {/* <div className="creator-justify-center">
-              <Creator language={this.props.language} classes="creator creator-homepage"/>
-            </div> */}
-                    <div className={mainWrapperClasses}>
-          <LoaderLogo/>
-        </div>
+            <div className={mainWrapperClasses}>
+                <LoaderLogo position="homepage"/>
+            </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -759,8 +765,9 @@ class Homepage extends React.Component{
 
   getClassesForApp() {
     let urlCurrent = window.location.href
-    if(urlCurrent.includes('/statistics')) return 'App-body-statistics'
-    else return 'App-body'
+    let isMobile = utils.isMobile()
+    let classesReturning = urlCurrent.includes('/statistics') ? 'App-body-statistics' : (isMobile ? 'App-body app-body-background-mobile' : 'App-body app-body-background-desktop')
+    return classesReturning
   }
 
   render() {

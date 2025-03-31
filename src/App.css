@@ -57,10 +57,11 @@
   width: 50vw;
 }
 .opacity-deactivated{
-  opacity: 0.3
+  filter: brightness(0.3)
 }
 .mode-cursor-deacitaved:hover{
   cursor: default !important
+
 }
 .mode-cursor-deacitaved:active{
   cursor: default !important;
@@ -89,6 +90,7 @@
 }
 .wrapper-mode-selector:hover{
   cursor: pointer;
+  filter: brightness(0.8);
 }
 .wrapper-mode-selector:active{
   filter: brightness(0.6);
@@ -134,6 +136,14 @@ p {
   align-items: center;
   justify-content: center;
   color: var(--palette-white);
+}
+.app-body-background-mobile {
+  background-image: url('./assets/images/background1.jpg');
+  background-size: cover;
+}
+.app-body-background-desktop {
+  background-image: url('./assets/images/background1.jpg');
+  background-size: cover;
 }
 .App-link {
   color: var(--palette-quaternary);
@@ -233,17 +243,41 @@ p {
 .margin-or{
   margin: 20px;
 }
-.margin-title{
+.wrapper-title-logo{
+  min-width: 100%;
+}
+.margin-title-logo{
   margin: 40px 30px;
+}
+.width-title-logo{
+  width:67%
 }
 .margin-x{
   margin: 20px;
+}
+.wrapper-button-login{
+  min-width: 100%;
+  padding: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.homepage-button{
+  width: 55%;
+}
+.homepage-button:hover{
+  cursor: pointer;
+  filter: brightness(0.8);
+}
+.homepage-button:active{
+  cursor: pointer;
+  filter: brightness(0.6);
 }
 .button-login {
   padding: 1vw;
   background-color: var(--palette-primary);
   margin: 2% 2%;
-  width: 60%;
+  width: 55%;
   max-width: 400px;
 }
 .wrapper-buttons-login{
@@ -306,7 +340,7 @@ p {
   font-size: calc(4vmin);
 }
 .button-border {
-  border-radius: 0px 0px 0px 0px;
+  border-radius: 15px;
 }
 .button-activity {
   text-align: left;
@@ -1039,7 +1073,7 @@ p {
 }
 .modal-buttons-single:hover{
   cursor: pointer;
-  filter: brightness(0.6);
+  filter: brightness(0.8);
 }
 .modal-buttons-ahead{
   background-color: var(--palette-primary);
@@ -1295,6 +1329,12 @@ p {
   }
 }
 @media print, screen and (min-width: 600px) {
+  .homepage-button{
+    width: 310px;
+  }
+  .width-title-logo{
+    width: 390px;
+  }
   .creator{
     font-size: calc(1vmin);
   }
