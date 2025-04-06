@@ -48,7 +48,7 @@ const Modal = forwardRef((props,ref) => {
             }).catch(error => {
               if(String(error).includes('NotAllowedError')) downloadImage(title, b, type)
               console.error('Error sharing image:', error)
-              insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,JSON.stringify(error),JSON.stringify(infoLog),'modal','navigator.share','exception')})
+              insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})
             });
           } catch (error) {
             console.error('Error sharing image:', error)
