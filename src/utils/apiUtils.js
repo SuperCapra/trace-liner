@@ -82,6 +82,7 @@ const apiUtils = {
             has_exported : false,
             type_export : null,
             is_mobile : utils.isMobile(),
+            user_agent : navigator.userAgent
         }
         result = {...result,...this.getTimestampFields()}
         return result
