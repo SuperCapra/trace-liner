@@ -176,7 +176,7 @@ const apiUtils = {
     getErrorLogsBody(visitId,message,info,component,f,t) {
         let result = {
             visit_id : visitId,
-            message : message,
+            message : String(message),
             info: info,
             component : component,
             function : f,
