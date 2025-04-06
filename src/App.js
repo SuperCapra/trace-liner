@@ -228,7 +228,7 @@ class Homepage extends React.Component{
       }
     } catch (e) {
       console.error('Excpetion processGPX:', e)
-      this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,JSON.stringify(e),undefined,'app','processGPX','exception')})
+      this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','processGPX','exception')})
     }
   }
 
