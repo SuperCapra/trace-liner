@@ -182,49 +182,70 @@ function ImageComponent(props) {
     dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
   }
 
-  const setLoadedModal = (bj,bp) => {
+  const setLoadedModal = useCallback((bj,bp) => {
     console.log('bj', bp)
     console.log('bj', bj)
     if(!bj && !bp) insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception: no blob from ImageComponent',JSON.stringify(infoLog),'Imagecomponent','setLoadedModal','exception')})
     if(modaldRef.current) modaldRef.current.loaded(bj,bp)
-  }
+  },[
+    infoLog,
+    visitId
+  ])
 
-  const pregenerateImagePng = useCallback((bj, anchor) => {
+  const pregenerateImagePng = useCallback((bj, anchor, scale) => {
     addOpacity()
     html2canvas(anchor, {
       backgroundColor:null,
-      scale: 10
+      scale: scale ? scale : 10
     }).then((canvas) => {
       canvas.toBlob(function(blob) {
-        setLoadedModal(bj,blob)
+        if(!blob) {
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Excpetion: blob null from canvas.toBlob for png',JSON.stringify(infoLog),'Imagecomponent','pregenerateImagePng','exception')})
+          pregenerateImagePng(bj, anchor, 2)
+        } else {
+          setLoadedModal(bj,blob)
+        }
       }, 'image/png');
     })
     .catch((e) => {
       console.error('Error:', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'Imagecomponent','pregenerateImagePng','exception')})
     })
     .finally(() => {
       removeOpacity()
       addRoundCorner()
     })
-  },[])
+  },[
+    infoLog,
+    visitId,
+    setLoadedModal
+  ])
 
-  const pregenerateImageJpeg = useCallback(() => {
+  const pregenerateImageJpeg = useCallback((scale) => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     logUtils.loggerText('anchor', anchor)
     html2canvas(anchor, {
       backgroundColor: null,
-      scale: 10
+      scale: scale ? scale : 10
     }).then((canvas) => {
       canvas.toBlob(function(blob) {
-        pregenerateImagePng(blob, anchor)
+        if(!blob) {
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Excpetion: blob null from canvas.toBlob for jpeg',JSON.stringify(infoLog),'Imagecomponent','pregenerateImageJpeg','exception')})
+          pregenerateImageJpeg(2)
+        } else {
+          pregenerateImagePng(blob, anchor, scale ? scale : undefined)
+        }
       }, 'image/jpeg');
     })
     .catch((e) => {
       console.error('Error:', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'Imagecomponent','pregenerateImageJpeg','exception')})
     })
   },[
-    pregenerateImagePng
+    pregenerateImagePng,
+    infoLog,
+    visitId
   ])
 
   const handleDownloadShare = (type) => {
