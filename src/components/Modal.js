@@ -52,6 +52,7 @@ const Modal = forwardRef((props,ref) => {
             });
           } catch (error) {
             console.error('Error sharing image:', error)
+            insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})
           }
         } else {
           downloadImage(title, b, type)
@@ -67,6 +68,7 @@ const Modal = forwardRef((props,ref) => {
           insertExport({body: apiUtils.getExportBody(infoLog,activityId,userId)})
         } catch (e) {
           console.error('Error:', e)
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'modal','navigator.share','exception')})
         }
         handleCloseModal()
       }
@@ -84,6 +86,7 @@ const Modal = forwardRef((props,ref) => {
         URL.revokeObjectURL(url); // Clean up URL object after use
       } catch (error) {
         console.error('Error downloading image:', error);
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})
       } finally {
           handleCloseModal()
       }
