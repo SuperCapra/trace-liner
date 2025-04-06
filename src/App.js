@@ -240,6 +240,7 @@ class Homepage extends React.Component{
   }
 
   routesToStage() {
+    console.log('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     if(urlCurrent.includes('/statistics')) return <Statistics/>

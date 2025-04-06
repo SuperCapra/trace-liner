@@ -109,7 +109,8 @@ const tableDefinitions = `
         timestamp TIMESTAMP,
         timestamp_local TIMESTAMP,
         timezone_offset VARCHAR(20),
-        timezone_name VARCHAR(100)
+        timezone_name VARCHAR(100),
+        user_agent VARCHAR(255)
     );
 
     CREATE TABLE IF NOT EXISTS logs (
