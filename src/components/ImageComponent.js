@@ -11,6 +11,8 @@ import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
 import Selector from './Selector.js';
+import dbInteractions from '../services/dbInteractions.js';
+import apiUtils from '../utils/apiUtils.js';
 
 function ImageComponent(props) {
 
@@ -174,47 +176,76 @@ function ImageComponent(props) {
   const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
   const classMode5 = classesForMode5()
   const classWrapperMode5 = ratio === '1:1' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
-  
-  const setLoadedModal = (bj,bp) => {
-    if(modaldRef.current) modaldRef.current.loaded(bj,bp)
+
+  const insertLogsModal = async (data) => {
+    let body = data.body
+    dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
   }
 
-  const pregenerateImagePng = useCallback((bj, anchor) => {
+  const setLoadedModal = useCallback((bj,bp) => {
+    console.log('bj', bp)
+    console.log('bj', bj)
+    if(!bj && !bp) insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception: no blob from ImageComponent',JSON.stringify(infoLog),'Imagecomponent','setLoadedModal','exception')})
+    if(modaldRef.current) modaldRef.current.loaded(bj,bp)
+  },[
+    infoLog,
+    visitId
+  ])
+
+  const pregenerateImagePng = useCallback((bj, anchor, scale) => {
     addOpacity()
     html2canvas(anchor, {
       backgroundColor:null,
-      scale: 10
+      scale: scale ? scale : 10
     }).then((canvas) => {
       canvas.toBlob(function(blob) {
-        setLoadedModal(bj,blob)
+        if(!blob) {
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Excpetion: blob null from canvas.toBlob for png',JSON.stringify(infoLog),'Imagecomponent','pregenerateImagePng','exception')})
+          pregenerateImagePng(bj, anchor, 2)
+        } else {
+          setLoadedModal(bj,blob)
+        }
       }, 'image/png');
     })
     .catch((e) => {
       console.error('Error:', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'Imagecomponent','pregenerateImagePng','exception')})
     })
     .finally(() => {
       removeOpacity()
       addRoundCorner()
     })
-  },[])
+  },[
+    infoLog,
+    visitId,
+    setLoadedModal
+  ])
 
-  const pregenerateImageJpeg = useCallback(() => {
+  const pregenerateImageJpeg = useCallback((scale) => {
     let anchor = document.getElementById('printingAnchor')
     removeRoundCorner()
     logUtils.loggerText('anchor', anchor)
     html2canvas(anchor, {
       backgroundColor: null,
-      scale: 10
+      scale: scale ? scale : 10
     }).then((canvas) => {
       canvas.toBlob(function(blob) {
-        pregenerateImagePng(blob, anchor)
+        if(!blob) {
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Excpetion: blob null from canvas.toBlob for jpeg',JSON.stringify(infoLog),'Imagecomponent','pregenerateImageJpeg','exception')})
+          pregenerateImageJpeg(2)
+        } else {
+          pregenerateImagePng(blob, anchor, scale ? scale : undefined)
+        }
       }, 'image/jpeg');
     })
     .catch((e) => {
       console.error('Error:', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'Imagecomponent','pregenerateImageJpeg','exception')})
     })
   },[
-    pregenerateImagePng
+    pregenerateImagePng,
+    infoLog,
+    visitId
   ])
 
   const handleDownloadShare = (type) => {
