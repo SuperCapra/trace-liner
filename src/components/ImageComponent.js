@@ -326,206 +326,220 @@ function ImageComponent(props) {
   }
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
-    let canvasSketch = document.getElementById('canvasSketch')
-    if(!canvasSketch) {
-      setTimeout(() => drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled), 100)
-      return
-    }
-    if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
-      (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
-    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = 500 * 10
-    let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500 * 10
-    let altitudeStream = activity.altitudeStream
-    let distanceStream = activity.distanceStream
-    let width = Math.min(canvasSketchHeight, canvasSketchWidth) * 10
-    let height = canvasSketchHeight * 10
-    setDrawingWidth(width)
-    setDrawingHeight(canvasSketchHeight)
-    let ctx = canvasSketch.getContext('2d')
-    // Setup line properties to avoid spikes
-    ctx.lineJoin = 'round';
-    ctx.lineCap = 'round';
-
-    let maxAltitude = Math.max(...altitudeStream)
-    let minAltitude = Math.min(...altitudeStream)
-
-    let altitudeGap = maxAltitude - minAltitude
-
-    logUtils.loggerText('width:', width)
-    logUtils.loggerText('height:', height)
-    logUtils.loggerText('altitudeStream:', altitudeStream)
-    logUtils.loggerText('maxAltitude:', maxAltitude)
-    logUtils.loggerText('minAltitude:', minAltitude)
-    logUtils.loggerText('altitudeGap:', altitudeGap)
-    console.log('mode4Enabled from drawElevation:', mode4Enabled)
-    if(!mode4Enabled) ctx.clearRect(0, 0, width, height);
-
-    ctx.strokeStyle = color 
-    ctx.lineWidth = width * 0.005
-    let lengthDistance = distanceStream.length
-    let ratioForResolution = Math.round(lengthDistance / 125)
-    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
-    ctx.beginPath()
-  
-    let zoomFactorY = (height * 0.30)/altitudeGap
-    let zoomFactorX = width/distanceStream[lengthDistance - 1]
-    logUtils.loggerText('zoomFactorY:', zoomFactorY)
-    logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
-
-    for(let i = 0; i < altitudeStream.length; i++) {
-      if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
-        let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
-        let aX = distanceStream[i] * zoomFactorX
-        ctx.lineTo(aX,aY)
+    try {
+      let canvasSketch = document.getElementById('canvasSketch')
+      if(!canvasSketch) {
+        setTimeout(() => drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled), 100)
+        return
       }
-    }
-    logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
-    logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+      if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
+        (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
+      // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+      // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+      let canvasSketchWidth = 500 * 10
+      let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500 * 10
+      let altitudeStream = activity.altitudeStream
+      let distanceStream = activity.distanceStream
+      let width = Math.min(canvasSketchHeight, canvasSketchWidth) * 10
+      let height = canvasSketchHeight * 10
+      setDrawingWidth(width)
+      setDrawingHeight(canvasSketchHeight)
+      let ctx = canvasSketch.getContext('2d')
+      // Setup line properties to avoid spikes
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+  
+      let maxAltitude = Math.max(...altitudeStream)
+      let minAltitude = Math.min(...altitudeStream)
+  
+      let altitudeGap = maxAltitude - minAltitude
+  
+      logUtils.loggerText('width:', width)
+      logUtils.loggerText('height:', height)
+      logUtils.loggerText('altitudeStream:', altitudeStream)
+      logUtils.loggerText('maxAltitude:', maxAltitude)
+      logUtils.loggerText('minAltitude:', minAltitude)
+      logUtils.loggerText('altitudeGap:', altitudeGap)
+      console.log('mode4Enabled from drawElevation:', mode4Enabled)
+      if(!mode4Enabled) ctx.clearRect(0, 0, width, height);
+  
+      ctx.strokeStyle = color 
+      ctx.lineWidth = width * 0.005
+      let lengthDistance = distanceStream.length
+      let ratioForResolution = Math.round(lengthDistance / 125)
+      let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthDistance))
+      let resolutionUsing = (resolutionPercentage / 100) * lengthDistance / ratioForResolution
+      ctx.beginPath()
     
-    ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
-    ctx.lineTo(width,height)
-    ctx.lineTo(0,height)
-    ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
-    ctx.fillStyle = color
-    ctx.closePath()
-    ctx.fill()
-    // requestAnimationFrame(() => {
-    //   pregenerateImageJpeg();
-    // });
-    // let climbs = returnClimbing(altitudeStream, distanceStream)
-    // for(let i = 0; i < climbs.length; i++) {
-    //   let climb = climbs[i]
-    //   ctx.beginPath()
-    //   ctx.strokeStyle = color
-    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
-    //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
-    //   ctx.stroke()
-    //   ctx.beginPath()
-    //   ctx.strokeStyle = brandingPalette.secondary
-    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
-    //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
-    //   ctx.stroke()
-    // }
+      let zoomFactorY = (height * 0.30)/altitudeGap
+      let zoomFactorX = width/distanceStream[lengthDistance - 1]
+      logUtils.loggerText('zoomFactorY:', zoomFactorY)
+      logUtils.loggerText('Math.floor(lengthDistance/500):', Math.floor(lengthDistance/10))
+  
+      for(let i = 0; i < altitudeStream.length; i++) {
+        if(i % Math.floor(lengthDistance/resolutionUsing) === 0) {
+          let aY = height - ((altitudeStream[i] - minAltitude * 0.9) * zoomFactorY)
+          let aX = distanceStream[i] * zoomFactorX
+          ctx.lineTo(aX,aY)
+        }
+      }
+      logUtils.loggerText('altitudeStream[0] * zoomFactorY:', altitudeStream[0] * zoomFactorY)
+      logUtils.loggerText('distanceStream[0] * zoomFactorY:', distanceStream[0] * zoomFactorX)
+      
+      ctx.lineTo(width,height - ((altitudeStream[altitudeStream.length - 1] - minAltitude * 0.9) * zoomFactorY))
+      ctx.lineTo(width,height)
+      ctx.lineTo(0,height)
+      ctx.lineTo(0,height - (altitudeStream[0] * zoomFactorY))
+      ctx.fillStyle = color
+      ctx.closePath()
+      ctx.fill()
+      // requestAnimationFrame(() => {
+      //   pregenerateImageJpeg();
+      // });
+      // let climbs = returnClimbing(altitudeStream, distanceStream)
+      // for(let i = 0; i < climbs.length; i++) {
+      //   let climb = climbs[i]
+      //   ctx.beginPath()
+      //   ctx.strokeStyle = color
+      //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX,height * 0.4)
+      //   ctx.lineTo(distanceStream[climb.indexStart] * zoomFactorX, height - ((altitudeStream[climb.indexStart] - minAltitude * 0.9) * zoomFactorY) - 10)
+      //   ctx.stroke()
+      //   ctx.beginPath()
+      //   ctx.strokeStyle = brandingPalette.secondary
+      //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX,height * 0.4)
+      //   ctx.lineTo(distanceStream[climb.indexFinish] * zoomFactorX, height - ((altitudeStream[climb.indexFinish] - minAltitude * 0.9) * zoomFactorY) - 10)
+      //   ctx.stroke()
+      // }
+    } catch (e) {
+      console.log('e', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawElevation','exception')})
+    }
   },[
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    valueResolution
+    valueResolution,
+    infoLog,
+    visitId
     // pregenerateImageJpeg
   ])
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
-    let canvasSketch = document.getElementById('canvasSketch')
-    if(!canvasSketch) {
-      setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled),100)
-      return
-    }
-    if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
-    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
-    let canvasSketchWidth = 500 * 10
-    let canvasSketchHeight = 500 * 10
-    canvasSketchWidth = 500 * 10
-    canvasSketchHeight = 500 * 10
-    let coordinates = activity.coordinates
-    let width = Math.min(canvasSketchHeight, canvasSketchWidth)
-    let height = Math.min(canvasSketchHeight, canvasSketchWidth)
-    setDrawingHeight(width)
-    setDrawingWidth(height)
-    let ctx = canvasSketch.getContext('2d')
-    // Setup line properties to avoid spikes
-    ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
-    ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
-    // let border = width*0.2
-    // setThickness(width*0.01)
+    try {
+      let canvasSketch = document.getElementById('canvasSketch')
+      if(!canvasSketch) {
+        setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled),100)
+        return
+      }
+      if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
+      // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
+      // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+      let canvasSketchWidth = 500 * 10
+      let canvasSketchHeight = 500 * 10
+      canvasSketchWidth = 500 * 10
+      canvasSketchHeight = 500 * 10
+      let coordinates = activity.coordinates
+      let width = Math.min(canvasSketchHeight, canvasSketchWidth)
+      let height = Math.min(canvasSketchHeight, canvasSketchWidth)
+      setDrawingHeight(width)
+      setDrawingWidth(height)
+      let ctx = canvasSketch.getContext('2d')
+      // Setup line properties to avoid spikes
+      ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
+      ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
+      // let border = width*0.2
+      // setThickness(width*0.01)
 
-    let minX = Math.min(...coordinates.map(x => x[0]))
-    let maxX = Math.max(...coordinates.map(x => x[0]))
-    let minY = Math.min(...coordinates.map(x => x[1]))
-    let maxY = Math.max(...coordinates.map(x => x[1]))
+      let minX = Math.min(...coordinates.map(x => x[0]))
+      let maxX = Math.max(...coordinates.map(x => x[0]))
+      let minY = Math.min(...coordinates.map(x => x[1]))
+      let maxY = Math.max(...coordinates.map(x => x[1]))
+      
+      let mapWidth = maxX - minX
+      let mapHeight = maxY - minY
+      let mapCenterX = (minX + maxX) / 2
+      let mapCenterY = (minY + maxY) / 2
+      let mapCenter = [mapCenterX, mapCenterY]
+
+      let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
+      logUtils.loggerText('zoomFactor:', zoomFactor)
+      console.log('mode4Enabled from drawLine:', mode4Enabled)
+      ctx.clearRect(0, 0, width, height);
+
+      ctx.strokeStyle = color 
+      ctx.lineWidth = width * 0.01
+      let lengthCoordinates = coordinates.length
+      let ratioForResolution = Math.round(lengthCoordinates / 200)
+      let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
+      let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
+      console.log('lengthCoordinates', lengthCoordinates)
+      // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
+      let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
+      console.log('scaleFactor:', scaleFactor)
+      let drawing = true
+      let dimentionCircleStart = width * 0.005
+      let dimentionCircleFinish = width * 0.02
+      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
+      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
+      let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
+      let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
+      // stroke the initial circle only if the intersection it's null with the final circle
+      drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
+      // stroke the final circle
+      drawCircle(ctx, endCoordinates, dimentionCircleFinish)
+      // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
+      ctx.beginPath()
     
-    let mapWidth = maxX - minX
-    let mapHeight = maxY - minY
-    let mapCenterX = (minX + maxX) / 2
-    let mapCenterY = (minY + maxY) / 2
-    let mapCenter = [mapCenterX, mapCenterY]
 
-    let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
-    logUtils.loggerText('zoomFactor:', zoomFactor)
-    console.log('mode4Enabled from drawLine:', mode4Enabled)
-    ctx.clearRect(0, 0, width, height);
-
-    ctx.strokeStyle = color 
-    ctx.lineWidth = width * 0.01
-    let lengthCoordinates = coordinates.length
-    let ratioForResolution = Math.round(lengthCoordinates / 200)
-    let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
-    let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
-    console.log('lengthCoordinates', lengthCoordinates)
-    // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
-    let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
-    console.log('scaleFactor:', scaleFactor)
-    let drawing = true
-    let dimentionCircleStart = width * 0.005
-    let dimentionCircleFinish = width * 0.02
-    let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
-    let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
-    let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
-    let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
-    // stroke the initial circle only if the intersection it's null with the final circle
-    drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
-    // stroke the final circle
-    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-    // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
-    ctx.beginPath()
-  
-
-    for(let i = 0; i < coordinates.length; i++) {
-      // if(i>200) break
-      let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
-      // let cdMinus
-      let cdPlus
-      // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
-      if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter)
-      if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
-        if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-          if(!drawing) {
+      for(let i = 0; i < coordinates.length; i++) {
+        // if(i>200) break
+        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
+        // let cdMinus
+        let cdPlus
+        // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
+        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter)
+        if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
+          if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+            if(!drawing) {
+              drawing = true
+              ctx.beginPath()
+            }
+            ctx.lineTo(cd[0],cd[1])
+          } else {
+            if(drawing) ctx.stroke()
+            drawing = false
+          }
+        } else {
+          if(!drawing && cdPlus && utils.comingOutsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
             drawing = true
             ctx.beginPath()
+            ctx.lineTo(cdPlus[0],cdPlus[1])
+          } 
+          else if(drawing && cdPlus && utils.comingInsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+            ctx.lineTo(cd[0],cd[1])
+            ctx.stroke()
+            drawing = false
           }
-          ctx.lineTo(cd[0],cd[1])
-        } else {
-          if(drawing) ctx.stroke()
-          drawing = false
         }
-      } else {
-        if(!drawing && cdPlus && utils.comingOutsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-          drawing = true
-          ctx.beginPath()
-          ctx.lineTo(cdPlus[0],cdPlus[1])
-        } 
-        else if(drawing && cdPlus && utils.comingInsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-          ctx.lineTo(cd[0],cd[1])
-          ctx.stroke()
-          drawing = false
-        }
+        // ctx.lineTo(cd[0],cd[1])
       }
-      // ctx.lineTo(cd[0],cd[1])
+      // stroke the path
+      ctx.stroke()
+      if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
+      // if(club && club.name === 'dev-admin') returnImage()
+      // requestAnimationFrame(() => {
+      //   pregenerateImageJpeg();
+      // });
+    } catch (e) {
+      console.log('e', e)
+      insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawLine','exception')})
     }
-    // stroke the path
-    ctx.stroke()
-    if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
-    // if(club && club.name === 'dev-admin') returnImage()
-    // requestAnimationFrame(() => {
-    //   pregenerateImageJpeg();
-    // });
   },[
     activity.coordinates,
     valueResolution,
-    drawElevation
+    drawElevation,
+    visitId,
+    infoLog
     // pregenerateImageJpeg
     // club,
     // returnImage
