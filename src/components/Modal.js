@@ -45,11 +45,7 @@ const Modal = forwardRef((props,ref) => {
               title: title,
               text: 'Trace liner image sharing',
               files: [file]
-            }).then(res => {
-              console.log('res:', res)
-              console.log('shared!')
-            })
-            .catch(error => {
+            }).catch(error => {
               if(String(error).includes('NotAllowedError')) downloadImage(title, b, type)
               console.error('Error sharing image:', error)
               insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})

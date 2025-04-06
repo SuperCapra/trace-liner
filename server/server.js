@@ -131,6 +131,7 @@ app.post('/api/editable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecord(req.body, table)
+    // console.log('req.body:', req.body)
     // console.log('creating record:', table)
     // console.log('creating record id:', id)
     const result = {
@@ -163,6 +164,7 @@ app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecord(req.body, table)
+    // console.log('req.body:', req.body)
     // console.log('creating record:', table)
     // console.log('creating record id:', id)
     const result = {
