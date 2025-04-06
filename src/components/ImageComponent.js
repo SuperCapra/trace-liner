@@ -11,6 +11,8 @@ import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
 import Selector from './Selector.js';
+import dbInteractions from '../services/dbInteractions.js';
+import apiUtils from '../utils/apiUtils.js';
 
 function ImageComponent(props) {
 
@@ -174,8 +176,16 @@ function ImageComponent(props) {
   const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
   const classMode5 = classesForMode5()
   const classWrapperMode5 = ratio === '1:1' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
-  
+
+  const insertLogsModal = async (data) => {
+    let body = data.body
+    dbInteractions.createRecordNonEditable('logs', process.env.REACT_APP_JWT_TOKEN, body)
+  }
+
   const setLoadedModal = (bj,bp) => {
+    console.log('bj', bp)
+    console.log('bj', bj)
+    if(!bj && !bp) insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception: no blob from ImageComponent',JSON.stringify(infoLog),'Imagecomponent','setLoadedModal','exception')})
     if(modaldRef.current) modaldRef.current.loaded(bj,bp)
   }
 

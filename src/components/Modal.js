@@ -23,7 +23,10 @@ const Modal = forwardRef((props,ref) => {
       fill: brandingPalette.background
     }
     const loaded = (blobComp,blobCont) => {
-      if(!blobComp && !blobCont) setIsError(true)
+      if(!blobComp && !blobCont) {
+        setIsError(true)
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception: no blob from modal',JSON.stringify(infoLog),'modal','loaded','exception')})
+      }
       setIsLoading(false)
       setBlobComplete(blobComp)
       setblobCountour(blobCont)
@@ -52,6 +55,7 @@ const Modal = forwardRef((props,ref) => {
             });
           } catch (error) {
             console.error('Error sharing image:', error)
+            insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','share','exception')})
           }
         } else {
           downloadImage(title, b, type)
@@ -84,6 +88,7 @@ const Modal = forwardRef((props,ref) => {
         URL.revokeObjectURL(url); // Clean up URL object after use
       } catch (error) {
         console.error('Error downloading image:', error);
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','share','exception')})
       } finally {
           handleCloseModal()
       }
