@@ -52,6 +52,13 @@ function ImageComponent(props) {
   const [showMode5, setShowMode5] = useState(false);
   const [showMode6, setShowMode6] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const containerRef = useRef(null);
+  const textTitleRef = useRef(null);
+  const textSubtitleRef = useRef(null);
+  const textDataRef = useRef(null);
+  const textDataMode5Ref = useRef(null);
+
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
   // const [blendMode, setBlendMode] = useState('unset');
@@ -123,8 +130,9 @@ function ImageComponent(props) {
     }
   }
   const classesForName = () => {
+    let result = 'sub-text-overlay'
     if(showMode5) {
-      let result = 'text-overlay text-title-props-mode-5 text-name-props'
+      result = result + ' text-title-props-mode-5 text-name-props'
       if(textUp) {
         if(ratio === '1:1') return result + ' text-title-props-mode-5-up'
         else return result + ' text-title-props-mode-5-up-rect'
@@ -133,8 +141,8 @@ function ImageComponent(props) {
         else return result + ' text-title-props-mode-5-down-rect'
       }
     } else {
-      if(ratio === '1:1') return ('text-overlay text-title-props text-name-props')
-      else return ('text-overlay text-title-props-rect text-name-props')
+      if(ratio === '1:1') return (result + ' text-title-props text-name-props')
+      else return (result + ' text-title-props-rect text-name-props')
     }
   }
   const classesForMode5 = () => {
@@ -163,14 +171,14 @@ function ImageComponent(props) {
   }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = classesForName()
-  const classesDate = ratio === '1:1' ? 'text-overlay text-title-props text-date-props' : 'text-overlay text-title-props-rect text-date-props'
-  const classesModeStandard = ratio === '1:1' ? 'text-overlay text-coordinates-props' : 'text-overlay text-coordinates-props text-coordinates-props-rect'
+  const classesDate = 'sub-text-overlay text-date-props' + (ratio === '1:1' ? ' text-title-props' : ' text-title-props-rect')
+  const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' ? '' : ' text-coordinates-props-rect')
   const classesSketch = classesForSketch()
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = classesForDataElement()
-  const classesDataPLittle = 'data-p-little'
+  const classesDataPLittle = 'data-p-little title-data-anchor'
   const classesLogoClub = classesForLogoClub()
   const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
@@ -1083,7 +1091,7 @@ function ImageComponent(props) {
     let elementToDisplayNormal = !line1.length ? <div></div> : (line2.length) ? <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}{line2.length && <div className={classesDataWrapperLine}>{line2}</div>}</div> : <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}</div>
     let elementToDisplayCoord = <div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{activity.beautyCoordinates}</div>
     let elementToReturn = (activity.beautyCoordinates && showCoordinates) ? elementToDisplayCoord : elementToDisplayNormal
-    return(<div>{elementToReturn}</div>)
+    return(<div ref={textDataRef}>{elementToReturn}</div>)
   }
 
   const returnMode2Disposition = () => {
@@ -1091,7 +1099,7 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying += activity[unitMeasureSelected].beautyDistance
     if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity[unitMeasureSelected].beautyElevation
     if(activity.beautyDuration && showDuration) dataDisplaying += (dataDisplaying.length ? ' x ' : '') + activity.beautyDuration
-    return(<div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataDisplaying}</div>)
+    return(<div ref={textDataRef} id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{dataDisplaying}</div>)
   }
 
   const returnMode3Disposition = () => {
@@ -1111,13 +1119,13 @@ function ImageComponent(props) {
       if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3-vertical"><p>{activity.beautyDuration}</p></div>)
       // if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3-vertical"><p>{activity.beautyPower}</p></div>)
       // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-      return (<div id="canvasText" className={classMode3Vertical} style={styleText}>{dataDisplaying}</div>)
+      return (<div ref={textDataRef} id="canvasText" className={classMode3Vertical} style={styleText}>{dataDisplaying}</div>)
     }
   }
 
   const returnMode4Disposition = () => {
     // let dataDisplaying = []
-    return (<div id="canvasText"></div>)
+    return (<div ref={textDataRef} id="canvasText"></div>)
   }
   
   const returnMode5Disposition = () => {
@@ -1126,7 +1134,7 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DISTANCE}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyDistance}</p></div>)
     if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_ELEVATION}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyElevation}</p></div>)
     if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
-    return (<div id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
+    return (<div ref={textDataMode5Ref} id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
   }
   const returnMode6Disposition = () => {
     let dataShowing = []
@@ -1156,7 +1164,7 @@ function ImageComponent(props) {
       </div>
     ) : <div></div>
     console.log('elementReturning:', elementReturning)
-    return(<div>{elementReturning}</div>)
+    return(<div ref={textDataRef}>{elementReturning}</div>)
   }
 
   // const bubbleChangeLanguage = (value) => {
@@ -1164,12 +1172,24 @@ function ImageComponent(props) {
   // }
 
   useEffect(() => {
-    // if(club && club.name === 'dev-admin') {
-    //   setIsLoading(true)
-    //   seeHiding()
-    // }
-    // if(activity.photoUrl) fetchImage()
+    const updateFontSize = () => {
+      const dataElements = document.getElementsByClassName('title-data-anchor')
+      if (containerRef.current) {
+        const width = containerRef.current.offsetWidth;
+        if(textTitleRef.current) textTitleRef.current.style.fontSize = `${width * 0.06}px`;
+        if(textSubtitleRef.current) textSubtitleRef.current.style.fontSize = `${width * 0.04}px`;
+        if(textDataRef.current) textDataRef.current.style.fontSize = `${width * 0.05}px`;
+        if(textDataMode5Ref.current) textDataMode5Ref.current.style.fontSize = `${width * 0.035}px`;
+        if(dataElements && dataElements.length) for(let e of dataElements) e.style.fontSize = `${width * 0.03}px`;
+      }
+    };
+
+    updateFontSize();
+
+    window.addEventListener("resize", updateFontSize);
+
     handleCrop(ratio, imageSrc)
+    return () => window.removeEventListener("resize", updateFontSize);
   }, [
       ratio,
       canvasHeight,
@@ -1219,20 +1239,20 @@ function ImageComponent(props) {
       {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
       {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
-          <div className={classesCanvasContainer} id="printingAnchor" translate="no">
+          <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
             <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
             {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
             {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
             {showTitle && !showMode5 && !showMode6 && (
               <div className="text-overlay text-title">
-                <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+                <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
+                {showDate && activity && activity.beautyDatetimeLanguages && (<div ref={textSubtitleRef} id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
               </div>
             )}
             {showTitle && showMode5 && !showMode6 && (
               <div className="text-overlay text-title-mode-5">
-                <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
+                <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
               </div>
             )}
             {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
