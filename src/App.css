@@ -98,9 +98,6 @@
 .scale-mode{
   transform: scale(2.6);
 }
-/* iframe{
-  display: none;
-} */
 body{
   overscroll-behavior: none;
 }
@@ -177,13 +174,7 @@ p {
 }
 .image-creator-wrapper-2{
   height: 10%;
-  /* display: flex;
-  justify-content: center; */
 }
-/* .creator-800{
-  position: absolute;
-  bottom: 1vh;
-} */
 .back-button{
   display: flex;
   flex-direction: row;
@@ -238,7 +229,6 @@ p {
   left: 50%;
   translate: -50%;
   width: 260px;
-  /* margin: 0 12.5vw; */
 }
 .margin-or{
   margin: 20px;
@@ -511,7 +501,6 @@ p {
   z-index: 5;
 }
 #dropDown{
-  /* z-index: 6; with this the overflow it's not guaranted */
   position: relative;
 }
 #dropdownValues{
@@ -523,8 +512,6 @@ p {
 .background-loading{
   background-color: var(--palette-background);
   position: absolute;
-  /* top: 0;
-  left: 0; */
   aspect-ratio: 9/16;
   width: 325px;
 }
@@ -540,17 +527,17 @@ p {
   color: white;
 }
 .text-title{
-  width: 72vw;
-  top: 8vw;
-  left: 4vw;
+  width: 86%;
+  top: 20%;
+  left: 7%;
   display: flex;
   flex-direction: row;
 }
 .text-title-props:first-child{
-  bottom:-4vw
+  bottom:0%
 }
 .text-title-props:last-child{
-  top:4.5vw
+  top:0%
 }
 .text-name-props{
   font-weight: 900;
@@ -568,10 +555,10 @@ p {
   transform: translate(-50%,0)
 }
 .text-title-props-rect:first-child{
-  bottom:-16vw
+  bottom:0%;
 }
 .text-title-props-rect:last-child{
-  top:16.5vw
+  top:0%;
 }
 .text-coordinates-props-rect{
   top:84%;
@@ -589,11 +576,6 @@ p {
 .proportion:hover{
   cursor: pointer;
 }
-/* .feature:active{
-  background-color: white;
-  opacity: 0.5;
-  border-radius: 5px;
-} */
 .feature:active{
   filter: brightness(0.6);
 }
@@ -767,21 +749,21 @@ p {
   position: absolute;
   display: flex;
   flex-direction: column;
-  min-width: 80vw;
+  min-width: 100%;
   font-size: calc(4vmin);
   font-weight: 900;
   font-family: 'Helvetica';
-  top: 104vw
+  top: 74%
 }
 .wrapper-data-2-lines{
   position: absolute;
   display: flex;
   flex-direction: column;
-  min-width: 80vw;
+  min-width: 100%;
   font-size: calc(3.5vmin);
   font-weight: 900;
   font-family: 'Helvetica';
-  top: 64vw
+  top: 80%
 }
 .wrapper-data-line{
   display: flex;
@@ -975,7 +957,7 @@ p {
   cursor: pointer;
 }
 .width-general{
-  width: 80vw;
+  width: 100%;
 }
 .homepage-logo-width{
   width: 45%;
@@ -1020,7 +1002,6 @@ p {
   border-radius: 5px;
   max-width: 500px;
   width: 60%;
-  /* min-height: 100px; */
   display: flex;
   justify-content: center;
   position: relative;
@@ -1065,7 +1046,6 @@ p {
 .modal-buttons-single{
   background-color: var(--palette-background);
   color: var(--palette-secondary);
-  /* border-radius: 5px; */
   margin: 5px 5px;
 }
 .modal-buttons-p{
@@ -1088,16 +1068,11 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5); /* Optional: Dim background */
-  z-index: 10; /* Ensure it appears on top */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }
 .width-logo-extended{
   width: 80vw;
-}
-@media print, screen and (max-width: 450px) {
-  .text-title{
-    width: 72vw !important;
-  }
 }
 @media print, screen and (min-width: 450px) {
   .creator{
@@ -1129,7 +1104,6 @@ p {
   }
   .button-login {
     padding: 0.75vw;
-    /* margin: 20px 22.5%; */
   }
   .p-login{
     padding: 0.75vh 2.25vw 0.75vh 2.25vw;
@@ -1145,9 +1119,7 @@ p {
   .beauty-border{
     width: 60vw;
   }
-  .width-general{
-    width: 60vw;
-  }
+
   .width-header-wrapper{
     width: 60vw;
   }
@@ -1157,7 +1129,6 @@ p {
   .blend-text{
     font-size: calc(3vw);
   }
-  /* to comment this when solved the fact of an unique dimention*/
   .title-activity {
     padding: 0.75vh 2.25vw 0.1875vh 2.25vw;
     font-size: calc(2.625vmin);
@@ -1166,32 +1137,17 @@ p {
     padding: 0vh 2.25vw 0.75vh 2.25vw;
     font-size: calc(1.875vmin);
   }
-  .text-title{
-    width: 54vw;
-    top: 6vw;
-    left: 3vw;
-  }
   .text-overlay{
     font-size: calc(3vw);
   }
   .text-date-props{
     font-size: calc(2.25vw);
   }
-  .text-title-props-rect:first-child{
-    bottom:-12vw
-  }
-  .text-title-props-rect:last-child{
-    top:12.5vw
-  }
   .wrapper-data-2-lines-rect{
     font-size: calc(3vw);
-    min-width: 60vw;
-    top: 78vw;
   }
   .wrapper-data-2-lines{
     font-size: calc(2.625vw);
-    min-width: 60vw;
-    top: 48vw;
   }
   .canvas-container-general{
     min-width: 60vw;
@@ -1364,7 +1320,6 @@ p {
   }
   .button-login {
     padding: 0.5vw;
-    /* margin: 20px 25%; */
   }
   .p-login{
     padding: 0.5vh 1.5vw 0.5vh 1.5vw;
@@ -1380,9 +1335,6 @@ p {
   .beauty-border{
     width: 40vw;
   }
-  .width-general{
-    width: 40vw;
-  }
   .width-header-wrapper{
     width: 40vw;
   }
@@ -1392,7 +1344,6 @@ p {
   .blend-text{
     font-size: calc(2vw);
   }
-  /* to comment this when solved the fact of an unique dimention*/
   .title-activity {
     padding: 0.5vh 1.5vw 0.125vh 1.5vw;
     font-size: calc(1.75vmin);
@@ -1401,38 +1352,17 @@ p {
     padding: 0vh 1.5vw 0.5vh 1.5vw;
     font-size: calc(1.25vmin);
   }
-  .text-title{
-    width: 36vw;
-    top: 4vw;
-    left: 2vw;
-  }
   .text-overlay{
     font-size: calc(2vw);
   }
   .text-date-props{
     font-size: calc(1.5vw);
   }
-  .text-title-props:first-child{
-    bottom: -1vw
-  }
-  .text-title-props:last-child{
-    top:1.2vw
-  }
-  .text-title-props-rect:first-child{
-    bottom:-8vw
-  }
-  .text-title-props-rect:last-child{
-    top:8.5vw
-  }
   .wrapper-data-2-lines-rect{
     font-size: calc(2vw);
-    min-width: 40vw;
-    top: 52vw;
   }
   .wrapper-data-2-lines{
     font-size: calc(1.75vw);
-    min-width: 40vw;
-    top: 32vw;
   }
   .canvas-container-general{
     min-width: 40vw;
@@ -1614,19 +1544,11 @@ p {
   .beauty-border{
     width: 320px;
   }
-  .width-general{
-    width: 320px;
-  }
   .width-header-wrapper{
     width: 740px;
   }
   .canvas-container-square{
     min-height: 320px;
-  }
-  .text-title{
-    width: 288px;
-    top: 32px;
-    left: 16px;
   }
   .text-overlay{
     font-size: 16px;
@@ -1634,21 +1556,11 @@ p {
   .text-date-props{
     font-size: 12px;
   }
-  .text-title-props-rect:first-child{
-    bottom:-64px
-  }
-  .text-title-props-rect:last-child{
-    top:68px
-  }
   .wrapper-data-2-lines-rect{
     font-size: 16px;
-    min-width: 320px;
-    top: 420px;
   }
   .wrapper-data-2-lines{
     font-size: 14px;
-    min-width: 320px;
-    top: 256px;
   }
   .canvas-container-general{
     min-width: 320px;
@@ -1714,7 +1626,6 @@ p {
   .display-buttons{
     display: flex;
     flex-direction: column;
-    /* align-items: flex-start; */
     margin: 0 10px;
     width: 100%;
   }
@@ -1820,19 +1731,11 @@ p {
   .beauty-border{
     width: 400px;
   }
-  .width-general{
-    width: 400px;
-  }
   .width-header-wrapper{
     width: 920px;
   }
   .canvas-container-square{
     min-height: 400px;
-  }
-  .text-title{
-    width: 360px;
-    top: 40px;
-    left: 20px;
   }
   .text-overlay{
     font-size: 20px;
@@ -1840,21 +1743,11 @@ p {
   .text-date-props{
     font-size: 15px;
   }
-  .text-title-props-rect:first-child{
-    bottom:-80px
-  }
-  .text-title-props-rect:last-child{
-    top:85px
-  }
   .wrapper-data-2-lines-rect{
     font-size: 20px;
-    min-width: 400px;
-    top: 525px;
   }
   .wrapper-data-2-lines{
     font-size: 17.5px;
-    min-width: 400px;
-    top: 320px;
   }
   .canvas-container-general{
     min-width: 400px;
