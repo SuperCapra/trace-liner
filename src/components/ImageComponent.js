@@ -1225,13 +1225,13 @@ function ImageComponent(props) {
             {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
             {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
             {showTitle && !showMode5 && !showMode6 && (
-              <div className="width-general text-overlay text-title">
+              <div className="text-overlay text-title">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
                 {showDate && activity && activity.beautyDatetimeLanguages && (<div id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
               </div>
             )}
             {showTitle && showMode5 && !showMode6 && (
-              <div className="width-general text-overlay text-title">
+              <div className="text-overlay text-title-mode-5">
                 <div id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
               </div>
             )}
