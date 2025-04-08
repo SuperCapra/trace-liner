@@ -799,6 +799,9 @@ function ImageComponent(props) {
         infoLog.showpower = !infoLog.showpower
         setShowPower(data.show)
         if(data.show) setShowCoordinates(false)
+      } else if(data.subtype === 'calories') {
+        infoLog.showcalories = !infoLog.showcalories
+        setShowCalories(data.show)
       } else if(data.subtype === 'coordinates') {
         infoLog.showcoordinates = !infoLog.showcoordinates
         setShowCoordinates(data.show)

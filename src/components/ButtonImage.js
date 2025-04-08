@@ -379,180 +379,26 @@ function ButtonImage(props) {
     setValueResolution(value);
     handleClick({type: 'resolutionSlider', value: value})
   }
-
-  const nameController = () => {
+  
+  const textViewController = (label, propagationKey, value, isVisible) => {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showName && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
-          {!showName && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
+          {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+          {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
         </div>
-        <p>{vocabulary[language].BUTTON_TITLE}: {activity.beautyName}</p>
+        <p>{vocabulary[language][label]}: {value}</p>
       </div>
     )
   }
-  const dateController = () => {
+  const textArrowController = (label, propagationKey, isVisible) => {
     return(
       <div className="wrapper-buttons-left">
         <div>
-          {showDate && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
-          {!showDate && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
+          {isVisible && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+          {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide(propagationKey)} />)}
         </div>
-        <p>{vocabulary[language].BUTTON_DATE}: {activity.beautyDatetimeLanguages[language]}</p>
-      </div>
-    )
-  }
-  const distanceController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistance}</p>
-      </div>
-    )
-  }
-  const distanceSpacedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistanceSpaced}</p>
-      </div>
-    )
-  }
-  const durationController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DURATION}: {activity.beautyDuration}</p>
-      </div>
-    )
-  }
-  const movingTimeController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_MOVING_TIME}: {activity.beautyMovingTime}</p>
-      </div>
-    )
-  }
-  const elevationController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_ELEVATION}: {activity[unitMeasure].beautyElevation}</p>
-      </div>
-    )
-  }
-  const elevationGainController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_ELEVATION_GAIN}: {activity[unitMeasure].beautyElevationGain}</p>
-      </div>
-    )
-  }
-  const averageController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE}: {activity[unitMeasure].beautyAverage}</p>
-      </div>
-    )
-  }
-  const averageSpeedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE_SPEED}: {activity[unitMeasure].beautyAverageSpeed}</p>
-      </div>
-    )
-  }
-  const powerController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_POWER}: {activity.beautyPower}</p>
-      </div>
-    )
-  }
-  const powerSpacedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE_POWER}: {activity.beautyPowerSpaced}</p>
-      </div>
-    )
-  }
-  const coordinatesController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showCoordinates && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-          {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_COORDINATES}: {activity.beautyCoordinates}</p>
-      </div>
-    )
-  }
-  const caloriesController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showCalories && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
-          {!showCalories && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_CALORIES}: {activity.beautyCalories}</p>
-      </div>
-    )
-  }
-  const switchController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {textUp && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchText')} />)}
-          {!textUp && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchText')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_SWITCH}</p>
-      </div>
-    )
-  }
-  const switchAltitudeController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {altitudeVertical && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchAltitude')} />)}
-          {!altitudeVertical && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchAltitude')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_SWITCH_ALTITUDE}</p>
+        <p>{vocabulary[language][label]}</p>
       </div>
     )
   }
@@ -678,14 +524,14 @@ function ButtonImage(props) {
   const displayMode1 = () => {
     return (
       <div className="width-mode-sub">
-        {nameController()}
-        {activity.beautyDatetimeLanguages[language] && dateController()}
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
-        {activity[unitMeasure].beautyAverage && averageController()}
-        {activity.beautyCoordinates && coordinatesController()}
+        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate)}
+        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate)}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
+        {activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)}
+        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates)}
       </div>
     )
   }
@@ -693,23 +539,23 @@ function ButtonImage(props) {
   const displayMode2 = () => {
     return (
       <div className="width-mode-sub">
-        {nameController()}
-        {activity.beautyDatetimeLanguages[language] && dateController()}
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
+        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate)}
+        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate)}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
       </div>
     )
   }
   const displayMode3 = () => {    
     return (
       <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {!altitudeVertical && activity.beautyPower && powerController()}
-        {!altitudeVertical && activity[unitMeasure].beautyAverage && averageController()}
-        {switchAltitudeController()}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
+        {!altitudeVertical && activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)}
+        {!altitudeVertical && activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {textArrowController('BUTTON_SWITCH_ALTITUDE', 'switchAltitude', altitudeVertical)}
         {/* {activity.beautyCoordinates && coordinatesController()} */}
       </div>
     )
@@ -717,31 +563,31 @@ function ButtonImage(props) {
   const displayMode4 = () => {    
     return (
       <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
       </div>
     )
   }
   const displayMode5 = () => {    
     return (
       <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {switchController()}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
+        {textArrowController('BUTTON_SWITCH', 'switchText', textUp)}
       </div>
     )
   }
   const displayMode6 = () => {    
     return (
       <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceSpacedController()}
-        {activity[unitMeasure].beautyElevation && elevationGainController()}
-        {activity.beautyDuration && movingTimeController()}
-        {activity[unitMeasure].beautyAverage && averageSpeedController()}
-        {activity.beautyPower && powerSpacedController()}
-        {activity.beautyCalories && caloriesController()}
+        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistanceSpaced, showDistance)}
+        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation)}
+        {activity.beautyMovingTime && textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration)}
+        {activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower)}
+        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'calories', activity.beautyCalories, showCalories)}
       </div>
     )
   }
