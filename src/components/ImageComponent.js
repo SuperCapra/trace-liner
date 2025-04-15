@@ -1,7 +1,6 @@
 import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
 import image1 from '../assets/images/image1.jpg'
-import {ReactComponent as ArrowLeft} from '../assets/images/arrowLeftSimplified20.svg'
 import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js';
 import ButtonImage from './ButtonImage.js'

@@ -8,8 +8,7 @@ import ImageComponent from './components/ImageComponent.js'
 // import Creator from './components/Creator.js'
 import Statistics from './components/Statistics.js';
 // import Dropdown from './components/Dropdown.js'
-import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
-import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
+import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
 import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
 import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
@@ -352,7 +351,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivities') {
         let arrowDownStyle = {
-          fill: brandingPalette.background
+          fill: brandingPalette.secondary
         }
         let activitiesButton = activities.map(element => 
           <div key={element.id} className="button-activity button-border justify-center-column" onClick={() => {
@@ -388,7 +387,7 @@ class Homepage extends React.Component{
             )}
             {/* <Creator language={this.props.language} classes="creator"/> */}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
-              <ArrowDown style={arrowDownStyle}/>
+              <ArrowDown style={arrowDownStyle}></ArrowDown>
             </div>
           </div>
         )

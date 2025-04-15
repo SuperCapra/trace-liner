@@ -946,15 +946,15 @@ p {
   margin: 1vw 2.5vw;
 }
 .arrow-down{
-  padding: 8px;
+  padding: 40px;
   background-color: var(--palette-primary);
   width: 45px;
   height: 45px;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  transform: scale(0.8);
-  border-radius: 5px;
+  bottom: 0px;
+  right: 0px;
+  transform: scale(0.4);
+  border-radius: 7px;
 }
 .arrow-down:hover{
   cursor: pointer;
