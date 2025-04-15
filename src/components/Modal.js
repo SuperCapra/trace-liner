@@ -121,7 +121,7 @@ const Modal = forwardRef((props,ref) => {
                     <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
                 </div>
                 <div className="modal-text">
-                    <p className="modal-p p-back">{vocabulary[language]['MODAL_ERROR']}</p>
+                    <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_ERROR']}</p>
                 </div>
             </div>}
             {!isLoading && !isError && <div>
@@ -131,7 +131,7 @@ const Modal = forwardRef((props,ref) => {
                   </div>
                 </div>
                 <div className="modal-text">
-                    <p className="modal-p p-back">{vocabulary[language]['MODAL_TEXT']}</p>
+                    <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_TEXT']}</p>
                 </div>
                 {!showButtons && <div className="modal-buttons">
                     <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>

@@ -409,28 +409,28 @@ function Statistics(props) {
         </div>}
         {!isLoading && <div className="wrapper-statistics">
             <div className="wrapper-numbers">
-                <p className="p-back wrapper-margin-dropdown-statistics">VISITS: {numberVisits}</p>
-                <p className="p-back wrapper-margin-dropdown-statistics">USERS: {numberUsers} ({numberStravaUsers})</p>
-                <p className="p-back wrapper-margin-dropdown-statistics">ACTIVITIES: {numberActivities}</p>
-                <p className="p-back wrapper-margin-dropdown-statistics">EXPORTS: {numberExports}</p>
+                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">VISITS: {numberVisits}</p>
+                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">USERS: {numberUsers} ({numberStravaUsers})</p>
+                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">ACTIVITIES: {numberActivities}</p>
+                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">EXPORTS: {numberExports}</p>
             </div>
             <div className="position-dropdown-statistics">
                 <div className="position-dropdown-statistics-group">
                     <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-back align-left">TABLE</p>
+                        <p className="p-dimention p-left p-color align-left">TABLE</p>
                         <Dropdown value={table} values={tables} type="table" hasBorder="true" handleChangeValue={defineTable}/>
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-back align-left">COLUMNS</p>
+                        <p className="p-dimention p-left p-color align-left">COLUMNS</p>
                         <MultiDropdown ref={childColumnsRef} valuesSelected={columns} valuesAvailable={columnsAvailable} type="column" hasBorder="true" size="300px" handleChangeValue={defineColumn}/>
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
                         <div className="filter-wrapper">
-                            <p className="p-back align-left">FILTER</p>
+                            <p className="p-dimention p-left p-color align-left">FILTER</p>
                             <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineFilter}/>
                             <div className="filter-wrapper-constrains">
-                                <input type="text" value={valueMinorFilter} className="input-constrain p-back minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
-                                <input type="text" value={valueMajorFilter} className="input-constrain p-back major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
+                                <input type="text" value={valueMinorFilter} className="input-constrain p-dimention p-left p-color minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
+                                <input type="text" value={valueMajorFilter} className="input-constrain p-dimention p-left p-color major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
                             </div>
                         </div>
                     </div>
@@ -438,7 +438,7 @@ function Statistics(props) {
                 <div className="position-dropdown-statistics-group">
                     <div className="wrapper-margin-dropdown-statistics">
                         <div className="filter-wrapper">
-                            <p className="p-back align-left">GROUP BY</p>
+                            <p className="p-dimention p-left p-color align-left">GROUP BY</p>
                             <Dropdown ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
                             {valueGroupBy1 && <div className="margin-dropdown">
                                 <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
@@ -447,7 +447,7 @@ function Statistics(props) {
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
                         <div className="filter-wrapper">
-                            <p className="p-back align-left invisible-null">NULL</p>
+                            <p className="p-dimention p-left p-color align-left invisible-null">NULL</p>
                             <TextCheckbox ref={childGroupy1AscendingSettingRef} value={groupBy1AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy1AcendingSetting}/>
                             {valueGroupBy1 && <div className="margin-dropdown">
                                 <TextCheckbox ref={childGroupy2AscendingSettingRef} value={groupBy2AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy2AcendingSetting}/>
@@ -456,7 +456,7 @@ function Statistics(props) {
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
                         <div className="filter-wrapper">
-                            <p className="p-back align-left invisible-null">NULL</p>
+                            <p className="p-dimention p-left p-color align-left invisible-null">NULL</p>
                             {settingGroupBy1.isTimestamp && <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy1DateSetting}/>}
                             {valueGroupBy1 && settingGroupBy2.isTimestamp && <div className="margin-dropdown">
                                 <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy2DateSetting}/>
@@ -468,7 +468,7 @@ function Statistics(props) {
                         <CopyExcel style={refreshStyle} onClick={() => copyTableToClipboard()}/>
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-back margin-top-29">{numberRecords}</p>
+                        <p className="p-dimention p-left p-color margin-top-29">{numberRecords}</p>
                     </div>
                 </div>
             </div>

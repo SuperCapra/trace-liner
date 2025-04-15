@@ -1,19 +1,18 @@
 import '../App.css';
 import React, {useState} from 'react';
-import ShareContour from './ShareContour'
 import SelectedImage from './SelectedImage';
 import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
-import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
-import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
-import {ReactComponent as TextSVG} from '../assets/images/text.svg'
+// import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
+// import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
+// import {ReactComponent as TextSVG} from '../assets/images/text.svg'
 import {ReactComponent as RectangleSVG} from '../assets/images/rectangle.svg'
 import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
-import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
+// import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
 import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
 import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
 import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
@@ -288,24 +287,19 @@ function ButtonImage(props) {
   }
 
   const unitMeasureStyle = {
-    fill: brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: brandingPalette.primary,
   }
   const shareStyle = {
-    fill: brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: brandingPalette.primary,
   }
   const modifyStyle = {
-    fill: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
   }
   const textStyle = {
-    fill: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
   }
   const squareStyle = {
-    fill: square ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: square ? brandingPalette.secondary : brandingPalette.primary,
   }
   const rectangleStyle = {
     fill: rectangle ? brandingPalette.secondary : brandingPalette.primary,
@@ -651,20 +645,20 @@ function ButtonImage(props) {
   return (
     <div className="display-buttons">
       <div className="wrapper-buttons">
-        <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
-          <p>{vocabulary[language].BUTTON_METRICS}</p>
+        <div style={unitMeasureStyle} className="feature" onClick={() => propagateUnitMeasure()}>
+          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_METRICS}</p>
           {/* <UnitMeasureSVG className="feature" /> */}
         </div>
-        <div style={textStyle} onClick={() => showModifySetText()}>
-          <p>{vocabulary[language].BUTTON_MODE}</p>
+        <div style={textStyle} className="feature" onClick={() => showModifySetText()}>
+          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_MODE}</p>
           {/* <TextSVG className="feature" /> */}
         </div>
-        <div style={modifyStyle} onClick={() => showModifySetImage()}>
-          <p>{vocabulary[language].BUTTON_EDIT}</p>
+        <div style={modifyStyle} className="feature" onClick={() => showModifySetImage()}>
+          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_EDIT}</p>
           {/* <ModifySVG className="feature" /> */}
         </div>
-        <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
-          <p>{vocabulary[language].BUTTON_SHARE}</p>
+        <div style={shareStyle} className="feature" onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
+          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_SHARE}</p>
           {/* <ShareSVG className="feature"/> */}
         </div>
       </div>

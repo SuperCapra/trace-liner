@@ -355,7 +355,7 @@ class Homepage extends React.Component{
             <div className="header-wrapper">
               <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
                 <div className="back-text-container">
-                  <p className="p-back">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
+                  <p className="p-dimention p-left p-color">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
                 </div>
               </div>
               <div className="language-selector">

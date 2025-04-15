@@ -156,19 +156,19 @@ p {
 .back-image{
   fill: var(--palette-primary);
 }
-.p-back{
-  color: var(--palette-primary);
+.p-left{
   justify-content: left;
-  font-size: calc(4vw);
 }
-.p-back-xl{
+.p-color{
   color: var(--palette-primary);
-  justify-content: left;
+}
+.p-dimention-xl{
   font-size: calc(6vw);
 }
-.p-back-xs{
-  color: var(--palette-primary);
-  justify-content: left;
+.p-dimention{
+  font-size: calc(4vw);
+}
+.p-dimention-xs{
   font-size: calc(3vw);
 }
 .p-uppercase{
@@ -570,6 +570,10 @@ p {
 }
 .proportion:hover{
   cursor: pointer;
+}
+.feature{
+  border: 1px solid;
+  width: 60%;
 }
 .feature:active{
   filter: brightness(0.6);
@@ -1025,7 +1029,7 @@ p {
   align-items: center;
   justify-content: center;
 }
-.modal-p{
+.p-color-modal{
   color: var(--palette-background)
 }
 .modal-buttons{
@@ -1067,17 +1071,13 @@ p {
   width: 80vw;
 }
 @media print, screen and (min-width: 450px) {
-  .p-back{
+  .p-dimention{
     font-size: calc(3.25vw);
   }
-  .p-back-xl{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xl{
     font-size: calc(4.5vw);
   }
-  .p-back-xs{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xs{
     font-size: calc(2.35vw);
   }
   .p-select{
@@ -1209,17 +1209,13 @@ p {
   .width-title-logo{
     width: 390px;
   }
-  .p-back{
+  .p-dimention{
     font-size: calc(2vw);
   }
-  .p-back-xl{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xl{
     font-size: calc(3vw);
   }
-  .p-back-xs{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xs{
     font-size: calc(1.5vw);
   }
   .p-select{
@@ -1333,17 +1329,13 @@ p {
   }
 }
 @media print, screen and (min-width: 800px) {
-  .p-back{
+  .p-dimention{
     font-size: 24px;
   }
-  .p-back-xl{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xl{
     font-size: 36px;
   }
-  .p-back-xs{
-    color: var(--palette-primary);
-    justify-content: left;
+  .p-dimention-xs{
     font-size: 18px;
   }
   .p-select{

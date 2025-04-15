@@ -1209,7 +1209,7 @@ function ImageComponent(props) {
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-text-container">
-            <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
+            <p className="p-dimention p-left p-color">{vocabulary[language].HOMEPAGE_BACK}</p>
           </div>
         </div>
         <div className="language-selector">

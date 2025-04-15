@@ -247,7 +247,7 @@ const Table = forwardRef((_,ref) => {
                 }
                 bars.push(<div className="sub-bar-wrapper" style={styleBar}>{subbar}</div>)
             }
-            // labels.push(<div style={styleLabels}><p className="p-back">{groupedData[indexGroupedData].value}</p></div>)
+            // labels.push(<div style={styleLabels}><p className="p-dimention p-left p-color">{groupedData[indexGroupedData].value}</p></div>)
         }
         graph.push(<div className="bars-wrapper" style={styleGraph}>{bars}</div>)
         // graph.push(<div className="labels-wrapper">{labels}</div>)
@@ -398,7 +398,7 @@ const Table = forwardRef((_,ref) => {
     }));
 
     return (<div className="statistics-wrapper">
-        {needsRefresh && <p className="p-back">PLEASE REFRESH</p>}
+        {needsRefresh && <p className="p-dimention p-left p-color">PLEASE REFRESH</p>}
         {!needsRefresh && groupedData.length > 0 && graph}
         {!needsRefresh && table}
     </div>)
