@@ -1245,9 +1245,6 @@ function ImageComponent(props) {
       {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
-          <div className="back-arrow-container">
-            <ArrowLeft className="back-image"/>
-          </div>
           <div className="back-text-container">
             <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
           </div>
@@ -1256,10 +1253,6 @@ function ImageComponent(props) {
           {/* <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/> */}
         </div>
       </div>
-      {/* <div className="back-button" onClick={() => handleBack()}>
-        <ArrowLeft className="back-image"/>
-        <p className="p-back">{vocabulary[language].HOMEPAGE_BACK}</p>
-      </div> */}
       {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
       {modeSelected && <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
