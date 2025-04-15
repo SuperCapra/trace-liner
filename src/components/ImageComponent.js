@@ -14,7 +14,7 @@ import apiUtils from '../utils/apiUtils.js';
 
 function ImageComponent(props) {
 
-  const {athlete, activity, club, admin, language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
+  const {athlete, activity, club, language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -555,10 +555,6 @@ function ImageComponent(props) {
       // stroke the path
       ctx.stroke()
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
-      // if(club && club.name === 'dev-admin') returnImage()
-      // requestAnimationFrame(() => {
-      //   pregenerateImageJpeg();
-      // });
     } catch (e) {
       console.log('e', e)
       insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawLine','exception')})
@@ -1209,7 +1205,7 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} admin={admin} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
+      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-text-container">
@@ -1254,7 +1250,7 @@ function ImageComponent(props) {
         }
         <div>
         </div>
-        <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
+        <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
   );

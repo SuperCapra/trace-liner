@@ -57,7 +57,11 @@ const vocabulary = {
         SELECTOR_TEXT: 'SELECT YOUR MODE',
         SELECTOR_TEXT_HINT: '(YOU CAN CHANGE IT LATER WITH THE "A" ICON)',
         COMING_SOON: 'COMING SOON',
-        ARROW: '>'
+        ARROW: '>',
+        BUTTON_METRICS: 'METRICS',
+        BUTTON_EDIT: 'EDIT',
+        BUTTON_MODE: 'MODE',
+        BUTTON_SHARE: 'SHARE',
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -117,7 +121,11 @@ const vocabulary = {
         SELECTOR_TEXT: 'SELEZIONA LA MODE CHE PREFERISCI',
         SELECTOR_TEXT_HINT: '(LA PUOI CAMBIARE ANCHE DOPO CON L\'ICONA "A")',
         COMING_SOON: 'COMING SOON',
-        ARROW: '>'
+        ARROW: '>',
+        BUTTON_METRICS: 'METRICS',
+        BUTTON_EDIT: 'MODIFICA',
+        BUTTON_MODE: 'MODALITA\'',
+        BUTTON_SHARE: 'CONDIVIDI',
     }
 }
 

@@ -34,7 +34,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, admin, handleClickButton } = props
+  const { activity, unitMeasure, language, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -652,20 +652,21 @@ function ButtonImage(props) {
     <div className="display-buttons">
       <div className="wrapper-buttons">
         <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
-          <UnitMeasureSVG className="feature" />
+          <p>{vocabulary[language].BUTTON_METRICS}</p>
+          {/* <UnitMeasureSVG className="feature" /> */}
         </div>
         <div style={textStyle} onClick={() => showModifySetText()}>
-          <TextSVG className="feature" />
+          <p>{vocabulary[language].BUTTON_MODE}</p>
+          {/* <TextSVG className="feature" /> */}
         </div>
         <div style={modifyStyle} onClick={() => showModifySetImage()}>
-          <ModifySVG className="feature" />
+          <p>{vocabulary[language].BUTTON_EDIT}</p>
+          {/* <ModifySVG className="feature" /> */}
         </div>
         <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
-          <ShareSVG className="feature"/>
+          <p>{vocabulary[language].BUTTON_SHARE}</p>
+          {/* <ShareSVG className="feature"/> */}
         </div>
-        {admin && <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'png'})}>
-          <ShareContour/>
-        </div>}
       </div>
       {showModifyImage && (
         <div className="wrapper-controller">

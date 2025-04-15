@@ -29,7 +29,6 @@ let unitMeasure = 'metric'
 let called = false 
 let sendCreatingVisit = false
 let changedLanguage = false
-let admin = false
 let vId = undefined
 let uId = undefined
 let aId = undefined
@@ -270,8 +269,6 @@ class Homepage extends React.Component{
     logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
-    admin = urlCurrent.includes('/admin')
-    if(admin) stravaAuthorizeUrl += '/admin'
     logUtils.loggerText('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
@@ -381,7 +378,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
-          <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
+          <ImageComponent athlete={athleteData} activity={activity} club={club} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
         )
       }
     }
