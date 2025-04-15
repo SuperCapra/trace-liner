@@ -374,7 +374,6 @@ class Homepage extends React.Component{
                 <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
-            {/* <Creator language={this.props.language} classes="creator"/> */}
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}></ArrowDown>
             </div>
@@ -382,16 +381,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
-          <div className="wrapper-of-warpper">
-            <div className="image-creator">
-              <div className="image-creator-wrapper-1">
-                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
-              </div>
-              {/* <div className="image-creator-wrapper-2">
-                <Creator language={this.props.language} classes="creator creator-800"/>
-              </div> */}
-            </div>
-          </div>
+          <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
         )
       }
     }

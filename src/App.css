@@ -145,36 +145,6 @@ p {
 .App-link {
   color: var(--palette-quaternary);
 }
-.creator{
-  font-size: calc(2vmin);
-  color: var(--palette-primary)
-}
-.creator-homepage{
-  position: absolute;
-  bottom: 1vh;
-}
-.creator-justify-center{
-  display: flex;
-  justify-content: center;
-}
-.image-creator{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 96vh;
-}
-.image-creator-wrapper-1{
-  height: auto
-}
-.wrapper-of-warpper{
-  display: flex;
-  min-height: 96vh;
-  justify-content: space-between;
-  flex-direction: column;
-}
-.image-creator-wrapper-2{
-  height: 10%;
-}
 .back-button{
   display: flex;
   flex-direction: row;
@@ -208,6 +178,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 2;
 }
 .width-header-wrapper{
   width: 80vw;
@@ -415,10 +386,28 @@ p {
 }
 .width-wrapper-main{
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: center;
   width: 80vw;
   margin: 1vh 0vh 5vh
+}
+.display-buttons{
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px 10px 10px;
+  width: 100%;
+}
+.display-buttons::before{
+  content: "";
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  right: -9999px;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: -1;
 }
 .wrapper-main{
   display: flex;
@@ -747,9 +736,6 @@ p {
 }
 .indexed-height{
   z-index: 100;
-}
-.beauty-border{
-  border-radius: 5px;
 }
 .wrapper-data-2-lines-rect{
   position: absolute;
@@ -1081,9 +1067,6 @@ p {
   width: 80vw;
 }
 @media print, screen and (min-width: 450px) {
-  .creator{
-    font-size: calc(1.6vmin);
-  }
   .p-back{
     font-size: calc(3.25vw);
   }
@@ -1118,12 +1101,7 @@ p {
     font-size: calc(3vmin);
   }
   .width-wrapper-main{
-    display: flex;
-    flex-direction: column;
     width: 80vw;
-  }
-  .beauty-border{
-    width: 60vw;
   }
   .width-header-wrapper{
     width: 60vw;
@@ -1231,9 +1209,6 @@ p {
   .width-title-logo{
     width: 390px;
   }
-  .creator{
-    font-size: calc(1vmin);
-  }
   .p-back{
     font-size: calc(2vw);
   }
@@ -1268,12 +1243,7 @@ p {
     font-size: (2vmin);
   }
   .width-wrapper-main{
-    display: flex;
-    flex-direction: column;
     width: 80vw;
-  }
-  .beauty-border{
-    width: 40vw;
   }
   .width-header-wrapper{
     width: 40vw;
@@ -1363,17 +1333,6 @@ p {
   }
 }
 @media print, screen and (min-width: 800px) {
-  .creator{
-    font-size: 15px;
-  }
-  .image-creator-wrapper-2{
-    display: flex;
-    justify-content: center;
-  }
-  .creator-800{
-    position: absolute;
-    bottom: 1vh;
-  }
   .p-back{
     font-size: 24px;
   }
@@ -1415,9 +1374,6 @@ p {
   }
   .p-login-or-size{
     font-size: 32px;
-  }
-  .beauty-border{
-    width: 320px;
   }
   .width-header-wrapper{
     width: 740px;
@@ -1475,10 +1431,13 @@ p {
     align-items: flex-start;
   }
   .display-buttons{
-    display: flex;
-    flex-direction: column;
-    margin: 0 10px;
-    width: 100%;
+    margin: 0 10px 10px 40px;
+  }
+  .display-buttons::before{
+    top: -9999px;
+    left: 0;
+    right: -9999px;
+    bottom: -9999px;
   }
   .width-mode{
     width: 400px;
@@ -1538,9 +1497,6 @@ p {
   }
 }
 @media print, screen and (min-width: 1100px) {
-  .beauty-border{
-    width: 400px;
-  }
   .width-header-wrapper{
     width: 920px;
   }

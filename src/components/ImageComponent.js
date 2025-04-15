@@ -1221,31 +1221,29 @@ function ImageComponent(props) {
         </div>
       </div>
       <div className="width-wrapper-main">
-        <div className="beauty-border" id="hidingDiv">
-          <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
-            <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
-            <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-            {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
-            {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
-            {showTitle && !showMode5 && !showMode6 && (
-              <div className="text-overlay text-title">
-                <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                {showDate && activity && activity.beautyDatetimeLanguages && (<div ref={textSubtitleRef} id="canvasText" style={styleSubtextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
-              </div>
-            )}
-            {showTitle && showMode5 && !showMode6 && (
-              <div className="text-overlay text-title-mode-5">
-                <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
-              </div>
-            )}
-            {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
-            {showMode1 && returnMode1Disposition()}
-            {showMode2 && returnMode2Disposition()}
-            {showMode3 && returnMode3Disposition()}
-            {showMode4 && returnMode4Disposition()}
-            {showMode5 && returnMode5Disposition()}
-            {showMode6 && returnMode6Disposition()}
-          </div>
+        <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
+          <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
+          <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
+          {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
+          {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
+          {showTitle && !showMode5 && !showMode6 && (
+            <div className="text-overlay text-title">
+              <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
+              {showDate && activity && activity.beautyDatetimeLanguages && (<div ref={textSubtitleRef} id="canvasText" style={styleSubtextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+            </div>
+          )}
+          {showTitle && showMode5 && !showMode6 && (
+            <div className="text-overlay text-title-mode-5">
+              <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
+            </div>
+          )}
+          {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
+          {showMode1 && returnMode1Disposition()}
+          {showMode2 && returnMode2Disposition()}
+          {showMode3 && returnMode3Disposition()}
+          {showMode4 && returnMode4Disposition()}
+          {showMode5 && returnMode5Disposition()}
+          {showMode6 && returnMode6Disposition()}
         </div>
         {isLoading && 
           <div className="background-loading" id="loader">
