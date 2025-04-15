@@ -265,7 +265,6 @@ class Homepage extends React.Component{
     //   console.log('localKey:', localKey)
     //   this.getActivities()
     // }
-    // window.alert(window.innerHeight + ' and ' + window.clientHeight)
     logUtils.loggerText('Language navigator:', navigator.language)
     logUtils.loggerText('Language:', this.props.language)
     logUtils.loggerText('clubs', clubs)
@@ -283,10 +282,10 @@ class Homepage extends React.Component{
         break
       }
     }
-    if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
-      console.info('Club: ', club)
-      stravaAuthorizeUrl += club.urlKey
-    }
+    // if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
+    //   console.info('Club: ', club)
+    //   stravaAuthorizeUrl += club.urlKey
+    // }
 
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
@@ -332,16 +331,6 @@ class Homepage extends React.Component{
                   <ButtonGpxSVG className="homepage-button"></ButtonGpxSVG>
                   <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
                 </div>
-                {/* <div className="button-login button-border justify-center-column" onClick={() => {
-                  window.location.href = stravaAuthorizeUrl
-                }}>
-                  <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p>
-
-                </div>
-                <div className="button-login button-border justify-center-column" onClick={() => this.loadGPX()}>
-                  <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
-                  <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-                </div> */}
               </div>
             </div>
             <div className={mainWrapperClasses}>

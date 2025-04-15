@@ -34,7 +34,7 @@ import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, admin, modeselected, handleClickButton } = props
+  const { activity, unitMeasure, language, admin, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -54,12 +54,12 @@ function ButtonImage(props) {
   const [enableUploading, setEnableUploading] = useState(true)
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
-  const [showMode1, setShowMode1] = useState(modeselected === 'mode1' ? true : false);
-  const [showMode2, setShowMode2] = useState(modeselected === 'mode2' ? true : false);
-  const [showMode3, setShowMode3] = useState(modeselected === 'mode3' ? true : false);
-  const [showMode4, setShowMode4] = useState(modeselected === 'mode4' ? true : false);
-  const [showMode5, setShowMode5] = useState(modeselected === 'mode5' ? true : false);
-  const [showMode6, setShowMode6] = useState(modeselected === 'mode6' ? true : false);
+  const [showMode1, setShowMode1] = useState(true);
+  const [showMode2, setShowMode2] = useState(false);
+  const [showMode3, setShowMode3] = useState(false);
+  const [showMode4, setShowMode4] = useState(false);
+  const [showMode5, setShowMode5] = useState(false);
+  const [showMode6, setShowMode6] = useState(false);
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);

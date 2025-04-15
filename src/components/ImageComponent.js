@@ -9,7 +9,6 @@ import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
-import Selector from './Selector.js';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
 
@@ -43,8 +42,7 @@ function ImageComponent(props) {
   const modaldRef = useRef()
   const [valueResolution, setValueResolution] = useState(100);
   const [valueFilter, setValueFilter] = useState(0);
-  const [modeSelected, setModeSelected] = useState(undefined);
-  const [showMode1, setShowMode1] = useState(false);
+  const [showMode1, setShowMode1] = useState(true);
   const [showMode2, setShowMode2] = useState(false);
   const [showMode3, setShowMode3] = useState(false);
   const [showMode4, setShowMode4] = useState(false);
@@ -571,9 +569,6 @@ function ImageComponent(props) {
     drawElevation,
     visitId,
     infoLog
-    // pregenerateImageJpeg
-    // club,
-    // returnImage
   ])
 
   const drawCircle = (ctx, coordinates, diameter, fill, color) => {
@@ -594,8 +589,7 @@ function ImageComponent(props) {
     }
     if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
       (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
-    // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-    // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+
     let canvasSketchWidth = 500
     let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500
     let altitudeStream = activity.altitudeStream
@@ -677,8 +671,7 @@ function ImageComponent(props) {
     activity.altitudeStream,
     activity.distanceStream,
     ratio,
-    valueResolution,
-    // pregenerateImageJpeg
+    valueResolution
   ])
 
   // const returnClimbing = (altitudeStream, distanceStream) => {
@@ -747,7 +740,6 @@ function ImageComponent(props) {
   // }
 
   const drawFilter = useCallback((width, height) => {
-    // if(club && club.name === 'dev-admin') seeHiding()
     let widthToUse = width ? width : canvasWidth
     let heightToUse = height ? height : canvasHeight
     let canvasFilter = document.getElementById('canvasFilter')
@@ -755,13 +747,10 @@ function ImageComponent(props) {
     ctx.clearRect(0, 0, widthToUse, heightToUse)
     ctx.fillStyle = filterColor
     ctx.fillRect(0, 0, widthToUse, heightToUse);
-    // if(club && club.name === 'dev-admin') returnImage()
   }, [
     filterColor, 
     canvasWidth, 
-    canvasHeight,
-    // returnImage,
-    // club
+    canvasHeight
   ])
 
   const handleClickDispatcher = (data) => {
@@ -846,7 +835,6 @@ function ImageComponent(props) {
           setFalseOthermode(data)
           enableMode1(data.show, true, data.start)
         }
-        // if(data.show) enableMode1(true, false, data.start)
       } else if(data.subtype === 'mode2') {
         setInfoLog(saleforceApiUtils.setMode2(infoLog))
         setShowMode2(data.show)
@@ -1000,7 +988,6 @@ function ImageComponent(props) {
   // }
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
-    if(!modeSelected) return
     logUtils.loggerText('Ratio text:', ratioText)
     if(!imgSrc) imgSrc = image1
     const imageReference = new Image()
@@ -1080,15 +1067,10 @@ function ImageComponent(props) {
     showMode5,
     altitudeVertical,
     xCrop,
-    yCrop,
-    modeSelected
+    yCrop
   ])
 
   const setImage = (newImage) => {
-    // if(club && club.name === 'dev-admin') {
-    //   setIsLoading(true)
-    //   seeHiding()
-    // }
     setImageSrc(newImage)
     handleCrop(ratio, newImage)
   }
@@ -1134,20 +1116,16 @@ function ImageComponent(props) {
       if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
       if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
       if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
-      // if(activity.beautyCoordinates && showCoordinates) dataDisplaying.push(<div key="coordinates" className="element-mode-3"><p>{activity.beautyCoordinates}</p></div>)
       return (<div id="canvasText" className={classMode3} style={styleText}>{dataDisplaying}</div>)
     } else {
       if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
       if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
       if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3-vertical"><p>{activity.beautyDuration}</p></div>)
-      // if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3-vertical"><p>{activity.beautyPower}</p></div>)
-      // if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
       return (<div ref={textDataRef} id="canvasText" className={classMode3Vertical} style={styleText}>{dataDisplaying}</div>)
     }
   }
 
   const returnMode4Disposition = () => {
-    // let dataDisplaying = []
     return (<div ref={textDataRef} id="canvasText"></div>)
   }
   
@@ -1219,10 +1197,7 @@ function ImageComponent(props) {
       canvasWidth,
       handleCrop,
       imageSrc,
-      club,
-      modeSelected
-      // activity.photoUrl,
-      // fetchImage
+      club
     ])
 
   const openModal = () => {
@@ -1230,13 +1205,6 @@ function ImageComponent(props) {
   }
   const closeModal = () => {
     setShowModal(false)
-  }
-  const setMode = (mode) => {
-    console.log('mode:', mode)
-    // setIsLoading(true)
-    setModeSelected(mode)
-    handleClickDispatcher({type: 'show-hide', subtype: mode, show: true, start: true})
-    // setIsLoading(false)
   }
   
   return (
@@ -1252,8 +1220,7 @@ function ImageComponent(props) {
           {/* <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/> */}
         </div>
       </div>
-      {!modeSelected && <Selector vocabulary={vocabulary} language={language} handleSelectMode={setMode}/>}
-      {modeSelected && <div className="width-wrapper-main">
+      <div className="width-wrapper-main">
         <div className="beauty-border" id="hidingDiv">
           <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
             <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
@@ -1288,10 +1255,9 @@ function ImageComponent(props) {
           </div>
         }
         <div>
-          {/* {imageToShare && admin && <img className="beauty-border width-general" id="showingImage" src={imageToShare} alt="img ready to share"/>} */}
         </div>
-        <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} modeselected={modeSelected} handleClickButton={handleClickDispatcher}/>
-      </div>}
+        <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} admin={admin} handleClickButton={handleClickDispatcher}/>
+      </div>
     </div>
   );
 }
