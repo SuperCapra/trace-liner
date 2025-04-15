@@ -369,9 +369,9 @@ class Homepage extends React.Component{
           <div>
             <div className="header-wrapper">
               <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
-                <div className="back-arrow-container">
+                {/* <div className="back-arrow-container">
                   <ArrowLeft className="back-image"/>
-                </div>
+                </div> */}
                 <div className="back-text-container">
                   <p className="p-back">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
                 </div>

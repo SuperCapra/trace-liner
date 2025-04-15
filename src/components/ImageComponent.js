@@ -58,6 +58,18 @@ function ImageComponent(props) {
   const textSubtitleRef = useRef(null);
   const textDataRef = useRef(null);
   const textDataMode5Ref = useRef(null);
+  const [fontSizeTitle, setFontSizeTitle] = useState(null);
+  const [fontSizeSubtitle, setFontSizeSubtitle] = useState(null);
+  const [fontSizeData, setFontSizeData] = useState(null);
+  const [fontSizeDataMode5, setFontSizeDataMode5] = useState(null);
+  const [fontSizeDataElements, setFontSizeDataElements] = useState(null);
+  // const titleStyleFontSize = {};
+  // const subtitleStyleFontSize = {};
+  // const dataStyleFontSize = {};
+  // const dataMode5StyleFontSize = {};
+  const dataElementsStyleFontSize = {
+    fontSize: fontSizeDataElements
+  };
 
   // const [imageToShare, setImagetoShare] = useState(null)
   const [isLoading/**, setIsLoading*/] = useState(false)
@@ -72,9 +84,20 @@ function ImageComponent(props) {
     color: drawingColor,
     // mixBlendMode: blendMode,
   }
+  const styleTextMode5 = {
+    color: drawingColor,
+    fontSize: fontSizeDataMode5
+  }
   const styleTextTitle = {
     color: drawingColor,
     width: '100%',
+    fontSize: fontSizeTitle
+    // mixBlendMode: blendMode,
+  }
+  const styleSubtextTitle = {
+    color: drawingColor,
+    width: '100%',
+    fontSize: fontSizeSubtitle
     // mixBlendMode: blendMode,
   }
   const filterStyle = {
@@ -89,6 +112,7 @@ function ImageComponent(props) {
   const styleTextUnderSketch = {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor,
+    fontSize: fontSizeData
     // mixBlendMode: blendMode
   }
 
@@ -178,7 +202,7 @@ function ImageComponent(props) {
   const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = classesForDataElement()
-  const classesDataPLittle = 'data-p-little title-data-anchor'
+  const classesDataPLittle = 'data-p-little'
   const classesLogoClub = classesForLogoClub()
   const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
@@ -1074,11 +1098,11 @@ function ImageComponent(props) {
     let line1 = []
     let line2 = []
     let dataShowing = []
-    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_ELEVATION}</p><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
-    if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DURATION}</p><p>{activity.beautyDuration}</p></div>)
-    if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_POWER}</p><p>{activity.beautyPower}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if(activity[unitMeasureSelected].beautyDistance && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_ELEVATION}</p><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
+    if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_DURATION}</p><p>{activity.beautyDuration}</p></div>)
+    if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_POWER}</p><p>{activity.beautyPower}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
     if(dataShowing.length <= 3) {
       line1.push(...dataShowing)
     } else if(dataShowing.length === 4) {
@@ -1091,7 +1115,7 @@ function ImageComponent(props) {
     let elementToDisplayNormal = !line1.length ? <div></div> : (line2.length) ? <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}{line2.length && <div className={classesDataWrapperLine}>{line2}</div>}</div> : <div id="canvasText" style={styleText} className={classesDataWrapper2Lines}>{line1.length && <div className={classesDataWrapperLine}>{line1}</div>}</div>
     let elementToDisplayCoord = <div id="canvasText" style={styleTextUnderSketch} className={classesModeStandard}>{activity.beautyCoordinates}</div>
     let elementToReturn = (activity.beautyCoordinates && showCoordinates) ? elementToDisplayCoord : elementToDisplayNormal
-    return(<div ref={textDataRef}>{elementToReturn}</div>)
+    return(<div ref={textDataRef} style={styleTextUnderSketch}>{elementToReturn}</div>)
   }
 
   const returnMode2Disposition = () => {
@@ -1134,16 +1158,16 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DISTANCE}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyDistance}</p></div>)
     if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_ELEVATION}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyElevation}</p></div>)
     if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
-    return (<div ref={textDataMode5Ref} id="canvasText" className={classMode5} style={styleText}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
+    return (<div ref={textDataMode5Ref} id="canvasText" className={classMode5} style={styleTextMode5}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
   }
   const returnMode6Disposition = () => {
     let dataShowing = []
-    if(activity[unitMeasureSelected].beautyDistanceSpaced && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistanceSpaced}</p></div>)
-    if(activity[unitMeasureSelected].beautyElevationGain && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_ELEVATION_GAIN}</p><p>{activity[unitMeasureSelected].beautyElevationGain}</p></div>)
-    if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
-    if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverageSpeed && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
-    if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
+    if(activity[unitMeasureSelected].beautyDistanceSpaced && showDistance) dataShowing.push(<div key="distance" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_DISTANCE}</p><p>{activity[unitMeasureSelected].beautyDistanceSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyElevationGain && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_ELEVATION_GAIN}</p><p>{activity[unitMeasureSelected].beautyElevationGain}</p></div>)
+    if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
+    if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
+    if(activity[unitMeasureSelected].beautyAverageSpeed && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
+    if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
     let lines = []
     if (dataShowing.length > 0) {
       lines.push([...dataShowing.slice(0, 2)]);
@@ -1164,32 +1188,32 @@ function ImageComponent(props) {
       </div>
     ) : <div></div>
     console.log('elementReturning:', elementReturning)
-    return(<div ref={textDataRef}>{elementReturning}</div>)
+    return(<div ref={textDataRef} style={styleTextUnderSketch}>{elementReturning}</div>)
   }
 
   // const bubbleChangeLanguage = (value) => {
   //   handleBubbleLanguage(value)
   // }
 
+  const updateFontSize = () => {
+    console.log('udating font size...')
+    if (containerRef.current) {
+      const width = containerRef.current.offsetWidth;
+      setFontSizeTitle(`${width * 0.06}px`)
+      setFontSizeSubtitle(`${width * 0.04}px`)
+      setFontSizeData(`${width * 0.05}px`)
+      setFontSizeDataMode5(`${width * 0.035}px`)
+      setFontSizeDataElements(`${width * 0.03}px`)
+    }
+  };
+
   useEffect(() => {
-    const updateFontSize = () => {
-      const dataElements = document.getElementsByClassName('title-data-anchor')
-      if (containerRef.current) {
-        const width = containerRef.current.offsetWidth;
-        if(textTitleRef.current) textTitleRef.current.style.fontSize = `${width * 0.06}px`;
-        if(textSubtitleRef.current) textSubtitleRef.current.style.fontSize = `${width * 0.04}px`;
-        if(textDataRef.current) textDataRef.current.style.fontSize = `${width * 0.05}px`;
-        if(textDataMode5Ref.current) textDataMode5Ref.current.style.fontSize = `${width * 0.035}px`;
-        if(dataElements && dataElements.length) for(let e of dataElements) e.style.fontSize = `${width * 0.03}px`;
-      }
-    };
+    updateFontSize()
 
-    updateFontSize();
-
-    window.addEventListener("resize", updateFontSize);
+    window.addEventListener("resize", updateFontSize)
 
     handleCrop(ratio, imageSrc)
-    return () => window.removeEventListener("resize", updateFontSize);
+    return () => window.removeEventListener("resize", updateFontSize)
   }, [
       ratio,
       canvasHeight,
@@ -1247,7 +1271,7 @@ function ImageComponent(props) {
             {showTitle && !showMode5 && !showMode6 && (
               <div className="text-overlay text-title">
                 <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyName}</p></div>
-                {showDate && activity && activity.beautyDatetimeLanguages && (<div ref={textSubtitleRef} id="canvasText" style={styleTextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
+                {showDate && activity && activity.beautyDatetimeLanguages && (<div ref={textSubtitleRef} id="canvasText" style={styleSubtextTitle} className={classesDate}><p>{activity.beautyDatetimeLanguages[language]}</p></div>)}
               </div>
             )}
             {showTitle && showMode5 && !showMode6 && (
