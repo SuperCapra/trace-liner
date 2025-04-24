@@ -1187,14 +1187,14 @@ function ImageComponent(props) {
 
     handleCrop(ratio, imageSrc)
     return () => window.removeEventListener("resize", updateFontSize)
-  }, [
-      ratio,
-      canvasHeight,
-      canvasWidth,
-      handleCrop,
-      imageSrc,
-      club
-    ])
+  },[
+    ratio,
+    canvasHeight,
+    canvasWidth,
+    handleCrop,
+    imageSrc,
+    club
+  ])
 
   const openModal = () => {
     setShowModal(true)
@@ -1212,9 +1212,12 @@ function ImageComponent(props) {
             <p className="p-dimention p-left p-color">{vocabulary[language].HOMEPAGE_BACK}</p>
           </div>
         </div>
-        <div className="language-selector">
-          {/* <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/> */}
+        <div className="back-button" onClick={() => handleDownloadShare()}>
+          <p className="p-dimention p-left p-color">{vocabulary[language].BUTTON_SHARE}</p>
         </div>
+        {/* <div className="language-selector">
+           <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/>
+        </div>*/}
       </div>
       <div className="width-wrapper-main">
         <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
@@ -1248,8 +1251,6 @@ function ImageComponent(props) {
             </div>
           </div>
         }
-        <div>
-        </div>
         <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>

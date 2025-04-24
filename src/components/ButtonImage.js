@@ -1,10 +1,11 @@
 import '../App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import SelectedImage from './SelectedImage';
 import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
+import {modes} from '../config/modes';
 // import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
 // import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
 // import {ReactComponent as TextSVG} from '../assets/images/text.svg'
@@ -96,11 +97,20 @@ function ButtonImage(props) {
 
   const showModifySetImage = () => {
     setModifyText(false)
+    activateModeOrEdit('editElement','modeElement')
     setModifyImgae(!showModifyImage)
   }
   const showModifySetText = () => {
     setModifyImgae(false)
+    activateModeOrEdit('modeElement','editElement')
     setModifyText(!showModifyText)
+  }
+  const activateModeOrEdit = (activate, deactivate) => {
+    const elementActivate = document.getElementById(activate)
+    const elementDeactivate = document.getElementById(deactivate)
+    if(elementActivate && !elementActivate.classList.contains('feature-active')) elementActivate.classList.add('feature-active')
+    else if(elementActivate.classList.contains('feature-active')) elementActivate.classList.remove('feature-active')
+    if(elementDeactivate && elementDeactivate.classList.contains('feature-active')) elementDeactivate.classList.remove('feature-active')
   }
   const handleClick = (data) => {
     // pregenerateImage()
@@ -286,9 +296,9 @@ function ButtonImage(props) {
     setShowCalories(true)
   }
 
-  const unitMeasureStyle = {
-    color: brandingPalette.primary,
-  }
+  // const unitMeasureStyle = {
+  //   color: brandingPalette.primary,
+  // }
   const shareStyle = {
     color: brandingPalette.primary,
   }
@@ -347,6 +357,7 @@ function ButtonImage(props) {
   // }
 
   const returnsColors = () => {
+    console.log('modes:', modes)
     if(!colors.length) {
       for(let color in colorText) {
         // if(!selectedUnsetBlendMode && color === 'black') continue
@@ -374,27 +385,39 @@ function ButtonImage(props) {
     handleClick({type: 'resolutionSlider', value: value})
   }
   
-  const textViewController = (label, propagationKey, value, isVisible) => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
-          {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
-        </div>
-        <p>{vocabulary[language][label]}: {value}</p>
+  const textViewController = (label, propagationKey, value, isVisible, deactivated) => {
+    let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
+      <div>
+        {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+        {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
-    )
+      <p>{vocabulary[language][label]}: {value}</p>
+    </div>)
+    let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
+      <div>
+        {isVisible && (<ViewSVG style={subEyeStyle}/>)}
+        {!isVisible && (<HideSVG style={subEyeStyle}/>)}
+      </div>
+      <p>{vocabulary[language][label]}: {value}</p>
+    </div>)
+    return deactivated ? deactivatedElement : activatedElement
   }
-  const textArrowController = (label, propagationKey, isVisible) => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {isVisible && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide(propagationKey)} />)}
-          {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide(propagationKey)} />)}
-        </div>
-        <p>{vocabulary[language][label]}</p>
+  const textArrowController = (label, propagationKey, isVisible, deactivated) => {
+    let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
+      <div>
+        {isVisible && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+        {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
-    )
+      <p>{vocabulary[language][label]}</p>
+    </div>)
+    let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
+      <div>
+        {isVisible && (<ArrowDownSVG style={subSwitchStyle}/>)}
+        {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown}/>)}
+      </div>
+      <p>{vocabulary[language][label]}</p>
+    </div>)
+    return deactivated ? deactivatedElement : activatedElement
   }
 
   const returnImages = () => {
@@ -433,9 +456,9 @@ function ButtonImage(props) {
     if(fileInput) fileInput.click()
   }
 
-  const propagateUnitMeasure = () => {
-    handleClick({type: 'unit', unit: unitMeasure === 'metric' ? 'imperial' : 'metric'})
-  }
+  // const propagateUnitMeasure = () => {
+  //   handleClick({type: 'unit', unit: unitMeasure === 'metric' ? 'imperial' : 'metric'})
+  // }
 
   const loadImage = (event) => {
     if(event && event.target && event.target.files && event.target.files.length) {
@@ -473,46 +496,43 @@ function ButtonImage(props) {
   }
 
   const modeController = () => {
-    return (
-      <div>
+
+    let elemenntDistance = showMode6 ? textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistanceSpaced, showDistance) : textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)
+    let elemenntElevation = showMode6 ? textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation) : textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)
+    let elemenntDuration = showMode6 ? textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration) : textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)
+    let elemenntPower = showMode6 ? textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower) : textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)
+
+    return (<div className="wrapper-modes-text">
+      <div className="wrapper-modes">        
         <div className="wrapper-buttons-left">
           {showMode1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
           {!showMode1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
-          <p>MODE 1</p>
+          <p>{vocabulary[language].MODE_201}</p>
         </div>
-        {showMode1 && displayMode1()}
-        <div className="wrapper-buttons-left">
-          {showMode2 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
-          {!showMode2 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
-          <p>MODE 2</p>
-        </div>
-        {showMode2 && displayMode2()}
-        <div className="wrapper-buttons-left">
-          {showMode3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
-          {!showMode3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
-          <p>MODE 3</p>
-        </div>
-        {showMode3 && displayMode3()}
-        {/* <div className="wrapper-buttons-left">
-          {showMode4 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
-          {!showMode4 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
-          <p>MODE 4</p>
-        </div>
-        {showMode4 && displayMode4()} */}
         <div className="wrapper-buttons-left">
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
-          <p>MODE 5</p>
+          <p>{vocabulary[language].MODE_202}</p>
         </div>
-        {showMode5 && displayMode5()}
         <div className="wrapper-buttons-left">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p>MODE 6</p>
+          <p>{vocabulary[language].MODE_203}</p>
         </div>
-        {showMode6 && displayMode6()}
       </div>
-    )
+      <div className="wrapper-texts">
+        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
+        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate, showMode6 || showMode5)}
+        {activity[unitMeasure].beautyDistance && elemenntDistance}
+        {activity[unitMeasure].beautyElevation && elemenntElevation}
+        {activity.beautyDuration && elemenntDuration}
+        {activity.beautyPower && elemenntPower}
+        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates, showMode6)}
+        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'coordinates', activity.beautyCalories, showCalories, !showMode6)}
+        {textArrowController('BUTTON_SWITCH', 'switchText', textUp, !showMode5)}
+      </div>
+    </div>)
   }
 
   const displayMode1 = () => {
@@ -554,15 +574,15 @@ function ButtonImage(props) {
       </div>
     )
   }
-  const displayMode4 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-      </div>
-    )
-  }
+  // const displayMode4 = () => {    
+  //   return (
+  //     <div className="width-mode-sub">
+  //       {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
+  //       {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
+  //       {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
+  //     </div>
+  //   )
+  // }
   const displayMode5 = () => {    
     return (
       <div className="width-mode-sub">
@@ -642,25 +662,71 @@ function ButtonImage(props) {
   //   }
   // };
 
+  const updateLayerSize = () => {
+    console.log('udating layer size...')
+    const styleSheet = document.styleSheets[0];
+    const elementLayer = document.getElementsByClassName('display-buttons')
+    const elementApp = document.getElementsByClassName('App')
+    if(elementLayer && elementLayer.length && elementApp && elementApp.length) {
+      let topValue = `-${elementLayer[0].offsetTop}`
+      let leftValue = `0`
+      let rightValue = `0`
+      let bottomValue = `0`
+      if(window.innerWidth < 800) {
+        leftValue = `-${elementLayer[0].offsetLeft}`
+        rightValue = `-${elementLayer[0].offsetLeft}`
+      } else {
+        bottomValue = `-${elementApp[0].offsetHeight - elementLayer[0].offsetHeight - elementLayer[0].offsetTop}`
+        rightValue = `-${window.innerWidth - elementLayer[0].offsetWidth - elementLayer[0].offsetLeft}`
+      }
+      for (let i = 0; i < styleSheet.cssRules.length; i++) {
+        const rule = styleSheet.cssRules[i];
+        let deletedRule = false
+        if (rule.selectorText === '.display-buttons::before') {
+          styleSheet.deleteRule(i)
+          deletedRule = true
+        }
+        styleSheet.insertRule(`
+          .display-buttons::before {
+            top: ${topValue}px !important;
+            left: ${leftValue}px !important;
+            right: ${rightValue}px !important;
+            bottom: ${bottomValue}px !important;
+          }
+        `, styleSheet.cssRules.length);
+        if(deletedRule) break
+      }
+    }
+  }
+
+  useEffect(() => {
+    updateLayerSize()
+
+    window.addEventListener("resize", updateLayerSize)
+
+    return () => window.removeEventListener("resize", updateLayerSize)
+  },[
+
+  ])
+
   return (
     <div className="display-buttons">
       <div className="wrapper-buttons">
-        <div style={unitMeasureStyle} className="feature" onClick={() => propagateUnitMeasure()}>
+        {/* <div style={unitMeasureStyle} className="feature" onClick={() => propagateUnitMeasure()}>
           <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_METRICS}</p>
-          {/* <UnitMeasureSVG className="feature" /> */}
-        </div>
-        <div style={textStyle} className="feature" onClick={() => showModifySetText()}>
-          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_MODE}</p>
+        </div> */}
+        <div id="modeElement" style={textStyle} className="feature" onClick={() => showModifySetText()}>
+          <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_MODE}</p>
           {/* <TextSVG className="feature" /> */}
         </div>
-        <div style={modifyStyle} className="feature" onClick={() => showModifySetImage()}>
-          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_EDIT}</p>
+        <div id="editElement" style={modifyStyle} className="feature" onClick={() => showModifySetImage()}>
+          <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_EDIT}</p>
           {/* <ModifySVG className="feature" /> */}
         </div>
-        <div style={shareStyle} className="feature" onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
+        {/*<div style={shareStyle} className="feature" onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
           <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_SHARE}</p>
-          {/* <ShareSVG className="feature"/> */}
-        </div>
+          <ShareSVG className="feature"/>
+        </div>*/}
       </div>
       {showModifyImage && (
         <div className="wrapper-controller">

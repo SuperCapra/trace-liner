@@ -162,6 +162,9 @@ p {
 .p-color{
   color: var(--palette-primary);
 }
+.p-margin{
+  margin: 7px;
+}
 .p-dimention-xl{
   font-size: calc(6vw);
 }
@@ -173,6 +176,15 @@ p {
 }
 .p-uppercase{
   text-transform: uppercase;
+}
+.wrapper-modes-text{
+  display: flex;
+}
+.wrapper-modes{
+  width: 50%;
+}
+.wrapper-texts{
+  width: 50%;
 }
 .header-wrapper{
   display: flex;
@@ -334,7 +346,7 @@ p {
   display:flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
 
 }
 .wrapper-sub-buttons{
@@ -356,6 +368,17 @@ p {
   align-items: center;
   justify-content: left;
   text-align: left;
+}
+.wrapper-buttons-left-deactivated{
+  text-decoration: line-through;
+  filter: brightness(0.5);
+}
+.wrapper-buttons-left-activated:hover{
+  cursor: pointer;
+  filter: brightness(0.8);
+}
+.wrapper-buttons-left-activated:active{
+  filter: brightness(0.6);
 }
 .back{
   color: var(--palette-background);
@@ -397,7 +420,7 @@ p {
   display: flex;
   flex-direction: column;
   margin: 0 10px 10px 10px;
-  width: 100%;
+  width: 80vw;
 }
 .display-buttons::before{
   content: "";
@@ -573,7 +596,12 @@ p {
 }
 .feature{
   border: 1px solid;
-  width: 60%;
+  border-radius: 7px;
+  width: 30%;
+  margin: 10px;
+}
+.feature-active{
+  color: var(--palette-secondary) !important
 }
 .feature:active{
   filter: brightness(0.6);
@@ -922,6 +950,7 @@ p {
 }
 .width-mode{
   width: 80vw;
+  padding: 10px
 }
 .width-mode-sub{
   width:75vw;
@@ -1106,6 +1135,9 @@ p {
   .width-header-wrapper{
     width: 60vw;
   }
+  .display-buttons{
+    width: 60vw;
+  }
   .canvas-container-square{
     min-height: 60vw;
   }
@@ -1201,6 +1233,10 @@ p {
   .modal-buttons-p{
     font-size: calc(2.15vw);
   }
+  .width-mode{
+    width: 60vw;
+    padding: 10px
+  }
 }
 @media print, screen and (min-width: 600px) {
   .homepage-button{
@@ -1242,7 +1278,10 @@ p {
     width: 80vw;
   }
   .width-header-wrapper{
-    width: 40vw;
+    width: 60vw;
+  }
+  .display-buttons{
+    width: 60vw;
   }
   .canvas-container-square{
     min-height: 40vw;
@@ -1369,6 +1408,9 @@ p {
   }
   .width-header-wrapper{
     width: 740px;
+  }
+  .display-buttons{
+    width: 100%;
   }
   .canvas-container-square{
     min-height: 320px;
