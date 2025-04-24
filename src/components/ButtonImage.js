@@ -535,76 +535,6 @@ function ButtonImage(props) {
     </div>)
   }
 
-  const displayMode1 = () => {
-    return (
-      <div className="width-mode-sub">
-        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate)}
-        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate)}
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-        {activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)}
-        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
-        {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates)}
-      </div>
-    )
-  }
-
-  const displayMode2 = () => {
-    return (
-      <div className="width-mode-sub">
-        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate)}
-        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate)}
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-      </div>
-    )
-  }
-  const displayMode3 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-        {!altitudeVertical && activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)}
-        {!altitudeVertical && activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
-        {textArrowController('BUTTON_SWITCH_ALTITUDE', 'switchAltitude', altitudeVertical)}
-        {/* {activity.beautyCoordinates && coordinatesController()} */}
-      </div>
-    )
-  }
-  // const displayMode4 = () => {    
-  //   return (
-  //     <div className="width-mode-sub">
-  //       {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-  //       {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-  //       {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-  //     </div>
-  //   )
-  // }
-  const displayMode5 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)}
-        {activity.beautyDuration && textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)}
-        {textArrowController('BUTTON_SWITCH', 'switchText', textUp)}
-      </div>
-    )
-  }
-  const displayMode6 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistanceSpaced, showDistance)}
-        {activity[unitMeasure].beautyElevation && textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation)}
-        {activity.beautyMovingTime && textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration)}
-        {activity.beautyPower && textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower)}
-        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
-        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'calories', activity.beautyCalories, showCalories)}
-      </div>
-    )
-  }
   // const minusFilter = () => {
   //   handleClick({type: 'filter', direction: 'minus'})
   // }
@@ -617,50 +547,6 @@ function ButtonImage(props) {
   // const plusResolution = () => {
   //   handleClick({type: 'resolution', direction: 'plus'})
   // }
-
-  // const captureAndUploadImage = (canvas, titleImage, type, blob) => {
-  //   try {
-  //     // Convert canvas to Blob
-  //     canvas.toBlob(async (blob) => {
-  //       if (blob) {
-  //         // Send the blob to the proxy server
-  //         const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
-  //         logUtils.loggerText('url:', uploadedImageUrl)
-          
-  //         // Share the URL once the image is uploaded
-  //         if (uploadedImageUrl) {
-  //           shareImageUrl(uploadedImageUrl, titleImage, type, blob);
-  //         }
-  //       }
-  //     }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
-  //   } catch (error) {
-  //     console.error('Error capturing and uploading image:', error);
-  //     downloadImage(titleImage.replace('.' + type, ''), blob, type)
-  //   }
-  // };
-
-  // const uploadImageToProxy = async (blob, titleImage) => {
-  //   const formData = new FormData();
-  //   formData.append('file', blob, titleImage);
-  //   let origin = window.location.origin
-  //   logUtils.loggerText('formData:', formData)
-  
-  //   try {
-  //     const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-  
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       return data.url;  // Return the uploaded image URL
-  //     } else {
-  //       throw new Error('Image upload failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
 
   const updateLayerSize = () => {
     console.log('udating layer size...')
