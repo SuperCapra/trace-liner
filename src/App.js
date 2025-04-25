@@ -13,8 +13,8 @@ import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.sv
 import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
 import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
 import brandingPalette from './config/brandingPalette';
-import {vocabulary, languages} from './config/vocabulary';
-import clubs from './config/clubs'
+import {vocabulary/** , languages*/} from './config/vocabulary';
+// import clubs from './config/clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
@@ -28,7 +28,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 let unitMeasure = 'metric'
 let called = false 
 let sendCreatingVisit = false
-let changedLanguage = false
+// let changedLanguage = false
 let vId = undefined
 let uId = undefined
 let aId = undefined
@@ -266,38 +266,30 @@ class Homepage extends React.Component{
     // }
     logUtils.loggerText('Language navigator:', navigator.language)
     logUtils.loggerText('Language:', this.props.language)
-    logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
     logUtils.loggerText('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
     let language = this.props.language
-    for(let c of clubs) {
-      if(urlCurrent.includes(c.urlKey)) {
-        club = c
-        break
-      }
-    }
-    // if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
-    //   console.info('Club: ', club)
-    //   stravaAuthorizeUrl += club.urlKey
+    // for(let c of clubs) {
+    //   if(urlCurrent.includes(c.urlKey)) {
+    //     club = c
+    //     break
+    //   }
     // }
 
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
     }
     if(code && !called) {
-      // queryParameters.forEach((value, key) => {
-      //   queryParameters.delete(key)
-      //   logUtils.loggerText(key, value);
-      // });
       called = true
       this.getAccessTokenAndActivities(code)
-      if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language
-    } else if(club && club.language && languages.includes(club.language) && !changedLanguage) {
-      this.setLanguage({value: club.language})
-    }
+      // if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language
+    } 
+    // else if(club && club.language && languages.includes(club.language) && !changedLanguage) {
+    //   this.setLanguage({value: club.language})
+    // }
     let mainWrapperClasses = "main-wrapper" + (utils.isMobile() ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (

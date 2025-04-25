@@ -718,7 +718,7 @@ p {
     height: 100%;
   }
 }
-.logo-club-wrapper{
+/* .logo-club-wrapper{
   position: absolute;
   bottom: 0;
   right: 3%;
@@ -765,7 +765,7 @@ p {
 .logo-club-svg{
   width: 15vw;
   height: 12vw
-}
+} */
 .indexed-height{
   z-index: 100;
 }
@@ -1155,7 +1155,7 @@ p {
   .canvas-container-general{
     min-width: 60vw;
   }
-  .logo-club-wrapper-scale{
+  /* .logo-club-wrapper-scale{
     transform: scale(0.75);
   }
   .logo-club-wrapper{
@@ -1189,7 +1189,7 @@ p {
   .logo-club-wrapper-mode-5-down-rect{
     top: 5vw;
     right: 1.5vw;
-  }
+  } */
   .text-overlay-mode-3{
     border-right: calc(1.5vw) solid;
   }
@@ -1300,7 +1300,7 @@ p {
   .canvas-container-general{
     min-width: 40vw;
   }
-  .logo-club-wrapper-scale{
+  /* .logo-club-wrapper-scale{
     transform: scale(0.6);
   }
   .logo-club-wrapper{
@@ -1339,7 +1339,7 @@ p {
     top: 0vw;
     right: -2vw;
     transform: scale(0.5);
-  }
+  } */
   .text-overlay-mode-3{
     border-right: calc(1vw) solid;
   }
@@ -1418,7 +1418,7 @@ p {
   .canvas-container-general{
     min-width: 320px;
   }
-  .logo-club-wrapper-scale{
+  /* .logo-club-wrapper-scale{
     transform: scale(0.85);
   }
   .logo-club-wrapper{
@@ -1457,7 +1457,7 @@ p {
   .logo-club-svg{
     width: 60px !important;
     height: 48px !important;
-  }
+  } */
   .width-wrapper-main{
     width: 740px;
     margin: 10px 0px 40px;
@@ -1540,7 +1540,7 @@ p {
   .canvas-container-general{
     min-width: 400px;
   }
-  .logo-club-wrapper{
+  /* .logo-club-wrapper{
     bottom: -10px;
     right: 2px;
   }
@@ -1575,7 +1575,7 @@ p {
   .logo-club-svg{
     width: 75px !important;
     height: 60px !important;
-  }
+  } */
   .width-wrapper-main{
     width: 920px;
     margin: 10px 0px 40px;

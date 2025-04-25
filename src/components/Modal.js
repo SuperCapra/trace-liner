@@ -12,7 +12,7 @@ import dbInteractions from '../services/dbInteractions.js';
 
 const Modal = forwardRef((props,ref) => {
 
-    const {/**message, title,*/ activity, infoLog, club, language, activityId, userId, visitId, showButtons, handleCloseModal} = props
+    const {/**message, title,*/ activity, infoLog, /**club,*/ language, activityId, userId, visitId, showButtons, handleCloseModal} = props
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(false)
@@ -36,7 +36,7 @@ const Modal = forwardRef((props,ref) => {
       let b = type === 'png' ? blobCountour : blobComplete
       if(type === 'png') infoLog.exportType = 'contour'
       try {
-        if(navigator.share && utils.isMobile(club)) {
+        if(navigator.share && utils.isMobile() /**utils.isMobile(club)*/) {
           try {
             console.info('Is user activation: ', navigator.userActivation.isActive)
             // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)

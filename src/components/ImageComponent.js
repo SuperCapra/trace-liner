@@ -15,7 +15,7 @@ import {ReactComponent as DesignBySVG} from '../assets/images/design.svg'
 
 function ImageComponent(props) {
 
-  const {athlete, activity, club, language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
+  const {athlete, activity,/**, club,*/ language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -101,12 +101,12 @@ function ImageComponent(props) {
   const filterStyle = {
     opacity: valueFilter/100
   }
-  const styleLogoClub = {
-    width: (ratio === '1:1') ? '10vw' : '15vw',
-    height: (ratio === '1:1') ? '8vw' : '12vw',
-    fill: drawingColor,
-    // mixBlendMode: blendMode
-  }
+  // const styleLogoClub = {
+  //   width: (ratio === '1:1') ? '10vw' : '15vw',
+  //   height: (ratio === '1:1') ? '8vw' : '12vw',
+  //   fill: drawingColor,
+  //   // mixBlendMode: blendMode
+  // }
   const styleTextUnderSketch = {
     top: (ratio === '1:1') ? '82%' : '82%',
     color: drawingColor,
@@ -122,24 +122,24 @@ function ImageComponent(props) {
     right: showMode5 ? (textUp ? '3%' : 'unset') : '3%',
   }
 
-  const classesForLogoClub = () => {
-    let result = 'logo-club-wrapper-scale'
-    if(showMode3) {
-      if(!altitudeVertical) {
-        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3'
-        else return result + ' logo-club-wrapper-mode-3-rect'
-      } else {
-        if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3-vertical'
-        else return result + ' logo-club-wrapper-mode-3-vertical-rect'
-      }
-    } else if(showMode5 && !textUp) {
-      if(ratio === '1:1') return result + ' logo-club-wrapper-mode-5-down'
-      else return result + ' logo-club-wrapper-mode-5-down-rect'
-    } else {
-      if(ratio === '1:1') return result + ' logo-club-wrapper'
-      else return result + ' logo-club-wrapper-rect'
-    }
-  }
+  // const classesForLogoClub = () => {
+  //   let result = 'logo-club-wrapper-scale'
+  //   if(showMode3) {
+  //     if(!altitudeVertical) {
+  //       if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3'
+  //       else return result + ' logo-club-wrapper-mode-3-rect'
+  //     } else {
+  //       if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3-vertical'
+  //       else return result + ' logo-club-wrapper-mode-3-vertical-rect'
+  //     }
+  //   } else if(showMode5 && !textUp) {
+  //     if(ratio === '1:1') return result + ' logo-club-wrapper-mode-5-down'
+  //     else return result + ' logo-club-wrapper-mode-5-down-rect'
+  //   } else {
+  //     if(ratio === '1:1') return result + ' logo-club-wrapper'
+  //     else return result + ' logo-club-wrapper-rect'
+  //   }
+  // }
 
   const classesForSketch = () => {
     let result = 'round-corner canvas-position canvas-filter'
@@ -209,7 +209,7 @@ function ImageComponent(props) {
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = classesForDataElement()
   const classesDataPLittle = 'data-p-little'
-  const classesLogoClub = classesForLogoClub()
+  // const classesLogoClub = classesForLogoClub()
   const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
   const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
   const classMode5 = classesForMode5()
@@ -1215,7 +1215,7 @@ function ImageComponent(props) {
     canvasWidth,
     handleCrop,
     imageSrc,
-    club
+    // club
   ])
 
   const openModal = () => {
@@ -1227,7 +1227,8 @@ function ImageComponent(props) {
   
   return (
     <div className="wrapper-main">
-      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
+      {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
+      {/* {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>} */}
       <div className="header-wrapper width-header-wrapper">
         <div className="back-button" onClick={() => handleBack()}>
           <div className="back-text-container">
@@ -1258,7 +1259,7 @@ function ImageComponent(props) {
               <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
             </div>
           )}
-          {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)}
+          {/* {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)} */}
           {showMode1 && returnMode1Disposition()}
           {showMode2 && returnMode2Disposition()}
           {showMode3 && returnMode3Disposition()}
