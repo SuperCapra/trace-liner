@@ -61,10 +61,7 @@ function ImageComponent(props) {
   const [fontSizeData, setFontSizeData] = useState(null);
   const [fontSizeDataMode5, setFontSizeDataMode5] = useState(null);
   const [fontSizeDataElements, setFontSizeDataElements] = useState(null);
-  // const titleStyleFontSize = {};
-  // const subtitleStyleFontSize = {};
-  // const dataStyleFontSize = {};
-  // const dataMode5StyleFontSize = {};
+  const [topSketch, setTopSketch] = useState('unset');
   const dataElementsStyleFontSize = {
     fontSize: fontSizeDataElements
   };
@@ -199,11 +196,20 @@ function ImageComponent(props) {
       else return 'wrapper-data-element-rect'
     }
   }
+  const styleForSketch = () => {
+    if(showMode5) {
+      return {
+        color: drawingColor,
+        top: topSketch
+      }
+    } else return { color: drawingColor}
+  }
   const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = classesForName()
   const classesDate = 'sub-text-overlay text-date-props' + (ratio === '1:1' ? ' text-title-props' : ' text-title-props-rect')
   const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' ? '' : ' text-coordinates-props-rect')
   const classesSketch = classesForSketch()
+  const styleSketch = styleForSketch()
   const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
@@ -1153,7 +1159,7 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DISTANCE}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyDistance}</p></div>)
     if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_ELEVATION}</p><p className="data-mode-5">{activity[unitMeasureSelected].beautyElevation}</p></div>)
     if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-5"><p className="text-mode-5">{vocabulary[language].IMAGE_DURATION}</p><p className="data-mode-5">{activity.beautyDuration}</p></div>)
-    return (<div ref={textDataMode5Ref} id="canvasText" className={classMode5} style={styleTextMode5}><div className={classWrapperMode5}>{dataDisplaying}</div></div>)
+    return (<div ref={textDataMode5Ref} id="canvasText" className={classMode5} style={styleTextMode5}><div id="ancorSketchData" className={classWrapperMode5}>{dataDisplaying}</div></div>)
   }
   const returnMode6Disposition = () => {
     let dataShowing = []
@@ -1202,10 +1208,29 @@ function ImageComponent(props) {
     }
   };
 
+  const updateSketchHeight = useCallback(() => {
+    if(!showMode5) return
+    const elemntToMatch = document.getElementById(textUp ? 'ancorSketchData' : 'ancorSketchText')
+    const elementHeightTotal = document.getElementById('ancorTotalHeight')
+    console.log('elemntToMatch.offsetHeight')
+    if(elemntToMatch && elementHeightTotal) {
+      let heightElementMatching = elementHeightTotal.offsetHeight * (textUp ? 0.07 : 0.795)
+      let height = elemntToMatch.offsetHeight
+      console.log('height', height)
+      console.log('heightElementMatching', heightElementMatching)
+      setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
+    }
+  },[
+    showMode5,
+    textUp
+  ])
+
   useEffect(() => {
     updateFontSize()
+    updateSketchHeight()
 
     window.addEventListener("resize", updateFontSize)
+    window.addEventListener("resize", updateSketchHeight)
 
     handleCrop(ratio, imageSrc)
     return () => window.removeEventListener("resize", updateFontSize)
@@ -1215,6 +1240,7 @@ function ImageComponent(props) {
     canvasWidth,
     handleCrop,
     imageSrc,
+    updateSketchHeight
     // club
   ])
 
@@ -1246,7 +1272,7 @@ function ImageComponent(props) {
         <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
           <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-          {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>}
+          {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleSketch}/>}
           {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
           {showTitle && !showMode5 && !showMode6 && (
             <div className="text-overlay text-title">
@@ -1255,8 +1281,8 @@ function ImageComponent(props) {
             </div>
           )}
           {showTitle && showMode5 && !showMode6 && (
-            <div className="text-overlay text-title-mode-5">
-              <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p>{activity.beautyNameNoEmoji}</p></div>
+            <div id="ancorTotalHeight" className="text-overlay text-title-mode-5">
+              <div ref={textTitleRef} id="canvasText" style={styleTextTitle} className={classesName}><p id="ancorSketchText">{activity.beautyNameNoEmoji}</p></div>
             </div>
           )}
           {/* {club && club.hasImageLogo && club.imageLogo(classesLogoClub, styleLogoClub)} */}
