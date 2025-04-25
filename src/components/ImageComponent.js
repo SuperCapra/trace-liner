@@ -359,8 +359,8 @@ function ImageComponent(props) {
   //     })
   // },[])
 
-  const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max) => {
-    if(showMode5) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? 0 : height)]
+  const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max, dimentionCircleFinish) => {
+    if(showMode5) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? dimentionCircleFinish : height - dimentionCircleFinish)]
     else return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
   }, [
     textUp,
@@ -529,8 +529,8 @@ function ImageComponent(props) {
       let drawing = true
       let dimentionCircleStart = width * 0.005
       let dimentionCircleFinish = width * 0.02
-      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY)
-      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY)
+      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
+      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
       let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
       let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
       // stroke the initial circle only if the intersection it's null with the final circle
@@ -543,11 +543,11 @@ function ImageComponent(props) {
 
       for(let i = 0; i < coordinates.length; i++) {
         // if(i>200) break
-        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY)
+        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
         // let cdMinus
         let cdPlus
         // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
-        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY)
+        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
         if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
           if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
             if(!drawing) {
