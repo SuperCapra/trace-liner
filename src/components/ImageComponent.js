@@ -11,6 +11,7 @@ import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
+import {ReactComponent as DesignBySVG} from '../assets/images/design.svg'
 
 function ImageComponent(props) {
 
@@ -111,6 +112,14 @@ function ImageComponent(props) {
     color: drawingColor,
     fontSize: fontSizeData
     // mixBlendMode: blendMode
+  }
+  const styleDesignBy = {
+    fill: drawingColor,
+    width: '4%',
+    top: showMode5 ? (textUp ? 'unset' : '2%') : 'unset',
+    bottom: showMode5 ? (textUp ? '2%' : 'unset') : '2%',
+    left: showMode5 ? (textUp ? 'unset' : '3%') : 'unset',
+    right: showMode5 ? (textUp ? '3%' : 'unset') : '3%',
   }
 
   const classesForLogoClub = () => {
@@ -350,9 +359,21 @@ function ImageComponent(props) {
   //     })
   // },[])
 
-  const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
-    return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
-  }
+  const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max) => {
+    if(showMode5) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? 0 : height)]
+    else return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
+  }, [
+    textUp,
+    showMode5
+  ])
+  // const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
+  //   return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
+  // }
+  // const transformCoordinatesMode5 = (coord, zoomFactor, width, height, mapCenter, min, max) => {
+  //   console.log('min', min)
+  //   console.log('coord[1]', coord[1])
+  //   return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] + (textUp ? max : (-min)) ) * zoomFactor + height]
+  // }
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
     try {
@@ -508,8 +529,8 @@ function ImageComponent(props) {
       let drawing = true
       let dimentionCircleStart = width * 0.005
       let dimentionCircleFinish = width * 0.02
-      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter)
-      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter)
+      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY)
+      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY)
       let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
       let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
       // stroke the initial circle only if the intersection it's null with the final circle
@@ -522,11 +543,11 @@ function ImageComponent(props) {
 
       for(let i = 0; i < coordinates.length; i++) {
         // if(i>200) break
-        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter)
+        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY)
         // let cdMinus
         let cdPlus
         // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
-        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter)
+        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY)
         if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
           if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
             if(!drawing) {
@@ -564,7 +585,8 @@ function ImageComponent(props) {
     valueResolution,
     drawElevation,
     visitId,
-    infoLog
+    infoLog,
+    transformCoordinates
   ])
 
   const drawCircle = (ctx, coordinates, diameter, fill, color) => {
@@ -1243,6 +1265,7 @@ function ImageComponent(props) {
           {showMode4 && returnMode4Disposition()}
           {showMode5 && returnMode5Disposition()}
           {showMode6 && returnMode6Disposition()}
+          <DesignBySVG style={styleDesignBy} className="design-position"></DesignBySVG>
         </div>
         {isLoading && 
           <div className="background-loading" id="loader">
