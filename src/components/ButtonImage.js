@@ -10,6 +10,7 @@ import {modes} from '../config/modes';
 // import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
 // import {ReactComponent as TextSVG} from '../assets/images/text.svg'
 import {ReactComponent as RectangleSVG} from '../assets/images/rectangle.svg'
+import {ReactComponent as PostSVG} from '../assets/images/post.svg'
 import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
@@ -301,6 +302,8 @@ function ButtonImage(props) {
   // }
   const shareStyle = {
     color: brandingPalette.primary,
+    fill: brandingPalette.primary,
+    transform: 'scale(0.55)'
   }
   const modifyStyle = {
     color: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
@@ -309,11 +312,10 @@ function ButtonImage(props) {
     color: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
   }
   const squareStyle = {
-    color: square ? brandingPalette.secondary : brandingPalette.primary,
+    fill: square ? brandingPalette.secondary : brandingPalette.primary,
   }
   const rectangleStyle = {
     fill: rectangle ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
   }
   const eyeStyle = {
     fill: brandingPalette.primary,
@@ -617,8 +619,8 @@ function ButtonImage(props) {
       {showModifyImage && (
         <div className="wrapper-controller">
           <div className="wrapper-sub-buttons">
-            <RectangleSVG className="proportion" style={rectangleStyle} onClick={() => propagateRectangle()}/>
-            <SquareSVG className="proportion" style={squareStyle} onClick={() => propagateSquare()}/>
+            <RectangleSVG className="proportion margin-10" style={rectangleStyle} onClick={() => propagateRectangle()}/>
+            <PostSVG className="proportion margin-10" style={squareStyle} onClick={() => propagateSquare()}/>
             {/* <SquareSVG style={squareStyle} onClick={() => propagateTwice()}/> */}
           </div>
           {/* <div className="wrapper-sub-buttons">
@@ -635,22 +637,22 @@ function ButtonImage(props) {
             <ResolutionSVG></ResolutionSVG>
             <PlusSVG onClick={() => plusResolution()}/>
           </div> */}
-          <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders display-flex">
-              <ResolutionSVG style={shareStyle}></ResolutionSVG>
+          <div className="wrapper-sub-buttons-slider slider-width">
+            <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
+              <p className="p-dimention">{vocabulary[language].DETAIL}</p>
             </div> 
-            <Slider value={valueResolution} onChange={handleChangeValueResolution} />
+            <Slider className="width-slider-large" value={valueResolution} onChange={handleChangeValueResolution} />
           </div>
-          <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders display-flex">
-              <FilterSVG style={shareStyle}></FilterSVG>
+          <div className="wrapper-sub-buttons-slider slider-width">
+            <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
+              <p className="p-dimention">{vocabulary[language].SLIDER}</p>
             </div> 
-            <Slider value={valueFilter} onChange={handleChangeValueFilter} />
+            <Slider className="width-slider-large" value={valueFilter} onChange={handleChangeValueFilter} />
           </div>
-          <div className="wrapper-sub-buttons colors-background">
+          <div className="wrapper-sub-buttons">
             {returnsColors()}
           </div>
-          <div className="wrapper-sub-buttons wrapper-images image-background">
+          <div className="wrapper-sub-buttons wrapper-images">
             {returnImages()}
             {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
             <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />

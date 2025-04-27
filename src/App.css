@@ -355,6 +355,13 @@ p {
   align-items: center;
   justify-content: center;
 }
+.wrapper-sub-buttons-slider{
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 70%;
+}
 .wrapper-images{
   width: 80%;
   flex-wrap: wrap;
@@ -1651,4 +1658,13 @@ p {
 .design-position{
   position: absolute;
   z-index: 3;
+}
+.width-slider-shrink{
+  min-width: 40%;
+}
+.width-slider-large{
+  min-width: 60%;
+}
+.margin-10{
+  margin:10px;
 }

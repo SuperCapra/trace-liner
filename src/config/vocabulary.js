@@ -64,7 +64,9 @@ const vocabulary = {
         BUTTON_SHARE: 'SHARE',
         MODE_201: 'Mode 2.0.1',
         MODE_202: 'Mode 2.0.2',
-        MODE_203: 'Mode 2.0.3'
+        MODE_203: 'Mode 2.0.3',
+        SLIDER: 'TINT',
+        DETAIL: 'DETAIL'
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -131,7 +133,9 @@ const vocabulary = {
         BUTTON_SHARE: 'CONDIVIDI',
         MODE_201: 'Mode 2.0.1',
         MODE_202: 'Mode 2.0.2',
-        MODE_203: 'Mode 2.0.3'
+        MODE_203: 'Mode 2.0.3',
+        SLIDER: 'FILTRO',
+        DETAIL: 'DETTAGLI'
     }
 }
 
