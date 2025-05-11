@@ -573,10 +573,10 @@ p {
   flex-direction: row;
 }
 .text-title-props:first-child{
-  bottom:83%
+  bottom:90%
 }
 .text-title-props:last-child{
-  top:17%
+  top:10%
 }
 .text-name-props{
   font-weight: 900;
