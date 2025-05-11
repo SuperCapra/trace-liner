@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3.27 24.37" width="20px">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #d2d627;
+      }
+    </style>
+  </defs>
+  <path class="cls-1" d="M0,24.37v-.5h3.27v.5H0Z"/>
+  <path class="cls-1" d="M0,23.61v-.5h.25v-.25h.5v-.25h.25v-.25h.5v-.25h.25v-.25h.5v-.25h-.25s-2.01,0-2.01,0v-.5h3.27v.5h-.25v.25h-.25v.25h-.25v.25h-.5v.25h-.25v.25h-.5v.25h2.01v.5H0Z"/>
+  <path class="cls-1" d="M1.26,20.6v.25h-.75v-.25h-.25v-.25h-.25v-1.51h.25v-.25h.25v-.25h.5v.5h-.25v.25h-.25v1.01h.25v.25h.25v-.25h.25v-1.26h.25v-.25h.25v-.25h1v.25h.25v.25h.25v1.51h-.25v.25h-.25v.25h-.5v-.5h.25v-.25h.25v-1.01h-.25v-.25h-.5v.25h-.25v1.26h-.25v.25h-.25Z"/>
+  <path class="cls-1" d="M0,18.09v-2.51h.5v1h2.76v.5H.5v1h-.5Z"/>
+  <path class="cls-1" d="M2.76,14.83h.5v.5h-.76v-.25h-.5v-.25h-.5v-.25h-.75v-.25H.25v-.25h-.25v-.5h.25v-.25h.5v-.25h.75v-.25h.5v-.25h.5v-.25h.76v.5h-.5v.25h-.25v1.51h.25v.25ZM1.51,14.33h.5v-1h-.5v.25h-.75v.5h.75v.25Z"/>
+  <path class="cls-1" d="M3.01,11.56v.25h-.25v.25H.5v-.25h-.25v-.25h-.25v-1.75h.25v-.25h.25v-.25h.75v.5h-.5v.25h-.25v1.26h.25v.25h1.75v-.25h.25v-.75h-.25v-.25h-.25v-.25h-.25v.5h-.5v-1.25h1.76v.5h-.5v.25h.25v.25h.25v1.26h-.25Z"/>
+  <path class="cls-1" d="M0,9.05v-2.01h.25v-.25h.25v-.25h1v.25h.25v.25h.25v-.25h.25v-.25h1v.5h-.76v.25h-.25v.25h-.25v1h1.25v.5H0ZM.5,8.55h1v-1.25h-.25v-.25h-.5v.25h-.25v1.25Z"/>
+  <path class="cls-1" d="M2.76,5.79h.5v.5h-.76v-.25h-.5v-.25h-.5v-.25h-.75v-.25H.25v-.25h-.25v-.5h.25v-.25h.5v-.25h.75v-.25h.5v-.25h.5v-.25h.76v.5h-.5v.25h-.25v1.51h.25v.25ZM1.51,5.29h.5v-1h-.5v.25h-.75v.5h.75v.25Z"/>
+  <path class="cls-1" d="M0,3.02v-.5h.25v-.25h.5v-.25h.5v-.25h.5v-.5h-.5v-.25h-.5v-.25H.25v-.25h-.25v-.5h3.27v.5H1.26v.25h.5v.25h.5v.25h.5v.5h-.5v.25h-.5v.25h-.5v.25h2.01v.5H0Z"/>
+</svg>

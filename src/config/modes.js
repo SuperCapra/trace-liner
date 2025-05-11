@@ -1,16 +1,16 @@
 const modes = [{
     name: 'mode201',
-    label: 'MODE_201',
+    label: 'MODE_1',
     bubbleKey: 'mode1',
     dataAvailable: ['title', 'date', 'distance', 'elevation', 'duration', 'power', 'average', 'coordinates']
 },{
     name: 'mode202',
-    label: 'MODE_202',
+    label: 'MODE_2',
     bubbleKey: 'mode5',
     dataAvailable: ['title', 'distance', 'elevation', 'duration']
 },{
     name: 'mode203',
-    label: 'MODE_203',
+    label: 'MODE_3',
     bubbleKey: 'mode6',
     dataAvailable: ['distance', 'elevation', 'duration', 'power', 'average', 'calories']
 }]

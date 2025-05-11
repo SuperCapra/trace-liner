@@ -5,18 +5,18 @@ import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
-import {modes} from '../config/modes';
+// import {modes} from '../config/modes';
 // import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
 // import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
 // import {ReactComponent as TextSVG} from '../assets/images/text.svg'
-import {ReactComponent as RectangleSVG} from '../assets/images/rectangle.svg'
+import {ReactComponent as StorySVG} from '../assets/images/stories.svg'
 import {ReactComponent as PostSVG} from '../assets/images/post.svg'
-import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
+// import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
 // import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
-import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
-import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
+// import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
+// import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
 import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
 // import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
 // import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
@@ -65,7 +65,7 @@ function ButtonImage(props) {
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
   // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
-  const colors = []
+  const colorsController = []
   const [images,setImages] = useState([{
     photo: image1, 
     alt: 'default-1',
@@ -100,11 +100,13 @@ function ButtonImage(props) {
     setModifyText(false)
     activateModeOrEdit('editElement','modeElement')
     setModifyImgae(!showModifyImage)
+    updateLayerSize()
   }
   const showModifySetText = () => {
     setModifyImgae(false)
     activateModeOrEdit('modeElement','editElement')
     setModifyText(!showModifyText)
+    updateLayerSize()
   }
   const activateModeOrEdit = (activate, deactivate) => {
     const elementActivate = document.getElementById(activate)
@@ -302,20 +304,19 @@ function ButtonImage(props) {
   // }
   const shareStyle = {
     color: brandingPalette.primary,
-    fill: brandingPalette.primary,
-    transform: 'scale(0.55)'
+    fill: brandingPalette.primary
   }
   const modifyStyle = {
-    color: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
+    color: showModifyImage ? brandingPalette.primary : brandingPalette.secondary,
   }
   const textStyle = {
-    color: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
+    color: showModifyText ? brandingPalette.primary : brandingPalette.secondary,
   }
   const squareStyle = {
-    fill: square ? brandingPalette.secondary : brandingPalette.primary,
+    stoke: (square ? brandingPalette.secondary : brandingPalette.primary) + ' !important',
   }
   const rectangleStyle = {
-    fill: rectangle ? brandingPalette.secondary : brandingPalette.primary,
+    stroke: rectangle ? brandingPalette.tertiary : brandingPalette.primary,
   }
   const eyeStyle = {
     fill: brandingPalette.primary,
@@ -358,9 +359,26 @@ function ButtonImage(props) {
   //   borderRadius: '5px'
   // }
 
-  const returnsColors = () => {
-    console.log('modes:', modes)
-    if(!colors.length) {
+  // const returnsColors = () => {
+  //   if(!colors.length) {
+  //     for(let color in colorText) {
+  //       // if(!selectedUnsetBlendMode && color === 'black') continue
+  //       // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
+  //       let styleColor = {
+  //         backgroundColor: colorText[color],
+  //         width: '20px',
+  //         height: '20px',
+  //         borderRadius: '20px',
+  //         border: '2px solid ' + brandingPalette['background']
+  //       }
+  //       colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>)
+  //     }
+  //     logUtils.loggerText('colors', colors)
+  //   }
+  //   return (colors)
+  // }
+  const returnsColorsController = () => {
+    if(!colorsController.length) {
       for(let color in colorText) {
         // if(!selectedUnsetBlendMode && color === 'black') continue
         // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
@@ -369,13 +387,14 @@ function ButtonImage(props) {
           width: '20px',
           height: '20px',
           borderRadius: '20px',
-          border: '2px solid ' + brandingPalette['background']
+          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background'])
         }
-        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>)
+        let valueP = color.replace('text','')
+        colorsController.push(<div className="colors-flex"><div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/><p className="p-dimention margin-horizontal">{valueP}</p><div className="colors" key={'image' + color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/></div>)
       }
-      logUtils.loggerText('colors', colors)
+      logUtils.loggerText('colors label', colorsController)
     }
-    return (colors)
+    return (colorsController)
   }
 
   const handleChangeValueFilter = (value) => {
@@ -498,7 +517,6 @@ function ButtonImage(props) {
   }
 
   const modeController = () => {
-
     let elemenntDistance = showMode6 ? textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistanceSpaced, showDistance) : textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)
     let elemenntElevation = showMode6 ? textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation) : textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)
     let elemenntDuration = showMode6 ? textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration) : textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)
@@ -509,27 +527,27 @@ function ButtonImage(props) {
         <div className="wrapper-buttons-left">
           {showMode1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
           {!showMode1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
-          <p>{vocabulary[language].MODE_201}</p>
+          <p>{vocabulary[language].MODE_1}</p>
         </div>
         <div className="wrapper-buttons-left">
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
-          <p>{vocabulary[language].MODE_202}</p>
+          <p>{vocabulary[language].MODE_2}</p>
         </div>
         <div className="wrapper-buttons-left">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p>{vocabulary[language].MODE_203}</p>
+          <p>{vocabulary[language].MODE_3}</p>
         </div>
       </div>
       <div className="wrapper-texts">
-        {textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
-        {activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate, showMode6 || showMode5)}
-        {activity[unitMeasure].beautyDistance && elemenntDistance}
-        {activity[unitMeasure].beautyElevation && elemenntElevation}
+        {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
+        {activity.beautyDatetimeLanguages && activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate, showMode6 || showMode5)}
+        {activity[unitMeasure] && activity[unitMeasure].beautyDistance && elemenntDistance}
+        {activity[unitMeasure] && activity[unitMeasure].beautyElevation && elemenntElevation}
         {activity.beautyDuration && elemenntDuration}
         {activity.beautyPower && elemenntPower}
-        {activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity[unitMeasure] && activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
         {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates, showMode6)}
         {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'coordinates', activity.beautyCalories, showCalories, !showMode6)}
         {textArrowController('BUTTON_SWITCH', 'switchText', textUp, !showMode5)}
@@ -618,24 +636,25 @@ function ButtonImage(props) {
       </div>
       {showModifyImage && (
         <div className="wrapper-controller">
-          <div className="wrapper-sub-buttons">
-            <RectangleSVG className="proportion margin-10" style={rectangleStyle} onClick={() => propagateRectangle()}/>
-            <PostSVG className="proportion margin-10" style={squareStyle} onClick={() => propagateSquare()}/>
-            {/* <SquareSVG style={squareStyle} onClick={() => propagateTwice()}/> */}
+          <div className="wrapper-sub-buttons flex-wrapper-colors-factor">
+            <div className="wrapper-sub-buttons">
+              <div>
+                {returnsColorsController()}
+              </div>
+            </div>
+            <div className="flex-factor">
+              <StorySVG className="proportion margin-10" style={rectangleStyle} onClick={() => propagateRectangle()}/>
+              <PostSVG className="proportion margin-10" style={squareStyle} onClick={() => propagateSquare()}/>
+            </div>
+
           </div>
           {/* <div className="wrapper-sub-buttons">
-            <p className="blend-title blend-text">BLEND:</p>
-            <p className="blend-mode blend-text" style={unsetBlendModeStyle} onClick={() => propagateBlendMode('unset')}>none</p>
-            <p className="blend-mode blend-text" style={differenceBlendModeStyle} onClick={() => propagateBlendMode('difference')}>diff.</p>
-            <p className="blend-mode blend-text" style={exclusionBlendModeStyle} onClick={() => propagateBlendMode('exclusion')}>excl.</p>
-          </div> */}
-          {/* <div className="wrapper-sub-buttons slider-width">
-            <MinusSVG onClick={() => minusFilter()} />
-            <FilterSVG></FilterSVG>
-            <PlusSVG onClick={() => plusFilter()}/>
-            <MinusSVG onClick={() => minusResolution()}/>
-            <ResolutionSVG></ResolutionSVG>
-            <PlusSVG onClick={() => plusResolution()}/>
+            {returnsColors()}
+          </div>
+          <div className="wrapper-sub-buttons wrapper-images">
+            {returnImages()}
+            {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
+            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div> */}
           <div className="wrapper-sub-buttons-slider slider-width">
             <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
@@ -648,14 +667,6 @@ function ButtonImage(props) {
               <p className="p-dimention">{vocabulary[language].SLIDER}</p>
             </div> 
             <Slider className="width-slider-large" value={valueFilter} onChange={handleChangeValueFilter} />
-          </div>
-          <div className="wrapper-sub-buttons">
-            {returnsColors()}
-          </div>
-          <div className="wrapper-sub-buttons wrapper-images">
-            {returnImages()}
-            {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
           </div>
         </div>
       )}
