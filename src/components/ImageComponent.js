@@ -1133,7 +1133,7 @@ function ImageComponent(props) {
       console.log('height', height)
       console.log('heightElementMatching', heightElementMatching)
       if(ratio !== '4:5') setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
-      else setTopSketch((textUp ? (heightElementMatching + height) * 1.8 : (heightElementMatching - height) / 5) + 'px')
+      else setTopSketch((textUp ? (heightElementMatching + height) * 1.8 : (heightElementMatching - height) / 7) + 'px')
     }
   },[
     showMode5,
