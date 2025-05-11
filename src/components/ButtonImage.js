@@ -310,8 +310,11 @@ function ButtonImage(props) {
     stoke: (square ? brandingPalette.secondary : brandingPalette.primary) + ' !important',
   }
   const rectangleStyle = {
-    stroke: rectangle ? brandingPalette.tertiary : brandingPalette.primary,
+    stroke: (rectangle ? brandingPalette.tertiary : brandingPalette.primary) + ' !important',
+    fill: (rectangle ? brandingPalette.tertiary : brandingPalette.primary) + ' !important',
   }
+  const classesRectangle = rectangle ? 'proportion margin-10 stroke-primary' : 'proportion margin-10 stroke-secondary'
+  const classesSquare = square ? 'proportion margin-10 stroke-primary' : 'proportion margin-10 stroke-secondary'
   const eyeStyle = {
     fill: brandingPalette.primary,
     transform: 'scale(0.55)'
@@ -373,6 +376,10 @@ function ButtonImage(props) {
   // }
   const returnsColorsController = () => {
     if(!colorsController.length) {
+      colorsController.push(<div className="colors-flex-header">
+          <p className="p-dimention margin-horizontal p-uppercase">{vocabulary[language].LINE}</p>
+          <p className="p-dimention margin-horizontal p-uppercase">{vocabulary[language].BACKGROUND}</p>
+          </div>)
       let i = 0
       for(let color in colorText) {
         // if(!selectedUnsetBlendMode && color === 'black') continue
@@ -689,8 +696,8 @@ function ButtonImage(props) {
               </div>
             </div>
             <div className="flex-factor">
-              <StorySVG className="proportion margin-10" style={rectangleStyle} onClick={() => propagateRectangle()}/>
-              <PostSVG className="proportion margin-10" style={squareStyle} onClick={() => propagateSquare()}/>
+              <StorySVG className={classesRectangle} style={rectangleStyle} onClick={() => propagateRectangle()}/>
+              <PostSVG className={classesSquare} style={squareStyle} onClick={() => propagateSquare()}/>
             </div>
 
           </div>

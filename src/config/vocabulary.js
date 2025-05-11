@@ -66,7 +66,9 @@ const vocabulary = {
         MODE_2: 'Mode 2',
         MODE_3: 'Mode 3',
         SLIDER: 'TINT',
-        DETAIL: 'DETAIL'
+        DETAIL: 'DETAIL',
+        LINE: 'LINE',
+        BACKGROUND: 'BACK.'
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -135,7 +137,9 @@ const vocabulary = {
         MODE_2: 'Mode 2',
         MODE_3: 'Mode 3',
         SLIDER: 'FILTRO',
-        DETAIL: 'DETTAGLI'
+        DETAIL: 'DETTAGLI',
+        LINE: 'LINE',
+        BACKGROUND: 'SFONDO'
     }
 }
 

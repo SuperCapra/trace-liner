@@ -135,6 +135,15 @@ p {
   justify-content: center;
   color: var(--palette-white);
 }
+.App-body-sketch {
+  padding: 2vh;
+  min-height: 96vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  color: var(--palette-white);
+}
 .app-body-background-mobile {
   background-image: url('./assets/images/background1.jpg');
   background-size: cover;
@@ -598,6 +607,13 @@ p {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+}
+.colors-flex-header{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  min-width: 120%;
+  transform: translateX(-8%);
 }
 .colors{
   margin: 4px;
@@ -1259,6 +1275,7 @@ p {
     font-size: calc(2.15vw);
   }
   .width-mode{
+    width: 450px;
     padding: 10px
   }
 }
@@ -1697,4 +1714,16 @@ p {
   position: absolute;
   bottom: 2%;
   right: 2%;
+}
+.stroke-primary .stories-fill-none{
+  stroke: var(--palette-primary)
+}
+.stroke-primary .post-fill-none{
+  stroke: var(--palette-primary)
+}
+.stroke-secondary .stories-fill-none{
+  stroke: var(--palette-secondary)
+}
+.stroke-secondary .post-fill-none{
+  stroke: var(--palette-secondary)
 }

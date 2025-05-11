@@ -741,6 +741,7 @@ class Homepage extends React.Component{
     let urlCurrent = window.location.href
     let isMobile = utils.isMobile()
     let classesReturning = urlCurrent.includes('/statistics') ? 'App-body-statistics' : (isMobile ? 'App-body app-body-background-mobile' : 'App-body app-body-background-desktop')
+    if(stage === 'ShowingActivity') classesReturning = classesReturning.replace('App-body', 'App-body-sketch')
     return classesReturning
   }
 
