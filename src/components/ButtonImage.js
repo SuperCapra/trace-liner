@@ -390,7 +390,7 @@ function ButtonImage(props) {
           border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background'])
         }
         let valueP = color.replace('text','')
-        colorsController.push(<div className="colors-flex"><div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/><p className="p-dimention margin-horizontal">{valueP}</p><div className="colors" key={'image' + color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/></div>)
+        colorsController.push(<div className="colors-flex"><div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/><p className="p-dimention margin-horizontal p-uppercase">{valueP}</p><div className="colors" key={'image' + color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/></div>)
       }
       logUtils.loggerText('colors label', colorsController)
     }

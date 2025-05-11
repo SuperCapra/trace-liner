@@ -11,7 +11,7 @@ import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
-import {ReactComponent as DesignBySVG} from '../assets/images/design.svg'
+import {ReactComponent as DesignBySVG} from '../assets/images/logoImage.svg'
 
 function ImageComponent(props) {
 
@@ -365,12 +365,11 @@ function ImageComponent(props) {
   //     })
   // },[])
 
-  const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max, dimentionCircleFinish) => {
-    if(showMode5) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? dimentionCircleFinish : height - dimentionCircleFinish)]
+  const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max, dimentionCircleFinish, mode5Enabled) => {
+    if(mode5Enabled) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? dimentionCircleFinish : height - dimentionCircleFinish)]
     else return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
   }, [
-    textUp,
-    showMode5
+    textUp
   ])
   // const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
   //   return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
@@ -480,11 +479,11 @@ function ImageComponent(props) {
     // pregenerateImageJpeg
   ])
 
-  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
+  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled) => {
     try {
       let canvasSketch = document.getElementById('canvasSketch')
       if(!canvasSketch) {
-        setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled),100)
+        setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled),100)
         return
       }
       if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
@@ -535,8 +534,8 @@ function ImageComponent(props) {
       let drawing = true
       let dimentionCircleStart = width * 0.005
       let dimentionCircleFinish = width * 0.02
-      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
-      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
+      let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
+      let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
       let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
       let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
       // stroke the initial circle only if the intersection it's null with the final circle
@@ -549,11 +548,11 @@ function ImageComponent(props) {
 
       for(let i = 0; i < coordinates.length; i++) {
         // if(i>200) break
-        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
+        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
         // let cdMinus
         let cdPlus
         // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
-        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish)
+        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
         if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
           if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
             if(!drawing) {
@@ -793,7 +792,7 @@ function ImageComponent(props) {
       if(showMode3) {
         if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
         else drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
-      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value)
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value, showMode4, showMode5)
     }
     // else if(data.type === 'share') handleDownloadClick()
     // else if(data.type === 'share-contour') handleDownloadClick('contour')
@@ -971,7 +970,7 @@ function ImageComponent(props) {
   }
 
   const enableMode5 = (start) => {
-    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, false, true)
     setShowTitle(true)
     setShowDate(false)
     setShowDistance(true)
@@ -994,7 +993,7 @@ function ImageComponent(props) {
     if(showMode3) {
       if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
       else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-    } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4)
+    } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5)
     drawFilter()
   }
 
@@ -1073,7 +1072,7 @@ function ImageComponent(props) {
       if(showMode3) {
         if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
         else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4);
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
