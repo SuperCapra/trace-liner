@@ -5,21 +5,11 @@ import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
-// import {modes} from '../config/modes';
-// import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
-// import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
-// import {ReactComponent as TextSVG} from '../assets/images/text.svg'
 import {ReactComponent as StorySVG} from '../assets/images/stories.svg'
 import {ReactComponent as PostSVG} from '../assets/images/post.svg'
-// import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
-// import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
-// import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
-// import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
 import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
-// import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
-// import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
 import image1 from '../assets/images/imagebackground1.jpg'
 import image2 from '../assets/images/imagebackground2.jpg'
 import image3 from '../assets/images/imagebackground3.jpg'
@@ -59,9 +49,6 @@ function ButtonImage(props) {
   const [showMode6, setShowMode6] = useState(false);
   const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
 
-  // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
-  // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
-  // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
   const colorsController = []
   const [images,setImages] = useState([{
     photo: image1, 
@@ -109,28 +96,23 @@ function ButtonImage(props) {
     if(elementDeactivate && elementDeactivate.classList.contains('feature-active')) elementDeactivate.classList.remove('feature-active')
   }
   const handleClick = (data) => {
-    // pregenerateImage()
     handleClickButton(data)
   }
-  const propagateSquare = () => {
+  // const propagateSquare = () => {
+  //   if(rectangle) setRectangle(false)
+  //   setSquare(true)
+  //   handleClick({type: 'square'})
+  // }
+  const propagatePost = () => {
     if(rectangle) setRectangle(false)
     setSquare(true)
-    handleClick({type: 'square'})
+    handleClick({type: 'post'})
   }
   const propagateRectangle = () => {
     if(square) setSquare(false)
     setRectangle(true)
     handleClick({type: 'rectangle'})
   }
-  // const propagateTwice = () => {
-  //   handleClick({type: 'twice'})
-  // }
-  // const propagateBlendMode = (blendModeSetting) => {
-  //   handleClick({type: 'blend-mode', blendMode: blendModeSetting})
-  //   setSelectedUnsetBlendMode(blendModeSetting === 'unset' ? true : false)
-  //   setSelectedDifferenceBlendMode(blendModeSetting === 'difference' ? true : false)
-  //   setSelectedExclusionBlendMode(blendModeSetting === 'exclusion' ? true : false)
-  // }
   const propagateShowHide = (type) => {
     if(type === 'name') {
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
@@ -697,7 +679,7 @@ function ButtonImage(props) {
             </div>
             <div className="flex-factor">
               <StorySVG className={classesRectangle} style={rectangleStyle} onClick={() => propagateRectangle()}/>
-              <PostSVG className={classesSquare} style={squareStyle} onClick={() => propagateSquare()}/>
+              <PostSVG className={classesSquare} style={squareStyle} onClick={() => propagatePost()}/>
             </div>
 
           </div>

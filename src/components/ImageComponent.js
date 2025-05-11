@@ -88,28 +88,19 @@ function ImageComponent(props) {
     color: drawingColor,
     width: '100%',
     fontSize: fontSizeTitle
-    // mixBlendMode: blendMode,
   }
   const styleSubtextTitle = {
     color: drawingColor,
     width: '100%',
     fontSize: fontSizeSubtitle
-    // mixBlendMode: blendMode,
   }
   const filterStyle = {
     opacity: valueFilter/100
   }
-  // const styleLogoClub = {
-  //   width: (ratio === '1:1') ? '10vw' : '15vw',
-  //   height: (ratio === '1:1') ? '8vw' : '12vw',
-  //   fill: drawingColor,
-  //   // mixBlendMode: blendMode
-  // }
   const styleTextUnderSketch = {
-    top: (ratio === '1:1') ? '82%' : '82%',
+    top: '82%',
     color: drawingColor,
     fontSize: fontSizeData
-    // mixBlendMode: blendMode
   }
   const styleDesignBy = {
     fill: drawingColor,
@@ -119,41 +110,21 @@ function ImageComponent(props) {
     left: showMode5 ? (textUp ? 'unset' : '3%') : 'unset',
     right: showMode5 ? (textUp ? '3%' : 'unset') : '3%',
   }
-
-  // const classesForLogoClub = () => {
-  //   let result = 'logo-club-wrapper-scale'
-  //   if(showMode3) {
-  //     if(!altitudeVertical) {
-  //       if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3'
-  //       else return result + ' logo-club-wrapper-mode-3-rect'
-  //     } else {
-  //       if(ratio === '1:1') return result + ' logo-club-wrapper-mode-3-vertical'
-  //       else return result + ' logo-club-wrapper-mode-3-vertical-rect'
-  //     }
-  //   } else if(showMode5 && !textUp) {
-  //     if(ratio === '1:1') return result + ' logo-club-wrapper-mode-5-down'
-  //     else return result + ' logo-club-wrapper-mode-5-down-rect'
-  //   } else {
-  //     if(ratio === '1:1') return result + ' logo-club-wrapper'
-  //     else return result + ' logo-club-wrapper-rect'
-  //   }
-  // }
-
   const classesForSketch = () => {
     let result = 'round-corner canvas-position canvas-filter'
     if(showMode3 || showMode4) {
-      if(ratio === '1:1') return result + ' canvas-sketch-mode-3'
+      if(ratio === '1:1' || ratio === '4:5') return result + ' canvas-sketch-mode-3'
       else return result + ' canvas-sketch-mode-3-rect'
     } else if(showMode5) {
       if(textUp) {
-        if(ratio === '1:1') return result + ' canvas-sketch-mode-5'
+        if(ratio === '1:1' || ratio === '4:5') return result + ' canvas-sketch-mode-5'
         else return result + ' canvas-sketch-mode-5-rect'
       } else {
-        if(ratio === '1:1') return result + ' canvas-sketch-mode-5-down'
+        if(ratio === '1:1' || ratio === '4:5') return result + ' canvas-sketch-mode-5-down'
         else return result + ' canvas-sketch-mode-5-down-rect'
       }
     } else {
-      if(ratio === '1:1') return result + ' canvas-sketch'
+      if(ratio === '1:1' || ratio === '4:5') return result + ' canvas-sketch'
       else return result + ' canvas-sketch-rect'
     }
   }
@@ -162,27 +133,27 @@ function ImageComponent(props) {
     if(showMode5) {
       result = result + ' text-title-props-mode-5 text-name-props'
       if(textUp) {
-        if(ratio === '1:1') return result + ' text-title-props-mode-5-up'
+        if(ratio === '1:1' || ratio === '4:5') return result + ' text-title-props-mode-5-up'
         else return result + ' text-title-props-mode-5-up-rect'
       } else {
-        if(ratio === '1:1') return result + ' text-title-props-mode-5-down'
+        if(ratio === '1:1' || ratio === '4:5') return result + ' text-title-props-mode-5-down'
         else return result + ' text-title-props-mode-5-down-rect'
       }
     } else {
-      if(ratio === '1:1') return (result + ' text-title-props text-name-props')
+      if(ratio === '1:1' || ratio === '4:5') return (result + ' text-title-props text-name-props')
       else return (result + ' text-title-props-rect text-name-props')
     }
   }
   const classesForMode5 = () => {
     let result = 'width-left-mode-5 text-overlay-mode-5'
     if(textUp) {
-      if(ratio === '1:1') {
+      if(ratio === '1:1' || ratio === '4:5') {
         return (result + ' position-mode-5-up')
       } else {
         return (result + ' position-mode-5-up-rect')
       }
     } else {
-      if(ratio === '1:1') {
+      if(ratio === '1:1' || ratio === '4:5') {
         return (result + ' position-mode-5-down')
       } else {
         return (result + ' position-mode-5-down-rect')
@@ -193,7 +164,7 @@ function ImageComponent(props) {
     if(showMode6) {
       return 'wrapper-data-element-mode-6'
     } else {
-      if(ratio === '1:1') return 'wrapper-data-element'
+      if(ratio === '1:1' || ratio === '4:5') return 'wrapper-data-element'
       else return 'wrapper-data-element-rect'
     }
   }
@@ -205,22 +176,21 @@ function ImageComponent(props) {
       }
     } else return { color: drawingColor}
   }
-  const classesCanvasContainer = ratio === '1:1' ? 'width-general canvas-container-general canvas-container-square round-corner' : 'canvas-container-general canvas-container-rect round-corner'
+  const classesCanvasContainer = ratio === '1:1' || ratio === '4:5' ? 'width-general canvas-container-general canvas-container-post round-corner' : 'canvas-container-general canvas-container-rect round-corner'
   const classesName = classesForName()
-  const classesDate = 'sub-text-overlay text-date-props' + (ratio === '1:1' ? ' text-title-props' : ' text-title-props-rect')
-  const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' ? '' : ' text-coordinates-props-rect')
+  const classesDate = 'sub-text-overlay text-date-props' + (ratio === '1:1' || ratio === '4:5' ? ' text-title-props' : ' text-title-props-rect')
+  const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' || ratio === '4:5' ? '' : ' text-coordinates-props-rect')
   const classesSketch = classesForSketch()
   const styleSketch = styleForSketch()
-  const classesDataWrapper2Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
-  const classesDataWrapper3Lines = ratio === '1:1' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
+  const classesDataWrapper2Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
+  const classesDataWrapper3Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
   const classesDataElement = classesForDataElement()
   const classesDataPLittle = 'data-p-little'
-  // const classesLogoClub = classesForLogoClub()
-  const classMode3 = ratio === '1:1' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
-  const classMode3Vertical = ratio === '1:1' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
+  const classMode3 = ratio === '1:1' || ratio === '4:5' ? 'position-mode-3 text-overlay-mode-3 text-overlay-mode-3-dimention mode-3-text' : 'position-mode-3-rect text-overlay-mode-3 text-overlay-mode-3-dimention-rect mode-3-text-rect'
+  const classMode3Vertical = ratio === '1:1' || ratio === '4:5' ? 'position-mode-3-vertical text-overlay-mode-3-vertical mode-3-vertical-text' : 'position-mode-3-vertical-rect text-overlay-mode-3-vertical mode-3-vertical-text-rect'
   const classMode5 = classesForMode5()
-  const classWrapperMode5 = ratio === '1:1' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
+  const classWrapperMode5 = ratio === '1:1' || ratio === '4:5' ? 'wrapper-element-mode-5' : 'wrapper-element-mode-5'
 
   const insertLogsModal = async (data) => {
     let body = data.body
@@ -298,23 +268,6 @@ function ImageComponent(props) {
     pregenerateImageJpeg()
   }
 
-  // const fetchImage = useCallback(async () => {
-  //   const imageUrl = activity.photoUrl;
-  //   const proxyUrl = window.location.origin + `/image-proxy?url=${encodeURIComponent(imageUrl)}`;
-  //   // const proxyUrl = `http:localhost:3000/image-proxy?url=${encodeURIComponent(imageUrl)}`;
-  
-  //   const response = await fetch(proxyUrl);
-  //   logUtils.loggerText('response: ', response)
-  //   const blob = await response.blob();
-  //   const imageObjectURL = URL.createObjectURL(blob);
-    
-  //   // Set the image source in your app (for example, in an img element)
-  //   activity['photoUrlProxied'] = imageObjectURL.replace('blob:','');
-  //   logUtils.loggerText('activity: ', activity)
-  // },[
-  //   activity
-  // ]);
-
   const removeRoundCorner = () => {
     const canvasImageElement = document.getElementById('canvasImage')
     const canvasFilterElement = document.getElementById('canvasFilter')
@@ -348,38 +301,12 @@ function ImageComponent(props) {
     if(canvasAnchorElement) canvasAnchorElement.classList.remove('background-trasparency')
   }
 
-  // const returnImage = useCallback(() => {
-  //   removeRoundCorner()
-  //   let anchor = document.getElementById('printingAnchor')
-
-  //   toJpeg(anchor, { quality: 0.95, width: anchor.offsetWidth, height: anchor.offsetHeight })
-  //     .then((dataUrl) => {
-  //       seeImage()
-  //       setImagetoShare(dataUrl)
-  //       setIsLoading(false)
-  //     })
-  //     .catch((error) => {
-  //       console.error('oops, something went wrong!', error);
-  //     })
-  //     .finally(() => {
-  //       addRoundCorner()
-  //     })
-  // },[])
-
   const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max, dimentionCircleFinish, mode5Enabled) => {
     if(mode5Enabled) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? dimentionCircleFinish : height - dimentionCircleFinish)]
     else return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
   }, [
     textUp
   ])
-  // const transformCoordinates = (coord, zoomFactor, width, height, mapCenter) => {
-  //   return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
-  // }
-  // const transformCoordinatesMode5 = (coord, zoomFactor, width, height, mapCenter, min, max) => {
-  //   console.log('min', min)
-  //   console.log('coord[1]', coord[1])
-  //   return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] + (textUp ? max : (-min)) ) * zoomFactor + height]
-  // }
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
     try {
@@ -388,10 +315,10 @@ function ImageComponent(props) {
         setTimeout(() => drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled), 100)
         return
       }
+
       if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
         (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
-      // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-      // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+
       let canvasSketchWidth = 500 * 10
       let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500 * 10
       let altitudeStream = activity.altitudeStream
@@ -401,7 +328,7 @@ function ImageComponent(props) {
       setDrawingWidth(width)
       setDrawingHeight(canvasSketchHeight)
       let ctx = canvasSketch.getContext('2d')
-      // Setup line properties to avoid spikes
+
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
   
@@ -477,7 +404,6 @@ function ImageComponent(props) {
     valueResolution,
     infoLog,
     visitId
-    // pregenerateImageJpeg
   ])
 
   const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled) => {
@@ -487,9 +413,9 @@ function ImageComponent(props) {
         setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled),100)
         return
       }
+
       if(!activity.coordinates || (activity.coordinates && !activity.coordinates.length)) return
-      // let canvasSketchWidth = (canvasWidth ? canvasWidth : canvasSketch.getBoundingClientRect().width) * 5
-      // let canvasSketchHeight = (canvasHeight ? canvasHeight : canvasSketch.getBoundingClientRect().height) * 5
+
       let canvasSketchWidth = 500 * 10
       let canvasSketchHeight = 500 * 10
       canvasSketchWidth = 500 * 10
@@ -500,11 +426,9 @@ function ImageComponent(props) {
       setDrawingHeight(width)
       setDrawingWidth(height)
       let ctx = canvasSketch.getContext('2d')
-      // Setup line properties to avoid spikes
-      ctx.lineJoin = 'round'; // Options: 'bevel', 'round', 'miter'
-      ctx.lineCap = 'round';  // Options: 'butt', 'round', 'square'
-      // let border = width*0.2
-      // setThickness(width*0.01)
+
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
 
       let minX = Math.min(...coordinates.map(x => x[0]))
       let maxX = Math.max(...coordinates.map(x => x[0]))
@@ -529,7 +453,7 @@ function ImageComponent(props) {
       let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
       let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
       console.log('lengthCoordinates', lengthCoordinates)
-      // (lengthCoordinates * (resolutionPercentage / 100))/lengthCoordinates
+
       let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
       console.log('scaleFactor:', scaleFactor)
       let drawing = true
@@ -539,20 +463,14 @@ function ImageComponent(props) {
       let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
       let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
       let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
-      // stroke the initial circle only if the intersection it's null with the final circle
       drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
-      // stroke the final circle
       drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-      // ctx.setLineDash([Number((lengthCoordinates * 0.003).toFixed(0)), Number((lengthCoordinates * 0.008).toFixed(0))]);
       ctx.beginPath()
     
 
       for(let i = 0; i < coordinates.length; i++) {
-        // if(i>200) break
         let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
-        // let cdMinus
         let cdPlus
-        // if(coordinates[i - 1]) cdMinus = transformCoordinates(coordinates[i - 1], zoomFactor, width, height, mapCenter)
         if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
         if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
           if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
@@ -577,9 +495,8 @@ function ImageComponent(props) {
             drawing = false
           }
         }
-        // ctx.lineTo(cd[0],cd[1])
       }
-      // stroke the path
+
       ctx.stroke()
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     } catch (e) {
@@ -623,7 +540,7 @@ function ImageComponent(props) {
     setDrawingWidth(width)
     setDrawingHeight(canvasSketchHeight)
     let ctx = canvasSketch.getContext('2d')
-    // Setup line properties to avoid spikes
+
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
 
@@ -795,19 +712,16 @@ function ImageComponent(props) {
         else drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
       } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value, showMode4, showMode5)
     }
-    // else if(data.type === 'share') handleDownloadClick()
-    // else if(data.type === 'share-contour') handleDownloadClick('contour')
-    // else if(data.type === 'blend-mode') handleBlendMode(data.blendMode)
     else if(data.type === 'changing-color') handleColorChange(data.color)
-    else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'twice') {
+    else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'post') {
       let ratioText = '9:16'
       infoLog.size = data.type
       switch (data.type) {
         case 'square':
           ratioText = '1:1'
           break
-        case 'twice':
-          ratioText = '2:1'
+        case 'post':
+          ratioText = '4:5'
           break
         default:
           ratioText = '9:16'
@@ -1218,11 +1132,13 @@ function ImageComponent(props) {
       let height = elemntToMatch.offsetHeight
       console.log('height', height)
       console.log('heightElementMatching', heightElementMatching)
-      setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
+      if(ratio !== '4:5') setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
+      else setTopSketch((textUp ? (heightElementMatching + height) * 1.8 : (heightElementMatching - height) / 5) + 'px')
     }
   },[
     showMode5,
-    textUp
+    textUp,
+    ratio
   ])
 
   useEffect(() => {
