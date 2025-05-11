@@ -433,9 +433,9 @@ p {
 .display-buttons::before{
   content: "";
   position: absolute;
-  top: -9999px;
+  /* top: -9999px;
   left: -9999px;
-  right: -9999px;
+  right: -9999px; */
   bottom: 0;
   background-color: rgba(42, 44, 52, 0.5);
   z-index: -1;
@@ -968,12 +968,7 @@ p {
   border-radius: 5px;
 }
 .width-mode{
-  width: 80vw;
   padding: 10px
-}
-.width-mode-sub{
-  width:75vw;
-  margin: 1vw 2.5vw;
 }
 .arrow-down{
   padding: 40px;
@@ -1253,7 +1248,6 @@ p {
     font-size: calc(2.15vw);
   }
   .width-mode{
-    width: 60vw;
     padding: 10px
   }
 }
@@ -1487,20 +1481,16 @@ p {
     margin: 0 10px 10px 40px;
   }
   .display-buttons::before{
-    top: -9999px;
+    /* top: -9999px;
     left: 0;
     right: -9999px;
-    bottom: -9999px;
+    bottom: -9999px; */
   }
   .width-mode{
     width: 400px;
   }
   .wrapper-buttons-left{
     font-size: 16px;
-  }
-  .width-mode-sub{
-    width: 350px;
-    margin: 8px 20px
   }
   .blend-text{
     font-size: calc(1vw);
@@ -1603,10 +1593,6 @@ p {
   }
   .width-mode{
     width: 500px;
-  }
-  .width-mode-sub{
-    width: 450px;
-    margin: 8px 20px
   }
   .blend-text{
     font-size: 16px;
