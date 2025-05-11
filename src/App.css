@@ -596,11 +596,22 @@ p {
 }
 .colors-flex{
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
 }
 .colors{
   margin: 4px;
+}
+.colors-black{
+  margin: 5px;
+}
+.colors-black:hover{
+  cursor: pointer;
+}
+.colors-selected{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .colors:hover{
   cursor: pointer;
@@ -1479,14 +1490,7 @@ p {
   }
   .display-buttons{
     margin: 0 10px 10px 40px;
-  }
-  .display-buttons::before{
-    /* top: -9999px;
-    left: 0;
-    right: -9999px;
-    bottom: -9999px; */
-  }
-  .width-mode{
+  }th-mode{
     width: 400px;
   }
   .wrapper-buttons-left{

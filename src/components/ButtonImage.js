@@ -20,16 +20,12 @@ import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
 import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
 // import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
 // import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
-import image1 from '../assets/images/image1.jpg'
-import image2 from '../assets/images/image2.jpg'
-import image3 from '../assets/images/image3.jpg'
-import image4 from '../assets/images/image4.jpg'
-import image5 from '../assets/images/image5.jpg'
-import image6 from '../assets/images/image6.jpg'
-import image7 from '../assets/images/image7.jpg'
-// import image8 from '../assets/images/image8.jpeg'
-// import image9 from '../assets/images/image9.jpeg'
-// import image10 from '../assets/images/image10.jpg'
+import image1 from '../assets/images/imagebackground1.jpg'
+import image2 from '../assets/images/imagebackground2.jpg'
+import image3 from '../assets/images/imagebackground3.jpg'
+import image4 from '../assets/images/imagebackground4.jpg'
+import image5 from '../assets/images/imagebackground5.jpg'
+import image6 from '../assets/images/imagebackground6.jpg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -61,6 +57,7 @@ function ButtonImage(props) {
   const [showMode4, setShowMode4] = useState(false);
   const [showMode5, setShowMode5] = useState(false);
   const [showMode6, setShowMode6] = useState(false);
+  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
 
   // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
   // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
@@ -69,7 +66,7 @@ function ButtonImage(props) {
   const [images,setImages] = useState([{
     photo: image1, 
     alt: 'default-1',
-    selected: true,
+    selected: false,
   },{
     photo: image2, 
     alt: 'default-2',
@@ -81,7 +78,7 @@ function ButtonImage(props) {
   },{
     photo: image4, 
     alt: 'default-4',
-    selected: false,
+    selected: true,
   },{
     photo: image5, 
     alt: 'default-5',
@@ -89,10 +86,6 @@ function ButtonImage(props) {
   },{
     photo: image6, 
     alt: 'default-6',
-    selected: false,
-  },{
-    photo: image7, 
-    alt: 'default-7',
     selected: false,
   }])
 
@@ -247,6 +240,7 @@ function ButtonImage(props) {
 
   const propagateColor = (info) => {
     handleClick(info)
+    setDrawingColor(info.color)
   }
 
   const enableMode1 = (bool, isStart) => {
@@ -379,18 +373,66 @@ function ButtonImage(props) {
   // }
   const returnsColorsController = () => {
     if(!colorsController.length) {
+      let i = 0
       for(let color in colorText) {
         // if(!selectedUnsetBlendMode && color === 'black') continue
         // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
+        let elementImage = images[i]
         let styleColor = {
           backgroundColor: colorText[color],
           width: '20px',
           height: '20px',
           borderRadius: '20px',
-          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background'])
+          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background']),
+          filter: drawingColor === colorText[color] ? 'brightness(0.6)' : 'unset'
         }
-        let valueP = color.replace('text','')
-        colorsController.push(<div className="colors-flex"><div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/><p className="p-dimention margin-horizontal p-uppercase">{valueP}</p><div className="colors" key={'image' + color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/></div>)
+        let styleImage = {
+          width: '20px',
+          height: '20px',
+          borderRadius: '20px',
+          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background']),
+          filter: elementImage.selected ? 'brightness(0.6)' : 'unset'
+        }
+        let styleSelected = {
+          width: '0px',
+          height: '0px',
+          borderRadius: '6px',
+          border: (color === 'textblack' ? '5px solid ' + brandingPalette['white'] : '6px solid ' + brandingPalette['background']),
+        }
+        let styleSelectedImage = {
+          width: '0px',
+          height: '0px',
+          borderRadius: '6px',
+          border: (color === 'textblack' ? '5px solid ' + brandingPalette['white'] : '6px solid ' + brandingPalette['background']),
+          position: 'absolute',
+          zIndex: '10',
+          transform: color === 'textblack' ? 'translate(11px, 11px)' : 'translate(10px, 10px)',
+          filter: 'brightness(0.6)'
+        }
+        let styleWrapper = {
+          height : '32px'
+        }
+        let valueText = color.replace('text','')
+        let classesColor = (color === 'textblack' ? 'colors-black ' : 'colors ') + 'colors-selected'
+        let classesColorSelected = (color === 'textblack' ? 'colors-black ' : 'colors ') + 'colors-selected'
+        let markupColor = drawingColor === colorText[color] ? 
+          <div className={classesColorSelected} key={color} style={styleColor}>
+            <div key={color + 'selected'} style={styleSelected}/>
+          </div> : 
+          <div className={classesColor} key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>
+        let markupImage = elementImage.selected ? 
+        <div key={elementImage.alt + 'wrapper'} style={styleWrapper}>
+          <div key={color + 'selected'} style={styleSelectedImage}/>
+          <img src={elementImage.photo} id={elementImage.alt} className={classesColor} alt={elementImage.alt} style={styleImage}/>
+        </div> :
+          // <img src={elementImage.photo} id={elementImage.alt} className="colors" alt={elementImage.alt} style={styleImage}/> : 
+          <img src={elementImage.photo} id={elementImage.alt} key={elementImage.alt} onClick={() => resetImage(elementImage.alt)} className={classesColor} alt={elementImage.alt} style={styleImage}/>
+        colorsController.push(<div className="colors-flex">
+          {markupColor}
+          <p className="p-dimention margin-horizontal p-uppercase">{valueText}</p>
+          {markupImage}
+          </div>)
+        i++
       }
       logUtils.loggerText('colors label', colorsController)
     }
@@ -453,7 +495,11 @@ function ButtonImage(props) {
     for(let element of images) {
 
       let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
-      htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
+      htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected">
+        <div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/>
+        </div>
+        <img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/>
+        </div>)
     }
     return(htmlImages)
   }
@@ -617,7 +663,7 @@ function ButtonImage(props) {
 
   return (
     <div className="display-buttons">
-      <div className="wrapper-buttons">
+      <div className="wrapper-buttons width-mode">
         {/* <div style={unitMeasureStyle} className="feature" onClick={() => propagateUnitMeasure()}>
           <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_METRICS}</p>
         </div> */}

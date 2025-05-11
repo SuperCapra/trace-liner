@@ -1,6 +1,7 @@
 import '../App.css';
 import React, {useState, useRef, useEffect, useCallback} from 'react';
-import image1 from '../assets/images/image1.jpg'
+import imagebackground4 from '../assets/images/imagebackground4.jpg'
+import colorText from '../config/colorText.js';
 import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js';
 import ButtonImage from './ButtonImage.js'
@@ -23,7 +24,7 @@ function ImageComponent(props) {
   const [drawingWidth, setDrawingWidth] = useState(0);
   const [xCrop, setXCrop] = useState(0);
   const [yCrop, setYCrop] = useState(0);
-  const [drawingColor, setDrawingColor] = useState('white');
+  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
@@ -38,7 +39,7 @@ function ImageComponent(props) {
   const [showCalories, setShowCalories] = useState(false);
   const [textUp, setTextUp] = useState(false);
   const [altitudeVertical, setAltitudeVertical] = useState(false);
-  const [imageSrc, setImageSrc] = useState(image1);
+  const [imageSrc, setImageSrc] = useState(imagebackground4);
   const canvasRef = useRef(null)
   const modaldRef = useRef()
   const [valueResolution, setValueResolution] = useState(100);
@@ -1012,7 +1013,7 @@ function ImageComponent(props) {
 
   const handleCrop = useCallback((ratioText, imgSrc) => {
     logUtils.loggerText('Ratio text:', ratioText)
-    if(!imgSrc) imgSrc = image1
+    if(!imgSrc) imgSrc = imagebackground4
     const imageReference = new Image()
     imageReference.onload = () => {
       let imageReferenceWidth = imageReference.width
