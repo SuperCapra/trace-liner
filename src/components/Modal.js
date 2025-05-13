@@ -1,6 +1,8 @@
 import '../App.css';
 import React, {useState, useImperativeHandle, forwardRef} from 'react';
 import {ReactComponent as Close} from '../assets/images/close.svg'
+import {ReactComponent as ButtonCompleteSVG} from '../assets/images/buttonComplete.svg'
+import {ReactComponent as ButtonCountourSVG} from '../assets/images/buttonContour.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import Loader from './Loader.js'
@@ -134,12 +136,14 @@ const Modal = forwardRef((props,ref) => {
                     <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_TEXT']}</p>
                 </div>
                 {!showButtons && <div className="modal-buttons">
-                    <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
+                  <ButtonCompleteSVG className="modal-buttons-single-wrapper" onClick={() => share('jpeg')}></ButtonCompleteSVG>
+                  <ButtonCountourSVG className="modal-buttons-single-wrapper" onClick={() => share('jpeg')}></ButtonCountourSVG>
+                    {/* <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
                       <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_COMPLETE']}</div>
                     </div>
                     <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
                       <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_CONTOUR']}</div>
-                    </div>
+                    </div> */}
                 </div>}
             </div>}
           </div>

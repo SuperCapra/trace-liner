@@ -1109,9 +1109,6 @@ p {
  display: flex;
  justify-content: center;
 }
-.modal-buttons-single-wrapper{
-  padding: 2px 7.5px;
-}
 .modal-buttons-single{
   background-color: var(--palette-background);
   color: var(--palette-secondary);
@@ -1142,6 +1139,11 @@ p {
 }
 .width-logo-extended{
   width: 80vw;
+}
+.modal-buttons-single-wrapper{
+  padding: 8px 10px;
+  min-width: 40px;
+  width: 60px;
 }
 @media print, screen and (min-width: 450px) {
   .p-dimention{
@@ -1280,6 +1282,10 @@ p {
   .width-mode{
     /* width: 450px; */
     padding: 10px
+  }
+  .modal-buttons-single-wrapper{
+    padding: 8px 10px;
+    width: 75px;
   }
 }
 @media print, screen and (min-width: 600px) {
@@ -1562,6 +1568,10 @@ p {
   .modal-buttons-p{
     font-size: 18px;
   }
+  .modal-buttons-single-wrapper{
+    padding: 8px 10px;
+    width: 100px;
+  }
 }
 @media print, screen and (min-width: 1100px) {
   .width-header-wrapper{
@@ -1633,6 +1643,10 @@ p {
   }
   .text-overlay-mode-3-dimention-rect{
     font-size: 32px;
+  }
+  .modal-buttons-single-wrapper{
+    padding: 12px 15px;
+    width: 120px;
   }
 }
 @media print, screen and (min-width: 1250px) {
@@ -1715,6 +1729,9 @@ p {
 }
 .fill-secondary{
     fill: var(--palette-secondary)
+}
+.fill-background{
+    fill: var(--palette-background)
 }
 .instagram-logo{
   position: absolute;
