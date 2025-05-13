@@ -1178,7 +1178,7 @@ function ImageComponent(props) {
           </div>
         </div>
         <div className="back-button" onClick={() => handleDownloadShare()}>
-          <p className="p-dimention p-left p-color">{vocabulary[language].BUTTON_SHARE}</p>
+          <p className="p-dimention p-left p-color translate-share">{vocabulary[language].BUTTON_SHARE}</p>
         </div>
         {/* <div className="language-selector">
            <Dropdown value={language} values={languages} type="language" handleChangeValue={bubbleChangeLanguage}/>

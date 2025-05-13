@@ -1278,7 +1278,7 @@ p {
     font-size: calc(2.15vw);
   }
   .width-mode{
-    width: 450px;
+    /* width: 450px; */
     padding: 10px
   }
 }
@@ -1322,10 +1322,10 @@ p {
     width: 80vw;
   }
   .width-header-wrapper{
-    width: 60vw;
+    width: 80vw;
   }
   .display-buttons{
-    width: 60vw;
+    width: 80vw;
   }
   .canvas-container-square{
     min-height: 40vw;
@@ -1655,6 +1655,9 @@ p {
 @media print, screen and (min-width: 1300px) {
   .width-mode{
     width: 700px;
+  }
+  .translate-share{
+    transform: translateX(150px);
   }
 }
 .no-see-selected-image{
