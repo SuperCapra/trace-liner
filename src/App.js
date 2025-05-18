@@ -313,9 +313,9 @@ class Homepage extends React.Component{
               <div className="wrapper-title-logo margin-title-logo">
                 <LogoExtendedSVG className="width-title-logo"></LogoExtendedSVG>
               </div>
-              {/* <div className="wrapper-title-logo margin-title-logo">
-                <LogoHomepage className="width-title-logo"></LogoHomepage>
-              </div> */}
+              <div className="wrapper-title-logo margin-title-logo">
+                <LogoHomepage></LogoHomepage>
+              </div>
               <div className="wrapper-buttons-login">
                 <div className="wrapper-button-login" onClick={() => {
                   window.location.href = stravaAuthorizeUrl

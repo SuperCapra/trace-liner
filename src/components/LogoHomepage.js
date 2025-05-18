@@ -1,11 +1,11 @@
 import '../App.css';
 import React from 'react';
 import {ReactComponent as LogoExtendedCircleSVG} from '../assets/images/logoExtendedCircle.svg'
-import './LoaderLogo.css'
+import './LogoHomepage.css'
 
 function LogoHomepage(props) {
     return(
-        <LogoExtendedCircleSVG className="logo-width-homepage"></LogoExtendedCircleSVG>
+        <LogoExtendedCircleSVG className="width-title-logo"></LogoExtendedCircleSVG>
     )
 }
 
