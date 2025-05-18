@@ -1,7 +1,6 @@
 import '../App.css';
 import React, {useState} from 'react';
 import './Login.css'
-import InputPassword from './InputPassword.js'
 import brandingPalette from '../config/brandingPalette.js';
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
