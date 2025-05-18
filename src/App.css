@@ -444,7 +444,6 @@ p {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   background-color: rgba(42, 44, 52, 0.5);
   z-index: -1;
   min-height: 30vh;
