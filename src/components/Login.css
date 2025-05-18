@@ -8,7 +8,6 @@
 .wrapper-password{
     display: flex;
     align-items: center;
-    justify-content: space-between;
 }
 .input-login-password{
     border: unset;
