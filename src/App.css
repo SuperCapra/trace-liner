@@ -441,13 +441,14 @@ p {
 }
 .display-buttons::before{
   content: "";
-  position: absolute;
-  /* top: -9999px;
-  left: -9999px;
-  right: -9999px; */
+  position: fixed;
+  top: 0;
+  left: 0;
   bottom: 0;
   background-color: rgba(42, 44, 52, 0.5);
   z-index: -1;
+  min-height: 30vh;
+  min-width: 100vw;
 }
 .wrapper-main{
   display: flex;
@@ -1571,6 +1572,12 @@ p {
   .modal-buttons-single-wrapper{
     padding: 8px 10px;
     width: 100px;
+  }
+  .display-buttons::before{
+    top: 0;
+    left: 50vw;
+    min-height: 100vh;
+    min-width: 50vw;
   }
 }
 @media print, screen and (min-width: 1100px) {

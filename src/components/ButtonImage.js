@@ -621,21 +621,21 @@ function ButtonImage(props) {
         rightValue = `-${window.innerWidth - elementLayer[0].offsetWidth - elementLayer[0].offsetLeft}`
       }
       for (let i = 0; i < styleSheet.cssRules.length; i++) {
-        const rule = styleSheet.cssRules[i];
-        let deletedRule = false
-        if (rule.selectorText === '.display-buttons::before') {
-          styleSheet.deleteRule(i)
-          deletedRule = true
-        }
-        styleSheet.insertRule(`
-          .display-buttons::before {
-            top: ${topValue}px !important;
-            left: ${leftValue}px !important;
-            right: ${rightValue}px !important;
-            bottom: ${bottomValue}px !important;
-          }
-        `, styleSheet.cssRules.length);
-        if(deletedRule) break
+        // const rule = styleSheet.cssRules[i];
+        // let deletedRule = false
+        // if (rule.selectorText === '.display-buttons::before') {
+        //   styleSheet.deleteRule(i)
+        //   deletedRule = true
+        // }
+        // styleSheet.insertRule(`
+        //   .display-buttons::before {
+        //     top: ${topValue}px !important;
+        //     left: ${leftValue}px !important;
+        //     right: ${rightValue}px !important;
+        //     bottom: ${bottomValue}px !important;
+        //   }
+        // `, styleSheet.cssRules.length);
+        // if(deletedRule) break
       }
     }
   }
