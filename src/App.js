@@ -8,6 +8,7 @@ import LogoHomepage from './components/LogoHomepage.js'
 import ImageComponent from './components/ImageComponent.js'
 // import Creator from './components/Creator.js'
 import Statistics from './components/Statistics.js';
+import Login from './components/Login.js';
 // import Dropdown from './components/Dropdown.js'
 import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
@@ -244,6 +245,7 @@ class Homepage extends React.Component{
     console.log('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
+    if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>
     if(urlCurrent.includes('/visitId-')) {
       console.log('created vId')

@@ -172,6 +172,9 @@ p {
 .p-color{
   color: var(--palette-primary);
 }
+.p-shaded{
+  filter: brightness(0.6);
+}
 .p-margin{
   margin: 7px;
 }
