@@ -126,7 +126,7 @@ const Modal = forwardRef((props,ref) => {
                     <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_ERROR']}</p>
                 </div>
             </div>}
-            {!isLoading && !isError && <div>
+            {!isLoading && !isError && <div className="display-flex-vertical">
                 <div>
                   <div className="modal-close-wrapper">
                       <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>

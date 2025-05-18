@@ -16,6 +16,7 @@ import image3 from '../assets/images/imagebackground3.jpg'
 import image4 from '../assets/images/imagebackground4.jpg'
 import image5 from '../assets/images/imagebackground5.jpg'
 import image6 from '../assets/images/imagebackground6.jpg'
+import {ReactComponent as PlusSVG} from '../assets/images/plus2.svg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -38,7 +39,8 @@ function ButtonImage(props) {
   const [showCalories, setShowCalories] = useState(true);
   const [textUp, setTextUp] = useState(false);
   const [altitudeVertical, setAltitudeVertical] = useState(false);
-  const [enableUploading, setEnableUploading] = useState(true)
+  const [enableUploading, setEnableUploading] = useState(true);
+  const [imageSelected, setImageSelected] = useState(false);
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
   const [showMode1, setShowMode1] = useState(true);
@@ -80,13 +82,13 @@ function ButtonImage(props) {
     setModifyText(false)
     activateModeOrEdit('editElement','modeElement')
     setModifyImgae(!showModifyImage)
-    updateLayerSize()
+    setTimeout(() => updateLayerSize(),50)
   }
   const showModifySetText = () => {
     setModifyImgae(false)
     activateModeOrEdit('modeElement','editElement')
     setModifyText(!showModifyText)
-    updateLayerSize()
+    setTimeout(() => updateLayerSize(),50)
   }
   const activateModeOrEdit = (activate, deactivate) => {
     const elementActivate = document.getElementById(activate)
@@ -423,6 +425,32 @@ function ButtonImage(props) {
           </div>)
         i++
       }
+      let stylePhantom = {
+        backgroundColor: 'rgb(0,0,0,0)',
+        width: '20px',
+        height: '20px',
+        borderRadius: '20px',
+        border: '2px solid rgb(0,0,0,0)',
+      }
+      let styleImage = {
+        backgroundColor: 'var(--palette-primary',
+        width: '20px',
+        height: '20px',
+        borderRadius: '20px',
+        border: '2px solid black',
+      }
+      let markupImage = imageSelected && images[colorText.length] ? <div className="colors-phantom image-loader" key="phantom" style={styleImage} onClick={handleClickPlus}>
+          <img src={images[colorText.length].photo} id={images[colorText.length].alt} key={images[colorText.length].alt} onClick={() => resetImage(images[colorText.length].alt)} className="colors" alt={images[colorText.length].alt} style={styleImage}/>
+          <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+        </div> : <div className="colors-phantom image-loader" key="phantom" style={styleImage} onClick={handleClickPlus}>
+          <PlusSVG></PlusSVG>
+          <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+        </div>
+      colorsController.push(<div className="colors-flex">
+        <div className="colors-phantom" key="phantom" style={stylePhantom}></div>
+        <p className="p-dimention margin-horizontal p-uppercase">IMAGE</p>
+        {markupImage}
+      </div>)
       logUtils.loggerText('colors label', colorsController)
     }
     return (colorsController)
@@ -534,6 +562,7 @@ function ButtonImage(props) {
           selected: true})
         setImages(tempImages)
         handleClick({type: 'image', image: imageDataURL})
+        setImageSelected(true)
         if(tempImages.length > 11) {
           setEnableUploading(false)
         }
@@ -609,33 +638,31 @@ function ButtonImage(props) {
     const elementLayer = document.getElementsByClassName('display-buttons')
     const elementApp = document.getElementsByClassName('App')
     if(elementLayer && elementLayer.length && elementApp && elementApp.length) {
-      let topValue = `-${elementLayer[0].offsetTop}`
-      let leftValue = `0`
-      let rightValue = `0`
-      let bottomValue = `0`
+      // let topValue = `-${elementLayer[0].offsetTop}`
+      // let leftValue = `0`
+      // let rightValue = `0`
+      let heightValue = `0`
       if(window.innerWidth < 800) {
-        leftValue = `-${elementLayer[0].offsetLeft}`
-        rightValue = `-${elementLayer[0].offsetLeft}`
-      } else {
-        bottomValue = `-${elementApp[0].offsetHeight - elementLayer[0].offsetHeight - elementLayer[0].offsetTop}`
-        rightValue = `-${window.innerWidth - elementLayer[0].offsetWidth - elementLayer[0].offsetLeft}`
+        heightValue = `${elementLayer[0].offsetTop + elementLayer[0].offsetHeight}`
       }
       for (let i = 0; i < styleSheet.cssRules.length; i++) {
-        // const rule = styleSheet.cssRules[i];
-        // let deletedRule = false
-        // if (rule.selectorText === '.display-buttons::before') {
-        //   styleSheet.deleteRule(i)
-        //   deletedRule = true
-        // }
-        // styleSheet.insertRule(`
-        //   .display-buttons::before {
-        //     top: ${topValue}px !important;
-        //     left: ${leftValue}px !important;
-        //     right: ${rightValue}px !important;
-        //     bottom: ${bottomValue}px !important;
-        //   }
-        // `, styleSheet.cssRules.length);
-        // if(deletedRule) break
+        const rule = styleSheet.cssRules[i];
+        let deletedRule = false
+        console.log('rule.selectorText:', rule.selectorText)
+        if (rule.selectorText === '.display-buttons::before') {
+          console.log('hey mannaggia')
+          styleSheet.deleteRule(i)
+          deletedRule = true
+        }
+        console.log('height:', heightValue)
+        if(window.innerWidth < 800) {
+          styleSheet.insertRule(`
+            .display-buttons::before {
+              min-height: ${heightValue}px !important;
+            }
+          `, styleSheet.cssRules.length);
+        }
+        if(deletedRule) break
       }
     }
   }

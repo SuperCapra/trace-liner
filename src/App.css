@@ -627,6 +627,15 @@ p {
 .colors-black:hover{
   cursor: pointer;
 }
+.colors-phantom{
+  margin: 5px;
+}
+.image-loader{
+  display: flex;
+}
+.image-loader:hover{
+  cursor: pointer
+}
 .colors-selected{
   display: flex;
   align-items: center;
@@ -1067,7 +1076,7 @@ p {
 }
 .modal-dimention-positioning{
   height: fit-content;
-  background-color: var(--palette-secondary);
+  background-color: var(--palette-primary);
   border-radius: 5px;
   max-width: 500px;
   width: 60%;
@@ -1575,7 +1584,7 @@ p {
   .display-buttons::before{
     top: 0;
     left: 50vw;
-    min-height: 100vh;
+    min-height: 100vh !important;
     min-width: 50vw;
   }
 }
@@ -1755,4 +1764,9 @@ p {
 }
 .stroke-secondary .post-fill-none{
   stroke: var(--palette-secondary)
+}
+.display-flex-vertical{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
