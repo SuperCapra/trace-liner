@@ -441,7 +441,7 @@ p {
 }
 .display-buttons::before{
   content: "";
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   background-color: rgba(42, 44, 52, 0.5);
@@ -1582,8 +1582,9 @@ p {
     width: 100px;
   }
   .display-buttons::before{
-    top: 0;
-    left: 50vw;
+    position: fixed;
+    top: 0 !important;
+    left: 50vw !important;
     min-height: 100vh !important;
     min-width: 50vw;
   }

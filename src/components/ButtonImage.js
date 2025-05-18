@@ -556,10 +556,10 @@ function ButtonImage(props) {
         let alt = 'loaded-images-' + key
         let indexSelected = tempImages.findIndex(x => x.selected === true)
         if(indexSelected !== -1) tempImages[indexSelected].selected = false
-        tempImages.push({
+        tempImages[tempImages.length] = {
           photo: imageDataURL, 
           alt: alt,
-          selected: true})
+          selected: true}
         setImages(tempImages)
         handleClick({type: 'image', image: imageDataURL})
         setImageSelected(true)
@@ -638,8 +638,8 @@ function ButtonImage(props) {
     const elementLayer = document.getElementsByClassName('display-buttons')
     const elementApp = document.getElementsByClassName('App')
     if(elementLayer && elementLayer.length && elementApp && elementApp.length) {
-      // let topValue = `-${elementLayer[0].offsetTop}`
-      // let leftValue = `0`
+      let topValue = `-${elementLayer[0].offsetTop}`
+      let leftValue = `-${elementLayer[0].offsetLeft}`
       // let rightValue = `0`
       let heightValue = `0`
       if(window.innerWidth < 800) {
@@ -658,6 +658,8 @@ function ButtonImage(props) {
         if(window.innerWidth < 800) {
           styleSheet.insertRule(`
             .display-buttons::before {
+              top: ${topValue}px !important;
+              left: ${leftValue}px !important;
               min-height: ${heightValue}px !important;
             }
           `, styleSheet.cssRules.length);
