@@ -127,6 +127,14 @@ const tableDefinitions = `
         timezone_offset VARCHAR(20),
         timezone_name VARCHAR(100)
     );
+
+    CREATE TABLE IF NOT EXISTS traceliner_users (
+        id SERIAL PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        active BOOLEAN DEFAULT TRUE,
+    );
 `;
 
 // Function to create tables if they don't exist
