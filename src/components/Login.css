@@ -37,6 +37,9 @@
     max-height: 35px;
     background: none;
 }
+.input-error-validity{
+    border-color: var(--palette-tertiary) !important;
+}
 .padding-right{
     padding: 0 30px 0 0;
 }
@@ -46,4 +49,21 @@
 .position-hide{
     position: absolute;
     right: 5px
+}
+.button-create-user{
+    background-color: var(--palette-primary);
+    color: var(--palette-background);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin: 15px
+}
+.disabled-button{
+    filter: brightness(0.6);
+}
+.active-button:hover{
+    cursor: pointer;
+    filter: brightness(0.8);
+}
+.active-button:active{
+    filter: brightness(0.6);
 }
