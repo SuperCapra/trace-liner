@@ -12,7 +12,8 @@
 }
 
 .logo-animation {
-    animation: rotateAnimation 4s infinite;
+    animation: rotateAnimation 4s;
+    transform-origin: 54.63%;
 }
 
 .logo-width-homepage {

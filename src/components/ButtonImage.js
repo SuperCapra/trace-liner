@@ -447,7 +447,7 @@ function ButtonImage(props) {
           <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
         </div>
       colorsController.push(<div className="colors-flex">
-        <div className="colors-phantom" key="phantom" style={stylePhantom}></div>
+        <div className="colors-phantom" key="phantomColor" style={stylePhantom}></div>
         <p className="p-dimention margin-horizontal p-uppercase">IMAGE</p>
         {markupImage}
       </div>)

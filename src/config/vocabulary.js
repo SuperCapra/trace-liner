@@ -68,7 +68,7 @@ const vocabulary = {
         SLIDER: 'TINT',
         DETAIL: 'DETAIL',
         LINE: 'LINE',
-        BACKGROUND: 'BACK.'
+        BACKGROUND: 'BACK'
     },
     it: {
         MONTH_1: 'Gennaio',

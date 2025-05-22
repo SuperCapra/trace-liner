@@ -7,28 +7,27 @@
     100% { transform: rotate(1080deg); animation-timing-function: ease-in-out; }
 }
   
-.logo-animation-homepage {
+.logo-animation-homepage-loader {
     animation: rotateAnimation 3s;
 }
 
-.logo-animation {
-    animation: rotateAnimation 4s infinite;
-    transform-origin: 54.63%;
+.logo-animation-loader {
+    animation: rotateAnimation 4s;
 }
 
-.logo-width-homepage {
+.logo-width-homepage-loader {
     width: 8%;
 }
 
-.logo-width{
+.logo-width-loader{
     width: 10%;
 }
 
 @media print, screen and (min-width: 600px) {
-    .logo-width-homepage {
+    .logo-width-homepage-loader {
         width: 50px;
     }
-    .logo-width{
+    .logo-width-loader{
         width: 60px;
     }
 }

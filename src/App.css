@@ -304,7 +304,7 @@ p {
   transform: translateY(-3vh);
 }
 .translate-main-wapper-mobile{
-  transform: translateY(-12vh);
+  transform: translateY(0vh);
 }
 .main-wrapper{
   width: 100%;
@@ -434,6 +434,12 @@ p {
   width: 80vw;
   margin: 1vh 0vh 5vh
 }
+.wrapper-upper-main{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 96vh;
+}
 .display-buttons{
   position: relative;
   z-index: 0;
@@ -458,7 +464,8 @@ p {
   align-items: center;
 }
 .canvas-image{
-  width: 80vw;
+  width: 72vw;
+  /* width: 80vw; */
   position: absolute;
   top: 0;
   left: 0;
@@ -466,10 +473,12 @@ p {
 .canvas-container-general{
   background-color: var(--palette-backgroundcomplementary);
   position: relative;
-  min-width: 80vw;
+  min-width: 72vw;
+  /* min-width: 80vw; */
 }
 .canvas-container-square {
-  min-height: 80vw;
+  min-height: 72vw;
+  /* min-height: 80vw; */
 }
 .canvas-container-post {
   aspect-ratio: 4/5;
@@ -487,7 +496,7 @@ p {
   left: 0;
 }
 .canvas-filter{
-  width: 80vw;
+  width: 72vw;
 }
 .canvas-sketch{
   width: 57.5%;
@@ -611,7 +620,7 @@ p {
 }
 .colors-flex{
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
 }
 .colors-flex-header{
@@ -1157,6 +1166,24 @@ p {
   min-width: 40px;
   width: 60px;
 }
+.designed-logo{
+  position: absolute;
+  bottom: 10px;
+  transform: translateX(-50%);
+  width: 200px;
+}
+.instagram-logo{
+  width: 200px;
+  bottom: 30px;
+  height: 20px;
+}
+.instagram-logo:hover{
+  cursor: pointer;
+  filter: brightness(0.8);
+}
+.instagram-logo:active{
+  filter: brightness(0.6);
+}
 @media print, screen and (min-width: 450px) {
   .p-dimention{
     font-size: calc(3.25vw);
@@ -1197,7 +1224,7 @@ p {
     width: 60vw;
   }
   .canvas-container-square{
-    min-height: 60vw;
+    min-height: 54vw;
   }
   .blend-text{
     font-size: calc(3vw);
@@ -1211,7 +1238,7 @@ p {
     font-size: calc(1.875vmin);
   }
   .canvas-container-general{
-    min-width: 60vw;
+    min-width: 54vw;
   }
   /* .logo-club-wrapper-scale{
     transform: scale(0.75);
@@ -1346,7 +1373,7 @@ p {
     width: 80vw;
   }
   .canvas-container-square{
-    min-height: 40vw;
+    min-height: 36vw;
   }
   .blend-text{
     font-size: calc(2vw);
@@ -1360,7 +1387,7 @@ p {
     font-size: calc(1.25vmin);
   }
   .canvas-container-general{
-    min-width: 40vw;
+    min-width: 36vw;
   }
   /* .logo-club-wrapper-scale{
     transform: scale(0.6);
@@ -1528,7 +1555,8 @@ p {
   }
   .display-buttons{
     margin: 0 10px 10px 40px;
-  }th-mode{
+  }
+  .width-mode{
     width: 400px;
   }
   .wrapper-buttons-left{
@@ -1591,6 +1619,10 @@ p {
     min-height: 100vh !important;
     min-width: 50vw;
   }
+  .width-translate-footer{
+    max-width: 370px;
+    transform: translateX(100%);
+  }
 }
 @media print, screen and (min-width: 1100px) {
   .width-header-wrapper{
@@ -1601,6 +1633,14 @@ p {
   }
   .canvas-container-general{
     min-width: 400px;
+  }
+  .designed-logo{
+    width: 300px;
+  }
+  .instagram-logo{
+    width: 250px;
+    bottom: 30px;
+    height: 25px;
   }
   /* .logo-club-wrapper{
     bottom: -10px;
@@ -1667,6 +1707,9 @@ p {
     padding: 12px 15px;
     width: 120px;
   }
+  .width-translate-footer{
+    max-width: 460px;
+  }
 }
 @media print, screen and (min-width: 1250px) {
   .arrow-down{
@@ -1691,6 +1734,10 @@ p {
   }
   .translate-share{
     transform: translateX(150px);
+  }
+  .width-translate-footer{
+    max-width: 700px;
+    transform: translateX(60%);
   }
 }
 .no-see-selected-image{
@@ -1726,6 +1773,9 @@ p {
 .margin-10{
   margin:10px;
 }
+.margin-5{
+  margin:10px;
+}
 .flex-factor{
   display: flex;
   flex-direction: column;
@@ -1738,24 +1788,17 @@ p {
 .margin-horizontal{
   margin: 0 10px;
 }
-.designed-logo{
-  position: absolute;
-  bottom: 10px;
-  transform: translateX(-50%);
-}
 .fill-primary{
     fill: var(--palette-primary)
 }
 .fill-secondary{
     fill: var(--palette-secondary)
 }
+.fill-tertiary{
+    fill: var(--palette-tertiary)
+}
 .fill-background{
     fill: var(--palette-background)
-}
-.instagram-logo{
-  position: absolute;
-  bottom: 2%;
-  right: 2%;
 }
 .stroke-primary .stories-fill-none{
   stroke: var(--palette-primary)

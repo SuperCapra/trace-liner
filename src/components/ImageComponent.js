@@ -13,6 +13,8 @@ import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
 import {ReactComponent as DesignBySVG} from '../assets/images/logoImage.svg'
+import {ReactComponent as DesignedSVG} from '../assets/images/designed.svg'
+import {ReactComponent as InstagramYellowSVG} from '../assets/images/buttonInstagramYellow.svg'
 
 function ImageComponent(props) {
 
@@ -101,10 +103,17 @@ function ImageComponent(props) {
     top: '82%',
     color: drawingColor,
     fontSize: fontSizeData
+    
   }
   const styleDesignBy = {
     fill: drawingColor,
-    width: '4%',
+    width: '100%',
+    height: '100%',
+  }
+  const styleWrapperDesign = {
+    position: 'absolute',
+    width: ratio === '1:1' ? '3%' : '4%',
+    height: ratio === '1:1' ? '16%' : '20%',
     top: showMode5 ? (textUp ? 'unset' : '2%') : 'unset',
     bottom: showMode5 ? (textUp ? '2%' : 'unset') : '2%',
     left: showMode5 ? (textUp ? 'unset' : '3%') : 'unset',
@@ -209,10 +218,13 @@ function ImageComponent(props) {
 
   const pregenerateImagePng = useCallback((bj, anchor, scale) => {
     addOpacity()
+        logUtils.loggerText('anchor png', anchor)
     html2canvas(anchor, {
       backgroundColor:null,
-      scale: scale ? scale : 10
+      scale: scale ? scale : 10,
+      useCORS: true
     }).then((canvas) => {
+      console.log('canvas:', canvas)
       canvas.toBlob(function(blob) {
         if(!blob) {
           insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Excpetion: blob null from canvas.toBlob for png',JSON.stringify(infoLog),'Imagecomponent','pregenerateImagePng','exception')})
@@ -1114,11 +1126,13 @@ function ImageComponent(props) {
     console.log('udating font size...')
     if (containerRef.current) {
       const width = containerRef.current.offsetWidth;
-      setFontSizeTitle(`${width * 0.06}px`)
-      setFontSizeSubtitle(`${width * 0.04}px`)
-      setFontSizeData(`${width * 0.05}px`)
-      setFontSizeDataMode5(`${width * 0.035}px`)
-      setFontSizeDataElements(`${width * 0.03}px`)
+      const widthScreen = window.innerWidth
+      console.log('widthScreen:', widthScreen)
+      setFontSizeTitle(widthScreen > 800 ? `${width * 0.06}px` : `${width * 0.054}px`)
+      setFontSizeSubtitle(widthScreen > 800 ? `${width * 0.04}px` : `${width * 0.036}px`)
+      setFontSizeData(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.045}px`)
+      setFontSizeDataMode5(widthScreen > 800 ? `${width * 0.035}px` : `${width * 0.0315}px`)
+      setFontSizeDataElements(widthScreen > 800 ? `${width * 0.03}px` : `${width * 0.027}px`)
     }
   };
 
@@ -1168,6 +1182,7 @@ function ImageComponent(props) {
   }
   
   return (
+    <div className="wrapper-upper-main">
     <div className="wrapper-main">
       {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>}
       {/* {showModal && <Modal ref={modaldRef} activity={activity} infoLog={infoLog} club={club} language={language} activityId={activityId} userId={userId} visitId={visitId} handleCloseModal={() => closeModal()}/>} */}
@@ -1208,7 +1223,9 @@ function ImageComponent(props) {
           {showMode4 && returnMode4Disposition()}
           {showMode5 && returnMode5Disposition()}
           {showMode6 && returnMode6Disposition()}
-          <DesignBySVG style={styleDesignBy} className="design-position"></DesignBySVG>
+          <div id="canvasLogo" className="design-position" style={styleWrapperDesign}>
+            <DesignBySVG style={styleDesignBy}></DesignBySVG>
+          </div>
         </div>
         {isLoading && 
           <div className="background-loading" id="loader">
@@ -1220,6 +1237,12 @@ function ImageComponent(props) {
         <ButtonImage translate="no" className="indexed-height" activity={activity} unitMeasure={unitMeasureSelected} language={language} handleClickButton={handleClickDispatcher}/>
       </div>
     </div>
+      <div className="flex-factor width-translate-footer">
+        <InstagramYellowSVG className="instagram-logo margin-5" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramYellowSVG>
+        <DesignedSVG className="fill-primary"></DesignedSVG>
+      </div>
+    </div>
+
   );
 }
 

@@ -137,7 +137,7 @@ const Modal = forwardRef((props,ref) => {
                 </div>
                 {!showButtons && <div className="modal-buttons">
                   <ButtonCompleteSVG className="modal-buttons-single-wrapper" onClick={() => share('jpeg')}></ButtonCompleteSVG>
-                  <ButtonCountourSVG className="modal-buttons-single-wrapper" onClick={() => share('jpeg')}></ButtonCountourSVG>
+                  <ButtonCountourSVG className="modal-buttons-single-wrapper" onClick={() => share('png')}></ButtonCountourSVG>
                     {/* <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
                       <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_COMPLETE']}</div>
                     </div>

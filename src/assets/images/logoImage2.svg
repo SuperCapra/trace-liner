@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100px"
+   height="890px"
+   viewBox="0 0 89 10">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1"
+     transform="matrix(8.8999992,0,0,8.8999992,0,-467.3354)">
+    <text
+       style="font-size:14.2857px;line-height:1.02;font-family:OffBit;-inkscape-font-specification:OffBit;text-align:justify;fill:#e4ff3c;fill-opacity:1;stroke-width:8.09896;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:33.2;paint-order:markers fill stroke"
+       x="-89.414032"
+       y="10.000001"
+       id="text792"
+       transform="rotate(-90)"><tspan
+         id="tspan790"
+         style="font-weight:bold;fill:#e4ff3c;fill-opacity:1;stroke-width:8.09896"
+         x="-89.414032"
+         y="10.000001">TRACE LINER</tspan></text>
+    <path
+       class="cls-1"
+       d="m 3.994436,42.030311 c 0,-0.296716 0.09268,-0.537758 0.278049,-0.723125 0.185205,-0.185367 0.426245,-0.27805 0.722798,-0.27805 h 1.001008 v 3.999181 H 3.994436 Z m 0,-2.002029 c 0,0.296716 -0.09268,0.537436 -0.278048,0.722803 -0.185366,0.185367 -0.426406,0.278051 -0.72296,0.278051 H 0 V 39.027427 H 3.994436 Z M 5.996291,39.027427 H 10 v 2.001709 H 5.996291 Z m -1.001008,-4.01611 c 0.296553,0 0.537593,0.09268 0.722959,0.278051 0.185366,0.185367 0.278049,0.426409 0.278049,0.722803 v 3.015256 H 3.994436 v -4.01611 z"
+       id="path138"
+       style="fill:#e4ff3c;stroke-width:0.129934" />
+  </g>
+</svg>

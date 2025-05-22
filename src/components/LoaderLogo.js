@@ -7,7 +7,7 @@ function LoaderLogo(props) {
 
     const {position} = props
 
-    const classes = position === 'homepage' ? 'logo-animation-homepage logo-width-homepage' : 'logo-animation logo-width'
+    const classes = position === 'homepage' ? 'logo-animation-homepage-loader logo-width-homepage-loader' : 'logo-animation-loader logo-width-loader'
 
     return(
         <LogoRotatingSVG className={classes}></LogoRotatingSVG>

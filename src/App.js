@@ -15,7 +15,6 @@ import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
 import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
 import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
-import {ReactComponent as DesignedSVG} from './assets/images/designed.svg'
 import brandingPalette from './config/brandingPalette';
 import {vocabulary/** , languages*/} from './config/vocabulary';
 // import clubs from './config/clubs'
@@ -23,7 +22,8 @@ import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
 import dbInteractions from './services/dbInteractions.js';
-import {ReactComponent as InstagramSVG} from './assets/images/Instagram.svg'
+import {ReactComponent as DesignedSVG} from './assets/images/designed.svg'
+import {ReactComponent as InstagramYellowSVG} from './assets/images/buttonInstagramYellow.svg'
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -317,9 +317,6 @@ class Homepage extends React.Component{
               <div className="wrapper-title-logo margin-title-logo">
                 <LogoExtendedSVG className="width-title-logo"></LogoExtendedSVG>
               </div>
-              <div className="wrapper-title-logo margin-title-logo">
-                <LogoHomepage></LogoHomepage>
-              </div>
               <div className="wrapper-buttons-login">
                 <div className="wrapper-button-login" onClick={() => {
                   window.location.href = stravaAuthorizeUrl
@@ -335,8 +332,8 @@ class Homepage extends React.Component{
             <div className={mainWrapperClasses}>
                 <LoaderLogo position="homepage"/>
             </div>
+            <InstagramYellowSVG className="designed-logo instagram-logo" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramYellowSVG>
             <DesignedSVG className="designed-logo fill-primary"></DesignedSVG>
-            {/* <InstagramSVG className="instagram-logo" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramSVG> */}
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
@@ -378,7 +375,10 @@ class Homepage extends React.Component{
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
               <ArrowDown style={arrowDownStyle}></ArrowDown>
             </div>
-            <DesignedSVG className="fill-primary"></DesignedSVG>
+            <div className="flex-factor">
+              <InstagramYellowSVG className="instagram-logo margin-5" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramYellowSVG>
+              <DesignedSVG className="fill-primary"></DesignedSVG>
+            </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivity') {

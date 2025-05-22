@@ -12,6 +12,11 @@ function SignUp(props) {
     const [typePassword, setTypePassword] = useState("password");
     const [hide, setHide] = useState(true);
     const [submittable, setSubmittable] = useState(false);
+    const [legitUsername, setLegitUsername] = useState(true);
+    const [legitPassword, setLegitPassword] = useState(true);
+    const [showMessageUsername, setShowMessageUsername] = useState(false);
+    const [showMessagePassword, setShowMessagePassword] = useState(false);
+    const [leftshift, setLeftshift] = useState('unset')
 
     const usernameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
@@ -28,6 +33,12 @@ function SignUp(props) {
         setValueUsername(value)
     }
 
+    const styleMessage = {
+        left: leftshift,
+        textAlign: 'left',
+        width: '20vw'
+    }
+
     const onChangeHide = () => {
         if(hide) setTypePassword('text')
         else setTypePassword('password')
@@ -40,57 +51,123 @@ function SignUp(props) {
     }
     const onBlur = (event) => {
         console.log('event.target.name', event.target.name)
-        checkValidity()
+        console.log('event.target.value', event.target.value)
+        checkValidity(event.target.name, event.target.value)
     }
-    const checkValidity = () => {
-        let legitUsername = usernameRegex.test(valueUsername)
-        let legitPassword = passwordRegex.test(valuePassword)
-        console.log('password validity', passwordRegex.test(valuePassword))
-        console.log('username validity', usernameRegex.test(valueUsername))
-        const usernameElement = document.getElementById("username")
-        const passwordElement = document.getElementById("password")
-        if(legitUsername && usernameElement.classList.contains("input-error-validity"))  usernameElement.classList.remove("input-error-validity")
-        if(legitPassword && passwordElement.classList.contains("input-error-validity"))  passwordElement.classList.remove("input-error-validity")
-        if(legitPassword && legitUsername) {
-            setSubmittable(true)
-        } else {
-            setSubmittable(false)
-            if(usernameElement && !legitUsername && !usernameElement.classList.contains("input-error-validity")) {
-                usernameElement.classList.add("input-error-validity")
+    const checkValidity = (name, value) => {
+        if(name === 'password') {
+            let legitPasswordLocal = !value.length || (value.length && passwordRegex.test(value))
+            setLegitPassword(legitPasswordLocal)
+            const passwordElement = document.getElementById("password")
+            console.log('legitPasswordLocal', legitPasswordLocal)
+            if(legitPasswordLocal && passwordElement.classList.contains("input-error-validity")) {
+                passwordElement.classList.remove("input-error-validity")
+                setShowMessagePassword(false)
             }
-            if(passwordElement && !legitPassword && !passwordElement.classList.contains("input-error-validity")) {
+            if(legitUsername && legitPasswordLocal) setSubmittable(true)
+            else {
+                setSubmittable(false)
+                if(passwordElement && !legitPasswordLocal && !passwordElement.classList.contains("input-error-validity"))
                 passwordElement.classList.add("input-error-validity")
             }
         }
+        if(name === 'username') {
+            let legitUsernameLocal = !value.length || (value.length && usernameRegex.test(value))
+            setLegitUsername(legitUsernameLocal)
+            const usernameElement = document.getElementById("username")
+            console.log('legitUsernameLocal', legitUsernameLocal)
+            if(legitUsernameLocal && usernameElement.classList.contains("input-error-validity")) {
+                usernameElement.classList.remove("input-error-validity")
+                setShowMessageUsername(false)
+            }
+            if(legitPassword && legitUsernameLocal) setSubmittable(true)
+            else {
+                setSubmittable(false)
+                if(usernameElement && !legitUsernameLocal && !usernameElement.classList.contains("input-error-validity"))
+                usernameElement.classList.add("input-error-validity")
+            }
+        }
+        // let legitUsernameLocal = !valueUsername.length || (valueUsername.length && usernameRegex.test(valueUsername))
+        // setLegitUsername(legitUsernameLocal)
+        // const usernameElement = document.getElementById("username")
+        // console.log('legitUsernameLocal', legitUsernameLocal)
+        // console.log('valueUsername', valueUsername)
+        // console.log('valuePassword', valuePassword)
+        // if(legitUsernameLocal && usernameElement.classList.contains("input-error-validity")) usernameElement.classList.remove("input-error-validity")
+        // if(legitPasswordLocal && legitUsernameLocal) {
+        //     setSubmittable(true)
+        // } else {
+        //     setSubmittable(false)
+        //     if(usernameElement && !legitUsernameLocal && !usernameElement.classList.contains("input-error-validity")) {
+        //         usernameElement.classList.add("input-error-validity")
+        //     }
+        //     if(passwordElement && !legitPasswordLocal && !passwordElement.classList.contains("input-error-validity")) {
+        //         passwordElement.classList.add("input-error-validity")
+        //     }
+        // }
     }
     const onSubmit = () => {
 
     }
+    const changeShowUsername = () => {
+        setShowMessageUsername(true)
+        setShowMessagePassword(false)
+        setStyleMessage()
+    }
+    const changeShowPassword = () => {
+        setShowMessagePassword(true)
+        setShowMessageUsername(false)
+        setStyleMessage()
+    }
+
+    const setStyleMessage = () => {
+        const elementInput = document.getElementById('username')
+        if(elementInput) {
+            console.log('width', elementInput.offsetWidth)
+            let rightWidth = elementInput.offsetWidth + 20
+            setLeftshift(`${rightWidth}px`)
+        }
+    }
 
     return (<div className="wrapper-login modal-overlay">
             <p className="p-dimention-xl p-color">SIGN UP</p>
-            <input 
-                className="input-login p-dimention p-left p-color input-margin" 
-                id="username"
-                type="text" 
-                name="username"
-                value={valueUsername} 
-                pattern={usernameRegex} 
-                onBlur={onBlur}
-                title="You need to enter an username in the form of an email" 
-                placeholder="Username" onChange={onChangeUsername}/>
-            <div className="wrapper-password input-login input-margin position-relative" id="password">
+            <div className="wrapper-element-input position-relative">
                 <input 
-                    className="input-login-password p-dimention p-left p-color padding-right" 
-                    type={typePassword} 
-                    name="password"
-                    value={valuePassword} 
-                    pattern={passwordRegex} 
+                    className="input-login p-dimention p-left p-color input-margin" 
+                    id="username"
+                    type="text" 
+                    name="username"
+                    value={valueUsername}  
                     onBlur={onBlur}
-                    title={messagePassword}
-                    placeholder="Password" onChange={onChangePassword}/>
-                {hide && <HideSVG className="position-hide" onClick={onChangeHide} style={eyeStyle}></HideSVG>}
-                {!hide && <ViewSVG className="position-hide" onClick={onChangeHide} style={eyeStyle}></ViewSVG>}
+                    title="You need to enter an username in the form of an email" 
+                    placeholder="Username" onChange={onChangeUsername}/>
+                {!legitUsername && <p className="p-dimention p-color-tertiary position-info" onClick={changeShowUsername}>i</p>}
+                {showMessageUsername && <div className="position-info-message" style={styleMessage}>
+                        <div className="position-info-message border-popover">
+                            <p className="p-dimention-xs p-color-tertiary">{messageUsername}</p>
+                            <div className="border-popover-triangle"></div>
+                        </div>
+                    </div>}
+            </div>
+            <div className="wrapper-element-input position-relative">
+                <div className="wrapper-element-input input-login input-margin position-relative" id="password">
+                    <input 
+                        className="input-login-password p-dimention p-left p-color padding-right" 
+                        type={typePassword} 
+                        name="password"
+                        value={valuePassword} 
+                        onBlur={onBlur}
+                        placeholder="Password" onChange={onChangePassword}/>
+                    {hide && <HideSVG className="position-hide" onClick={onChangeHide} style={eyeStyle}></HideSVG>}
+                    {!hide && <ViewSVG className="position-hide" onClick={onChangeHide} style={eyeStyle}></ViewSVG>}
+                </div>
+                {!legitPassword && <p className="p-dimention p-color-tertiary position-info" onClick={changeShowPassword}>i</p>}
+                {showMessagePassword && <div className="position-info-message" style={styleMessage}>
+                        <div className="position-info-message border-popover">
+                            <p className="p-dimention-xs p-color-tertiary">{messagePassword}</p>
+                            <div className="border-popover-triangle"></div>
+                        </div>
+                    </div>}
             </div>
             {submittable && <div className="button-create-user active-button" id="submit" onClick={onSubmit}>
                 <p className="p-dimention">CREATE USER</p>
