@@ -1128,7 +1128,7 @@ function ImageComponent(props) {
       const width = containerRef.current.offsetWidth;
       const widthScreen = window.innerWidth
       console.log('widthScreen:', widthScreen)
-      setFontSizeTitle(widthScreen > 800 ? `${width * 0.06}px` : `${width * 0.054}px`)
+      setFontSizeTitle(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.054}px`)
       setFontSizeSubtitle(widthScreen > 800 ? `${width * 0.04}px` : `${width * 0.036}px`)
       setFontSizeData(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.045}px`)
       setFontSizeDataMode5(widthScreen > 800 ? `${width * 0.035}px` : `${width * 0.0315}px`)
