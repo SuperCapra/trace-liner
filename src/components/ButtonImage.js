@@ -1,6 +1,5 @@
 import '../App.css';
 import React, {useState, useEffect} from 'react';
-import SelectedImage from './SelectedImage';
 import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
@@ -39,7 +38,6 @@ function ButtonImage(props) {
   const [showCalories, setShowCalories] = useState(true);
   const [textUp, setTextUp] = useState(false);
   const [altitudeVertical, setAltitudeVertical] = useState(false);
-  const [enableUploading, setEnableUploading] = useState(true);
   const [imageSelected, setImageSelected] = useState(false);
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
@@ -100,11 +98,6 @@ function ButtonImage(props) {
   const handleClick = (data) => {
     handleClickButton(data)
   }
-  // const propagateSquare = () => {
-  //   if(rectangle) setRectangle(false)
-  //   setSquare(true)
-  //   handleClick({type: 'square'})
-  // }
   const propagatePost = () => {
     if(rectangle) setRectangle(false)
     setSquare(true)
@@ -277,9 +270,6 @@ function ButtonImage(props) {
     setShowCalories(true)
   }
 
-  // const unitMeasureStyle = {
-  //   color: brandingPalette.primary,
-  // }
   const shareStyle = {
     color: brandingPalette.primary,
     fill: brandingPalette.primary
@@ -316,48 +306,7 @@ function ButtonImage(props) {
     transform: 'scale(0.55)',
     rotate: '180deg'
   }
-  // const unsetBlendModeStyle = {
-  //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedUnsetBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
 
-  // const differenceBlendModeStyle = {
-  //   color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedDifferenceBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
-
-  // const exclusionBlendModeStyle = {
-  //   color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedExclusionBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
-
-  // const returnsColors = () => {
-  //   if(!colors.length) {
-  //     for(let color in colorText) {
-  //       // if(!selectedUnsetBlendMode && color === 'black') continue
-  //       // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
-  //       let styleColor = {
-  //         backgroundColor: colorText[color],
-  //         width: '20px',
-  //         height: '20px',
-  //         borderRadius: '20px',
-  //         border: '2px solid ' + brandingPalette['background']
-  //       }
-  //       colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>)
-  //     }
-  //     logUtils.loggerText('colors', colors)
-  //   }
-  //   return (colors)
-  // }
   const returnsColorsController = () => {
     if(!colorsController.length) {
       colorsController.push(<div className="colors-flex-header">
@@ -366,8 +315,6 @@ function ButtonImage(props) {
           </div>)
       let i = 0
       for(let color in colorText) {
-        // if(!selectedUnsetBlendMode && color === 'black') continue
-        // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
         let elementImage = images[i]
         let styleColor = {
           backgroundColor: colorText[color],
@@ -500,27 +447,6 @@ function ButtonImage(props) {
     return deactivated ? deactivatedElement : activatedElement
   }
 
-  const returnImages = () => {
-    // if(props.activity.photoUrlProxied) {
-    //   images = [{
-    //     photo: props.activity.photoUrlProxied, 
-    //     alt: 'activity'
-    //   },...images]
-    // }
-    console.log('images:', images)
-    let htmlImages = []
-    for(let element of images) {
-
-      let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
-      htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected">
-        <div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/>
-        </div>
-        <img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/>
-        </div>)
-    }
-    return(htmlImages)
-  }
-
   const resetImage = (alt) => {
     selectImage(alt)
     // deselectImage()
@@ -540,17 +466,12 @@ function ButtonImage(props) {
     if(fileInput) fileInput.click()
   }
 
-  // const propagateUnitMeasure = () => {
-  //   handleClick({type: 'unit', unit: unitMeasure === 'metric' ? 'imperial' : 'metric'})
-  // }
-
   const loadImage = (event) => {
     if(event && event.target && event.target.files && event.target.files.length) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageDataURL = e.target.result;
-        // returnImages(imageDataURL)
         let tempImages = images
         let key = images.length + 1
         let alt = 'loaded-images-' + key
@@ -563,9 +484,6 @@ function ButtonImage(props) {
         setImages(tempImages)
         handleClick({type: 'image', image: imageDataURL})
         setImageSelected(true)
-        if(tempImages.length > 11) {
-          setEnableUploading(false)
-        }
       };
       reader.readAsDataURL(file);
     }
@@ -619,19 +537,6 @@ function ButtonImage(props) {
     </div>)
   }
 
-  // const minusFilter = () => {
-  //   handleClick({type: 'filter', direction: 'minus'})
-  // }
-  // const plusFilter = () => {
-  //   handleClick({type: 'filter', direction: 'plus'})
-  // }
-  // const minusResolution = () => {
-  //   handleClick({type: 'resolution', direction: 'minus'})
-  // }
-  // const plusResolution = () => {
-  //   handleClick({type: 'resolution', direction: 'plus'})
-  // }
-
   const updateLayerSize = () => {
     console.log('udating layer size...')
     const styleSheet = document.styleSheets[0];
@@ -640,7 +545,6 @@ function ButtonImage(props) {
     if(elementLayer && elementLayer.length && elementApp && elementApp.length) {
       let topValue = `-${elementLayer[0].offsetTop}`
       let leftValue = `-${elementLayer[0].offsetLeft}`
-      // let rightValue = `0`
       let heightValue = `0`
       if(window.innerWidth < 800) {
         heightValue = `${elementLayer[0].offsetTop + elementLayer[0].offsetHeight}`
@@ -648,13 +552,10 @@ function ButtonImage(props) {
       for (let i = 0; i < styleSheet.cssRules.length; i++) {
         const rule = styleSheet.cssRules[i];
         let deletedRule = false
-        console.log('rule.selectorText:', rule.selectorText)
         if (rule.selectorText === '.display-buttons::before') {
-          console.log('hey mannaggia')
           styleSheet.deleteRule(i)
           deletedRule = true
         }
-        console.log('height:', heightValue)
         if(window.innerWidth < 800) {
           styleSheet.insertRule(`
             .display-buttons::before {
@@ -682,21 +583,12 @@ function ButtonImage(props) {
   return (
     <div className="display-buttons">
       <div className="wrapper-buttons width-mode">
-        {/* <div style={unitMeasureStyle} className="feature" onClick={() => propagateUnitMeasure()}>
-          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_METRICS}</p>
-        </div> */}
         <div id="modeElement" style={textStyle} className="feature" onClick={() => showModifySetText()}>
           <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_MODE}</p>
-          {/* <TextSVG className="feature" /> */}
         </div>
         <div id="editElement" style={modifyStyle} className="feature" onClick={() => showModifySetImage()}>
           <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_EDIT}</p>
-          {/* <ModifySVG className="feature" /> */}
         </div>
-        {/*<div style={shareStyle} className="feature" onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
-          <p className="p-dimention-xs p-left">{vocabulary[language].BUTTON_SHARE}</p>
-          <ShareSVG className="feature"/>
-        </div>*/}
       </div>
       {showModifyImage && (
         <div className="wrapper-controller width-mode">
@@ -712,14 +604,6 @@ function ButtonImage(props) {
             </div>
 
           </div>
-          {/* <div className="wrapper-sub-buttons">
-            {returnsColors()}
-          </div>
-          <div className="wrapper-sub-buttons wrapper-images">
-            {returnImages()}
-            {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
-          </div> */}
           <div className="wrapper-sub-buttons-slider slider-width">
             <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
               <p className="p-dimention">{vocabulary[language].DETAIL}</p>

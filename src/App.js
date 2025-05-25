@@ -4,20 +4,16 @@ import utils from './utils/utils.js'
 import logUtils from './utils/logUtils.js'
 import apiUtils from './utils/apiUtils.js';
 import LoaderLogo from './components/LoaderLogo.js'
-import LogoHomepage from './components/LogoHomepage.js'
 import ImageComponent from './components/ImageComponent.js'
-// import Creator from './components/Creator.js'
 import Statistics from './components/Statistics.js';
 import Login from './components/Login.js';
 import SignUp from './components/SignUp.js';
-// import Dropdown from './components/Dropdown.js'
 import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
 import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
 import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
 import brandingPalette from './config/brandingPalette';
 import {vocabulary/** , languages*/} from './config/vocabulary';
-// import clubs from './config/clubs'
 import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
@@ -162,7 +158,6 @@ class Homepage extends React.Component{
             beautyName: track.name ? he.decode(track.name) : undefined,
             beautyNameNoEmoji: track.name ? utils.removeEmoji(he.decode(track.name)) : undefined,
             beautyPower: undefined,
-            // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             coordinates: track.points && track.points.length ? track.points.map(point => ([
               point.lon,
@@ -265,12 +260,6 @@ class Homepage extends React.Component{
         console.error('error creating the visit:', e)
       })
     }
-    // let localKey = localStorage.getItem('tracelinerkey');
-    // if(localKey && !accessToken) {
-    //   accessToken = localKey
-    //   console.log('localKey:', localKey)
-    //   this.getActivities()
-    // }
     logUtils.loggerText('Language navigator:', navigator.language)
     logUtils.loggerText('Language:', this.props.language)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
@@ -438,10 +427,8 @@ class Homepage extends React.Component{
             console.error(e)
           }
         }
-        // localStorage.setItem('tracelinerkey',accessToken);
         console.info('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
-        // if(accessToken) this.getAthleDataComplete()
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
@@ -636,9 +623,7 @@ class Homepage extends React.Component{
               t.beautyEndCoordinates = t.beautyEndCoordinatesComplete ? t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime : undefined
             }
             t.metric.subtitle = utils.getSubTitle(t, 'metric')
-            // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
             t.imperial.subtitle = utils.getSubTitle(t, 'imperial')
-            // t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }
@@ -701,8 +686,6 @@ class Homepage extends React.Component{
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
-          // console.log(activity)
-          // this.getImage(activity.photoUrl)
         }
       })
       .catch(e => {
@@ -710,7 +693,6 @@ class Homepage extends React.Component{
         this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivity','exception')})
       })
       .finally(() => {
-        // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
       })
   }

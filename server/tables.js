@@ -133,7 +133,7 @@ const tableDefinitions = `
         username TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        active BOOLEAN DEFAULT TRUE,
+        active BOOLEAN DEFAULT TRUE
     );
 `;
 
