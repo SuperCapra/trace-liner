@@ -455,7 +455,7 @@ p {
   left: 0;
   background-color: rgba(42, 44, 52, 0.5);
   z-index: -1;
-  min-height: 30vh;
+  /* min-height: 30vh; */
   min-width: 100vw;
 }
 .wrapper-main{
@@ -585,10 +585,10 @@ p {
   flex-direction: row;
 }
 .text-title-props:first-child{
-  bottom:90%
+  bottom:82%
 }
 .text-title-props:last-child{
-  top:10%
+  top:19%
 }
 .text-name-props{
   font-weight: 900;
@@ -1617,7 +1617,7 @@ p {
     top: 0 !important;
     left: 50vw !important;
     min-height: 100vh !important;
-    min-width: 50vw;
+    min-width: 50vw !important;
   }
   .width-translate-footer{
     max-width: 370px;

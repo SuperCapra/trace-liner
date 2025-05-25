@@ -449,7 +449,6 @@ function ButtonImage(props) {
 
   const resetImage = (alt) => {
     selectImage(alt)
-    // deselectImage()
     const elementChosen = document.getElementById(alt)
     const elementChosenSelected = document.getElementById(alt + '-selected')
     if(elementChosenSelected) {
@@ -538,7 +537,7 @@ function ButtonImage(props) {
   }
 
   const updateLayerSize = () => {
-    console.log('udating layer size...')
+    logUtils.loggerText('udating layer size...')
     const styleSheet = document.styleSheets[0];
     const elementLayer = document.getElementsByClassName('display-buttons')
     const elementApp = document.getElementsByClassName('App')
@@ -551,21 +550,25 @@ function ButtonImage(props) {
       }
       for (let i = 0; i < styleSheet.cssRules.length; i++) {
         const rule = styleSheet.cssRules[i];
-        let deletedRule = false
-        if (rule.selectorText === '.display-buttons::before') {
-          styleSheet.deleteRule(i)
-          deletedRule = true
+        if(rule.selectorText === '.display-buttons::before') {
+
+          if(window.innerWidth < 800) {
+            styleSheet.insertRule(`
+              .display-buttons::before {
+                top: ${topValue}px !important;
+                left: ${leftValue}px !important;
+                min-height: ${heightValue}px !important;
+              }`, styleSheet.cssRules.length);
+          } else {
+            styleSheet.insertRule(`
+              .display-buttons::before {
+                top: 0 !important;
+                left: 50vw !important;
+                min-height: 100vh !important;
+              }`, styleSheet.cssRules.length);
+          }
+          break
         }
-        if(window.innerWidth < 800) {
-          styleSheet.insertRule(`
-            .display-buttons::before {
-              top: ${topValue}px !important;
-              left: ${leftValue}px !important;
-              min-height: ${heightValue}px !important;
-            }
-          `, styleSheet.cssRules.length);
-        }
-        if(deletedRule) break
       }
     }
   }
