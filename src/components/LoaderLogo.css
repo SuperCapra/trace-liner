@@ -8,11 +8,11 @@
 }
   
 .logo-animation-homepage-loader {
-    animation: rotateAnimation 3s;
+    animation: rotateAnimation 3s infinite;
 }
 
 .logo-animation-loader {
-    animation: rotateAnimation 4s;
+    animation: rotateAnimation 4s infinite;
 }
 
 .logo-width-homepage-loader {
