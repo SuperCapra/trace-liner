@@ -25,7 +25,10 @@ const Modal = forwardRef((props,ref) => {
       fill: brandingPalette.background
     }
     const loaded = (blobComp,blobCont) => {
-      if(!blobComp && !blobCont) setIsError(true)
+      if(!blobComp && !blobCont) {
+        setIsError(true)
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception: no blob from modal',JSON.stringify(infoLog),'modal','loaded','exception')})
+      }
       setIsLoading(false)
       setBlobComplete(blobComp)
       setblobCountour(blobCont)

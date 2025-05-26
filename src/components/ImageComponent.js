@@ -330,7 +330,6 @@ function ImageComponent(props) {
 
       if((!activity.altitudeStream || (activity.altitudeStream && !activity.altitudeStream.length)) ||
         (!activity.distanceStream || (activity.distanceStream && !activity.distanceStream.length))) return
-
       let canvasSketchWidth = 500 * 10
       let canvasSketchHeight = ratio.split(':')[1] / ratio.split(':')[0] * 500 * 10
       let altitudeStream = activity.altitudeStream
@@ -340,7 +339,7 @@ function ImageComponent(props) {
       setDrawingWidth(width)
       setDrawingHeight(canvasSketchHeight)
       let ctx = canvasSketch.getContext('2d')
-
+      
       ctx.lineJoin = 'round';
       ctx.lineCap = 'round';
   
@@ -465,7 +464,6 @@ function ImageComponent(props) {
       let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
       let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
       console.log('lengthCoordinates', lengthCoordinates)
-
       let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
       console.log('scaleFactor:', scaleFactor)
       let drawing = true
@@ -507,6 +505,7 @@ function ImageComponent(props) {
             drawing = false
           }
         }
+        // ctx.lineTo(cd[0],cd[1])
       }
 
       ctx.stroke()

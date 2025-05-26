@@ -1,0 +1,16 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ "main","dev" ]
+  pull_request:
+    branches: [ "main","dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build
+      run: react-scripts build
+      env:
+        NODE_ENV: production
