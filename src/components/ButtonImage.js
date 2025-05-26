@@ -1,40 +1,27 @@
 import '../App.css';
-import React, {useState} from 'react';
-import ShareContour from './ShareContour'
-import SelectedImage from './SelectedImage';
+import React, {useState, useEffect} from 'react';
 import logUtils from '../utils/logUtils';
 import brandingPalette from '../config/brandingPalette';
 import colorText from '../config/colorText';
 import {vocabulary} from '../config/vocabulary';
-import {ReactComponent as ShareSVG} from '../assets/images/share.svg'
-import {ReactComponent as ModifySVG} from '../assets/images/modify.svg'
-import {ReactComponent as TextSVG} from '../assets/images/text.svg'
-import {ReactComponent as RectangleSVG} from '../assets/images/rectangle.svg'
-import {ReactComponent as SquareSVG} from '../assets/images/square.svg'
+import {ReactComponent as StorySVG} from '../assets/images/stories.svg'
+import {ReactComponent as PostSVG} from '../assets/images/post.svg'
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
-import {ReactComponent as UnitMeasureSVG} from '../assets/images/unitMeasure.svg'
-import {ReactComponent as FilterSVG} from '../assets/images/filter.svg'
-import {ReactComponent as ResolutionSVG} from '../assets/images/resolution.svg'
 import {ReactComponent as ArrowDownSVG} from '../assets/images/arrowDownSimplified.svg'
-// import {ReactComponent as PlusSVG} from '../assets/images/plus.svg'
-// import {ReactComponent as MinusSVG} from '../assets/images/minus.svg'
-import image1 from '../assets/images/image1.jpg'
-import image2 from '../assets/images/image2.jpg'
-import image3 from '../assets/images/image3.jpg'
-import image4 from '../assets/images/image4.jpg'
-import image5 from '../assets/images/image5.jpg'
-import image6 from '../assets/images/image6.jpg'
-import image7 from '../assets/images/image7.jpg'
-// import image8 from '../assets/images/image8.jpeg'
-// import image9 from '../assets/images/image9.jpeg'
-// import image10 from '../assets/images/image10.jpg'
+import image1 from '../assets/images/imagebackground1.jpg'
+import image2 from '../assets/images/imagebackground2.jpg'
+import image3 from '../assets/images/imagebackground3.jpg'
+import image4 from '../assets/images/imagebackground4.jpg'
+import image5 from '../assets/images/imagebackground5.jpg'
+import image6 from '../assets/images/imagebackground6.jpg'
+import {ReactComponent as PlusSVG} from '../assets/images/plus2.svg'
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
 function ButtonImage(props) {
 
-  const { activity, unitMeasure, language, admin, modeselected, handleClickButton } = props
+  const { activity, unitMeasure, language, handleClickButton } = props
 
   const [showModifyImage, setModifyImgae] = useState(false);
   const [showModifyText, setModifyText] = useState(false);
@@ -51,24 +38,22 @@ function ButtonImage(props) {
   const [showCalories, setShowCalories] = useState(true);
   const [textUp, setTextUp] = useState(false);
   const [altitudeVertical, setAltitudeVertical] = useState(false);
-  const [enableUploading, setEnableUploading] = useState(true)
+  const [imageSelected, setImageSelected] = useState(false);
   const [valueFilter, setValueFilter] = useState(0);
   const [valueResolution, setValueResolution] = useState(100);
-  const [showMode1, setShowMode1] = useState(modeselected === 'mode1' ? true : false);
-  const [showMode2, setShowMode2] = useState(modeselected === 'mode2' ? true : false);
-  const [showMode3, setShowMode3] = useState(modeselected === 'mode3' ? true : false);
-  const [showMode4, setShowMode4] = useState(modeselected === 'mode4' ? true : false);
-  const [showMode5, setShowMode5] = useState(modeselected === 'mode5' ? true : false);
-  const [showMode6, setShowMode6] = useState(modeselected === 'mode6' ? true : false);
+  const [showMode1, setShowMode1] = useState(true);
+  const [showMode2, setShowMode2] = useState(false);
+  const [showMode3, setShowMode3] = useState(false);
+  const [showMode4, setShowMode4] = useState(false);
+  const [showMode5, setShowMode5] = useState(false);
+  const [showMode6, setShowMode6] = useState(false);
+  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
 
-  // const [selectedUnsetBlendMode, setSelectedUnsetBlendMode] = useState(true);
-  // const [selectedDifferenceBlendMode, setSelectedDifferenceBlendMode] = useState(false);
-  // const [selectedExclusionBlendMode, setSelectedExclusionBlendMode] = useState(false);
-  const colors = []
+  const colorsController = []
   const [images,setImages] = useState([{
     photo: image1, 
     alt: 'default-1',
-    selected: true,
+    selected: false,
   },{
     photo: image2, 
     alt: 'default-2',
@@ -80,7 +65,7 @@ function ButtonImage(props) {
   },{
     photo: image4, 
     alt: 'default-4',
-    selected: false,
+    selected: true,
   },{
     photo: image5, 
     alt: 'default-5',
@@ -89,43 +74,40 @@ function ButtonImage(props) {
     photo: image6, 
     alt: 'default-6',
     selected: false,
-  },{
-    photo: image7, 
-    alt: 'default-7',
-    selected: false,
   }])
 
   const showModifySetImage = () => {
     setModifyText(false)
+    activateModeOrEdit('editElement','modeElement')
     setModifyImgae(!showModifyImage)
+    setTimeout(() => updateLayerSize(),50)
   }
   const showModifySetText = () => {
     setModifyImgae(false)
+    activateModeOrEdit('modeElement','editElement')
     setModifyText(!showModifyText)
+    setTimeout(() => updateLayerSize(),50)
+  }
+  const activateModeOrEdit = (activate, deactivate) => {
+    const elementActivate = document.getElementById(activate)
+    const elementDeactivate = document.getElementById(deactivate)
+    if(elementActivate && !elementActivate.classList.contains('feature-active')) elementActivate.classList.add('feature-active')
+    else if(elementActivate.classList.contains('feature-active')) elementActivate.classList.remove('feature-active')
+    if(elementDeactivate && elementDeactivate.classList.contains('feature-active')) elementDeactivate.classList.remove('feature-active')
   }
   const handleClick = (data) => {
-    // pregenerateImage()
     handleClickButton(data)
   }
-  const propagateSquare = () => {
+  const propagatePost = () => {
     if(rectangle) setRectangle(false)
     setSquare(true)
-    handleClick({type: 'square'})
+    handleClick({type: 'post'})
   }
   const propagateRectangle = () => {
     if(square) setSquare(false)
     setRectangle(true)
     handleClick({type: 'rectangle'})
   }
-  // const propagateTwice = () => {
-  //   handleClick({type: 'twice'})
-  // }
-  // const propagateBlendMode = (blendModeSetting) => {
-  //   handleClick({type: 'blend-mode', blendMode: blendModeSetting})
-  //   setSelectedUnsetBlendMode(blendModeSetting === 'unset' ? true : false)
-  //   setSelectedDifferenceBlendMode(blendModeSetting === 'difference' ? true : false)
-  //   setSelectedExclusionBlendMode(blendModeSetting === 'exclusion' ? true : false)
-  // }
   const propagateShowHide = (type) => {
     if(type === 'name') {
       handleClick({type: 'show-hide', subtype: 'name', show: !showName})
@@ -235,6 +217,7 @@ function ButtonImage(props) {
 
   const propagateColor = (info) => {
     handleClick(info)
+    setDrawingColor(info.color)
   }
 
   const enableMode1 = (bool, isStart) => {
@@ -287,30 +270,25 @@ function ButtonImage(props) {
     setShowCalories(true)
   }
 
-  const unitMeasureStyle = {
-    fill: brandingPalette.primary,
-    transform: 'scale(0.55)'
-  }
   const shareStyle = {
-    fill: brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: brandingPalette.primary,
+    fill: brandingPalette.primary
   }
   const modifyStyle = {
-    fill: showModifyImage ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: showModifyImage ? brandingPalette.primary : brandingPalette.secondary,
   }
   const textStyle = {
-    fill: showModifyText ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    color: showModifyText ? brandingPalette.primary : brandingPalette.secondary,
   }
   const squareStyle = {
-    fill: square ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    stoke: (square ? brandingPalette.secondary : brandingPalette.primary) + ' !important',
   }
   const rectangleStyle = {
-    fill: rectangle ? brandingPalette.secondary : brandingPalette.primary,
-    transform: 'scale(0.55)'
+    stroke: (rectangle ? brandingPalette.tertiary : brandingPalette.primary) + ' !important',
+    fill: (rectangle ? brandingPalette.tertiary : brandingPalette.primary) + ' !important',
   }
+  const classesRectangle = rectangle ? 'proportion margin-10 stroke-primary' : 'proportion margin-10 stroke-secondary'
+  const classesSquare = square ? 'proportion margin-10 stroke-primary' : 'proportion margin-10 stroke-secondary'
   const eyeStyle = {
     fill: brandingPalette.primary,
     transform: 'scale(0.55)'
@@ -328,47 +306,101 @@ function ButtonImage(props) {
     transform: 'scale(0.55)',
     rotate: '180deg'
   }
-  // const unsetBlendModeStyle = {
-  //   color: selectedUnsetBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedUnsetBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
 
-  // const differenceBlendModeStyle = {
-  //   color: selectedDifferenceBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedDifferenceBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
-
-  // const exclusionBlendModeStyle = {
-  //   color: selectedExclusionBlendMode ? brandingPalette.background : brandingPalette.primary,
-  //   backgroundColor: selectedExclusionBlendMode ? brandingPalette.secondary : 'unset',
-  //   margin: '2%',
-  //   padding: '1%',
-  //   borderRadius: '5px'
-  // }
-
-  const returnsColors = () => {
-    if(!colors.length) {
+  const returnsColorsController = () => {
+    if(!colorsController.length) {
+      colorsController.push(<div className="colors-flex-header">
+          <p className="p-dimention margin-horizontal p-uppercase">{vocabulary[language].LINE}</p>
+          <p className="p-dimention margin-horizontal p-uppercase">{vocabulary[language].BACKGROUND}</p>
+          </div>)
+      let i = 0
       for(let color in colorText) {
-        // if(!selectedUnsetBlendMode && color === 'black') continue
-        // if(!selectedUnsetBlendMode && showMode3 && color === 'background') continue
+        let elementImage = images[i]
         let styleColor = {
           backgroundColor: colorText[color],
           width: '20px',
           height: '20px',
           borderRadius: '20px',
-          border: '2px solid ' + brandingPalette['background']
+          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background']),
+          filter: drawingColor === colorText[color] ? 'brightness(0.6)' : 'unset'
         }
-        colors.push(<div className="colors" key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>)
+        let styleImage = {
+          width: '20px',
+          height: '20px',
+          borderRadius: '20px',
+          border: (color === 'textblack' ? '1px solid ' + brandingPalette['white'] : '2px solid ' + brandingPalette['background']),
+          filter: elementImage.selected ? 'brightness(0.6)' : 'unset'
+        }
+        let styleSelected = {
+          width: '0px',
+          height: '0px',
+          borderRadius: '6px',
+          border: (color === 'textblack' ? '5px solid ' + brandingPalette['white'] : '6px solid ' + brandingPalette['background']),
+        }
+        let styleSelectedImage = {
+          width: '0px',
+          height: '0px',
+          borderRadius: '6px',
+          border: (color === 'textblack' ? '5px solid ' + brandingPalette['white'] : '6px solid ' + brandingPalette['background']),
+          position: 'absolute',
+          zIndex: '10',
+          transform: color === 'textblack' ? 'translate(11px, 11px)' : 'translate(10px, 10px)',
+          filter: 'brightness(0.6)'
+        }
+        let styleWrapper = {
+          height : '32px'
+        }
+        let valueText = color.replace('text','')
+        let classesColor = (color === 'textblack' ? 'colors-black ' : 'colors ') + 'colors-selected'
+        let classesColorSelected = (color === 'textblack' ? 'colors-black ' : 'colors ') + 'colors-selected'
+        let markupColor = drawingColor === colorText[color] ? 
+          <div className={classesColorSelected} key={color} style={styleColor}>
+            <div key={color + 'selected'} style={styleSelected}/>
+          </div> : 
+          <div className={classesColor} key={color} style={styleColor} onClick={() => propagateColor({type: 'changing-color', color: colorText[color]})}/>
+        let markupImage = elementImage.selected ? 
+        <div key={elementImage.alt + 'wrapper'} style={styleWrapper}>
+          <div key={color + 'selected'} style={styleSelectedImage}/>
+          <img src={elementImage.photo} id={elementImage.alt} className={classesColor} alt={elementImage.alt} style={styleImage}/>
+        </div> :
+          // <img src={elementImage.photo} id={elementImage.alt} className="colors" alt={elementImage.alt} style={styleImage}/> : 
+          <img src={elementImage.photo} id={elementImage.alt} key={elementImage.alt} onClick={() => resetImage(elementImage.alt)} className={classesColor} alt={elementImage.alt} style={styleImage}/>
+        colorsController.push(<div className="colors-flex">
+          {markupColor}
+          <p className="p-dimention margin-horizontal p-uppercase">{valueText}</p>
+          {markupImage}
+          </div>)
+        i++
       }
-      logUtils.loggerText('colors', colors)
+      let stylePhantom = {
+        backgroundColor: 'rgb(0,0,0,0)',
+        width: '20px',
+        height: '20px',
+        borderRadius: '20px',
+        border: '2px solid rgb(0,0,0,0)',
+      }
+      let styleImage = {
+        backgroundColor: 'var(--palette-primary',
+        width: '20px',
+        height: '20px',
+        borderRadius: '20px',
+        border: '2px solid black',
+      }
+      let markupImage = imageSelected && images[colorText.length] ? <div className="colors-phantom image-loader" key="phantom" style={styleImage} onClick={handleClickPlus}>
+          <img src={images[colorText.length].photo} id={images[colorText.length].alt} key={images[colorText.length].alt} onClick={() => resetImage(images[colorText.length].alt)} className="colors" alt={images[colorText.length].alt} style={styleImage}/>
+          <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+        </div> : <div className="colors-phantom image-loader" key="phantom" style={styleImage} onClick={handleClickPlus}>
+          <PlusSVG></PlusSVG>
+          <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+        </div>
+      colorsController.push(<div className="colors-flex">
+        <div className="colors-phantom" key="phantomColor" style={stylePhantom}></div>
+        <p className="p-dimention margin-horizontal p-uppercase">IMAGE</p>
+        {markupImage}
+      </div>)
+      logUtils.loggerText('colors label', colorsController)
     }
-    return (colors)
+    return (colorsController)
   }
 
   const handleChangeValueFilter = (value) => {
@@ -379,204 +411,44 @@ function ButtonImage(props) {
     setValueResolution(value);
     handleClick({type: 'resolutionSlider', value: value})
   }
-
-  const nameController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showName && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
-          {!showName && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('name')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_TITLE}: {activity.beautyName}</p>
+  
+  const textViewController = (label, propagationKey, value, isVisible, deactivated) => {
+    let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
+      <div>
+        {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+        {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
-    )
-  }
-  const dateController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDate && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
-          {!showDate && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('date')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DATE}: {activity.beautyDatetimeLanguages[language]}</p>
+      <p className="p-dimention-xs">{vocabulary[language][label]}: {value}</p>
+    </div>)
+    let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
+      <div>
+        {isVisible && (<ViewSVG style={subEyeStyle}/>)}
+        {!isVisible && (<HideSVG style={subEyeStyle}/>)}
       </div>
-    )
+      <p className="p-dimention-xs">{vocabulary[language][label]}: {value}</p>
+    </div>)
+    return deactivated ? deactivatedElement : activatedElement
   }
-  const distanceController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistance}</p>
+  const textArrowController = (label, propagationKey, isVisible, deactivated) => {
+    let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
+      <div>
+        {isVisible && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide(propagationKey)} />)}
+        {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
-    )
-  }
-  const distanceSpacedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDistance && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-          {!showDistance && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('distance')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DISTANCE}: {activity[unitMeasure].beautyDistanceSpaced}</p>
+      <p className="p-dimention-xs">{vocabulary[language][label]}</p>
+    </div>)
+    let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
+      <div>
+        {isVisible && (<ArrowDownSVG style={subSwitchStyle}/>)}
+        {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown}/>)}
       </div>
-    )
-  }
-  const durationController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_DURATION}: {activity.beautyDuration}</p>
-      </div>
-    )
-  }
-  const movingTimeController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showDuration && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-          {!showDuration && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('duration')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_MOVING_TIME}: {activity.beautyMovingTime}</p>
-      </div>
-    )
-  }
-  const elevationController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_ELEVATION}: {activity[unitMeasure].beautyElevation}</p>
-      </div>
-    )
-  }
-  const elevationGainController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showElevation && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-          {!showElevation && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('elevation')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_ELEVATION_GAIN}: {activity[unitMeasure].beautyElevationGain}</p>
-      </div>
-    )
-  }
-  const averageController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE}: {activity[unitMeasure].beautyAverage}</p>
-      </div>
-    )
-  }
-  const averageSpeedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showAverage && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-          {!showAverage && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('average')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE_SPEED}: {activity[unitMeasure].beautyAverageSpeed}</p>
-      </div>
-    )
-  }
-  const powerController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_POWER}: {activity.beautyPower}</p>
-      </div>
-    )
-  }
-  const powerSpacedController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showPower && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-          {!showPower && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('power')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_AVERAGE_POWER}: {activity.beautyPowerSpaced}</p>
-      </div>
-    )
-  }
-  const coordinatesController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showCoordinates && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-          {!showCoordinates && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('coordinates')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_COORDINATES}: {activity.beautyCoordinates}</p>
-      </div>
-    )
-  }
-  const caloriesController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {showCalories && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
-          {!showCalories && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide('calories')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_CALORIES}: {activity.beautyCalories}</p>
-      </div>
-    )
-  }
-  const switchController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {textUp && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchText')} />)}
-          {!textUp && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchText')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_SWITCH}</p>
-      </div>
-    )
-  }
-  const switchAltitudeController = () => {
-    return(
-      <div className="wrapper-buttons-left">
-        <div>
-          {altitudeVertical && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide('switchAltitude')} />)}
-          {!altitudeVertical && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide('switchAltitude')} />)}
-        </div>
-        <p>{vocabulary[language].BUTTON_SWITCH_ALTITUDE}</p>
-      </div>
-    )
-  }
-
-  const returnImages = () => {
-    // if(props.activity.photoUrlProxied) {
-    //   images = [{
-    //     photo: props.activity.photoUrlProxied, 
-    //     alt: 'activity'
-    //   },...images]
-    // }
-    console.log('images:', images)
-    let htmlImages = []
-    for(let element of images) {
-
-      let classesForSelected = element.selected ? "selected-image see-selected" : "selected-image no-see-selected"
-      htmlImages.push(<div key={element.alt + 'wrapper'} className="wrapper-image-selected"><div key={element.alt + '-selected'} id={element.alt + '-selected'} className={classesForSelected}><SelectedImage/></div><img src={element.photo} id={element.alt} key={element.alt} onClick={() => resetImage(element.alt)} className="image-props" alt={element.alt}/></div>)
-    }
-    return(htmlImages)
+      <p className="p-dimention-xs">{vocabulary[language][label]}</p>
+    </div>)
+    return deactivated ? deactivatedElement : activatedElement
   }
 
   const resetImage = (alt) => {
     selectImage(alt)
-    // deselectImage()
     const elementChosen = document.getElementById(alt)
     const elementChosenSelected = document.getElementById(alt + '-selected')
     if(elementChosenSelected) {
@@ -593,31 +465,24 @@ function ButtonImage(props) {
     if(fileInput) fileInput.click()
   }
 
-  const propagateUnitMeasure = () => {
-    handleClick({type: 'unit', unit: unitMeasure === 'metric' ? 'imperial' : 'metric'})
-  }
-
   const loadImage = (event) => {
     if(event && event.target && event.target.files && event.target.files.length) {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageDataURL = e.target.result;
-        // returnImages(imageDataURL)
         let tempImages = images
         let key = images.length + 1
         let alt = 'loaded-images-' + key
         let indexSelected = tempImages.findIndex(x => x.selected === true)
         if(indexSelected !== -1) tempImages[indexSelected].selected = false
-        tempImages.push({
+        tempImages[tempImages.length] = {
           photo: imageDataURL, 
           alt: alt,
-          selected: true})
+          selected: true}
         setImages(tempImages)
         handleClick({type: 'image', image: imageDataURL})
-        if(tempImages.length > 11) {
-          setEnableUploading(false)
-        }
+        setImageSelected(true)
       };
       reader.readAsDataURL(file);
     }
@@ -633,234 +498,126 @@ function ButtonImage(props) {
   }
 
   const modeController = () => {
-    return (
-      <div>
+    let elemenntDistance = showMode6 ? textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistanceSpaced, showDistance) : textViewController('BUTTON_DISTANCE', 'distance', activity[unitMeasure].beautyDistance, showDistance)
+    let elemenntElevation = showMode6 ? textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation) : textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)
+    let elemenntDuration = showMode6 ? textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration) : textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)
+    let elemenntPower = showMode6 ? textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower) : textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)
+
+    return (<div className="wrapper-modes-text">
+      <div className="wrapper-modes">        
         <div className="wrapper-buttons-left">
           {showMode1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
           {!showMode1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
-          <p>MODE 1</p>
+          <p className="p-dimention-xs">{vocabulary[language].MODE_1}</p>
         </div>
-        {showMode1 && displayMode1()}
-        <div className="wrapper-buttons-left">
-          {showMode2 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
-          {!showMode2 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode2')} />)}
-          <p>MODE 2</p>
-        </div>
-        {showMode2 && displayMode2()}
-        <div className="wrapper-buttons-left">
-          {showMode3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
-          {!showMode3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode3')} />)}
-          <p>MODE 3</p>
-        </div>
-        {showMode3 && displayMode3()}
-        {/* <div className="wrapper-buttons-left">
-          {showMode4 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
-          {!showMode4 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode4')} />)}
-          <p>MODE 4</p>
-        </div>
-        {showMode4 && displayMode4()} */}
         <div className="wrapper-buttons-left">
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
-          <p>MODE 5</p>
+          <p className="p-dimention-xs">{vocabulary[language].MODE_2}</p>
         </div>
-        {showMode5 && displayMode5()}
         <div className="wrapper-buttons-left">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p>MODE 6</p>
+          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
         </div>
-        {showMode6 && displayMode6()}
       </div>
-    )
+      <div className="wrapper-texts">
+        {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
+        {activity.beautyDatetimeLanguages && activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate, showMode6 || showMode5)}
+        {activity[unitMeasure] && activity[unitMeasure].beautyDistance && elemenntDistance}
+        {activity[unitMeasure] && activity[unitMeasure].beautyElevation && elemenntElevation}
+        {activity.beautyDuration && elemenntDuration}
+        {activity.beautyPower && elemenntPower}
+        {activity[unitMeasure] && activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates, showMode6)}
+        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'coordinates', activity.beautyCalories, showCalories, !showMode6)}
+        {textArrowController('BUTTON_SWITCH', 'switchText', textUp, !showMode5)}
+      </div>
+    </div>)
   }
 
-  const displayMode1 = () => {
-    return (
-      <div className="width-mode-sub">
-        {nameController()}
-        {activity.beautyDatetimeLanguages[language] && dateController()}
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {activity.beautyPower && powerController()}
-        {activity[unitMeasure].beautyAverage && averageController()}
-        {activity.beautyCoordinates && coordinatesController()}
-      </div>
-    )
+  const updateLayerSize = () => {
+    logUtils.loggerText('udating layer size...')
+    const styleSheet = document.styleSheets[0];
+    const elementLayer = document.getElementsByClassName('display-buttons')
+    const elementApp = document.getElementsByClassName('App')
+    if(elementLayer && elementLayer.length && elementApp && elementApp.length) {
+      let topValue = `-${elementLayer[0].offsetTop}`
+      let leftValue = `-${elementLayer[0].offsetLeft}`
+      let heightValue = `0`
+      if(window.innerWidth < 800) {
+        heightValue = `${elementLayer[0].offsetTop + elementLayer[0].offsetHeight}`
+      }
+      for (let i = 0; i < styleSheet.cssRules.length; i++) {
+        const rule = styleSheet.cssRules[i];
+        if(rule.selectorText === '.display-buttons::before') {
+
+          if(window.innerWidth < 800) {
+            styleSheet.insertRule(`
+              .display-buttons::before {
+                top: ${topValue}px !important;
+                left: ${leftValue}px !important;
+                min-height: ${heightValue}px !important;
+              }`, styleSheet.cssRules.length);
+          } else {
+            styleSheet.insertRule(`
+              .display-buttons::before {
+                top: 0 !important;
+                left: 50vw !important;
+                min-height: 100vh !important;
+              }`, styleSheet.cssRules.length);
+          }
+          break
+        }
+      }
+    }
   }
 
-  const displayMode2 = () => {
-    return (
-      <div className="width-mode-sub">
-        {nameController()}
-        {activity.beautyDatetimeLanguages[language] && dateController()}
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-      </div>
-    )
-  }
-  const displayMode3 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {!altitudeVertical && activity.beautyPower && powerController()}
-        {!altitudeVertical && activity[unitMeasure].beautyAverage && averageController()}
-        {switchAltitudeController()}
-        {/* {activity.beautyCoordinates && coordinatesController()} */}
-      </div>
-    )
-  }
-  const displayMode4 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-      </div>
-    )
-  }
-  const displayMode5 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceController()}
-        {activity[unitMeasure].beautyElevation && elevationController()}
-        {activity.beautyDuration && durationController()}
-        {switchController()}
-      </div>
-    )
-  }
-  const displayMode6 = () => {    
-    return (
-      <div className="width-mode-sub">
-        {activity[unitMeasure].beautyDistance && distanceSpacedController()}
-        {activity[unitMeasure].beautyElevation && elevationGainController()}
-        {activity.beautyDuration && movingTimeController()}
-        {activity[unitMeasure].beautyAverage && averageSpeedController()}
-        {activity.beautyPower && powerSpacedController()}
-        {activity.beautyCalories && caloriesController()}
-      </div>
-    )
-  }
-  // const minusFilter = () => {
-  //   handleClick({type: 'filter', direction: 'minus'})
-  // }
-  // const plusFilter = () => {
-  //   handleClick({type: 'filter', direction: 'plus'})
-  // }
-  // const minusResolution = () => {
-  //   handleClick({type: 'resolution', direction: 'minus'})
-  // }
-  // const plusResolution = () => {
-  //   handleClick({type: 'resolution', direction: 'plus'})
-  // }
+  useEffect(() => {
+    updateLayerSize()
 
-  // const captureAndUploadImage = (canvas, titleImage, type, blob) => {
-  //   try {
-  //     // Convert canvas to Blob
-  //     canvas.toBlob(async (blob) => {
-  //       if (blob) {
-  //         // Send the blob to the proxy server
-  //         const uploadedImageUrl = await uploadImageToProxy(blob, titleImage);
-  //         logUtils.loggerText('url:', uploadedImageUrl)
-          
-  //         // Share the URL once the image is uploaded
-  //         if (uploadedImageUrl) {
-  //           shareImageUrl(uploadedImageUrl, titleImage, type, blob);
-  //         }
-  //       }
-  //     }, 'image/jpeg'); // You can set the quality of the JPEG here if needed
-  //   } catch (error) {
-  //     console.error('Error capturing and uploading image:', error);
-  //     downloadImage(titleImage.replace('.' + type, ''), blob, type)
-  //   }
-  // };
+    window.addEventListener("resize", updateLayerSize)
 
-  // const uploadImageToProxy = async (blob, titleImage) => {
-  //   const formData = new FormData();
-  //   formData.append('file', blob, titleImage);
-  //   let origin = window.location.origin
-  //   logUtils.loggerText('formData:', formData)
-  
-  //   try {
-  //     const response = await fetch(origin + '/upload?server=' + origin, {  // Proxy URL
-  //       method: 'POST',
-  //       body: formData,
-  //     });
-  
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       return data.url;  // Return the uploaded image URL
-  //     } else {
-  //       throw new Error('Image upload failed');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
+    return () => window.removeEventListener("resize", updateLayerSize)
+  },[
+
+  ])
 
   return (
     <div className="display-buttons">
-      <div className="wrapper-buttons">
-        <div style={unitMeasureStyle} onClick={() => propagateUnitMeasure()}>
-          <UnitMeasureSVG className="feature" />
+      <div className="wrapper-buttons width-mode">
+        <div id="modeElement" style={textStyle} className="feature" onClick={() => showModifySetText()}>
+          <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_MODE}</p>
         </div>
-        <div style={textStyle} onClick={() => showModifySetText()}>
-          <TextSVG className="feature" />
+        <div id="editElement" style={modifyStyle} className="feature" onClick={() => showModifySetImage()}>
+          <p className="p-dimention-xs p-left p-margin">{vocabulary[language].BUTTON_EDIT}</p>
         </div>
-        <div style={modifyStyle} onClick={() => showModifySetImage()}>
-          <ModifySVG className="feature" />
-        </div>
-        <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'jpeg'})}>
-          <ShareSVG className="feature"/>
-        </div>
-        {admin && <div style={shareStyle} onClick={() => handleClickButton({type: 'downloadshare', subtype: 'png'})}>
-          <ShareContour/>
-        </div>}
       </div>
       {showModifyImage && (
-        <div className="wrapper-controller">
-          <div className="wrapper-sub-buttons">
-            <RectangleSVG className="proportion" style={rectangleStyle} onClick={() => propagateRectangle()}/>
-            <SquareSVG className="proportion" style={squareStyle} onClick={() => propagateSquare()}/>
-            {/* <SquareSVG style={squareStyle} onClick={() => propagateTwice()}/> */}
+        <div className="wrapper-controller width-mode">
+          <div className="wrapper-sub-buttons flex-wrapper-colors-factor">
+            <div className="wrapper-sub-buttons">
+              <div>
+                {returnsColorsController()}
+              </div>
+            </div>
+            <div className="flex-factor">
+              <StorySVG className={classesRectangle} style={rectangleStyle} onClick={() => propagateRectangle()}/>
+              <PostSVG className={classesSquare} style={squareStyle} onClick={() => propagatePost()}/>
+            </div>
+
           </div>
-          {/* <div className="wrapper-sub-buttons">
-            <p className="blend-title blend-text">BLEND:</p>
-            <p className="blend-mode blend-text" style={unsetBlendModeStyle} onClick={() => propagateBlendMode('unset')}>none</p>
-            <p className="blend-mode blend-text" style={differenceBlendModeStyle} onClick={() => propagateBlendMode('difference')}>diff.</p>
-            <p className="blend-mode blend-text" style={exclusionBlendModeStyle} onClick={() => propagateBlendMode('exclusion')}>excl.</p>
-          </div> */}
-          {/* <div className="wrapper-sub-buttons slider-width">
-            <MinusSVG onClick={() => minusFilter()} />
-            <FilterSVG></FilterSVG>
-            <PlusSVG onClick={() => plusFilter()}/>
-            <MinusSVG onClick={() => minusResolution()}/>
-            <ResolutionSVG></ResolutionSVG>
-            <PlusSVG onClick={() => plusResolution()}/>
-          </div> */}
-          <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders display-flex">
-              <ResolutionSVG style={shareStyle}></ResolutionSVG>
+          <div className="wrapper-sub-buttons-slider slider-width">
+            <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
+              <p className="p-dimention">{vocabulary[language].DETAIL}</p>
             </div> 
-            <Slider value={valueResolution} onChange={handleChangeValueResolution} />
+            <Slider className="width-slider-large" value={valueResolution} onChange={handleChangeValueResolution} />
           </div>
-          <div className="wrapper-sub-buttons slider-width">
-            <div className="wrapper-icon-sliders display-flex">
-              <FilterSVG style={shareStyle}></FilterSVG>
+          <div className="wrapper-sub-buttons-slider slider-width">
+            <div className="wrapper-icon-sliders display-flex width-slider-shrink" style={shareStyle}>
+              <p className="p-dimention">{vocabulary[language].SLIDER}</p>
             </div> 
-            <Slider value={valueFilter} onChange={handleChangeValueFilter} />
-          </div>
-          <div className="wrapper-sub-buttons colors-background">
-            {returnsColors()}
-          </div>
-          <div className="wrapper-sub-buttons wrapper-images image-background">
-            {returnImages()}
-            {enableUploading && (<div className="image-container" onClick={handleClickPlus}><div className="image-square"><p>+</p></div></div>)}
-            <input id="fileInput" type="file" accept="image/*" style={{display: 'none'}} onChange={loadImage} />
+            <Slider className="width-slider-large" value={valueFilter} onChange={handleChangeValueFilter} />
           </div>
         </div>
       )}

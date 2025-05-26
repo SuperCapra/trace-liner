@@ -3,20 +3,23 @@ import React, {useState} from 'react';
 import utils from './utils/utils.js'
 import logUtils from './utils/logUtils.js'
 import apiUtils from './utils/apiUtils.js';
-import Loader from './components/Loader.js'
+import LoaderLogo from './components/LoaderLogo.js'
 import ImageComponent from './components/ImageComponent.js'
-import Creator from './components/Creator.js'
 import Statistics from './components/Statistics.js';
-// import Dropdown from './components/Dropdown.js'
-import {ReactComponent as ArrowDown} from './assets/images/arrowDownSimplified.svg'
-import {ReactComponent as ArrowLeft} from './assets/images/arrowLeftSimplified20.svg'
+import Login from './components/Login.js';
+import SignUp from './components/SignUp.js';
+import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
+import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
+import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
+import {ReactComponent as ButtonGpxSVG} from './assets/images/buttonGpx.svg'
 import brandingPalette from './config/brandingPalette';
-import {vocabulary, languages} from './config/vocabulary';
-import clubs from './config/clubs'
+import {vocabulary/** , languages*/} from './config/vocabulary';
 import GPXParser from 'gpxparser';
 import he from 'he';
 import saleforceApiUtils from './services/salesforce.js';
 import dbInteractions from './services/dbInteractions.js';
+import {ReactComponent as DesignedSVG} from './assets/images/designed.svg'
+import {ReactComponent as InstagramYellowSVG} from './assets/images/buttonInstagramYellow.svg'
 
 let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_STRAVA_AUTORIZE_DIRECTORY + 
   '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
@@ -26,8 +29,7 @@ let stravaAuthorizeUrl = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_A
 let unitMeasure = 'metric'
 let called = false 
 let sendCreatingVisit = false
-let changedLanguage = false
-let admin = false
+// let changedLanguage = false
 let vId = undefined
 let uId = undefined
 let aId = undefined
@@ -156,7 +158,6 @@ class Homepage extends React.Component{
             beautyName: track.name ? he.decode(track.name) : undefined,
             beautyNameNoEmoji: track.name ? utils.removeEmoji(he.decode(track.name)) : undefined,
             beautyPower: undefined,
-            // beautyDate: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             beautyDatetimeLanguages: dateTimeLocalStringified ? utils.getBeautyDatetime(dateTimeLocalStringified) : undefined,
             coordinates: track.points && track.points.length ? track.points.map(point => ([
               point.lon,
@@ -240,6 +241,8 @@ class Homepage extends React.Component{
     console.log('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
+    if(urlCurrent.includes('/login')) return <Login/>
+    if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>
     if(urlCurrent.includes('/visitId-')) {
       console.log('created vId')
@@ -257,54 +260,37 @@ class Homepage extends React.Component{
         console.error('error creating the visit:', e)
       })
     }
-    // let localKey = localStorage.getItem('tracelinerkey');
-    // if(localKey && !accessToken) {
-    //   accessToken = localKey
-    //   console.log('localKey:', localKey)
-    //   this.getActivities()
-    // }
-    // window.alert(window.innerHeight + ' and ' + window.clientHeight)
     logUtils.loggerText('Language navigator:', navigator.language)
     logUtils.loggerText('Language:', this.props.language)
-    logUtils.loggerText('clubs', clubs)
     logUtils.loggerText('window.location.hostname:', window.location.pathname)
     isLoading = false
-    admin = urlCurrent.includes('/admin')
-    if(admin) stravaAuthorizeUrl += '/admin'
     logUtils.loggerText('window.location', window.location.href)
     let code = queryParameters.get('code')
     let club
     let language = this.props.language
-    for(let c of clubs) {
-      if(urlCurrent.includes(c.urlKey)) {
-        club = c
-        break
-      }
-    }
-    if(club && urlCurrent.includes(club.urlKey) && !stravaAuthorizeUrl.includes(club.urlKey)) {
-      console.info('Club: ', club)
-      stravaAuthorizeUrl += club.urlKey
-    }
+    // for(let c of clubs) {
+    //   if(urlCurrent.includes(c.urlKey)) {
+    //     club = c
+    //     break
+    //   }
+    // }
 
     if(urlCurrent.includes('/gpx-file')) {
       this.changeStage({stage: 'ShowingActivity'})
     }
     if(code && !called) {
-      // queryParameters.forEach((value, key) => {
-      //   queryParameters.delete(key)
-      //   logUtils.loggerText(key, value);
-      // });
       called = true
       this.getAccessTokenAndActivities(code)
-      if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language
-    } else if(club && club.language && languages.includes(club.language) && !changedLanguage) {
-      this.setLanguage({value: club.language})
-    }
+      // if(!changedLanguage && club && club.language && languages.includes(club.language)) language = club.language
+    } 
+    // else if(club && club.language && languages.includes(club.language) && !changedLanguage) {
+    //   this.setLanguage({value: club.language})
+    // }
     let mainWrapperClasses = "main-wrapper" + (utils.isMobile() ? " translate-main-wapper-mobile" :  " translate-main-wapper-desktop")
     if(isLoading || this.state.stage === 'FetchingActivities' || this.state.stage === 'FetchingActivity') {
       return (
         <div className={mainWrapperClasses}>
-          <Loader/>
+          <LoaderLogo/>
         </div>
       )
     } else {
@@ -317,32 +303,34 @@ class Homepage extends React.Component{
               </div>
             </div> */}
             <div className={mainWrapperClasses}>
-              <div className="margin-title">
-                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_SHARE_BY}</p>
+              <div className="wrapper-title-logo margin-title-logo">
+                <LogoExtendedSVG className="width-title-logo"></LogoExtendedSVG>
               </div>
-              <div className="button-login justify-center-column" onClick={() => {
-                window.location.href = stravaAuthorizeUrl
-              }}><p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOGIN_STRAVA}</p></div>
-              <div className="margin-or">
-                <p className="p-or p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_OR}</p>
+              <div className="wrapper-buttons-login">
+                <div className="wrapper-button-login" onClick={() => {
+                  window.location.href = stravaAuthorizeUrl
+                }}>
+                  <ButtonStravaSVG className="homepage-button"></ButtonStravaSVG>
+                </div>
+                <div className="wrapper-button-login" onClick={() => this.loadGPX()}>
+                  <ButtonGpxSVG className="homepage-button"></ButtonGpxSVG>
+                  <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
+                </div>
               </div>
-              <div className="button-login justify-center-column" onClick={() => this.loadGPX()}>
-                <p className="p-login p-login-or-size">{vocabulary[this.props.language].HOMEPAGE_LOAD}</p>
-                <input id="gpxInput" type="file" accept=".gpx" style={{display: 'none'}} onChange={this.processGPX} />
-              </div>
-              {club && club.hasHomepageLogo && club.homepageLogo(vocabulary, this.props.language)}
             </div>
-            <div className="creator-justify-center">
-              <Creator language={this.props.language} classes="creator creator-homepage"/>
+            <div className={mainWrapperClasses}>
+                <LoaderLogo position="homepage"/>
             </div>
+            <InstagramYellowSVG className="designed-logo instagram-logo" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramYellowSVG>
+            <DesignedSVG className="designed-logo fill-primary"></DesignedSVG>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivities') {
         let arrowDownStyle = {
-          fill: brandingPalette.background
+          fill: brandingPalette.secondary
         }
         let activitiesButton = activities.map(element => 
-          <div key={element.id} className="button-activity justify-center-column" onClick={() => {
+          <div key={element.id} className="button-activity button-border justify-center-column" onClick={() => {
               this.getActivity(element.id)
             }}>
             <p className="title-activity">{element.name}</p>
@@ -356,11 +344,8 @@ class Homepage extends React.Component{
           <div>
             <div className="header-wrapper">
               <div className="back-button" onClick={() => this.changeStage({stage:'RequestedLogin'})}>
-                <div className="back-arrow-container">
-                  <ArrowLeft className="back-image"/>
-                </div>
                 <div className="back-text-container">
-                  <p className="p-back">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
+                  <p className="p-dimention p-left p-color">{vocabulary[this.props.language].HOMEPAGE_BACK}</p>
                 </div>
               </div>
               <div className="language-selector">
@@ -376,24 +361,18 @@ class Homepage extends React.Component{
                 <p className="p-select">{vocabulary[this.props.language].HOMEPAGE_BEFORE_START}</p>
               </div>
             )}
-            <Creator language={this.props.language} classes="creator"/>
             <div className="arrow-down" style={styleArrow} onClick={() => this.scroll()}>
-              <ArrowDown style={arrowDownStyle}/>
+              <ArrowDown style={arrowDownStyle}></ArrowDown>
+            </div>
+            <div className="flex-factor">
+              <InstagramYellowSVG className="instagram-logo margin-5" onClick={() => window.open('https://www.instagram.com/traceliner','_self')}></InstagramYellowSVG>
+              <DesignedSVG className="fill-primary"></DesignedSVG>
             </div>
           </div>
         )
       } else if(this.state.stage === 'ShowingActivity') {
         return (
-          <div className="wrapper-of-warpper">
-            <div className="image-creator">
-              <div className="image-creator-wrapper-1">
-                <ImageComponent athlete={athleteData} activity={activity} club={club} admin={admin} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
-              </div>
-              <div className="image-creator-wrapper-2">
-                <Creator language={this.props.language} classes="creator creator-800"/>
-              </div>
-            </div>
-          </div>
+          <ImageComponent athlete={athleteData} activity={activity} club={club} language={language} activityId={aId} userId={uId} visitId={vId} handleBack={() => this.changeStage({stage: ((activity && activity.fromGpx) ? 'RequestedLogin' : 'ShowingActivities')})} handleBubbleLanguage={this.setLanguage}/>
         )
       }
     }
@@ -448,10 +427,8 @@ class Homepage extends React.Component{
             console.error(e)
           }
         }
-        // localStorage.setItem('tracelinerkey',accessToken);
         console.info('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
-        // if(accessToken) this.getAthleDataComplete()
       })
       .catch(e => {
         console.error('Fatal Error: ', e)
@@ -646,9 +623,7 @@ class Homepage extends React.Component{
               t.beautyEndCoordinates = t.beautyEndCoordinatesComplete ? t.beautyEndCoordinatesComplete.beautyCoordinatesTextTime : undefined
             }
             t.metric.subtitle = utils.getSubTitle(t, 'metric')
-            // t.metric.beautyData = t.metric.beautyDistance + ' x ' + t.metric.beautyElevation + ' x ' + t.beautyDuration
             t.imperial.subtitle = utils.getSubTitle(t, 'imperial')
-            // t.imperial.beautyData = t.imperial.beautyDistance + ' x ' + t.imperial.beautyElevation + ' x ' + t.beautyDuration
             activities.push(t)
           })
         }
@@ -711,8 +686,6 @@ class Homepage extends React.Component{
           activities[indexActivity].hasCoordinates = activities[indexActivity].coordinates && activities[indexActivity].coordinates.length ? true : false
           activity = activities[indexActivity]
           activity.photoUrl = res?.photos?.primary?.urls['600']
-          // console.log(activity)
-          // this.getImage(activity.photoUrl)
         }
       })
       .catch(e => {
@@ -720,7 +693,6 @@ class Homepage extends React.Component{
         this.insertLogsModal({body: apiUtils.getErrorLogsBody(vId,e,undefined,'app','getActivity','exception')})
       })
       .finally(() => {
-        // isLoading = false
         this.getAltitideStream(activityId, indexActivity)
       })
   }
@@ -753,8 +725,10 @@ class Homepage extends React.Component{
 
   getClassesForApp() {
     let urlCurrent = window.location.href
-    if(urlCurrent.includes('/statistics')) return 'App-body-statistics'
-    else return 'App-body'
+    let isMobile = utils.isMobile()
+    let classesReturning = urlCurrent.includes('/statistics') ? 'App-body-statistics' : (isMobile ? 'App-body app-body-background-mobile' : 'App-body app-body-background-desktop')
+    if(stage === 'ShowingActivity') classesReturning = classesReturning.replace('App-body', 'App-body-sketch')
+    return classesReturning
   }
 
   render() {

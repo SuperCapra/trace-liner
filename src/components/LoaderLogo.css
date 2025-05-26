@@ -1,0 +1,33 @@
+@keyframes rotateAnimation {
+    0% { transform: rotate(0deg); }
+    /* 25% { transform: rotate(360deg); animation-timing-function: linear; }
+    50% { transform: rotate(540deg); animation-timing-function: ease-out; }
+    75% { transform: rotate(720deg); animation-timing-function: linear; } */
+    /* 100% { transform: rotate(1080deg); animation-timing-function: linear; } */
+    100% { transform: rotate(1080deg); animation-timing-function: ease-in-out; }
+}
+  
+.logo-animation-homepage-loader {
+    animation: rotateAnimation 3s;
+}
+
+.logo-animation-loader {
+    animation: rotateAnimation 4s;
+}
+
+.logo-width-homepage-loader {
+    width: 8%;
+}
+
+.logo-width-loader{
+    width: 10%;
+}
+
+@media print, screen and (min-width: 600px) {
+    .logo-width-homepage-loader {
+        width: 50px;
+    }
+    .logo-width-loader{
+        width: 60px;
+    }
+}

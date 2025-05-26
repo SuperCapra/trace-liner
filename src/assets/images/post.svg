@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54.03 63.9" width="54.03px" height="63.9px">
+  <defs>
+    <style>
+      .post-fill-none {
+        fill: none;
+        stroke-miterlimit: 10;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="fill-primary" d="M16.76,34.53h-.69v3.41h-1.35v-9.53h1.35v.68h.69v-.68h2.03v.68h.68v.67h.67v4.1h-.67v.67h-.68v.68h-2.03v-.68ZM16.06,30.45v2.74h.69v.66h1.35v-.67h.68v-2.73h-.68v-.67h-1.35v.67h-.69Z"/>
+    <path class="fill-primary" d="M21.51,33.85h-.68v-4.08h.68v-.68h.68v-.67h2.73v.67h.68v.68h.68v4.08h-.68v.68h-.68v.68h-2.73v-.68h-.68v-.68ZM22.19,33.17h.68v.68h1.36v-.68h.68v-2.73h-.68v-.68h-1.36v.68h-.68v2.73Z"/>
+    <path class="fill-primary" d="M27.65,33.85h-.67v-1.37h1.35v.68h.68v.68h2.05v-.68h-.68v-.67h-1.36v-.68h-1.37v-.68h-.68v-1.37h.68v-.68h.68v-.67h2.73v.67h.68v.68h.67v1.35h-1.35v-.68h-.68v-.68h-2.05v.7h.68v.68h1.36v.68h1.36v.68h.67v1.35h-.67v.68h-.68v.68h-2.73v-.68h-.68v-.68Z"/>
+    <path class="fill-primary" d="M34.46,30.45h-1.36v-1.36h.68v-.67h.68v-1.37h1.36v1.37h-.68v.67h2.73v1.36h-2.05v3.4h.68v-.68h1.36v1.36h-.68v.68h-2.05v-.68h-.68v-4.08Z"/>
+  </g>
+  <rect class="post-fill-none" x="1" y="1" width="52.03" height="61.9"/>
+</svg>

@@ -27,7 +27,7 @@ const TextCheckbox = forwardRef((props,ref) => {
         // closeDropdown()
     }
 
-    const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
+    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
         width: hasBorder ? (size ? size : '200px') : 'unset'
     } 
@@ -44,7 +44,7 @@ const TextCheckbox = forwardRef((props,ref) => {
     }));
 
     return(
-        // <div className="p-back p-uppercase" id="dropDown">
+        // <div className="p-dimention p-left p-color p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} tabIndex={0} ref={dropdownRef}>
             <div className="dropdown-selected-value" onClick={() => changeValue()}>
                 {returnValueSelected()}

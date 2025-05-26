@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Livello_1" data-name="Livello 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 67.76 15.64" width="67.76px">
+  <rect class="fill-secondary" width="67.76" height="15.64" rx="6.28" ry="6.28"/>
+  <g>
+    <path class="fill-background" d="M11.24,9.93h-.59v-4.22h.59v-1.21h.61v-.61h3.63v.61h.61v1.21h.61v1.2h-1.21v-.61h-.61v-1.2h-2.42v1.2h-.61v3.02h.61v1.21h2.42v-1.2h.61v-.61h1.21v1.2h-.61v1.21h-.61v.61h-3.62v-.61h-.62v-1.21Z"/>
+    <path class="fill-background" d="M17.9,9.33h-.61v-3.03h.61v-1.2h.61v-.61h.61v-.61h3.02v.61h.59v.61h.61v1.2h.61v3.03h-.61v1.2h-.61v.61h-.59v.61h-3.02v-.61h-.61v-.61h-.61v-1.2ZM19.11,5.71v1.19h-.61v1.84h.61v1.19h.61v.61h1.81v-.61h.61v-1.19h.61v-1.84h-.61v-1.19h-.61v-.61h-1.81v.61h-.61Z"/>
+    <path class="fill-background" d="M24.54,3.89h1.21v.61h.59v1.21h.61v.59h.61v1.21h.61v.61h.61v1.21h.61v-.61h-.01V3.89h1.21v7.85h-1.21v-.61h-.59v-.61h-.61v-.59h-.61v-1.21h-.61v-.61h-.61v-1.21h-.59v4.83h-1.21V3.89Z"/>
+    <path class="fill-background" d="M31.18,3.89h6.02v1.21h-2.4v6.64h-1.21v-6.64h-2.41v-1.21Z"/>
+    <path class="fill-background" d="M38.41,9.33h-.61v-3.03h.61v-1.2h.61v-.61h.61v-.61h3.02v.61h.59v.61h.61v1.2h.61v3.03h-.61v1.2h-.61v.61h-.59v.61h-3.02v-.61h-.61v-.61h-.61v-1.2ZM39.62,5.71v1.19h-.61v1.84h.61v1.19h.61v.61h1.81v-.61h.61v-1.19h.61v-1.84h-.61v-1.19h-.61v-.61h-1.81v.61h-.61Z"/>
+    <path class="fill-background" d="M45.05,3.89h1.21v6.03h.61v.61h1.81v-.61h.59V3.89h1.21v6.64h-.61v.61h-.59v.61h-3.03v-.61h-.59v-.61h-.61V3.89Z"/>
+    <path class="fill-background" d="M51.08,3.89h4.82v.61h.61v.61h.61v2.41h-.61v.61h-.61v.61h.61v.61h.61v2.41h-1.21v-1.82h-.61v-.59h-.61v-.61h-2.4v3.02h-1.21V3.89ZM52.29,5.1v2.41h3v-.61h.61v-1.2h-.61v-.61h-3Z"/>
+  </g>
+</svg>

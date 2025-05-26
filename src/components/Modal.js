@@ -1,6 +1,8 @@
 import '../App.css';
 import React, {useState, useImperativeHandle, forwardRef} from 'react';
 import {ReactComponent as Close} from '../assets/images/close.svg'
+import {ReactComponent as ButtonCompleteSVG} from '../assets/images/buttonComplete.svg'
+import {ReactComponent as ButtonCountourSVG} from '../assets/images/buttonContour.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import Loader from './Loader.js'
@@ -12,7 +14,7 @@ import dbInteractions from '../services/dbInteractions.js';
 
 const Modal = forwardRef((props,ref) => {
 
-    const {/**message, title,*/ activity, infoLog, club, admin, language, activityId, userId, visitId, showButtons, handleCloseModal} = props
+    const {/**message, title,*/ activity, infoLog, /**club,*/ language, activityId, userId, visitId, showButtons, handleCloseModal} = props
 
     const [isLoading, setIsLoading] = useState(true)
     const [isError, setIsError] = useState(false)
@@ -39,7 +41,7 @@ const Modal = forwardRef((props,ref) => {
       let b = type === 'png' ? blobCountour : blobComplete
       if(type === 'png') infoLog.exportType = 'contour'
       try {
-        if(navigator.share && utils.isMobile(club, admin)) {
+        if(navigator.share && utils.isMobile() /**utils.isMobile(club)*/) {
           try {
             console.info('Is user activation: ', navigator.userActivation.isActive)
             // captureAndUploadImage(canvas, titleImage, 'jpeg', blob)
@@ -55,7 +57,7 @@ const Modal = forwardRef((props,ref) => {
             });
           } catch (error) {
             console.error('Error sharing image:', error)
-            insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','share','exception')})
+            insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})
           }
         } else {
           downloadImage(title, b, type)
@@ -71,6 +73,7 @@ const Modal = forwardRef((props,ref) => {
           insertExport({body: apiUtils.getExportBody(infoLog,activityId,userId)})
         } catch (e) {
           console.error('Error:', e)
+          insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,e,JSON.stringify(infoLog),'modal','navigator.share','exception')})
         }
         handleCloseModal()
       }
@@ -88,7 +91,7 @@ const Modal = forwardRef((props,ref) => {
         URL.revokeObjectURL(url); // Clean up URL object after use
       } catch (error) {
         console.error('Error downloading image:', error);
-        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','share','exception')})
+        insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,error,JSON.stringify(infoLog),'modal','navigator.share','exception')})
       } finally {
           handleCloseModal()
       }
@@ -123,21 +126,27 @@ const Modal = forwardRef((props,ref) => {
                     <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
                 </div>
                 <div className="modal-text">
-                    <p className="modal-p p-back">{vocabulary[language]['MODAL_ERROR']}</p>
+                    <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_ERROR']}</p>
                 </div>
             </div>}
-            {!isLoading && !isError && <div>
+            {!isLoading && !isError && <div className="display-flex-vertical">
                 <div>
                   <div className="modal-close-wrapper">
                       <Close className="modal-close-icon" style={styleClose} onClick={() => handleCloseModal()}/>
                   </div>
                 </div>
                 <div className="modal-text">
-                    <p className="modal-p p-back">{vocabulary[language]['MODAL_TEXT']}</p>
+                    <p className="p-color-modal p-dimention p-left p-color">{vocabulary[language]['MODAL_TEXT']}</p>
                 </div>
                 {!showButtons && <div className="modal-buttons">
-                    <div className="modal-buttons-single modal-buttons-p" onClick={() => share('jpeg')}>{vocabulary[language]['MODAL_COMPLETE']}</div>
-                    <div className="modal-buttons-single modal-buttons-p" onClick={() => share('png')}>{vocabulary[language]['MODAL_CONTOUR']}</div>
+                  <ButtonCompleteSVG className="modal-buttons-single-wrapper" onClick={() => share('jpeg')}></ButtonCompleteSVG>
+                  <ButtonCountourSVG className="modal-buttons-single-wrapper" onClick={() => share('png')}></ButtonCountourSVG>
+                    {/* <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
+                      <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_COMPLETE']}</div>
+                    </div>
+                    <div className="modal-buttons-single-wrapper modal-buttons-p" onClick={() => share('jpeg')}>
+                      <div className="modal-buttons-single button-border">{vocabulary[language]['MODAL_CONTOUR']}</div>
+                    </div> */}
                 </div>}
             </div>}
           </div>

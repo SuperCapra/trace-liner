@@ -17,7 +17,7 @@ const vocabulary = {
         HOMEPAGE_OR: 'OR',
         HOMEPAGE_LOAD: 'LOAD A GPX',
         HOMEPAGE_PER: 'X',
-        HOMEPAGE_BACK: 'BACK',
+        HOMEPAGE_BACK: '< BACK',
         HOMEPAGE_SELECT_ACTIVITY: 'SELECT AN ACTIVITY',
         HOMEPAGE_BEFORE_START: 'BEFORE YOU CAN START YOU HAVE TO LOAD SOME ACTIVITIES',
         BUTTON_TITLE: 'TITLE',
@@ -56,7 +56,19 @@ const vocabulary = {
         DROPDOWN_SELECT: ' - ',
         SELECTOR_TEXT: 'SELECT YOUR MODE',
         SELECTOR_TEXT_HINT: '(YOU CAN CHANGE IT LATER WITH THE "A" ICON)',
-        COMING_SOON: 'COMING SOON'
+        COMING_SOON: 'COMING SOON',
+        ARROW: '>',
+        BUTTON_METRICS: 'METRICS',
+        BUTTON_EDIT: 'EDIT',
+        BUTTON_MODE: 'MODE',
+        BUTTON_SHARE: 'SHARE',
+        MODE_1: 'Mode 1',
+        MODE_2: 'Mode 2',
+        MODE_3: 'Mode 3',
+        SLIDER: 'TINT',
+        DETAIL: 'DETAIL',
+        LINE: 'LINE',
+        BACKGROUND: 'BACK'
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -76,7 +88,7 @@ const vocabulary = {
         HOMEPAGE_OR: 'O',
         HOMEPAGE_LOAD: 'CARICA UN GPX',
         HOMEPAGE_PER: 'X',
-        HOMEPAGE_BACK: 'INDIETRO',
+        HOMEPAGE_BACK: '< INDIETRO',
         HOMEPAGE_SELECT_ACTIVITY: 'SELEZIONA UN\'ATTIVITÀ',
         HOMEPAGE_BEFORE_START: 'PRIMA DI INIZIARE DEVI CARICARE ALMENO UN\'ATTIVITÀ SU STRAVA',
         BUTTON_TITLE: 'TITOLO',
@@ -115,7 +127,19 @@ const vocabulary = {
         DROPDOWN_SELECT: ' - ',
         SELECTOR_TEXT: 'SELEZIONA LA MODE CHE PREFERISCI',
         SELECTOR_TEXT_HINT: '(LA PUOI CAMBIARE ANCHE DOPO CON L\'ICONA "A")',
-        COMING_SOON: 'COMING SOON'
+        COMING_SOON: 'COMING SOON',
+        ARROW: '>',
+        BUTTON_METRICS: 'METRICS',
+        BUTTON_EDIT: 'MODIFICA',
+        BUTTON_MODE: 'MODALITA\'',
+        BUTTON_SHARE: 'CONDIVIDI',
+        MODE_1: 'Mode 1',
+        MODE_2: 'Mode 2',
+        MODE_3: 'Mode 3',
+        SLIDER: 'FILTRO',
+        DETAIL: 'DETTAGLI',
+        LINE: 'LINE',
+        BACKGROUND: 'SFONDO'
     }
 }
 

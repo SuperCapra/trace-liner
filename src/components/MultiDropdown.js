@@ -67,7 +67,7 @@ const MultiDropdown = forwardRef((props,ref) => {
         handleChangeValue({type: type, valuesSelected: valuesSelected})
     }
 
-    const getClassesDropdown = 'p-back p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
+    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
     const styleText = {
         width: hasBorder ? (size ? size : '200px') : 'unset'
     } 
@@ -87,7 +87,7 @@ const MultiDropdown = forwardRef((props,ref) => {
     }));
 
     return(
-        // <div className="p-back p-uppercase" id="dropDown">
+        // <div className="p-dimention p-left p-color p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} onBlur={closeDropdown} tabIndex={0} ref={dropdownRef}>
             <div className="dropdown-selected-value" onClick={hideShowDropDown}>
                 {textSelected && <p style={styleText}>{textSelected}</p>}
