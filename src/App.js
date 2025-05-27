@@ -735,11 +735,7 @@ class Homepage extends React.Component{
     return (   
       <div className="App" translate="no">
         <div className={this.getClassesForApp()}>
-          <p className="p-dimention-xl p-color margin-10">UPGRADE COMING TOMORROW</p>
-                  <div className="main-wrapper translate-main-wapper-mobile">
-          <LoaderLogo/>
-        </div>
-          {/* {this.routesToStage()} */}
+          {this.routesToStage()}
         </div>
       </div>
     )
