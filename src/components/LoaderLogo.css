@@ -8,7 +8,7 @@
 }
   
 .logo-animation-homepage-loader {
-    animation: rotateAnimation 3s infinite;
+    animation: rotateAnimation 3s;
 }
 
 .logo-animation-loader {
