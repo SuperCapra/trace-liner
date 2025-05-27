@@ -1023,7 +1023,7 @@ p {
 }
 .arrow-down{
   padding: 40px;
-  background-color: var(--palette-primary);
+  background-color: var(--palette-secondary);
   width: 45px;
   height: 45px;
   position: fixed;

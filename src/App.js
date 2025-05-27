@@ -327,7 +327,7 @@ class Homepage extends React.Component{
         )
       } else if(this.state.stage === 'ShowingActivities') {
         let arrowDownStyle = {
-          fill: brandingPalette.secondary
+          fill: brandingPalette.primary
         }
         let activitiesButton = activities.map(element => 
           <div key={element.id} className="button-activity button-border justify-center-column" onClick={() => {
