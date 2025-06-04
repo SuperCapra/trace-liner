@@ -238,6 +238,7 @@ const utilsFunction = {
         let km = distance / 1000
         let durationMinutes = (duration / 60) / km
         let durationSeconds = ((durationMinutes - Math.floor(durationMinutes)) * 60).toFixed(0)
+        durationSeconds = durationSeconds.length > 1 ? durationSeconds : ('0' + durationSeconds)
         return (!distance || !duration) ? 0 : Math.floor(durationMinutes) + ':' + durationSeconds
     },
 
@@ -245,6 +246,7 @@ const utilsFunction = {
         let mi = (distance / 1000) * 0.621371
         let durationMinutes = (duration / 60) / mi
         let durationSeconds = ((durationMinutes - Math.floor(durationMinutes)) * 60).toFixed(0)
+        durationSeconds = durationSeconds.length > 1 ? durationSeconds : ('0' + durationSeconds)
         return (!distance || !duration) ? 0 : Math.floor(durationMinutes) + ':' + durationSeconds
     },
 

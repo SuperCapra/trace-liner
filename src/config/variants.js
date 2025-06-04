@@ -1,7 +1,7 @@
 const variants = {
     run: [
-        'running',
-        'walking'
+        'run',
+        'walk'
     ]
 }
 
