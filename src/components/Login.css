@@ -20,6 +20,11 @@
     position: absolute;
     right: -7px
 }
+.position-info-message-username{
+    position: absolute;
+    top: -5px;
+    transform: translateX(9vw);
+}
 .position-info:hover{
     cursor: pointer;
 }

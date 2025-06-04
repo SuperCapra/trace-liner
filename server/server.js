@@ -3,19 +3,12 @@ const tables = require('./tables');
 const path = require('path');
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
-// const axios = require('axios');
-// const cors = require('cors');
 const app = express();
+const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 const db = require('./db');
 const fs = require('fs');
-
-const roots = [
-  '/nama-crew',
-  '/mura-sunset-ride',
-  '/sem',
-  '/ph'
-];
+const dbUtils = require('./dbUtils');
 
 app.use(express.json());
 
@@ -210,13 +203,31 @@ app.post('/api/query', authenticateToken, async (req, res) => {
     res.status(500).json({error: e})
   }
 })
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    let data = {
+      username: username,
+      password_hash: hashedPassword,
+      active: true,
+      created_at: db.getTimestampGMT()
+    }
+    await db.register(data, 'traceliner_users');
+
+    res.status(201).json({message: 'user created'});
+  } catch (e) {
+    console.log('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
 app.get('/api/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const fields = req.body.fields
     const whereClause = req.body.whereClause
-    // console.log('fields:',fields)
-    // console.log('Array.isArray(fields):',Array.isArray(fields))
     let records
     if(fields && Array.isArray(fields) && fields.length) {
       records = await db.getRecordsFields(table,fields,whereClause)
@@ -333,18 +344,6 @@ app.use((req, res, next) => {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../build')));
 
-// The "catchall" handler: for any request that doesn't match,
-// send back the index.html from the React app.
-roots.forEach(rootKey => {
-  app.get([rootKey, `${rootKey}/visitId-:id`], (req, res) => {
-    res.sendFile(path.join(__dirname, '../build', 'index.html'));
-  });
-  let rootAdmin = '/admin' + rootKey
-  app.get([rootAdmin, `${rootAdmin}/visitId-:id`], (req, res) => {
-    res.sendFile(path.join(__dirname, '../build', 'index.html'));
-  });
-})
-
 app.get('/visitId-:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
@@ -352,12 +351,12 @@ app.get('/visitId-:id', (req, res) => {
 app.get('/statistics', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
-
-// app.get('/api/strava_webhook', (req, res) => {
-//   res.json({ 'hub.mode': 'subscribe','hub.challenge': 'oN6G8xMkPNrJtTd3PRohCLXjJLHxLpymJJwWpDza','hub.verify_token': 'STRAVA_BEAUTYLINER'});
-// })
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

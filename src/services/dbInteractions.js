@@ -106,6 +106,23 @@ const dbInteractions = {
             console.error(`Error querying ${query}:`, e)
         })
         return data
+    },
+    async register(body,token) {
+        const url = apiUtils.getUrlHost() + `/api/register`
+        const data = await fetch(url, {
+            method : 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json())
+        .then(data => {
+            return data
+        }).catch(e => {
+            console.error(`Error registering ${body.username}:`, e)
+        })
+        return data
     }
 }
 

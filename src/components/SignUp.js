@@ -4,6 +4,7 @@ import './Login.css'
 import brandingPalette from '../config/brandingPalette.js';
 import {ReactComponent as ViewSVG} from '../assets/images/view.svg'
 import {ReactComponent as HideSVG} from '../assets/images/hide.svg'
+import dbInteractions from '../services/dbInteractions.js';
 
 function SignUp(props) {
 
@@ -16,7 +17,9 @@ function SignUp(props) {
     const [legitPassword, setLegitPassword] = useState(true);
     const [showMessageUsername, setShowMessageUsername] = useState(false);
     const [showMessagePassword, setShowMessagePassword] = useState(false);
-    const [leftshift, setLeftshift] = useState('unset')
+    const [leftshift, setLeftshift] = useState('unset');
+    const [messageError,setMessageError] = useState('Key (username)=(gmaggi@traceliner.com) already exists.');
+    const [hasError, setHasError] = useState(true);
 
     const usernameRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/
@@ -25,12 +28,19 @@ function SignUp(props) {
 
     const onChangePassword = (event) => {
         setValuePassword(event.target.value)
+        resetValues()
     }
 
     const onChangeUsername = (event) => {
         let value = event.target.value
         console.log(value)
         setValueUsername(value)
+        resetValues()
+    }
+
+    const resetValues = () => {
+        hasError(false)
+        setSubmittable(false)
     }
 
     const styleMessage = {
@@ -55,6 +65,7 @@ function SignUp(props) {
         checkValidity(event.target.name, event.target.value)
     }
     const checkValidity = (name, value) => {
+        setHasError(false)
         if(name === 'password') {
             let legitPasswordLocal = !value.length || (value.length && passwordRegex.test(value))
             setLegitPassword(legitPasswordLocal)
@@ -87,27 +98,16 @@ function SignUp(props) {
                 usernameElement.classList.add("input-error-validity")
             }
         }
-        // let legitUsernameLocal = !valueUsername.length || (valueUsername.length && usernameRegex.test(valueUsername))
-        // setLegitUsername(legitUsernameLocal)
-        // const usernameElement = document.getElementById("username")
-        // console.log('legitUsernameLocal', legitUsernameLocal)
-        // console.log('valueUsername', valueUsername)
-        // console.log('valuePassword', valuePassword)
-        // if(legitUsernameLocal && usernameElement.classList.contains("input-error-validity")) usernameElement.classList.remove("input-error-validity")
-        // if(legitPasswordLocal && legitUsernameLocal) {
-        //     setSubmittable(true)
-        // } else {
-        //     setSubmittable(false)
-        //     if(usernameElement && !legitUsernameLocal && !usernameElement.classList.contains("input-error-validity")) {
-        //         usernameElement.classList.add("input-error-validity")
-        //     }
-        //     if(passwordElement && !legitPasswordLocal && !passwordElement.classList.contains("input-error-validity")) {
-        //         passwordElement.classList.add("input-error-validity")
-        //     }
-        // }
     }
     const onSubmit = () => {
-
+        console.log('onsubmit')
+        dbInteractions.register({username: valueUsername, password: valuePassword}, process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res', res)
+        }).catch(e => {
+            setHasError(true)
+            setMessageError(e && e.error && e.error.detail ? e.error.detail : 'error')
+            console.error('error creating the user:', e)
+        })
     }
     const changeShowUsername = () => {
         setShowMessageUsername(true)
@@ -169,8 +169,14 @@ function SignUp(props) {
                         </div>
                     </div>}
             </div>
-            {submittable && <div className="button-create-user active-button" id="submit" onClick={onSubmit}>
+            {submittable && <div className="button-create-user active-button position-relative" id="submit" onClick={onSubmit}>
                 <p className="p-dimention">CREATE USER</p>
+                {hasError && <div className="position-info-message-username" style={styleMessage}>
+                        <div className="position-info-message-username border-popover">
+                            <p className="p-dimention-xs p-color-tertiary">{messageError}</p>
+                            <div className="border-popover-triangle"></div>
+                        </div>
+                    </div>}
             </div>}
             {!submittable &&  <div className="button-create-user disabled-button" id="submit" onClick={onSubmit}>
                 <p className="p-dimention">CREATE USER</p>
