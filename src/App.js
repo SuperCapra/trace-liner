@@ -196,10 +196,12 @@ class Homepage extends React.Component{
           activityPreparing.durationElapsed = activityPreparing.timingStreamSeconds && activityPreparing.timingStreamSeconds.length ? activityPreparing.timingStreamSeconds[activityPreparing.timingStreamSeconds.length - 1] - activityPreparing.timingStreamSeconds[0] : undefined
           activityPreparing.metric.beautyAverage = averageSpeed + 'km/h'
           activityPreparing.metric.beautyPace = pace + '/km'
+          activityPreparing.metric.beautyAveragePace = pace + '/km'
           activityPreparing.metric.beautyAverageSpeed = averageSpeed + ' km/h'
           activityPreparing.average = activityPreparing.metric.beautyAverage
           activityPreparing.imperial.beautyAverage = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + 'mi/h'
-          activityPreparing.imperial.beautyPace = utils.getPaceImperial(activityPreparing.distance, activityPreparing.movingTime) + '/h'
+          activityPreparing.imperial.beautyPace = utils.getPaceImperial(activityPreparing.distance, activityPreparing.movingTime) + '/mi'
+          activityPreparing.imperial.beautyAveragePace = utils.getPaceImperial(activityPreparing.distance, activityPreparing.movingTime) + '/mi'
           activityPreparing.imperial.beautyAverageSpeed = utils.getAverageSpeedImperial(activityPreparing.distance, activityPreparing.movingTime) + ' mi/h'
           activityPreparing.endLatitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][0] : undefined
           activityPreparing.endLongitude = activityPreparing.coordinates && activityPreparing.coordinates.length && activityPreparing.coordinates[activityPreparing.coordinates.length - 1].length ? activityPreparing.coordinates[activityPreparing.coordinates.length - 1][1] : undefined
@@ -574,6 +576,7 @@ class Homepage extends React.Component{
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
                 beautyPace: utils.getPaceMetric(e.distance, e.moving_time) + '/km',
+                beautyAveragePace: utils.getPaceMetric(e.distance, e.moving_time) + '/km',
                 beautyAverageSpeed: utils.getAverageSpeedMetric(e.distance, e.moving_time, 1) + ' km/h',
                 beautyElevation: e.total_elevation_gain + 'm',
                 beautyElevationGain: e.total_elevation_gain + ' m',
@@ -584,6 +587,7 @@ class Homepage extends React.Component{
               imperial: {
                 beautyAverage: utils.getAverageSpeedImperial(e.distance, e.moving_time) + 'mi/h',
                 beautyPace: utils.getPaceImperial(e.distance, e.moving_time) + '/mi',
+                beautyAveragePace: utils.getPaceImperial(e.distance, e.moving_time) + '/mi',
                 beautyAverageSpeed: utils.getAverageSpeedImperial(e.distance, e.moving_time, 1) + ' mi/h',
                 beautyElevation: (e.total_elevation_gain * 3.28084).toFixed(0) + 'ft',
                 beautyElevationGain: (e.total_elevation_gain * 3.28084).toFixed(0) + ' ft',

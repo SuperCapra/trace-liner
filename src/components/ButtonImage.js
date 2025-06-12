@@ -502,7 +502,7 @@ function ButtonImage(props) {
     let elemenntElevation = showMode6 ? textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation) : textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)
     let elemenntDuration = showMode6 ? textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration) : textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)
     let elemenntPower = showMode6 ? textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower) : textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)
-    let elementAverage = activity.isRun ? textViewController('BUTTON_AVERAGE_PACE', 'average', activity[unitMeasure].beautyPace, showAverage) : textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)
+    let elementAverage = activity.isRun ? textViewController('BUTTON_PACE', 'average', activity[unitMeasure].beautyPace, showAverage) : textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)
 
     return (<div className="wrapper-modes-text">
       <div className="wrapper-modes">        
