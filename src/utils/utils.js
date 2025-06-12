@@ -344,6 +344,16 @@ const utilsFunction = {
     getVisitId(u) {
         const match = u.match(/visitId-(\w+)/)
         return match ? match[1] : undefined
+    },
+
+    isRunLogic(t) {
+        let variants = [
+            'run',
+            'walk',
+            'trailrun'
+        ]
+        if(!t || (t && !t.length)) return false
+        else return variants.includes(t.toLowerCase())
     }
 }
 

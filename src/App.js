@@ -609,6 +609,7 @@ class Homepage extends React.Component{
               distanceStream: [],
               elevation: e.total_elevation_gain,
               id: e.id,
+              isRun: utils.isRunLogic(e.type),
               locationCountry: e.location_country,
               locationCity: e.location_city,
               locationState: e.location_state,

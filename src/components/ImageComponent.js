@@ -8,7 +8,6 @@ import ButtonImage from './ButtonImage.js'
 import Modal from './Modal.js'
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
-import { variants } from '../config/variants.js';
 import saleforceApiUtils from '../services/salesforce.js';
 import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
@@ -1034,7 +1033,7 @@ function ImageComponent(props) {
     if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_DURATION}</p><p>{activity.beautyDuration}</p></div>)
     if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_POWER}</p><p>{activity.beautyPower}</p></div>)
     if((activity[unitMeasureSelected].beautyAverage || activity[unitMeasureSelected].beautyPace) && showAverage) {
-      if(variants.run.includes(activity.sportType.toLowerCase())) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
+      if(activity.isRun) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
       else dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
     }
     if(dataShowing.length <= 3) {
@@ -1069,7 +1068,7 @@ function ImageComponent(props) {
       if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
       if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
       if((activity[unitMeasureSelected].beautyAverage || activity[unitMeasureSelected].beautyPace) && showAverage) {
-        if(variants.run.includes(activity.sportType.toLowerCase())) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
+        if(activity.isRun) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
         else dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
       }
       return (<div id="canvasText" className={classMode3} style={styleText}>{dataDisplaying}</div>)
@@ -1100,7 +1099,7 @@ function ImageComponent(props) {
     if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
     if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
     if((activity[unitMeasureSelected].beautyAverageSpeed || activity[unitMeasureSelected].beautyPace) && showAverage) {
-      if(variants.run.includes(activity.sportType.toLowerCase())) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
+      if(activity.isRun) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
       else dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
     }
     if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
