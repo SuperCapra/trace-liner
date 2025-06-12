@@ -532,6 +532,9 @@ p {
 #canvasSketch {
   z-index: 3;
 }
+#canvasSketchLogo {
+  z-index: 3;
+}
 #canvasText {
   z-index: 4;
 }

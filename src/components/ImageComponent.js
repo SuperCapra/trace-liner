@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
 import {ReactComponent as DesignBySVG} from '../assets/images/logoImage.svg'
+import {ReactComponent as LogoInternalSVG} from '../assets/images/logoInternal.svg'
 import {ReactComponent as DesignedSVG} from '../assets/images/designed.svg'
 import {ReactComponent as InstagramYellowSVG} from '../assets/images/buttonInstagramYellow.svg'
 
@@ -191,6 +192,10 @@ function ImageComponent(props) {
   const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' || ratio === '4:5' ? '' : ' text-coordinates-props-rect')
   const classesSketch = classesForSketch()
   const styleSketch = styleForSketch()
+  const styleLogoInternal = {
+    fill: drawingColor,
+    transform: 'scale(0.8)'
+  }
   const classesDataWrapper2Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapper3Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
@@ -1211,7 +1216,8 @@ function ImageComponent(props) {
         <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
           <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-          {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleSketch}/>}
+          {activity.hasCoordinates && !showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleSketch}/>}
+          {!activity.hasCoordinates && !showMode6 && <div id="canvasSketchLogo" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleLogoInternal}><LogoInternalSVG></LogoInternalSVG></div>}
           {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
           {showTitle && !showMode5 && !showMode6 && (
             <div className="text-overlay text-title">
