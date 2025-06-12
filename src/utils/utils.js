@@ -234,6 +234,22 @@ const utilsFunction = {
         return (!distance || !duration) ? 0 : Number((((distance / duration) * 3.6) * 0.621371).toFixed(mantissa ? mantissa : 0))
     },
 
+    getPaceMetric(distance, duration) {
+        let km = distance / 1000
+        let durationMinutes = (duration / 60) / km
+        let durationSeconds = ((durationMinutes - Math.floor(durationMinutes)) * 60).toFixed(0)
+        durationSeconds = durationSeconds.length > 1 ? durationSeconds : ('0' + durationSeconds)
+        return (!distance || !duration) ? 0 : Math.floor(durationMinutes) + ':' + durationSeconds
+    },
+
+    getPaceImperial(distance, duration) {
+        let mi = (distance / 1000) * 0.621371
+        let durationMinutes = (duration / 60) / mi
+        let durationSeconds = ((durationMinutes - Math.floor(durationMinutes)) * 60).toFixed(0)
+        durationSeconds = durationSeconds.length > 1 ? durationSeconds : ('0' + durationSeconds)
+        return (!distance || !duration) ? 0 : Math.floor(durationMinutes) + ':' + durationSeconds
+    },
+
     getSubTitle(element, unitOfMeasure) {
         let result = {}
         for(let language of languages) {
@@ -328,6 +344,16 @@ const utilsFunction = {
     getVisitId(u) {
         const match = u.match(/visitId-(\w+)/)
         return match ? match[1] : undefined
+    },
+
+    isRunLogic(t) {
+        let variants = [
+            'run',
+            'walk',
+            'trailrun'
+        ]
+        if(!t || (t && !t.length)) return false
+        else return variants.includes(t.toLowerCase())
     }
 }
 

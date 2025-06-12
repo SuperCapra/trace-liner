@@ -13,6 +13,7 @@ import html2canvas from 'html2canvas';
 import dbInteractions from '../services/dbInteractions.js';
 import apiUtils from '../utils/apiUtils.js';
 import {ReactComponent as DesignBySVG} from '../assets/images/logoImage.svg'
+import {ReactComponent as LogoInternalSVG} from '../assets/images/logoInternal.svg'
 import {ReactComponent as DesignedSVG} from '../assets/images/designed.svg'
 import {ReactComponent as InstagramYellowSVG} from '../assets/images/buttonInstagramYellow.svg'
 
@@ -191,6 +192,10 @@ function ImageComponent(props) {
   const classesModeStandard = 'sub-text-overlay text-coordinates-props' + (ratio === '1:1' || ratio === '4:5' ? '' : ' text-coordinates-props-rect')
   const classesSketch = classesForSketch()
   const styleSketch = styleForSketch()
+  const styleLogoInternal = {
+    fill: drawingColor,
+    transform: 'scale(0.8)'
+  }
   const classesDataWrapper2Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapper3Lines = ratio === '1:1' || ratio === '4:5' ? 'width-general wrapper-data-2-lines' : 'width-general wrapper-data-2-lines-rect'
   const classesDataWrapperLine = 'width-general wrapper-data-line'
@@ -1032,7 +1037,10 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyElevation && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_ELEVATION}</p><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
     if(activity.beautyDuration && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_DURATION}</p><p>{activity.beautyDuration}</p></div>)
     if(activity.beautyPower && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_POWER}</p><p>{activity.beautyPower}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverage && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    if((activity[unitMeasureSelected].beautyAverage || activity[unitMeasureSelected].beautyPace) && showAverage) {
+      if(activity.isRun) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
+      else dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE}</p><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+    }
     if(dataShowing.length <= 3) {
       line1.push(...dataShowing)
     } else if(dataShowing.length === 4) {
@@ -1064,7 +1072,10 @@ function ImageComponent(props) {
       if(activity[unitMeasureSelected].beautyElevation && showElevation) dataDisplaying.push(<div key="elevation" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyElevation}</p></div>)
       if(activity.beautyDuration && showDuration) dataDisplaying.push(<div key="duration" className="element-mode-3"><p>{activity.beautyDuration}</p></div>)
       if(activity.beautyPower && showPower) dataDisplaying.push(<div key="power" className="element-mode-3"><p>{activity.beautyPower}</p></div>)
-      if(activity[unitMeasureSelected].beautyAverage && showAverage) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+      if((activity[unitMeasureSelected].beautyAverage || activity[unitMeasureSelected].beautyPace) && showAverage) {
+        if(activity.isRun) dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyPace}</p></div>)
+        else dataDisplaying.push(<div key="average" className="element-mode-3"><p>{activity[unitMeasureSelected].beautyAverage}</p></div>)
+      }
       return (<div id="canvasText" className={classMode3} style={styleText}>{dataDisplaying}</div>)
     } else {
       if(activity[unitMeasureSelected].beautyDistance && showDistance) dataDisplaying.push(<div key="distance" className="element-mode-3-vertical"><p>{activity[unitMeasureSelected].beautyDistance}</p></div>)
@@ -1092,7 +1103,10 @@ function ImageComponent(props) {
     if(activity[unitMeasureSelected].beautyElevationGain && showElevation) dataShowing.push(<div key="elevation" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_ELEVATION_GAIN}</p><p>{activity[unitMeasureSelected].beautyElevationGain}</p></div>)
     if(activity.beautyMovingTime && showDuration) dataShowing.push(<div key="duration" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_MOVING_TIME}</p><p>{activity.beautyMovingTime}</p></div>)
     if(activity.beautyPowerSpaced && showPower) dataShowing.push(<div key="power" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_POWER}</p><p>{activity.beautyPowerSpaced}</p></div>)
-    if(activity[unitMeasureSelected].beautyAverageSpeed && showAverage) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
+    if((activity[unitMeasureSelected].beautyAverageSpeed || activity[unitMeasureSelected].beautyAveragePace) && showAverage) {
+      if(activity.isRun) dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_PACE}</p><p>{activity[unitMeasureSelected].beautyAveragePace}</p></div>)
+      else dataShowing.push(<div key="average" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_AVERAGE_SPEED}</p><p>{activity[unitMeasureSelected].beautyAverageSpeed}</p></div>)
+    }
     if(activity.beautyCalories && showCalories) dataShowing.push(<div key="calories" className={classesDataElement}><p className={classesDataPLittle} style={dataElementsStyleFontSize}>{vocabulary[language].IMAGE_CALORIES}</p><p>{activity.beautyCalories}</p></div>)
     let lines = []
     if (dataShowing.length > 0) {
@@ -1202,7 +1216,8 @@ function ImageComponent(props) {
         <div ref={containerRef} className={classesCanvasContainer} id="printingAnchor" translate="no">
           <canvas id="canvasImage" className="width-general canvas-image canvas-position round-corner" ref={canvasRef} width={canvasWidth} height={canvasHeight}/>
           <canvas id="canvasFilter" className="width-general canvas-filter canvas-position round-corner" style={filterStyle} width={canvasWidth} height={canvasHeight}/>
-          {!showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleSketch}/>}
+          {activity.hasCoordinates && !showMode6 && <canvas id="canvasSketch" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleSketch}/>}
+          {!activity.hasCoordinates && !showMode6 && <div id="canvasSketchLogo" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleLogoInternal}><LogoInternalSVG></LogoInternalSVG></div>}
           {/* {!showMode6 && showMode4 && <canvas id="canvasSketchMode4" className={classesSketch} width={drawingWidth} height={drawingHeight} style={styleText}/>} */}
           {showTitle && !showMode5 && !showMode6 && (
             <div className="text-overlay text-title">

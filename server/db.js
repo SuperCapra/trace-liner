@@ -21,7 +21,6 @@ const addRecord = async (recordData, table) => {
 
   return result.rows[0].id
 }
-
 const modifyRecord = async (recordData, table, id) => {
   const qd = dbUtils.getQueryUpdate(recordData, table, id)
 
@@ -50,6 +49,28 @@ const getQueryResult = async (query) => {
   }
   return (await pool.query(query)).rows
 }
+const register = async (data, table) => {
+  const qd = dbUtils.getQueryInsert(data, table)
+
+  if (!qd.query.startsWith('INSERT')) {
+    throw new Error('Only INSERT queries are allowed.');
+  }
+  const result = await pool.query(qd.query, qd.values)
+  return result.rows[0].id
+}
+const getTimestampGMT = () => {
+  const now = new Date();
+
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(now.getUTCDate()).padStart(2, '0');
+  const hours = String(now.getUTCHours()).padStart(2, '0');
+  const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+  const milliseconds = String(now.getUTCMilliseconds()).padStart(3, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+}
 
 module.exports = {
   addRecord,
@@ -59,5 +80,7 @@ module.exports = {
   getRecord,
   getRecordFields,
   pool,
-  getQueryResult
+  getQueryResult,
+  register,
+  getTimestampGMT
 };

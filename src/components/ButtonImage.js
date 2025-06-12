@@ -502,6 +502,7 @@ function ButtonImage(props) {
     let elemenntElevation = showMode6 ? textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevationGain, showElevation) : textViewController('BUTTON_ELEVATION', 'elevation', activity[unitMeasure].beautyElevation, showElevation)
     let elemenntDuration = showMode6 ? textViewController('BUTTON_MOVING_TIME', 'duration', activity.beautyMovingTime, showDuration) : textViewController('BUTTON_DURATION', 'duration', activity.beautyDuration, showDuration)
     let elemenntPower = showMode6 ? textViewController('BUTTON_POWER', 'power', activity.beautyPowerSpaced, showPower) : textViewController('BUTTON_POWER', 'power', activity.beautyPower, showPower)
+    let elementAverage = activity.isRun ? textViewController('BUTTON_PACE', 'average', activity[unitMeasure].beautyPace, showAverage) : textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)
 
     return (<div className="wrapper-modes-text">
       <div className="wrapper-modes">        
@@ -528,7 +529,7 @@ function ButtonImage(props) {
         {activity[unitMeasure] && activity[unitMeasure].beautyElevation && elemenntElevation}
         {activity.beautyDuration && elemenntDuration}
         {activity.beautyPower && elemenntPower}
-        {activity[unitMeasure] && activity[unitMeasure].beautyAverage && textViewController('BUTTON_AVERAGE', 'average', activity[unitMeasure].beautyAverage, showAverage)}
+        {activity[unitMeasure] && (activity[unitMeasure].beautyAverage || activity[unitMeasure].beautyPace) && elementAverage}
         {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates, showMode6)}
         {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'coordinates', activity.beautyCalories, showCalories, !showMode6)}
         {textArrowController('BUTTON_SWITCH', 'switchText', textUp, !showMode5)}
