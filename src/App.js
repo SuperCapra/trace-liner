@@ -8,6 +8,7 @@ import ImageComponent from './components/ImageComponent.js'
 import Statistics from './components/Statistics.js';
 import Login from './components/Login.js';
 import SignUp from './components/SignUp.js';
+import Pro from './components/Pro.js';
 import {ReactComponent as ArrowDown} from './assets/images/arrow.svg'
 import {ReactComponent as LogoExtendedSVG} from './assets/images/logoExtended.svg'
 import {ReactComponent as ButtonStravaSVG} from './assets/images/buttonStrava.svg'
@@ -252,6 +253,7 @@ class Homepage extends React.Component{
     if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>
+    if(urlCurrent.includes('/pro')) return <Pro language={this.props.language}/>
     if(urlCurrent.includes('/visitId-')) {
       console.log('created vId')
       vId = utils.getVisitId(urlCurrent)
