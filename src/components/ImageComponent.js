@@ -780,7 +780,8 @@ function ImageComponent(props) {
         infoLog.showcoordinates = !infoLog.showcoordinates
         setShowCoordinates(data.show)
         if(data.show) {
-          enableMode1(false, false)
+          console.log('coordinates')
+          enableMode1(false, false, false, true)
         }
       } else if(data.subtype === 'mode1') {
         setInfoLog(saleforceApiUtils.setMode1(infoLog))
@@ -848,7 +849,7 @@ function ImageComponent(props) {
     if(data.subtype !== 'mode6') setShowMode6(!data.show)
   }
 
-  const enableMode1 = (bool, isStart, start) => {
+  const enableMode1 = (bool, isStart, start, refresh) => {
     if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
     if(isStart) {
       setShowTitle(bool)
