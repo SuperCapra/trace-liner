@@ -142,7 +142,7 @@ function ButtonImage(props) {
       setShowPower(!showPower)
     } else if(type === 'coordinates') {
       handleClick({type: 'show-hide', subtype: 'coordinates', show: !showCoordinates})
-      if(showCoordinates) {
+      if(!showCoordinates) {
         enableMode1(false, false)
       }
       setShowCoordinates(!showCoordinates)
@@ -413,6 +413,11 @@ function ButtonImage(props) {
   }
   
   const textViewController = (label, propagationKey, value, isVisible, deactivated) => {
+    console.log('label', label)
+    console.log('propagationKey', propagationKey)
+    console.log('value', value)
+    console.log('isVisible', isVisible)
+    console.log('deactivated', deactivated)
     let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
       <div>
         {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
@@ -531,7 +536,7 @@ function ButtonImage(props) {
         {activity.beautyPower && elemenntPower}
         {activity[unitMeasure] && (activity[unitMeasure].beautyAverage || activity[unitMeasure].beautyPace) && elementAverage}
         {activity.beautyCoordinates && textViewController('BUTTON_COORDINATES', 'coordinates', activity.beautyCoordinates, showCoordinates, showMode6)}
-        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'coordinates', activity.beautyCalories, showCalories, !showMode6)}
+        {activity.beautyCalories && textViewController('BUTTON_CALORIES', 'calories', activity.beautyCalories, showCalories, !showMode6)}
         {textArrowController('BUTTON_SWITCH', 'switchText', textUp, !showMode5)}
       </div>
     </div>)
