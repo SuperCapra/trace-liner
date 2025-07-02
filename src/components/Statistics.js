@@ -406,8 +406,8 @@ function Statistics(props) {
 
     const resizeInputConstrain = () => {
         let widthScreen = window.innerWidth;
-        setWidthInput(window.innerWidth < 300 ? (((widthScreen * 0.91) - 22)/2) + 'px' : '136px')
-        setPaddingInput(window.innerWidth < 300 ? '2.5px' : '4px')
+        setWidthInput(window.innerWidth < 600 ? ((widthScreen - 42)/2) + 'px' : '136px')
+        setPaddingInput(window.innerWidth < 600 ? '2.5px' : '4px')
     }
 
     const refreshColumnsAvailableGroup2 = (elementName) => {
@@ -478,7 +478,7 @@ function Statistics(props) {
                                 <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.isTimestamp} handleChangeValue={defineGroupBy1DateSetting}/>
                             </div>
                         </div>
-                        {valueGroupBy1 && <div className="wrapper-margin-dropdown-statistics-row-group-1 margin-top">
+                        {/* {valueGroupBy1 && <div className="wrapper-margin-dropdown-statistics-row-group-1 margin-top">
                             <div className="margin-right">
                                 <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailableGroup2} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
                             </div>
@@ -488,7 +488,7 @@ function Statistics(props) {
                                 </div>
                                 <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.isTimestamp} handleChangeValue={defineGroupBy2DateSetting}/>
                             </div>
-                        </div>}
+                        </div>} */}
                     </div>
                     <div className="wrapper-refresh">
                         <Refresh className={getClassRefresh} style={refreshStyle} onClick={() => launchRefresh()}/>
