@@ -24,15 +24,19 @@ function Statistics(props) {
     const childGroupy2DateSettingRef = useRef();
     const childGroupy1AscendingSettingRef = useRef();
     const childGroupy2AscendingSettingRef = useRef();
+    const childTablesRef = useRef();
 
     const [groupBy1DateSetting,setGroupBy1DateSetting] = useState('day');
     const [groupBy2DateSetting,setGroupBy2DateSetting] = useState('day');
     const [groupBy1AscendingSetting,setGroupBy1AscendingSetting] = useState('asc');
     const [groupBy2AscendingSetting,setGroupBy2AscendingSetting] = useState('asc');
+    // const [table, setTable] = useState(undefined);
     const [table, setTable] = useState('visits');
     const [tables, setTables] = useState([]);
     const [columnsAvailable, setColumnsAvailable] = useState([]);
+    const [columnsAvailableGroup2, setColumnsAvailableGroup2] = useState([]);
     const [columnsAvailableData, setColumnsAvailableData] = useState([]);
+    const [inactiveInputDropdown, setInactiveInputDropdown] = useState(!columnsAvailable || (columnsAvailable && !columnsAvailable.length) ? true : false);
     const [columns, setColumns] = useState([]);
     const [tableColumns, setTableColumns] = useState([]);
     const [records, setRecords] = useState([]);
@@ -43,7 +47,7 @@ function Statistics(props) {
     // const [tableColumns, setTableColumns] = useState(["id","user_id","type_export","timestamp","timestamp_local","timezone_name"]);
     // const [records, setRecords] = useState([{"id": 9,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Europe/Rome"},{"id": 10,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 11,"user_id": 2,"type_export": "contour","timestamp": "2025-01-17T00:53:40.393Z","timestamp_local": "2025-01-17T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 12,"user_id": 2,"type_export": "contour","timestamp": "2024-11-27T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 13,"user_id": 2,"type_export": "contour","timestamp": "2024-11-27T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Asia/Bangkok"},{"id": 1,"user_id": 2,"type_export": "contour","timestamp": "2024-11-26T23:53:40.393Z","timestamp_local": "2024-11-27T00:53:40.393Z","timezone_name": "Europe/Rome"},{"id": 2,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:00:08.227Z","timestamp_local": "2024-11-27T01:00:08.227Z","timezone_name": "Europe/Rome",},{"id": 3,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:01:29.747Z","timestamp_local": "2024-11-27T01:01:29.747Z","timezone_name": "Europe/Rome",},{"id": 4,"user_id": 2,"type_export": "complete","timestamp": "2024-11-27T00:04:36.140Z","timestamp_local": "2024-11-27T01:04:36.140Z","timezone_name": "Europe/Rome",},{"id": 5,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:05:30.276Z","timestamp_local": "2024-11-27T01:05:30.277Z","timezone_name": "Europe/Rome",},{"id": 6,"user_id": null,"type_export": "contour","timestamp": "2024-11-27T00:36:31.004Z","timestamp_local": "2024-11-27T01:36:31.004Z","timezone_name": "Europe/Rome",},{"id": 7,"user_id": 2,"type_export": "contour","timestamp": "2024-12-15T09:06:14.732Z","timestamp_local": "2024-12-15T13:06:14.732Z","timezone_name": "Asia/Dubai",},{"id": 8,"user_id": null,"type_export": "contour","timestamp": "2024-12-15T21:34:35.145Z","timestamp_local": "2024-12-16T04:34:35.145Z","timezone_name": "Asia/Bangkok",}]);
     const [isLoading, setIsLoading] = useState(false);
-    const [numberRecords, setNumberRecords] = useState(undefined);
+    const [numberRecords, setNumberRecords] = useState(0);
     const [numberVisits, setNumberVisits] = useState(undefined);
     const [numberUsers, setNumberUsers] = useState(undefined);
     const [numberStravaUsers, setNumberStravaUsers] = useState(undefined);
@@ -53,10 +57,21 @@ function Statistics(props) {
     const [valueMinorFilter, setValueMinorFilter] = useState(undefined);
     const [valueMajorFilter, setValueMajorFilter] = useState(undefined);
     const [valueGroupBy1, setValueGroupBy1] = useState(undefined);
-    const [settingGroupBy1, setSettingGroupBy1] = useState({isTimestamp: false, timestamp: undefined, ascending: true});
+    const [settingGroupBy1, setSettingGroupBy1] = useState({isTimestamp: false, hasValue: false, timestamp: undefined, ascending: true});
     const [valueGroupBy2, setValueGroupBy2] = useState(undefined);
-    const [settingGroupBy2, setSettingGroupBy2] = useState({isTimestamp: false, timestamp: undefined, ascending: true});
-    const [refreshed, setRefreshed] = useState(true)
+    const [settingGroupBy2, setSettingGroupBy2] = useState({isTimestamp: false, hasValue: false, timestamp: undefined, ascending: true});
+    const [refreshed, setRefreshed] = useState(true);
+    const [widthInput, setWidthInput] = useState('134px');
+    const [paddingInput, setPaddingInput] = useState('5px');
+
+    const inputDropdownStyle = {
+        filter: inactiveInputDropdown ? 'brightness(0.6)' : 'none',
+    }
+
+    const inputConstrainStyle = {
+        width: widthInput,
+        padding: paddingInput
+    }
 
     const resetFilterChild = () => {
         if(columnFilter && childFilterRef.current) {
@@ -71,14 +86,14 @@ function Statistics(props) {
         if(valueGroupBy1 && childGroupBy1Ref.current) {
             setValueGroupBy1(undefined)
             childGroupBy1Ref.current.resetSelect();
-            setSettingGroupBy1({isTimestamp: false, timestamp: undefined, ascending: true})
+            setSettingGroupBy1({isTimestamp: false, hasValue: false, timestamp: undefined, ascending: true})
         }
     }
     const resetGroupBy2Child = () => {
         if(valueGroupBy2 && childGroupBy2Ref.current) {
             setValueGroupBy2(undefined)
             childGroupBy2Ref.current.resetSelect();
-            setSettingGroupBy2({isTimestamp: false, timestamp: undefined, ascending: true})
+            setSettingGroupBy2({isTimestamp: false, hasValue: false, timestamp: undefined, ascending: true})
         }
     }
 
@@ -90,6 +105,13 @@ function Statistics(props) {
                     console.log('table:', e.tablename)
                     tableArray.push(e.tablename)
                 });
+                if(childTablesRef.current) childTablesRef.current.setInactive(false)
+                if(childColumnsRef.current) childColumnsRef.current.setInactive(false)
+                if(childFilterRef.current) childFilterRef.current.setInactive(false)
+                if(childGroupBy1Ref.current) childGroupBy1Ref.current.setInactive(false)
+                if(childGroupBy2Ref.current) childGroupBy2Ref.current.setInactive(false)
+                setInactiveInputDropdown(false)
+                setInactiveInputDropdown(false)
                 setTables(tableArray)
                 setIsLoading(false)
             }
@@ -98,17 +120,6 @@ function Statistics(props) {
         })
     }
 
-    // const retrieveRecords = () => {
-    //     dbInteractions.processQuery(`SELECT * FROM ${table} ORDER BY id`, process.env.REACT_APP_JWT_TOKEN).then(res => {
-    //         console.log('res:',res)
-    //         if(res.records) {
-    //             setNumberRecords(res.records.length)
-    //             setRecords(res.records)
-    //         }
-    //     }).catch(e => {
-    //         console.error('error querying tables:', e)
-    //     })
-    // }
     const retrieveNumbers = () => {
         dbInteractions.processQuery(queries.getQueryCount('visits'), process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:',res)
@@ -129,7 +140,7 @@ function Statistics(props) {
         dbInteractions.processQuery(queries.getQueryCountFilter('users', 'HAS_STRAVA = true'), process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:',res)
             if(res.records) {
-                setNumberStravaUsers(Number(res.records[0].count) + 49)
+                setNumberStravaUsers(Number(res.records[0].count) + 42)
             }
         }).catch(e => {
             console.error('error querying number of visits:', e)
@@ -208,10 +219,13 @@ function Statistics(props) {
             launchRefreshLight()
             resetGroupBy1Child()
         } else {
-            let set1 = columnsAvailableData[data.value].data_type.startsWith('timestamp') ? {isTimestamp: true, timestamp: 'day', ascending: true} : {isTimestamp: false, timestamp: undefined, ascending: true}
+            let isTimestamp = columnsAvailableData[data.value].data_type.startsWith('timestamp')
+            let set1 = isTimestamp ? {isTimestamp: true, hasValue: true, timestamp: 'day', ascending: true} : {isTimestamp: false, hasValue: true, timestamp: undefined, ascending: true}
+            if(childGroupy1DateSettingRef.current) childGroupy1DateSettingRef.current.setInactive(!isTimestamp)
             launchRefreshLight(false,set1)
             setValueGroupBy1(data.value)
             setSettingGroupBy1(set1)
+            refreshColumnsAvailableGroup2(data.value)
         }
         if(valueGroupBy2) resetGroupBy2Child()
         if(childTableRef.current) childTableRef.current.resetGroupedData()
@@ -220,9 +234,11 @@ function Statistics(props) {
         console.log('valuesSelected:', data.value)
         if(data.value === valueGroupBy2) {
             launchRefreshLight(valueGroupBy1,settingGroupBy1,undefined,undefined)
-            resetGroupBy2Child(columnsAvailableData[data.value].data_type.startsWith('timestamp'))
+            resetGroupBy2Child()
         } else {
-            let set2 = columnsAvailableData[data.value].data_type.startsWith('timestamp') ? {isTimestamp: true, timestamp: 'day', ascending: true} : {isTimestamp: false, timestamp: undefined, ascending: true}
+            let isTimestamp = columnsAvailableData[data.value].data_type.startsWith('timestamp')
+            let set2 = isTimestamp ? {isTimestamp: true, hasValue: true, timestamp: 'day', ascending: true} : {isTimestamp: false, hasValue: true, timestamp: undefined, ascending: true}
+            if(childGroupy2DateSettingRef.current) childGroupy2DateSettingRef.current.setInactive(!isTimestamp)
             launchRefreshLight(valueGroupBy1,settingGroupBy1,data.value,set2)
             setValueGroupBy2(data.value)
             setSettingGroupBy2(set2)
@@ -232,8 +248,16 @@ function Statistics(props) {
 
     const refreshStyle = {
         fill: brandingPalette.primary,
-        transform: 'scale(0.6)'
+        transform: 'scale(0.6)',
+        filter: table ? 'none' : 'brightness(0.6)',
     }
+    const copyStyle = {
+        fill: brandingPalette.primary,
+        transform: 'scale(0.6)',
+        filter: records && records.length ? 'none' : 'brightness(0.6)',
+    }
+    const getClassRefresh = table ? 'wrapper-refresh-icon-active' : ''
+    const getClassCopy = records && records.length ? 'wrapper-refresh-icon-active' : ''
 
     const processRecords = (rawData) => {
         let result = []
@@ -262,6 +286,7 @@ function Statistics(props) {
     }
 
     const launchRefresh = () => {
+        if(!table) return
         let processedRecords = records
         let processingColumns = columns
         console.log('processedRecords', processedRecords)
@@ -306,32 +331,13 @@ function Statistics(props) {
         if(childTableRef.current) childTableRef.current.setRefreshNeeded()
     }
 
-    // const setGroupBy1SettingHelper = (timestamp,ascending) => {
-    //     console.log('timestamp', timestamp)
-    //     let jsonSeting = {
-    //         isTimestamp : timestamp ? true : false,
-    //         timestamp : settingGroupBy1.timestamp,
-    //         ascending : ascending !== undefined ? ascending : settingGroupBy1.ascending
-    //     }
-    //     launchRefreshLight(valueGroupBy1,jsonSeting)
-    //     setSettingGroupBy1(jsonSeting)
-    // }
-    // const setGroupBy2SettingHelper = (timestamp,ascending) => {
-    //     let jsonSeting = {
-    //         isTimestamp : timestamp ? true : false,
-    //         timestamp : settingGroupBy2.timestamp,
-    //         ascending : ascending !== undefined ? ascending : settingGroupBy2.ascending
-    //     }
-    //     launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
-    //     setSettingGroupBy2(jsonSeting)
-    // }
-
     const defineGroupBy1DateSetting = (event) => {
         console.log(event.value)
         let jsonSeting = {
-            isTimestamp : settingGroupBy2.isTimestamp,
-            timestamp : settingGroupBy2.isTimestamp ? event.value : undefined,
-            ascending : settingGroupBy2.ascending
+            isTimestamp : settingGroupBy1.isTimestamp,
+            hasValue : settingGroupBy1.hasValue,
+            timestamp : settingGroupBy1.isTimestamp ? event.value : undefined,
+            ascending : settingGroupBy1.ascending
         }
         setGroupBy1DateSetting(event.value)
         launchRefreshLight(valueGroupBy1,settingGroupBy1,valueGroupBy2,jsonSeting)
@@ -342,6 +348,7 @@ function Statistics(props) {
         console.log(event.value)
         let jsonSeting = {
             isTimestamp : settingGroupBy2.isTimestamp,
+            hasValue : settingGroupBy2.hasValue,
             timestamp : settingGroupBy2.isTimestamp ? event.value : undefined,
             ascending : settingGroupBy2.ascending
         }
@@ -354,6 +361,7 @@ function Statistics(props) {
         console.log(event.value)
         let jsonSeting = {
             isTimestamp : settingGroupBy1.isTimestamp,
+            hasValue : settingGroupBy1.hasValue,
             timestamp : settingGroupBy1.timestamp,
             ascending : event.value === 'asc'
         }
@@ -366,6 +374,7 @@ function Statistics(props) {
         console.log(event.value)
         let jsonSeting = {
             isTimestamp : settingGroupBy2.isTimestamp,
+            hasValue : settingGroupBy2.hasValue,
             timestamp : settingGroupBy2.timestamp,
             ascending : event.value === 'asc'
         }
@@ -395,9 +404,23 @@ function Statistics(props) {
         });
     }
 
+    const resizeInputConstrain = () => {
+        let widthScreen = window.innerWidth;
+        setWidthInput(window.innerWidth < 300 ? (((widthScreen * 0.91) - 22)/2) + 'px' : '136px')
+        setPaddingInput(window.innerWidth < 300 ? '2.5px' : '4px')
+    }
+
+    const refreshColumnsAvailableGroup2 = (elementName) => {
+        let temp = [...columnsAvailable]
+        if(elementName) temp = temp.filter(e => e !== elementName)
+        setColumnsAvailableGroup2(temp)
+    }
+
     useEffect(() => {
         retrieveTables()
         retrieveColumns('visits')
+        resizeInputConstrain()
+        window.addEventListener("resize", resizeInputConstrain)
         if(!numberVisits) retrieveNumbers()
     },[
         numberVisits
@@ -415,60 +438,62 @@ function Statistics(props) {
                 <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">EXPORTS: {numberExports}</p>
             </div>
             <div className="position-dropdown-statistics">
-                <div className="position-dropdown-statistics-group">
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-dimention p-left p-color align-left">TABLE</p>
-                        <Dropdown value={table} values={tables} type="table" hasBorder="true" handleChangeValue={defineTable}/>
-                    </div>
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-dimention p-left p-color align-left">COLUMNS</p>
-                        <MultiDropdown ref={childColumnsRef} valuesSelected={columns} valuesAvailable={columnsAvailable} type="column" hasBorder="true" size="300px" handleChangeValue={defineColumn}/>
+                <div className="position-dropdown-statistics-group-1">
+                    <div className="position-dropdown-statistics-sub-group-part-1">
+                        <div className="wrapper-margin-dropdown-statistics">
+                            <p className="p-dimention p-left p-color align-left">TABLE</p>
+                            <Dropdown ref={childTablesRef} value={table} values={tables} type="table" hasBorder="true" handleChangeValue={defineTable}/>
+                        </div>
+                        <div className="wrapper-margin-dropdown-statistics">
+                            <p className="p-dimention p-left p-color align-left">COLUMNS</p>
+                            <MultiDropdown ref={childColumnsRef} valuesSelected={columns} valuesAvailable={columnsAvailable} type="column" hasBorder="true" size="300px" handleChangeValue={defineColumn}/>
+                        </div>
                     </div>
                     <div className="wrapper-margin-dropdown-statistics">
                         <div className="filter-wrapper">
                             <p className="p-dimention p-left p-color align-left">FILTER</p>
                             <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineFilter}/>
-                            <div className="filter-wrapper-constrains">
-                                <input type="text" value={valueMinorFilter} className="input-constrain p-dimention p-left p-color minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
-                                <input type="text" value={valueMajorFilter} className="input-constrain p-dimention p-left p-color major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
+                            <div className="filter-wrapper-constrains" style={inputDropdownStyle}>
+                                <input type="text" value={valueMinorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
+                                <input type="text" value={valueMajorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="position-dropdown-statistics-group">
+                <div className="position-dropdown-statistics-group-2">
                     <div className="wrapper-margin-dropdown-statistics">
-                        <div className="filter-wrapper">
-                            <p className="p-dimention p-left p-color align-left">GROUP BY</p>
-                            <Dropdown ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
-                            {valueGroupBy1 && <div className="margin-dropdown">
-                                <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
-                            </div>}
+                        <div className="wrapper-margin-dropdown-statistics-row-title">
+                            <div className="filter-wrapper">
+                                <p className="p-dimention p-left p-color align-left">GROUP BY</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <div className="filter-wrapper">
-                            <p className="p-dimention p-left p-color align-left invisible-null">NULL</p>
-                            <TextCheckbox ref={childGroupy1AscendingSettingRef} value={groupBy1AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy1AcendingSetting}/>
-                            {valueGroupBy1 && <div className="margin-dropdown">
-                                <TextCheckbox ref={childGroupy2AscendingSettingRef} value={groupBy2AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy2AcendingSetting}/>
-                            </div>}
+                        <div className="wrapper-margin-dropdown-statistics-row-group-1">
+                            <div className="margin-right">
+                                <Dropdown className="margin-right" ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
+                            </div>
+                            <div className="wrapper-asc-day">
+                                <div className="margin-right">
+                                    <TextCheckbox ref={childGroupy1AscendingSettingRef} value={groupBy1AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.hasValue} handleChangeValue={defineGroupBy1AcendingSetting}/>
+                                </div>
+                                <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.isTimestamp} handleChangeValue={defineGroupBy1DateSetting}/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <div className="filter-wrapper">
-                            <p className="p-dimention p-left p-color align-left invisible-null">NULL</p>
-                            {settingGroupBy1.isTimestamp && <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy1DateSetting}/>}
-                            {valueGroupBy1 && settingGroupBy2.isTimestamp && <div className="margin-dropdown">
-                                <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="110px" handleChangeValue={defineGroupBy2DateSetting}/>
-                            </div>}
-                        </div>
+                        {valueGroupBy1 && <div className="wrapper-margin-dropdown-statistics-row-group-1 margin-top">
+                            <div className="margin-right">
+                                <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailableGroup2} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
+                            </div>
+                            <div className="wrapper-asc-day">
+                                <div className="margin-right">
+                                    <TextCheckbox ref={childGroupy2AscendingSettingRef} value={groupBy2AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.hasValue} handleChangeValue={defineGroupBy2AcendingSetting}/>
+                                </div>
+                                <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.isTimestamp} handleChangeValue={defineGroupBy2DateSetting}/>
+                            </div>
+                        </div>}
                     </div>
                     <div className="wrapper-refresh">
-                        <Refresh style={refreshStyle} onClick={() => launchRefresh()}/>
-                        <CopyExcel style={refreshStyle} onClick={() => copyTableToClipboard()}/>
-                    </div>
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <p className="p-dimention p-left p-color margin-top-29">{numberRecords}</p>
+                        <Refresh className={getClassRefresh} style={refreshStyle} onClick={() => launchRefresh()}/>
+                        <CopyExcel className={getClassCopy} style={copyStyle} onClick={() => copyTableToClipboard()}/>
+                        <p className="p-dimention p-left p-color margin-left-10">#{numberRecords}</p>
                     </div>
                 </div>
             </div>

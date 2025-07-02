@@ -1056,14 +1056,6 @@ p {
   width: 45%;
   max-width: 400px;
 }
-.dropdown-selected-value{
-  display: flex;
-  align-items: center;
-  padding: 0 5px;
-}
-.dropdown-selected-value:hover{
-  cursor: pointer;
-}
 .dropdown-values{
   background-color: var(--palette-secondary);
   display: flex;
@@ -1756,6 +1748,7 @@ p {
   display: flex;
   align-items: unset;
   justify-content: flex-start;
+  min-height: 100vh;
 }
 .center-logo-homepage{
   display: flex;

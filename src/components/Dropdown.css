@@ -1,0 +1,12 @@
+.dropdown-selected-value{
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    min-height: 100%;
+}
+.dropdown-selected-value-active:hover{
+    cursor: pointer;
+}
+.dimention-dropdown{
+    min-height: 20px;
+}

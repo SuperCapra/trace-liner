@@ -1,16 +1,20 @@
 import '../App.css';
-import React, {useState, useRef, forwardRef, useImperativeHandle} from 'react';
+import './MultiDropdown.css';
+import React, {useState, useRef, forwardRef, useImperativeHandle, useEffect} from 'react';
 import {ReactComponent as ArrowDown} from '../assets/images/arrowDownSimplified20.svg'
 import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
 const MultiDropdown = forwardRef((props,ref) => {
-    const {valuesSelected, valuesAvailable, type, hasBorder, size, handleChangeValue} = props
+    const {valuesSelected, valuesAvailable, type, hasBorder, size, inactive, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
     const [textSelected, setTextSelected] = useState('(' + (valuesSelected && valuesSelected.length ? valuesSelected.length : '0') + ')');
-    // const [valueSelectedPrivate, setValueSelectedPrivate] = useState(valuesSelected);
+    const [rightSize, setRightSize] = useState('300px');
+    const [inactivePrivate, setInactivePrivate] = useState(inactive || !valuesAvailable || (valuesAvailable && !valuesAvailable.valuesAvailable)  ? true : false);
+
+    const getClasses = 'multidropdown-selected-value' + (inactivePrivate ? '' : ' multidropdown-selected-value-active')
 
     const returnValues = () => {
         let resultHTML = []
@@ -61,38 +65,75 @@ const MultiDropdown = forwardRef((props,ref) => {
             valuesSelected.splice(index,1)
         }
         setTextSelected('('+ valuesSelected.length +')')
-        // setValueSelectedPrivate(valuesSelected)
-        // if(valueSetting === valueSelected) return
-        // setValueSelected(valueSetting)
         handleChangeValue({type: type, valuesSelected: valuesSelected})
     }
 
-    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
-    const styleText = {
-        width: hasBorder ? (size ? size : '200px') : 'unset'
-    } 
-    const styleDropdown = {
-        width: size ? size : '200px'
+    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase dimention-multidropdown' + (hasBorder === 'true' ? ' border-dropdown' : '')
+    const returnStyleTextDropdown = () => {
+        return {
+            width: hasBorder ? (rightSize ? (Number(rightSize.replace('px','')) < 200 ? (Number(rightSize.replace('px','')) * 0.95) + 'px' : rightSize) : '300px') : 'unset',
+        }
     }
+    const styleText = returnStyleTextDropdown()
+
+    const resizeElement = () => {
+        console.log('type', type)
+        console.log('size', size)
+        let widthScreen = window.innerWidth;
+        let defaultWidth = widthScreen < 600 ? '300px' : '200px';
+        let widthElement = size ? size : defaultWidth;
+        console.log('widthElement', widthElement)
+        if(size === '100px' && widthScreen < 600 && widthScreen >= 300) {
+            widthElement = '143px'
+        } else if(widthScreen < 300) {
+            if(size && size === '100px') {
+                widthElement = widthScreen * 0.45 + 'px';
+            } else {
+                widthElement = widthScreen * 0.91 + 'px';
+            }
+        }
+
+        setRightSize(widthElement);
+    }
+
+    const returnStyleDropdown = () => {
+        return {
+            width: rightSize,
+            filter: inactivePrivate ? 'brightness(0.6)' : 'none'
+        }
+    }
+
+    const styleDropdown = returnStyleDropdown()
+
     const resetSelect = () => {
         setTextSelected('(0)')
     }
     const selectAll = () => {
         setTextSelected('(' + valuesAvailable.length + ')')
     }
+    const setInactive = (inactiveValue) => {
+        setInactivePrivate(inactiveValue)
+    }
 
     useImperativeHandle(ref, () => ({
         resetSelect,
-        selectAll
+        selectAll,
+        setInactive
     }));
+
+    useEffect(() => {
+        if(size) resizeElement()
+        window.addEventListener("resize", resizeElement)
+        return () => window.removeEventListener("resize", resizeElement)
+    })
 
     return(
         // <div className="p-dimention p-left p-color p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} onBlur={closeDropdown} tabIndex={0} ref={dropdownRef}>
-            <div className="dropdown-selected-value" onClick={hideShowDropDown}>
+            <div className={getClasses} onClick={hideShowDropDown}>
                 {textSelected && <p style={styleText}>{textSelected}</p>}
                 {!textSelected && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
-                <ArrowDown className="padding-5" style={styleArrowDown20}/>
+                <ArrowDown className="scale-arrow" style={styleArrowDown20}/>
             </div>
             <div id="dropdownValues" style={styleDropdown} className="dropdown-appear dropdown-values no-see-dropdown-values">
                 {returnValues()}
