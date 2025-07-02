@@ -83,13 +83,14 @@ const MultiDropdown = forwardRef((props,ref) => {
         let defaultWidth = widthScreen < 600 ? '300px' : '200px';
         let widthElement = size ? size : defaultWidth;
         console.log('widthElement', widthElement)
-        if(size === '100px' && widthScreen < 600 && widthScreen >= 300) {
-            widthElement = '143px'
-        } else if(widthScreen < 300) {
+        // if(size === '100px' && widthScreen < 600 && widthScreen >= 500) {
+        //     widthElement = '143px'
+        // } else 
+        if(widthScreen < 600) {
             if(size && size === '100px') {
-                widthElement = widthScreen * 0.45 + 'px';
+                widthElement = (widthScreen - 42)/2 + 'px';
             } else {
-                widthElement = widthScreen * 0.91 + 'px';
+                widthElement = (widthScreen - 20) + 'px';
             }
         }
 
