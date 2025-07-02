@@ -1,0 +1,7 @@
+.dimention-textcheckbox{
+    min-height: 20px;
+}
+.textcheckbox-value{
+    display: flex;
+    justify-content: center;
+}

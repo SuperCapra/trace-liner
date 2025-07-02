@@ -1,15 +1,20 @@
 import '../App.css';
-import React, {useState, useRef, forwardRef, useImperativeHandle} from 'react';
+import './Dropdown.css';
+import React, {useState, useRef, forwardRef, useImperativeHandle, useEffect} from 'react';
 import {ReactComponent as ArrowDown} from '../assets/images/arrowDownSimplified20.svg'
 import {ReactComponent as Tick} from '../assets/images/tick.svg'
 import brandingPalette from '../config/brandingPalette';
 import { vocabulary } from '../config/vocabulary';
 
 const Dropdown = forwardRef((props,ref) => {
-    const {value, values, type, text, hasBorder, size, possibilityDeselect, handleChangeValue} = props
+    const {value, values, type, text, hasBorder, size, possibilityDeselect, inactive, handleChangeValue} = props
     
     const dropdownRef = useRef(null);
-    const [valueSelected, setValueSelected] = useState(value)
+    const [valueSelected, setValueSelected] = useState(value);
+    const [rightSize, setRightSize] = useState('300px');
+    const [inactivePrivate, setInactivePrivate] = useState(inactive || !values || (values && !values.length)  ? true : false);
+
+    const getClasses = 'dropdown-selected-value' + (inactivePrivate ? '' : ' dropdown-selected-value-active')
 
     const returnValues = () => {
         let resultHTML = []
@@ -29,8 +34,11 @@ const Dropdown = forwardRef((props,ref) => {
     }
 
     const hideShowDropDown = () => {
+        console.log('inactivePrivate:',inactivePrivate)
+        console.log('inactive:',inactive)
+        console.log('value:',values)
         const element = dropdownRef.current.querySelector("#dropdownValues")
-        if(element) {
+        if(element && !inactive) {
             if(element.classList.contains("no-see-dropdown-values")) {
                 element.classList.replace("no-see-dropdown-values", "see-dropdown-values")
             } else {
@@ -57,30 +65,69 @@ const Dropdown = forwardRef((props,ref) => {
         closeDropdown()
     }
 
-    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase' + (hasBorder === 'true' ? ' border-dropdown' : '')
-    const styleText = {
-        width: hasBorder ? (size ? (Number(size.replace('px','')) < 200 ? (Number(size.replace('px','')) * 0.75) + 'px' : size) : '200px') : 'unset'
-    } 
-    const styleDropdown = {
-        width: size ? size : '200px'
+    const getClassesDropdown = 'p-dimention p-left p-color p-uppercase dimention-dropdown' + (hasBorder === 'true' ? ' border-dropdown' : '')
+
+    const resizeElement = () => {
+        console.log('type', type)
+        console.log('size', size)
+        let widthScreen = window.innerWidth;
+        let defaultWidth = widthScreen < 600 ? '300px' : '200px';
+        let widthElement = size ? size : defaultWidth;
+        console.log('widthElement', widthElement)
+        if(size === '100px' && widthScreen < 600 && widthScreen >= 300) {
+            widthElement = '143px'
+        } else if(widthScreen < 300) {
+            if(size && size === '100px') {
+                widthElement = widthScreen * 0.45 + 'px';
+            } else {
+                widthElement = widthScreen * 0.91 + 'px';
+            }
+        }
+
+        setRightSize(widthElement);
     }
+
+    const returnStyleDropdown = () => {
+        return {
+            width: rightSize,
+            filter: inactivePrivate ? 'brightness(0.6)' : 'none'
+        }
+    }
+    const returnStyleTextDropdown = () => {
+        return {
+            width: hasBorder ? (rightSize ? (Number(rightSize.replace('px','')) < 200 ? (Number(rightSize.replace('px','')) * 0.9) + 'px' : rightSize) : '300px') : 'unset',
+        }
+    }
+    const styleText = returnStyleTextDropdown()
+    const styleDropdown = returnStyleDropdown()
 
     const resetSelect = () => {
         setValueSelected(undefined)
     }
 
+    const setInactive = (inactiveValue) => {
+        setInactivePrivate(inactiveValue);
+    }
+
     useImperativeHandle(ref, () => ({
         resetSelect,
+        setInactive
     }));
+
+    useEffect(() => {
+        resizeElement()
+        window.addEventListener("resize", resizeElement)
+        return () => window.removeEventListener("resize", resizeElement)
+    })
 
     return(
         // <div className="p-dimention p-left p-color p-uppercase" id="dropDown">
         <div className={getClassesDropdown} id="dropDown" style={styleDropdown} onBlur={closeDropdown} tabIndex={0} ref={dropdownRef}>
-            <div className="dropdown-selected-value" onClick={hideShowDropDown}>
+            <div className={getClasses} onClick={hideShowDropDown}>
                 {valueSelected && <p style={styleText}>{valueSelected}</p>}
                 {!valueSelected && text && <p style={styleText}>{text}</p>}
                 {!valueSelected && !text && <p style={styleText}>{vocabulary.en.DROPDOWN_SELECT}</p>}
-                <ArrowDown className="padding-5" style={styleArrowDown20}/>
+                <ArrowDown className="scale-arrow" style={styleArrowDown20}/>
             </div>
             <div id="dropdownValues" style={styleDropdown} className="dropdown-appear dropdown-values no-see-dropdown-values">
                 {returnValues()}
