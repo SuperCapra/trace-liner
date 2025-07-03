@@ -1,9 +1,17 @@
 const vocabulary = {
     en: {
-        TITLE_BUTTON: 'Load a GPX'
+        BUTTON_TITLE: 'Load a GPX',
+        BUTTON_BACK: '< BACK',
+        BUTTON_ROUTE: 'ROUTE',
+        BUTTON_ALTITUDE: 'ALTITUDE',
+        BUTTON_GET_SVG: 'GET SVG',
     },
     it: {
-        TITLE_BUTTON: 'Carica un GPX'
+        BUTTON_TITLE: 'Carica un GPX',
+        BUTTON_BACK: '< INDIETRO',
+        BUTTON_ROUTE: 'ROUTE',
+        BUTTON_ALTITUDE: 'ALTITUDE',
+        BUTTON_GET_SVG: 'GET SVG',
     }
 }
 

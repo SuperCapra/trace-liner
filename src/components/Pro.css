@@ -1,3 +1,51 @@
 .margin-title-logo{
     margin: 40px 0;
 }
+.button-primary{
+    padding: 1vw;
+    background-color: var(--palette-primary);
+    border-radius: 5px;
+}
+.button-primary-shorter{
+    padding: 0.5vw 1vw;
+    border-radius: 5px;
+}
+.button-primary-color{
+    color: var(--palette-background);
+    background-color: var(--palette-primary);
+}
+.button-secondary-color{
+    color: var(--palette-background);
+    background-color: var(--palette-secondary);
+}
+.justify-center-column{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.p-back{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: 36px;
+}
+.back-image{
+    width: 35px;
+    margin: 0 5px;
+    fill: var(--palette-primary);
+    transform: rotate(90deg) scale(0.7);
+}
+.back-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
+}
+.button-action:hover{
+    cursor: pointer;
+    filter:brightness(0.8)
+}
+.button-action:active{
+    cursor: pointer;
+    filter:brightness(0.6)
+}
