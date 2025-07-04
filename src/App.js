@@ -6,6 +6,7 @@ import apiUtils from './utils/apiUtils.js';
 import LoaderLogo from './components/LoaderLogo.js'
 import ImageComponent from './components/ImageComponent.js'
 import Statistics from './components/Statistics.js';
+import ModalGeneral from './components/Modal.js';
 import Login from './components/Login.js';
 import SignUp from './components/SignUp.js';
 import Pro from './components/Pro.js';
@@ -246,12 +247,27 @@ class Homepage extends React.Component{
     this.props.changeLanguage(data.value)
   }
 
+  getModalRedirect() {
+    return(
+      <div className="modal-overlay">
+        <div className="modal-dimention-positioning" id="modal" tabIndex={0}>
+          <div className="modal-text modal-text-dimention-general">
+              <p className="p-color-modal p-dimention p-left p-color">{vocabulary[this.props.language].MESSAGE_ANDROID}</p>
+              <a href="intent://traceliner.com#Intent;scheme=https;end">
+                {vocabulary[this.props.language].MESSAGE_BROWSER}
+              </a>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   routesToStage() {
     console.log('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('isInstagramAndroid:', utils.isInstagramAndroid())
-    if(utils.isInstagram()) window.open(window.location.href, '_blank');
+    if(utils.isInstagram()) return this.getModalRedirect();
     if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>
