@@ -72,7 +72,9 @@ const vocabulary = {
         SLIDER: 'TINT',
         DETAIL: 'DETAIL',
         LINE: 'LINE',
-        BACKGROUND: 'BACK'
+        BACKGROUND: 'BACK',
+        MESSAGE_ANDROID: 'Instagram\'s browser might block downloads.👉 Tap below to open this page in Chrome:',
+        MESSAGE_BROWSER: 'Open in browser'
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -147,7 +149,9 @@ const vocabulary = {
         SLIDER: 'FILTRO',
         DETAIL: 'DETTAGLI',
         LINE: 'LINE',
-        BACKGROUND: 'SFONDO'
+        BACKGROUND: 'SFONDO',
+        MESSAGE_ANDROID: 'Instagram potrebbe bloccare i download.👉 Clicca sotto per aprire traceliner nel tuo browser:',
+        MESSAGE_BROWSER: 'Apri nel browser'
     }
 }
 
