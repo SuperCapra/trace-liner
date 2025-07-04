@@ -6,7 +6,6 @@ import apiUtils from './utils/apiUtils.js';
 import LoaderLogo from './components/LoaderLogo.js'
 import ImageComponent from './components/ImageComponent.js'
 import Statistics from './components/Statistics.js';
-import ModalGeneral from './components/Modal.js';
 import Login from './components/Login.js';
 import SignUp from './components/SignUp.js';
 import Pro from './components/Pro.js';
@@ -267,7 +266,7 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('isInstagramAndroid:', utils.isInstagramAndroid())
-    if(utils.isInstagram()) return this.getModalRedirect();
+    if(utils.isInstagramAndroid()) return this.getModalRedirect();
     if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>

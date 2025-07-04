@@ -73,7 +73,7 @@ const vocabulary = {
         DETAIL: 'DETAIL',
         LINE: 'LINE',
         BACKGROUND: 'BACK',
-        MESSAGE_ANDROID: 'Instagram\'s browser might block downloads.👉 Tap below to open this page in Chrome:',
+        MESSAGE_ANDROID: 'Instagram\'s browser might block downloads. Tap below to open this page in Chrome:',
         MESSAGE_BROWSER: 'Open in browser'
     },
     it: {
@@ -150,7 +150,7 @@ const vocabulary = {
         DETAIL: 'DETTAGLI',
         LINE: 'LINE',
         BACKGROUND: 'SFONDO',
-        MESSAGE_ANDROID: 'Instagram potrebbe bloccare i download.👉 Clicca sotto per aprire traceliner nel tuo browser:',
+        MESSAGE_ANDROID: 'Instagram potrebbe bloccare i download. Clicca sotto per aprire traceliner nel tuo browser:',
         MESSAGE_BROWSER: 'Apri nel browser'
     }
 }
