@@ -1122,11 +1122,17 @@ p {
   filter: brightness(0.6);
 }
 .modal-text{
-  margin: 7% 5%;
-  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.modal-text-dimention{
+  margin: 7% 5%;
+  width: 90%;
+}
+.modal-text-dimention-general{
+  margin: 12% 7%;
+  width: 86%;
 }
 .p-color-modal{
   color: var(--palette-background)

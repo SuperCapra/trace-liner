@@ -1,11 +1,31 @@
-.buttons-wrapper-pro{
+.buttons-wrapper-header{
     width: 100%;
     display: flex;
+    margin-bottom: 40px;
+    flex-direction: column;
+}
+.buttons-wrapper-header-row-1{
+    display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 40px
+    align-items: center;
+}
+.buttons-wrapper-header-row-2{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-top: 4vh;
 }
 .buttons-wrapper-type{
     display: flex;
+}
+.buttons-wrapper-resolution{
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--palette-primary);
+    border-radius: 5px;
+    background-color: var(--palette-primary);
 }
 .margin-title-logo-pro{
     margin-bottom: 15px;
@@ -68,4 +88,30 @@
     padding: 5vw 5vh;
     background-color: var(--palette-backgroundmodal);
     border-radius: 5px
+}
+.input-resolution{
+    font-family: var(--font);
+    width: 50px;
+    border: unset;
+    outline: none;
+    transition: all 0.3s ease;
+    border-radius: 0px;
+    padding-top: 3px;
+    background: none;
+    text-align: center;
+}
+.button-controller{
+    padding: 0.7vw 1.5vw 0.4vw;
+    border-radius: 5px;
+}
+.wrapper-controller{
+    display: flex;
+    flex-direction: column;
+}
+.margin-left{
+    margin-left: 2vw;
+}
+.svg-altitude-container{
+    display: flex;
+    align-items: center;
 }

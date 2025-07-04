@@ -31,7 +31,7 @@ const utilsFuctions = {
         return normalizedCoordinates
     },
 
-    normalizeAltitude(altitudeArray, width, height, resolution) {
+    normalizeAltitude(altitudeArray, width, height, resolution, tickness) {
         if(!altitudeArray || (altitudeArray && !altitudeArray.length)) return undefined
         let normalizedAltitude = []
         let minY = Math.min(...altitudeArray, 0)
@@ -47,7 +47,7 @@ const utilsFuctions = {
         for(let i = 0; i < maxX; i++) {
             if(i % Math.floor(maxX / resolutionUsing) === 0 || i === 0 || i === maxX - 1) {
                 let aX = i * zoomFactorX
-                let aY = height - (altitudeArray[i] * zoomFactorY)
+                let aY = height - (altitudeArray[i] * zoomFactorY) + tickness
                 normalizedAltitude.push([aX,aY])
             }
         }
@@ -63,20 +63,32 @@ const utilsFuctions = {
         return pathData
     },
 
-    getAltitudePath(altritudeStream, height) {
+    getAltitudePath(altritudeStream, height, padding, notNormalizedAltitudeStream, underBorder) {
+        let result = {
+            pathData: undefined,
+            heightAltitude: undefined,
+        }
         if(!altritudeStream || (altritudeStream && !altritudeStream.length)) return undefined;
+        let maxY = Math.max(...altritudeStream.map(x => x[1]))
+        let realMaxY = Math.max(...notNormalizedAltitudeStream.map(x => x[1]))
+        let realMinY = Math.min(...notNormalizedAltitudeStream.map(x => x[1]))
+        let gapRealY = realMaxY - realMinY
+        let totalPadding = maxY * (1 + padding / 100)
         console.log('getAltitudePath, altritudeStream:', altritudeStream)
         let pathData = 'M ' + altritudeStream[0][0] + ',' + altritudeStream[0][1]
 
         for (let i = 1; i < altritudeStream.length; i++) 
             pathData += 'L ' + altritudeStream[i][0] + ',' + altritudeStream[i][1]
 
-        pathData += 'L ' + altritudeStream[altritudeStream.length - 1][0] + ',' + altritudeStream[altritudeStream.length - 1][1]
-        pathData += 'L ' + altritudeStream[altritudeStream.length - 1][0] + ',' + height
-        pathData += 'L ' + altritudeStream[0][0] + ',' + height
-        pathData += 'L ' + altritudeStream[0][0] + ',' + altritudeStream[0][1]
-
-        return pathData;
+        if(underBorder) {
+            pathData += 'L ' + altritudeStream[altritudeStream.length - 1][0] + ',' + altritudeStream[altritudeStream.length - 1][1]
+            pathData += 'L ' + altritudeStream[altritudeStream.length - 1][0] + ',' + totalPadding
+            pathData += 'L ' + altritudeStream[0][0] + ',' + totalPadding
+            pathData += 'L ' + altritudeStream[0][0] + ',' + altritudeStream[0][1]
+        }
+        result.pathData = pathData
+        result.heightAltitude = totalPadding
+        return result;
     }
 }
 
