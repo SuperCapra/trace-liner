@@ -347,13 +347,15 @@ app.use(express.static(path.join(__dirname, '../build')));
 app.get('/visitId-:id', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
-
 app.get('/statistics', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
-app.get('/signup', (req, res) => {
+app.get('/pro', (req, res) => {
   res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
+// app.get('/signup', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../build', 'index.html'));
+// });
 
 const PORT = process.env.PORT || 3000;
 
