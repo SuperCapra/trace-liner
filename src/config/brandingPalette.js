@@ -8,7 +8,8 @@ const brandingPalette = {
     background: '#252324',
     backgroundcomplementary: '#DADCDC',
     white: '#edf6f9',
-    black: '#000000'
+    black: '#000000',
+    backgroundmodal: '#2A2C3480',
     // ancestral: '#9b5de5',
     // primary: '#f15bb5',
     // secondary: '#fee440',

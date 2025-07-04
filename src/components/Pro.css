@@ -1,14 +1,29 @@
-.margin-title-logo{
-    margin: 40px 0;
+.buttons-wrapper-pro{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px
+}
+.buttons-wrapper-type{
+    display: flex;
+}
+.margin-title-logo-pro{
+    margin-bottom: 15px;
 }
 .button-primary{
     padding: 1vw;
     background-color: var(--palette-primary);
     border-radius: 5px;
 }
+.button-bordered{
+    border: 1px solid var(--palette-primary);
+}
 .button-primary-shorter{
-    padding: 0.5vw 1vw;
+    padding: 0.8vw 2vw 0.5vw;
     border-radius: 5px;
+}
+.button-margin-horizontal{
+    margin: 0 1vw;
 }
 .button-primary-color{
     color: var(--palette-background);
@@ -48,4 +63,9 @@
 .button-action:active{
     cursor: pointer;
     filter:brightness(0.6)
+}
+.pro-container{
+    padding: 5vw 5vh;
+    background-color: var(--palette-backgroundmodal);
+    border-radius: 5px
 }

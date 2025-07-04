@@ -29,6 +29,7 @@ function Pro(props) {
     const [height, setHeight] = useState(getHeight())
     const [gpxInfo, setGpxInfo] = useState(undefined)
     const [type, setType] = useState('altitude')
+    const [resolution, setResolution] = useState(100)
 
     const loadGPX = () => {
         console.log('loadedGPX', loadedGPX)
@@ -38,6 +39,19 @@ function Pro(props) {
 
     const changeType = (typeSetting) => {
         setType(typeSetting)
+    }
+
+    const increaseResolution = () => {
+        console.log('increaseResolution, resolution:', resolution)
+        if(resolution >= 100) return
+        setResolution(Math.min(resolution + 10,100))
+        normalizeGpxInfo(gpxInfo, width, height, Math.min(resolution + 10,100))
+    }
+    const decreaseResolution = () => {
+        console.log('decreaseResolution, resolution:', resolution)
+        if(resolution <= 1) return
+        setResolution(Math.max(resolution - 10,1))
+        normalizeGpxInfo(gpxInfo, width, height, Math.max(resolution - 10,1))
     }
 
     const downloadSVG = () => {
@@ -55,12 +69,14 @@ function Pro(props) {
         document.body.removeChild(downloadLink)
     }
 
-    const normalizeGpxInfo = (t,w,h) => {
+    const normalizeGpxInfo = (t,w,h,r) => {
+        console.log('normalizeGpxInfo, resolution:', resolution)
         if(!t && gpxInfo) t = gpxInfo
         if(!w) w = getWidth()
         if(!h) h = getHeight()
-        t['routePath'] = utils.getRoutePath(utils.normalizeCoordinates(t.coordinates, w, h))
-        t['altitudePath'] = utils.getAltitudePath(utils.normalizeAltitude(t.altitudeStream, w, h),h)
+        if(!r) r = resolution
+        t['routePath'] = utils.getRoutePath(utils.normalizeCoordinates(t.coordinates, w, h, r))
+        t['altitudePath'] = utils.getAltitudePath(utils.normalizeAltitude(t.altitudeStream, w, h, r),h)
         console.log('gpxInfo:', t)
         setGpxInfo(t)
     }
@@ -112,12 +128,13 @@ function Pro(props) {
             window.removeEventListener("resize", handleResize)
         }
     },[
-        gpxInfo
+        gpxInfo,
+        resolution
     ])
 
     const buttons = () => {
         return(<div>
-                <div className="wrapper-title-logo margin-title-logo">
+                <div className="wrapper-title-logo margin-title-logo-pro">
                     <p className="p-color p-dimention-xl p-uppercase">{vocabulary[language].BUTTON_TITLE}</p>
                 </div>
                 <div className="wrapper-button-login" onClick={() => loadGPX()}>
@@ -148,13 +165,15 @@ function Pro(props) {
     }
 
     const getClassesRouteButton = () => {
-        let c = 'button-action button-primary-shorter justify-center-column'
+        let c = 'button-action button-primary-shorter justify-center-column button-margin-horizontal'
         if(type === 'route') c += ' button-secondary-color'
+        else c += ' button-bordered'
         return c
     }
     const getClassesAltitudeButton = () => {
-        let c = 'button-action button-primary-shorter justify-center-column'
+        let c = 'button-action button-primary-shorter justify-center-column button-margin-horizontal'
         if(type === 'altitude') c += ' button-secondary-color'
+        else c += ' button-bordered'
         return c
     }
     const classesRouteButton = getClassesRouteButton()
@@ -162,23 +181,34 @@ function Pro(props) {
 
     const svgCreator = () => {
         console.log('svgCreator, gpxInfo:', gpxInfo)
-        return(<div>
-            <div className="buttons-wrapper">
+        return(<div className="pro-container">
+            <div className="buttons-wrapper-pro">
                 <div className="button-action back-button" onClick={() => handleBack()}>
                     <div className="back-text-container">
-                        <p className="p-dimention p-left p-color">{vocabulary[language].BUTTON_BACK}</p>
+                        <p className="p-dimention p-left p-color p-centering">{vocabulary[language].BUTTON_BACK}</p>
                     </div>
                 </div>
-                <div className={classesRouteButton} onClick={() => changeType('route')}>
-                    <p className="p-color p-uppercase p-dimention">{vocabulary[language].BUTTON_ROUTE}</p>
-                </div>
-                <div className={classesAltitudeButton} onClick={() => changeType('altitude')}>
-                    <p className="p-color p-uppercase p-dimention">{vocabulary[language].BUTTON_ALTITUDE}</p>
+                <div className="buttons-wrapper-type">
+                    <div className={classesRouteButton} onClick={() => changeType('route')}>
+                        <p className="p-color p-uppercase p-dimention p-centering">{vocabulary[language].BUTTON_ROUTE}</p>
+                    </div>
+                    <div className={classesAltitudeButton} onClick={() => changeType('altitude')}>
+                        <p className="p-color p-uppercase p-dimention p-centering">{vocabulary[language].BUTTON_ALTITUDE}</p>
+                    </div>
                 </div>
                 <div className="button-action button-primary-shorter button-primary-color justify-center-column" onClick={downloadSVG}>
-                    <p className="p-color-secondary p-uppercase p-dimention">{vocabulary[language].BUTTON_GET_SVG}</p>
+                    <p className="p-color-secondary p-uppercase p-dimention p-centering">{vocabulary[language].BUTTON_GET_SVG}</p>
                 </div>
             </div>
+                        <div className="buttons-wrapper-pro">
+
+                <div className="button-action button-primary-shorter button-primary-color justify-center-column" onClick={decreaseResolution}>
+                    <p className="p-color-secondary p-uppercase p-dimention p-centering">- RES</p>
+                </div>
+                <div className="button-action button-primary-shorter button-primary-color justify-center-column" onClick={increaseResolution}>
+                    <p className="p-color-secondary p-uppercase p-dimention p-centering">+ RES</p>
+                </div>
+                        </div>
             {type === 'route' && <svg ref={svgRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
                 <path d={gpxInfo.routePath} style={styleRoute}/>
             </svg>}
