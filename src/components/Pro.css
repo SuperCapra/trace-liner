@@ -111,7 +111,25 @@
 .margin-left{
     margin-left: 2vw;
 }
-.svg-altitude-container{
+.margin-left-600{
+    margin-left: 2vw;
+}
+.svg-container{
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+.buttons-subrow{
+    display: flex;
+}
+@media print, screen and (max-width: 600px) {
+    .buttons-wrapper-header-row-2{
+        flex-direction: column;
+    }
+    .margin-left-600{
+        margin-left: unset;
+    }
+    .buttons-subrow-margin-top{
+        margin-top: 2vh;
+    }
 }

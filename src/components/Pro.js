@@ -29,7 +29,8 @@ function Pro(props) {
     const [isLoading, setIsLoading] = useState(false)
     const [width, setWidth] = useState(getWidth())
     const [height, setHeight] = useState(getHeight())
-    const [heightAltitude, setHeightAltitude] = useState(getHeight())
+    const [widthSvg, setWidthSvg] = useState(getWidth())
+    const [heightSvg, setHeightSvg] = useState(getHeight())
     const [gpxInfo, setGpxInfo] = useState(undefined)
     const [type, setType] = useState('route')
     const [resolution, setResolution] = useState(50)
@@ -47,6 +48,8 @@ function Pro(props) {
 
     const changeType = (typeSetting) => {
         setType(typeSetting)
+        setWidthSvg(typeSetting === 'altitude' ? width : gpxInfo.routeWidth)
+        setHeightSvg(typeSetting === 'altitude' ? gpxInfo.altitudeHeight : gpxInfo.routeHeight)
     }
 
     const increaseResolution = () => {
@@ -65,33 +68,49 @@ function Pro(props) {
         setResolution(value)
         normalizeGpxInfo(gpxInfo, width, height, value, altitudePadding, thickness, underBorder)
     }
+    const handlePadding = (value) => {
+        let thicknessTemp = thickness
+        value = isNaN(value) ? 50 : value
+        if(value < thicknessTemp && underBorder) {
+            thicknessTemp = Math.max(value,1)
+            setThickness(thicknessTemp)
+        }
+        setAltitudePadding(value)
+        normalizeGpxInfo(gpxInfo, width, height, resolution, value, thicknessTemp, underBorder)
+    }
     const increasePadding = () => {
-        setAltitudePadding(Math.min(altitudePadding + 5,100))
-        normalizeGpxInfo(gpxInfo, width, height, resolution, Math.min(altitudePadding + 5,100), thickness, underBorder)
+        let value = Math.min(altitudePadding + 5,100)
+        handlePadding(value)
     }
     const decreasePadding = () => {
-        setAltitudePadding(Math.max(altitudePadding - 5,1))
-        normalizeGpxInfo(gpxInfo, width, height, resolution, Math.max(altitudePadding - 5,1), thickness, underBorder)
+        let value = Math.max(altitudePadding - 5,1)
+        handlePadding(value)
     }
     const changePadding = (event) => {
         let value = Math.max(Math.min(event.target.value,100),0)
-        value = isNaN(value) ? 50 : value
-        setAltitudePadding(value)
-        normalizeGpxInfo(gpxInfo, width, height, resolution, value, thickness, underBorder)
+        handlePadding(value)
+    }
+    const handleTickness = (value) => {
+        let altitudePaddingTemp = altitudePadding
+        value = isNaN(value) ? 2 : value
+        if(value > altitudePaddingTemp && underBorder) {
+            altitudePaddingTemp = Math.min(value,100)
+            setAltitudePadding(altitudePaddingTemp)
+        }
+        setThickness(value)
+        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePaddingTemp, value, underBorder)
     }
     const increaseThickness = () => {
-        setThickness(Math.min(thickness + 1,10))
-        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePadding, Math.min(thickness + 1,10), underBorder)
+        let newTickness = Math.min(thickness + 1,10)
+        handleTickness(newTickness)
     }
     const decreaseThickness = () => {
-        setThickness(Math.max(thickness - 1,0))
-        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePadding, Math.max(thickness - 1,1), underBorder)
+        let newTickness = Math.max(thickness - 1,1)
+        handleTickness(newTickness)
     }
     const changeThickness = (event) => {
         let value = Math.max(Math.min(event.target.value,10),0)
-        value = isNaN(value) ? 2 : value
-        setThickness(value)
-        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePadding, value, underBorder)
+        handleTickness(value)
     }
     const downloadSVG = () => {
         const svgElement = svgRef.current
@@ -110,11 +129,20 @@ function Pro(props) {
 
     const changeFillAltitude = () => {
         setFillAltitude(!fillAltitude)
+        if(thickness === 0) {
+            setThickness(2)
+            normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePadding, 2, underBorder)
+        }
     }
     const changeUnderBorder = () => {
         if(underBorder && fillAltitude) setFillAltitude(false)
+        let altitudePaddingTemp = altitudePadding
+        if(thickness / 2 > altitudePaddingTemp && !underBorder) {
+            altitudePaddingTemp = Math.min(thickness / 2,100)
+            setAltitudePadding(altitudePaddingTemp)
+        }
         setUnderBorder(!underBorder)
-        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePadding, thickness, !underBorder)
+        normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePaddingTemp, thickness, !underBorder)
     }
 
     const normalizeGpxInfo = (t,w,h,r,p,ti,ub) => {
@@ -125,11 +153,18 @@ function Pro(props) {
         if(!r) r = resolution
         if(!p) p = altitudePadding
         if(!ti) ti = thickness
-        t['routePath'] = utils.getRoutePath(utils.normalizeCoordinates(t.coordinates, w, h, r))
-        let altitudeInformation = utils.getAltitudePath(utils.normalizeAltitude(t.altitudeStream, w, h, r, ti), h, p, t.altitudeStream, ub)
+        let routeInformation = utils.getRoutePath(utils.normalizeCoordinates(t.coordinates, w, h, r, ti), w, h, ti)
+        t['routePath'] = routeInformation.pathData
+        t['routeWidth'] = routeInformation.widthRoute
+        t['routeHeight'] = routeInformation.heightRoute
+        let altitudeInformation = utils.getAltitudePath(utils.normalizeAltitude(t.altitudeStream, w, h, r, ti), h, p, t.altitudeStream, ti, ub)
         t['altitudePath'] = altitudeInformation.pathData
-        setHeightAltitude(altitudeInformation.heightAltitude)
+        t['altitudeWidth'] = w
+        t['altitudeHeight'] = altitudeInformation.heightAltitude
+        setWidthSvg(type === 'altitude' ? w : routeInformation.widthRoute)
+        setHeightSvg(type === 'altitude' ? altitudeInformation.heightAltitude : routeInformation.heightRoute)
         console.log('gpxInfo:', t)
+        console.log('type:', type)
         setGpxInfo(t)
     }
 
@@ -254,67 +289,73 @@ function Pro(props) {
                     </div>
                 </div>
                 <div className="buttons-wrapper-header-row-2">
-                    <div className="wrapper-controller">
-                        <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_RESOLUTION}</p>
-                        <div className="buttons-wrapper-resolution">
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreaseResolution}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
+                    <div className="buttons-subrow">
+                        <div className="wrapper-controller">
+                            <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_RESOLUTION}</p>
+                            <div className="buttons-wrapper-resolution">
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreaseResolution}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
+                                </div>
+                                <div>
+                                    <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={resolution} onChange={changeResolution}/>
+                                </div>
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={increaseResolution}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
+                                </div>
                             </div>
-                            <div>
-                                <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={resolution} onChange={changeResolution}/>
-                            </div>
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={increaseResolution}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
+                        </div>
+                        <div className="wrapper-controller margin-left">
+                            <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_THICKNESS}</p>
+                            <div className="buttons-wrapper-resolution">
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreaseThickness}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
+                                </div>
+                                <div>
+                                    <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={thickness} onChange={changeThickness}/>
+                                </div>
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={increaseThickness}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="wrapper-controller margin-left">
-                        <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_THICKNESS}</p>
-                        <div className="buttons-wrapper-resolution">
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreaseThickness}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
-                            </div>
-                            <div>
-                                <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={thickness} onChange={changeThickness}/>
-                            </div>
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={increaseThickness}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
-                            </div>
-                        </div>
-                    </div>
-                    {type === 'altitude' && <div className="wrapper-controller margin-left">
-                        <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_BOTTOM_PADDING}</p>
-                        <div className="buttons-wrapper-resolution">
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreasePadding}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
-                            </div>
-                            <div>
-                                <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={altitudePadding} onChange={changePadding}/>
-                            </div>
-                            <div className="button-action button-controller button-primary-color justify-center-column" onClick={increasePadding}>
-                                <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
+                    {type === 'altitude' && <div className="buttons-subrow buttons-subrow-margin-top">
+                        <div className="wrapper-controller margin-left-600">
+                            <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_BOTTOM_PADDING}</p>
+                            <div className="buttons-wrapper-resolution">
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={decreasePadding}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">-</p>
+                                </div>
+                                <div>
+                                    <input type="text" className="p-dimention p-color-secondary p-centering input-resolution" value={altitudePadding} onChange={changePadding}/>
+                                </div>
+                                <div className="button-action button-controller button-primary-color justify-center-column" onClick={increasePadding}>
+                                    <p className="p-color-secondary p-uppercase p-dimention p-centering">+</p>
+                                </div>
                             </div>
                         </div>
-                    </div>}
-                    {type === 'altitude' && <div className="wrapper-controller margin-left">
-                        <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_FILL}</p>
-                        <div className="buttons-wrapper-resolution button-controller button-action" onClick={changeFillAltitude}>
-                            <p className="p-color-secondary p-uppercase p-dimention p-centering">{String(fillAltitude)}</p>
+                        <div className="wrapper-controller margin-left">
+                            <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_FILL}</p>
+                            <div className="buttons-wrapper-resolution button-controller button-action" onClick={changeFillAltitude}>
+                                <p className="p-color-secondary p-uppercase p-dimention p-centering">{String(fillAltitude)}</p>
+                            </div>
                         </div>
-                    </div>}
-                    {type === 'altitude' && <div className="wrapper-controller margin-left">
-                        <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_UNDER_BORDER}</p>
-                        <div className="buttons-wrapper-resolution button-controller button-action" onClick={changeUnderBorder}>
-                            <p className="p-color-secondary p-uppercase p-dimention p-centering">{String(underBorder)}</p>
+                        <div className="wrapper-controller margin-left">
+                            <p className="p-dimention-xs p-color p-uppercase">{vocabulary[language].TEXT_UNDER_BORDER}</p>
+                            <div className="buttons-wrapper-resolution button-controller button-action" onClick={changeUnderBorder}>
+                                <p className="p-color-secondary p-uppercase p-dimention p-centering">{String(underBorder)}</p>
+                            </div>
                         </div>
                     </div>}
                 </div>
             </div>
-            {type === 'route' && <svg ref={svgRef} width={width} height={height} viewBox={`0 0 ${width} ${height}`} xmlns="http://www.w3.org/2000/svg">
-                <path d={gpxInfo.routePath} style={styleRoute}/>
-            </svg>}
-            {type === 'altitude' && <div style={{height: height}} className="svg-altitude-container">
-                <svg ref={svgRef} width={width} height={heightAltitude} viewBox={`0 0 ${width} ${heightAltitude}`} xmlns="http://www.w3.org/2000/svg">
+            {type === 'route' && <div style={{height: height, width: width}} className="svg-container">
+                <svg ref={svgRef} width={widthSvg} height={heightSvg} viewBox={`0 0 ${widthSvg} ${heightSvg}`} xmlns="http://www.w3.org/2000/svg">
+                    <path d={gpxInfo.routePath} style={styleRoute}/>
+                </svg>
+            </div>}
+            {type === 'altitude' && <div style={{height: height, width: width}} className="svg-container">
+                <svg ref={svgRef} width={widthSvg} height={heightSvg} viewBox={`0 0 ${widthSvg} ${heightSvg}`} xmlns="http://www.w3.org/2000/svg">
                     <path d={gpxInfo.altitudePath} style={styleAltitude}/>
                 </svg>
             </div>}
