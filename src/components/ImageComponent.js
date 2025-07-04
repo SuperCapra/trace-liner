@@ -5,7 +5,7 @@ import colorText from '../config/colorText.js';
 import utils from '../utils/utils.js'
 import logUtils from '../utils/logUtils.js';
 import ButtonImage from './ButtonImage.js'
-import Modal from './Modal.js'
+import Modal from './ModalExport.js'
 import Loader from './Loader.js'
 import { vocabulary/**, languages*/ } from '../config/vocabulary.js';
 import saleforceApiUtils from '../services/salesforce.js';

@@ -166,11 +166,21 @@ p {
 .back-image{
   fill: var(--palette-primary);
 }
+.p-centering{
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
 .p-left{
   justify-content: left;
 }
 .p-color{
   color: var(--palette-primary);
+}
+.p-color-secondary{
+  color: var(--palette-secondary);
 }
 .p-shaded{
   filter: brightness(0.6);
@@ -453,7 +463,7 @@ p {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(42, 44, 52, 0.5);
+  background-color: var(--palette-backgroundmodal);
   z-index: -1;
   /* min-height: 30vh; */
   min-width: 100vw;
@@ -1112,11 +1122,17 @@ p {
   filter: brightness(0.6);
 }
 .modal-text{
-  margin: 7% 5%;
-  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.modal-text-dimention{
+  margin: 7% 5%;
+  width: 90%;
+}
+.modal-text-dimention-general{
+  margin: 12% 7%;
+  width: 86%;
 }
 .p-color-modal{
   color: var(--palette-background)

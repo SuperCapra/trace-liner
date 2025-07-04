@@ -1,3 +1,117 @@
-.margin-title-logo{
-    margin: 40px 0;
+.buttons-wrapper-header{
+    width: 100%;
+    display: flex;
+    margin-bottom: 40px;
+    flex-direction: column;
+}
+.buttons-wrapper-header-row-1{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.buttons-wrapper-header-row-2{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    align-items: center;
+    margin-top: 4vh;
+}
+.buttons-wrapper-type{
+    display: flex;
+}
+.buttons-wrapper-resolution{
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--palette-primary);
+    border-radius: 5px;
+    background-color: var(--palette-primary);
+}
+.margin-title-logo-pro{
+    margin-bottom: 15px;
+}
+.button-primary{
+    padding: 1vw;
+    background-color: var(--palette-primary);
+    border-radius: 5px;
+}
+.button-bordered{
+    border: 1px solid var(--palette-primary);
+}
+.button-primary-shorter{
+    padding: 0.8vw 2vw 0.5vw;
+    border-radius: 5px;
+}
+.button-margin-horizontal{
+    margin: 0 1vw;
+}
+.button-primary-color{
+    color: var(--palette-background);
+    background-color: var(--palette-primary);
+}
+.button-secondary-color{
+    color: var(--palette-background);
+    background-color: var(--palette-secondary);
+}
+.justify-center-column{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.p-back{
+    color: var(--palette-primary);
+    justify-content: left;
+    font-size: 36px;
+}
+.back-image{
+    width: 35px;
+    margin: 0 5px;
+    fill: var(--palette-primary);
+    transform: rotate(90deg) scale(0.7);
+}
+.back-button{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 15px;
+}
+.button-action:hover{
+    cursor: pointer;
+    filter:brightness(0.8)
+}
+.button-action:active{
+    cursor: pointer;
+    filter:brightness(0.6)
+}
+.pro-container{
+    padding: 5vw 5vh;
+    background-color: var(--palette-backgroundmodal);
+    border-radius: 5px
+}
+.input-resolution{
+    font-family: var(--font);
+    width: 50px;
+    border: unset;
+    outline: none;
+    transition: all 0.3s ease;
+    border-radius: 0px;
+    padding-top: 3px;
+    background: none;
+    text-align: center;
+}
+.button-controller{
+    padding: 0.7vw 1.5vw 0.4vw;
+    border-radius: 5px;
+}
+.wrapper-controller{
+    display: flex;
+    flex-direction: column;
+}
+.margin-left{
+    margin-left: 2vw;
+}
+.svg-altitude-container{
+    display: flex;
+    align-items: center;
 }
