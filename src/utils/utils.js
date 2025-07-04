@@ -328,6 +328,16 @@ const utilsFunction = {
         return false
     },
 
+    isInstagramAndroid() {
+        const isInstagramInAppBrowser = /Instagram/.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        return isInstagramInAppBrowser && isAndroid
+    },
+    isInstagram() {
+        const isInstagramInAppBrowser = /Instagram/.test(navigator.userAgent);
+        return isInstagramInAppBrowser
+    },
+
     getTitleExtension(text, extension) {
         return text + '.' + extension
     },

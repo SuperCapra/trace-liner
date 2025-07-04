@@ -250,6 +250,8 @@ class Homepage extends React.Component{
     console.log('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
+    console.log('isInstagramAndroid:', utils.isInstagramAndroid())
+    if(utils.isInstagram()) window.open(window.location.href, '_blank');
     if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Statistics/>
