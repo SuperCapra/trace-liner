@@ -73,7 +73,7 @@ const vocabulary = {
         DETAIL: 'DETAIL',
         LINE: 'LINE',
         BACKGROUND: 'BACK',
-        MESSAGE_ANDROID: 'Instagram\'s browser might block image exports. Tap below to open this page in Chrome:',
+        MESSAGE_ANDROID: 'Instagram\'s browser might block image exports. Open traceliner in your browser at traceliner.com or tap on three point right above and select "Open in browser"',
         MESSAGE_BROWSER: 'Open in browser'
     },
     it: {
@@ -150,7 +150,7 @@ const vocabulary = {
         DETAIL: 'DETTAGLI',
         LINE: 'LINE',
         BACKGROUND: 'SFONDO',
-        MESSAGE_ANDROID: 'Instagram potrebbe bloccare l\'export delle immagini. Clicca sotto per aprire traceliner nel tuo browser:',
+        MESSAGE_ANDROID: 'Instagram potrebbe bloccare l\'export delle immagini. Apri traceliner dal tuo browser andando su traceliner.com o clicca i tre puntini in alto e seleziona "Apri nel Browser"',
         MESSAGE_BROWSER: 'Apri nel browser'
     }
 }

@@ -252,9 +252,9 @@ class Homepage extends React.Component{
         <div className="modal-dimention-positioning" id="modal" tabIndex={0}>
           <div className="modal-text modal-text-dimention-general">
               <p className="p-color-modal p-dimention p-left p-color">{vocabulary[this.props.language].MESSAGE_ANDROID}</p>
-              <a href="intent://traceliner.com#Intent;scheme=https;end">
+              {/* <a href="intent://traceliner.com#Intent;scheme=https;end">
                 {vocabulary[this.props.language].MESSAGE_BROWSER}
-              </a>
+              </a> */}
           </div>
         </div>
       </div>
