@@ -214,6 +214,7 @@ class Homepage extends React.Component{
           activityPreparing.beautyEndCoordinates = activityPreparing.beautyEndCoordinatesComplete.beautyCoordinatesTextTime
           activityPreparing.beautyDuration = utils.getBeautyDuration(activityPreparing.movingTime)
           activityPreparing.beautyMovingTime = utils.getBeautyMovingTime(activityPreparing.movingTime)
+          activityPreparing.hasCoordinates = activityPreparing.coordinates && activityPreparing.coordinates.length
           this.createUserAndActivity({
             average_speed : averageSpeed,
             distance : activityPreparing.distance,
