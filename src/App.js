@@ -229,7 +229,7 @@ class Homepage extends React.Component{
             start_date_local : activityPreparing.startDateLocal,
             start_lat : activityPreparing.startLatitude,
             start_lng : activityPreparing.startLongitude,
-            total_elevation_gain : Number(activityPreparing.elevation.toFixed(0)),
+            total_elevation_gain : activityPreparing.elevation ? Number(activityPreparing.elevation.toFixed(0)) : undefined,
           })
           logUtils.loggerText('activityPreparing ', activityPreparing)
           activity = activityPreparing

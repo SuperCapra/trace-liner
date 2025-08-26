@@ -53,6 +53,12 @@ function Statistics(props) {
     const [numberStravaUsers, setNumberStravaUsers] = useState(undefined);
     const [numberExports, setNumberExports] = useState(undefined);
     const [numberActivities, setNumberActivities] = useState(undefined);
+    const [numberActiveUsers, setNumberActiveUsers] = useState(undefined);
+    const [numberActiveUsersPreviousMonth, setNumberActiveUsersPreviousMonth] = useState(undefined);
+    const [numberNewUsersLast30days, setNumberNewUsersLast30days] = useState(undefined);
+    const [numberNewUsersLast30dayPrevious, setNumberNewUsersLast30daysPrevious] = useState(undefined);
+    const [numberExportsLast30days, setNumberExportsLast30days] = useState(undefined);
+    const [numberExportsLast30daysPrevious, setNumberExportsLast30daysPrevious] = useState(undefined);
     const [columnFilter, setColumnFilter] = useState(undefined);
     const [valueMinorFilter, setValueMinorFilter] = useState(undefined);
     const [valueMajorFilter, setValueMajorFilter] = useState(undefined);
@@ -144,6 +150,54 @@ function Statistics(props) {
             }
         }).catch(e => {
             console.error('error querying number of visits:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('users', 'has_strava = true AND lastmodified_at >= now() - INTERVAL\'30 days\''), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberActiveUsers(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying number of active users:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('users', 'has_strava = true AND lastmodified_at >= now() - INTERVAL\'60 days\' AND (lastmodified_at < now() - INTERVAL\'30 days\' OR created_at < now() - INTERVAL\'30 days\')'), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberActiveUsersPreviousMonth(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying number of active users previous month:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('users', 'has_strava = true AND created_at >= now() - INTERVAL\'30 days\''), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberNewUsersLast30days(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying new users last 30 days:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('users', 'has_strava = true AND created_at < now() - INTERVAL\'30 days\' AND created_at >= now() - INTERVAL\'60 days\''), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberNewUsersLast30daysPrevious(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying new users last 30 days previous:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('exports', 'timestamp >= now() - INTERVAL\'30 days\''), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberExportsLast30days(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying number of exports last 30 days:', e)
+        })
+        dbInteractions.processQuery(queries.getQueryCountFilter('exports', 'timestamp < now() - INTERVAL\'30 days\' AND timestamp >= now() - INTERVAL\'60 days\''), process.env.REACT_APP_JWT_TOKEN).then(res => {
+            console.log('res:',res)
+            if(res.records) {
+                setNumberExportsLast30daysPrevious(Number(res.records[0].count))
+            }
+        }).catch(e => {
+            console.error('error querying number of exports last 30 days:', e)
         })
         dbInteractions.processQuery(queries.getQueryCount('activities'), process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:',res)
