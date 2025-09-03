@@ -459,8 +459,8 @@ function Statistics(props) {
     }
 
     const resizeInputConstrain = () => {
-        let widthScreen = window.innerWidth;
-        setWidthInput(window.innerWidth < 600 ? ((widthScreen - 42)/2) + 'px' : '136px')
+        let widthScreenCurrent = window.innerWidth;
+        setWidthInput(window.innerWidth < 600 ? ((widthScreenCurrent - 42)/2) + 'px' : '136px')
         setPaddingInput(window.innerWidth < 600 ? '2.5px' : '4px')
     }
 
@@ -480,16 +480,58 @@ function Statistics(props) {
         numberVisits
     ])
 
-    return (<div className="wrapper-statistics">
+    return (<div className="container-statistics">
         {isLoading &&  <div className="translate-loading">
             <Loader/>
         </div>}
         {!isLoading && <div className="wrapper-statistics">
             <div className="wrapper-numbers">
-                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">VISITS: {numberVisits}</p>
-                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">USERS: {numberUsers} ({numberStravaUsers})</p>
-                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">ACTIVITIES: {numberActivities}</p>
-                <p className="p-dimention p-left p-color wrapper-margin-dropdown-statistics">EXPORTS: {numberExports}</p>
+                <div className="wrapper-numbers-group">
+                    <div className="wrapper-numbers-subgroup">
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">VISITS</div><div className="number-stat">{numberVisits}</div>
+                        </div>
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">USERS</div><div className="number-stat">{numberUsers} ({numberStravaUsers})</div>
+                        </div>
+                    </div>
+                    <div className="wrapper-numbers-subgroup">
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">ACTIVITIES</div><div className="number-stat">{numberActivities}</div>
+                        </div>
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">EXPORTS</div><div className="number-stat">{numberExports}</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="wrapper-numbers-group">
+                    <div className="wrapper-numbers-subgroup">
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">ACT.US.</div><div className="number-stat">{numberActiveUsers}</div>
+                        </div>
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">ACT.US. (PM)</div><div className="number-stat">{numberActiveUsersPreviousMonth}</div>
+                        </div>
+                    </div>
+                    <div className="wrapper-numbers-subgroup">
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">EX. (30D)</div><div className="number-stat">{numberExportsLast30days}</div>
+                        </div>
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">EX. (30DPM)</div><div className="number-stat">{numberExportsLast30daysPrevious}</div>
+                        </div>
+                    </div>
+                </div>
+                <div className="wrapper-numbers-group">
+                    <div className="wrapper-numbers-subgroup">
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">US. (30D)</div><div className="number-stat">{numberNewUsersLast30days}</div>
+                        </div>
+                        <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
+                            <div className="label-stat">US. (30DPM)</div><div className="number-stat">{numberNewUsersLast30dayPrevious}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="position-dropdown-statistics">
                 <div className="position-dropdown-statistics-group-1">
