@@ -507,28 +507,28 @@ function Statistics(props) {
                 <div className="wrapper-numbers-group">
                     <div className="wrapper-numbers-subgroup">
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">ACT.US.</div><div className="number-stat">{numberActiveUsers}</div>
+                            <div className="label-stat">ACTIVE USR</div><div className="number-stat">{numberActiveUsers}</div>
                         </div>
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">ACT.US. (PM)</div><div className="number-stat">{numberActiveUsersPreviousMonth}</div>
+                            <div className="label-stat">ACTIVE USR (P)</div><div className="number-stat">{numberActiveUsersPreviousMonth}</div>
                         </div>
                     </div>
                     <div className="wrapper-numbers-subgroup">
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">EX. (30D)</div><div className="number-stat">{numberExportsLast30days}</div>
+                            <div className="label-stat">EXPORTS (30D)</div><div className="number-stat">{numberExportsLast30days}</div>
                         </div>
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">EX. (30DPM)</div><div className="number-stat">{numberExportsLast30daysPrevious}</div>
+                            <div className="label-stat">EXPORTS (30DP)</div><div className="number-stat">{numberExportsLast30daysPrevious}</div>
                         </div>
                     </div>
                 </div>
                 <div className="wrapper-numbers-group">
                     <div className="wrapper-numbers-subgroup">
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">US. (30D)</div><div className="number-stat">{numberNewUsersLast30days}</div>
+                            <div className="label-stat">NEW USR (30D)</div><div className="number-stat">{numberNewUsersLast30days}</div>
                         </div>
                         <div className="p-dimention p-left p-color wrapper-margin-dropdown-statistics flex-data">
-                            <div className="label-stat">US. (30DPM)</div><div className="number-stat">{numberNewUsersLast30dayPrevious}</div>
+                            <div className="label-stat">NEW USR (30DP)</div><div className="number-stat">{numberNewUsersLast30dayPrevious}</div>
                         </div>
                     </div>
                 </div>

@@ -176,6 +176,7 @@
     }
     .App-body-statistics{
         background-color: color-mix(in srgb, var(--palette-background) 50%, white);
+        justify-content: center;
     }
 }
 @media print, screen and (max-width: 1700px) {
@@ -203,14 +204,15 @@
         display: flex;
         flex-direction: column;
     }
-}
-@media print, screen and (max-width: 500px) {
     .label-stat{
-        width: 100px;
+        width: calc(50vw - 30px);
     }
     .number-stat{
-        width: 100px;
+        width: calc(50vw - 30px);
     }
+}
+@media print, screen and (max-width: 500px) {
+
 }
 @media print, screen and (min-width: 1700px) {
     .wrapper-margin-dropdown-statistics{
