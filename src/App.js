@@ -267,10 +267,11 @@ class Homepage extends React.Component{
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
     console.log('isInstagramAndroid:', utils.isInstagramAndroid())
+    let isLocal = urlCurrent.includes('localhost:3000')
     if(utils.isInstagramAndroid()) return this.getModalRedirect();
     if(urlCurrent.includes('/login')) return <Login/>
     if(urlCurrent.includes('/signup')) return <SignUp/>
-    if(urlCurrent.includes('/statistics')) return <Statistics/>
+    if(urlCurrent.includes('/statistics')) return <Statistics islocal={isLocal}/>
     if(urlCurrent.includes('/pro')) return <Pro language={this.props.language}/>
     if(urlCurrent.includes('/visitId-')) {
       console.log('created vId')
