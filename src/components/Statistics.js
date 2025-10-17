@@ -15,6 +15,7 @@ import statisticsUtils from '../utils/statisticsUtils';
 import './Statistics.css'
 
 function Statistics(props) {
+    const {islocal} = props
     const childColumnsRef = useRef();
     const childFilterRef = useRef();
     const childGroupBy1Ref = useRef();
@@ -146,7 +147,7 @@ function Statistics(props) {
         dbInteractions.processQuery(queries.getQueryCountFilter('users', 'HAS_STRAVA = true'), process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:',res)
             if(res.records) {
-                setNumberStravaUsers(Number(res.records[0].count) + 28)
+                setNumberStravaUsers(Number(res.records[0].count) + 26)
             }
         }).catch(e => {
             console.error('error querying number of visits:', e)
@@ -533,69 +534,73 @@ function Statistics(props) {
                     </div>
                 </div>
             </div>
-            <div className="position-dropdown-statistics">
-                <div className="position-dropdown-statistics-group-1">
-                    <div className="position-dropdown-statistics-sub-group-part-1">
-                        <div className="wrapper-margin-dropdown-statistics">
-                            <p className="p-dimention p-left p-color align-left">TABLE</p>
-                            <Dropdown ref={childTablesRef} value={table} values={tables} type="table" hasBorder="true" handleChangeValue={defineTable}/>
-                        </div>
-                        <div className="wrapper-margin-dropdown-statistics">
-                            <p className="p-dimention p-left p-color align-left">COLUMNS</p>
-                            <MultiDropdown ref={childColumnsRef} valuesSelected={columns} valuesAvailable={columnsAvailable} type="column" hasBorder="true" size="300px" handleChangeValue={defineColumn}/>
-                        </div>
-                    </div>
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <div className="filter-wrapper">
-                            <p className="p-dimention p-left p-color align-left">FILTER</p>
-                            <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineFilter}/>
-                            <div className="filter-wrapper-constrains" style={inputDropdownStyle}>
-                                <input type="text" value={valueMinorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
-                                <input type="text" value={valueMajorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="position-dropdown-statistics-group-2">
-                    <div className="wrapper-margin-dropdown-statistics">
-                        <div className="wrapper-margin-dropdown-statistics-row-title">
-                            <div className="filter-wrapper">
-                                <p className="p-dimention p-left p-color align-left">GROUP BY</p>
-                            </div>
-                        </div>
-                        <div className="wrapper-margin-dropdown-statistics-row-group-1">
-                            <div className="margin-right">
-                                <Dropdown className="margin-right" ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
-                            </div>
-                            <div className="wrapper-asc-day">
-                                <div className="margin-right">
-                                    <TextCheckbox ref={childGroupy1AscendingSettingRef} value={groupBy1AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.hasValue} handleChangeValue={defineGroupBy1AcendingSetting}/>
+            {islocal && 
+                <div> 
+                    <div className="position-dropdown-statistics">
+                        <div className="position-dropdown-statistics-group-1">
+                            <div className="position-dropdown-statistics-sub-group-part-1">
+                                <div className="wrapper-margin-dropdown-statistics">
+                                    <p className="p-dimention p-left p-color align-left">TABLE</p>
+                                    <Dropdown ref={childTablesRef} value={table} values={tables} type="table" hasBorder="true" handleChangeValue={defineTable}/>
                                 </div>
-                                <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.isTimestamp} handleChangeValue={defineGroupBy1DateSetting}/>
+                                <div className="wrapper-margin-dropdown-statistics">
+                                    <p className="p-dimention p-left p-color align-left">COLUMNS</p>
+                                    <MultiDropdown ref={childColumnsRef} valuesSelected={columns} valuesAvailable={columnsAvailable} type="column" hasBorder="true" size="300px" handleChangeValue={defineColumn}/>
+                                </div>
+                            </div>
+                            <div className="wrapper-margin-dropdown-statistics">
+                                <div className="filter-wrapper">
+                                    <p className="p-dimention p-left p-color align-left">FILTER</p>
+                                    <Dropdown ref={childFilterRef} value={columnFilter} values={columnsAvailable} type="filter" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineFilter}/>
+                                    <div className="filter-wrapper-constrains" style={inputDropdownStyle}>
+                                        <input type="text" value={valueMinorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color minor-input" placeholder="Min. cons." onChange={onChangeMinor}/>
+                                        <input type="text" value={valueMajorFilter} disabled={inactiveInputDropdown} style={inputConstrainStyle} className="input-constrain p-dimention p-left p-color major-input" placeholder="Maj. cons." onChange={onChangeMajor}/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {/* {valueGroupBy1 && <div className="wrapper-margin-dropdown-statistics-row-group-1 margin-top">
-                            <div className="margin-right">
-                                <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailableGroup2} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
-                            </div>
-                            <div className="wrapper-asc-day">
-                                <div className="margin-right">
-                                    <TextCheckbox ref={childGroupy2AscendingSettingRef} value={groupBy2AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.hasValue} handleChangeValue={defineGroupBy2AcendingSetting}/>
+                        <div className="position-dropdown-statistics-group-2">
+                            <div className="wrapper-margin-dropdown-statistics">
+                                <div className="wrapper-margin-dropdown-statistics-row-title">
+                                    <div className="filter-wrapper">
+                                        <p className="p-dimention p-left p-color align-left">GROUP BY</p>
+                                    </div>
                                 </div>
-                                <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.isTimestamp} handleChangeValue={defineGroupBy2DateSetting}/>
+                                <div className="wrapper-margin-dropdown-statistics-row-group-1">
+                                    <div className="margin-right">
+                                        <Dropdown className="margin-right" ref={childGroupBy1Ref} value={valueGroupBy1} values={columnsAvailable} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy1}/>
+                                    </div>
+                                    <div className="wrapper-asc-day">
+                                        <div className="margin-right">
+                                            <TextCheckbox ref={childGroupy1AscendingSettingRef} value={groupBy1AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.hasValue} handleChangeValue={defineGroupBy1AcendingSetting}/>
+                                        </div>
+                                        <Dropdown ref={childGroupy1DateSettingRef} value={groupBy1DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy1.isTimestamp} handleChangeValue={defineGroupBy1DateSetting}/>
+                                    </div>
+                                </div>
+                                {/* {valueGroupBy1 && <div className="wrapper-margin-dropdown-statistics-row-group-1 margin-top">
+                                    <div className="margin-right">
+                                        <Dropdown ref={childGroupBy2Ref} value={valueGroupBy2} values={columnsAvailableGroup2} type="groupBy" hasBorder="true" size="300px" possibilityDeselect="true" handleChangeValue={defineGroupBy2}/>
+                                    </div>
+                                    <div className="wrapper-asc-day">
+                                        <div className="margin-right">
+                                            <TextCheckbox ref={childGroupy2AscendingSettingRef} value={groupBy2AscendingSetting} values={['asc','desc']} type="groupByAcendingSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.hasValue} handleChangeValue={defineGroupBy2AcendingSetting}/>
+                                        </div>
+                                        <Dropdown ref={childGroupy2DateSettingRef} value={groupBy2DateSetting} values={['day','month','year']} type="groupByDateSetting" hasBorder="true" size="100px" inactive={!settingGroupBy2.isTimestamp} handleChangeValue={defineGroupBy2DateSetting}/>
+                                    </div>
+                                </div>} */}
                             </div>
-                        </div>} */}
-                    </div>
-                    <div className="wrapper-refresh">
-                        <Refresh className={getClassRefresh} style={refreshStyle} onClick={() => launchRefresh()}/>
-                        <CopyExcel className={getClassCopy} style={copyStyle} onClick={() => copyTableToClipboard()}/>
-                        <p className="p-dimention p-left p-color margin-left-10">#{numberRecords}</p>
-                    </div>
+                            <div className="wrapper-refresh">
+                                <Refresh className={getClassRefresh} style={refreshStyle} onClick={() => launchRefresh()}/>
+                                <CopyExcel className={getClassCopy} style={copyStyle} onClick={() => copyTableToClipboard()}/>
+                                <p className="p-dimention p-left p-color margin-left-10">#{numberRecords}</p>
+                            </div>
+                        </div>            
+                    </div>            
+                    {refreshed && <div className="table-scrolling">
+                        <Table ref={childTableRef}/>
+                    </div>}
                 </div>
-            </div>
-            {refreshed && <div className="table-scrolling">
-                <Table ref={childTableRef}/>
-            </div>}
+            }
         </div>}
     </div>)
 }
