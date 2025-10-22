@@ -380,7 +380,7 @@ function ButtonImage(props) {
         border: '2px solid rgb(0,0,0,0)',
       }
       let styleImage = {
-        backgroundColor: 'var(--palette-primary',
+        backgroundColor: 'var(--palette-primary)',
         width: '20px',
         height: '20px',
         borderRadius: '20px',

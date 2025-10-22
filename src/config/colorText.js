@@ -1,10 +1,12 @@
 const colorText = {
-    textwhite: '#F1EEEB',
     textyellow: '#E4FF3C',
-    textblack: '#2E2F36',
-    textviolet: '#645BC2',
-    textgreen: '#B8D3A5',
+    // textviolet: '#645BC2',
+    // textgreen: '#B8D3A5',
     textorange: '#DE5731',
+    textred: '#B02B29',
+    textgreen: '#16616e',
+    textwhite: '#F1EEEB',
+    textblack: '#2E2F36',
 }
 // const colorText = {
 //     textwhite: '#EDF6F9',

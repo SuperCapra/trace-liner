@@ -134,7 +134,7 @@ const utilsFunction = {
 
     getBeautyMovingTime(durationInSec) {
         let parsedDuration = this.getJsonDuration(durationInSec)
-        console.log('parsedDuration:', parsedDuration)
+        // console.log('parsedDuration:', parsedDuration)
         let result = (parsedDuration 
             && parsedDuration.hours !== undefined 
             && parsedDuration.minutes !== undefined

@@ -38,19 +38,19 @@ const dbUtils = {
         return result
     },
     getQuerySelectAll(table,whereClause) {
-        console.log('query:', `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')  + ' ORDER BY id')
+        // console.log('query:', `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')  + ' ORDER BY id')
         return `SELECT * FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')
     },
     getQuerySelectFieldsAll(table,fields,whereClause) {
-        console.log('query:', `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '') + ' ORDER BY id')
+        // console.log('query:', `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '') + ' ORDER BY id')
         return `SELECT ${fields.join(',')} FROM ${table}` + (whereClause ? ' WHERE ' + whereClause : '')
     },
     getQuerySelectRecord(table,field,value) {
-        console.log('query:', `SELECT * FROM ${table} WHERE ${field} = '${value}'`)
+        // console.log('query:', `SELECT * FROM ${table} WHERE ${field} = '${value}'`)
         return `SELECT * FROM ${table} WHERE ${field} = '${value}'`
     },
     getQuerySelectFieldsRecord(table,fields,field,value) {
-        console.log('query:', `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`)
+        // console.log('query:', `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`)
         return `SELECT ${fields.join(',')} FROM ${table} WHERE ${field} = '${value}'`
     },
     logger(message) {

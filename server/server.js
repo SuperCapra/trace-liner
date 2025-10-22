@@ -71,7 +71,7 @@ app.post('/upload',authenticateToken, upload.single('file'), (req, res) => {
     const imageUrl = req.query.server + `/uploads/${req.file.filename}`;
     res.json({ url: imageUrl });
   } catch (e) {
-    console.log('Server upload error:', e)
+    console.error('Server upload error:', e)
   }
 });
 
@@ -133,7 +133,7 @@ app.post('/api/editable/:table', authenticateToken, async (req, res) => {
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception inserting non editable record:', e)
+    console.error('Exception inserting non editable record:', e)
     res.status(500).json({error: e})
   }
 })
@@ -149,7 +149,7 @@ app.patch('/api/editable/:table/:recordId', authenticateToken, async (req, res) 
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception modifying record:', e)
+    console.error('Exception modifying record:', e)
     res.status(500).json({error: e})
   }
 })
@@ -166,7 +166,7 @@ app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception inserting non editable record:', e)
+    console.error('Exception inserting non editable record:', e)
     res.status(500).json({error: e})
   }
 })
@@ -181,7 +181,7 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception updating non editable record:', e)
+    console.error('Exception updating non editable record:', e)
     res.status(500).json({error: e})
   }
 })
@@ -199,7 +199,7 @@ app.post('/api/query', authenticateToken, async (req, res) => {
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception querying:', e)
+    console.error('Exception querying:', e)
     res.status(500).json({error: e})
   }
 })
@@ -219,7 +219,7 @@ app.post('/api/register', async (req, res) => {
 
     res.status(201).json({message: 'user created'});
   } catch (e) {
-    console.log('Exception querying:', e)
+    console.error('Exception querying:', e)
     res.status(500).json({error: e})
   }
 })
@@ -241,7 +241,7 @@ app.get('/api/:table', authenticateToken, async (req, res) => {
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception querying:', e)
+    console.error('Exception querying:', e)
     res.status(500).json({error: e})
   }
 })
@@ -264,7 +264,7 @@ app.get('/api/:table/:field/:value', authenticateToken, async (req, res) => {
     }
     res.status(201).json(result)
   } catch (e) {
-    console.log('Exception querying:', e)
+    console.error('Exception querying:', e)
     res.status(500).json({error: e})
   }
 })

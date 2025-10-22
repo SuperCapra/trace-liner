@@ -27,7 +27,7 @@ function ImageComponent(props) {
   const [drawingWidth, setDrawingWidth] = useState(0);
   const [xCrop, setXCrop] = useState(0);
   const [yCrop, setYCrop] = useState(0);
-  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
+  const [drawingColor, setDrawingColor] = useState(colorText.textyellow);
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
@@ -359,7 +359,7 @@ function ImageComponent(props) {
       logUtils.loggerText('maxAltitude:', maxAltitude)
       logUtils.loggerText('minAltitude:', minAltitude)
       logUtils.loggerText('altitudeGap:', altitudeGap)
-      console.log('mode4Enabled from drawElevation:', mode4Enabled)
+      logUtils.loggerText('mode4Enabled from drawElevation:', mode4Enabled)
       if(!mode4Enabled) ctx.clearRect(0, 0, width, height);
   
       ctx.strokeStyle = color 
@@ -410,7 +410,7 @@ function ImageComponent(props) {
       //   ctx.stroke()
       // }
     } catch (e) {
-      console.log('e', e)
+      console.error('e', e)
       insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawElevation','exception')})
     }
   },[
@@ -459,7 +459,7 @@ function ImageComponent(props) {
 
       let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
       logUtils.loggerText('zoomFactor:', zoomFactor)
-      console.log('mode4Enabled from drawLine:', mode4Enabled)
+      logUtils.loggerText('mode4Enabled from drawLine:', mode4Enabled)
       ctx.clearRect(0, 0, width, height);
 
       ctx.strokeStyle = color 
@@ -468,9 +468,9 @@ function ImageComponent(props) {
       let ratioForResolution = Math.round(lengthCoordinates / 200)
       let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
       let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
-      console.log('lengthCoordinates', lengthCoordinates)
+      logUtils.loggerText('lengthCoordinates', lengthCoordinates)
       let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
-      console.log('scaleFactor:', scaleFactor)
+      logUtils.loggerText('scaleFactor:', scaleFactor)
       let drawing = true
       let dimentionCircleStart = width * 0.005
       let dimentionCircleFinish = width * 0.02
@@ -516,7 +516,7 @@ function ImageComponent(props) {
       ctx.stroke()
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     } catch (e) {
-      console.log('e', e)
+      console.error('e', e)
       insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawLine','exception')})
     }
   },[
@@ -780,7 +780,7 @@ function ImageComponent(props) {
         infoLog.showcoordinates = !infoLog.showcoordinates
         setShowCoordinates(data.show)
         if(data.show) {
-          console.log('coordinates')
+          logUtils.loggerText('coordinates')
           enableMode1(false, false, false, true)
         }
       } else if(data.subtype === 'mode1') {
@@ -1128,7 +1128,7 @@ function ImageComponent(props) {
         ))}
       </div>
     ) : <div></div>
-    console.log('elementReturning:', elementReturning)
+    logUtils.loggerText('elementReturning:', elementReturning)
     return(<div ref={textDataRef} style={styleTextUnderSketch}>{elementReturning}</div>)
   }
 
@@ -1137,11 +1137,11 @@ function ImageComponent(props) {
   // }
 
   const updateFontSize = () => {
-    console.log('udating font size...')
+    logUtils.loggerText('udating font size...')
     if (containerRef.current) {
       const width = containerRef.current.offsetWidth;
       const widthScreen = window.innerWidth
-      console.log('widthScreen:', widthScreen)
+      logUtils.loggerText('widthScreen:', widthScreen)
       setFontSizeTitle(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.054}px`)
       setFontSizeSubtitle(widthScreen > 800 ? `${width * 0.04}px` : `${width * 0.036}px`)
       setFontSizeData(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.045}px`)
@@ -1154,12 +1154,12 @@ function ImageComponent(props) {
     if(!showMode5) return
     const elemntToMatch = document.getElementById(textUp ? 'ancorSketchData' : 'ancorSketchText')
     const elementHeightTotal = document.getElementById('ancorTotalHeight')
-    console.log('elemntToMatch.offsetHeight')
+    logUtils.loggerText('elemntToMatch.offsetHeight')
     if(elemntToMatch && elementHeightTotal) {
       let heightElementMatching = elementHeightTotal.offsetHeight * (textUp ? 0.07 : 0.795)
       let height = elemntToMatch.offsetHeight
-      console.log('height', height)
-      console.log('heightElementMatching', heightElementMatching)
+      logUtils.loggerText('height', height)
+      logUtils.loggerText('heightElementMatching', heightElementMatching)
       if(ratio !== '4:5') setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
       else setTopSketch((textUp ? (heightElementMatching + height) * 1.8 : (heightElementMatching - height) / 7) + 'px')
     }

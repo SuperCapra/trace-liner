@@ -263,10 +263,10 @@ class Homepage extends React.Component{
   }
 
   routesToStage() {
-    console.log('navigator.userAgent', navigator.userAgent)
+    logUtils.loggerText('navigator.userAgent', navigator.userAgent)
     let queryParameters = new URLSearchParams(window.location.search)
     let urlCurrent = window.location.href
-    console.log('isInstagramAndroid:', utils.isInstagramAndroid())
+    logUtils.loggerText('isInstagramAndroid:', utils.isInstagramAndroid())
     let isLocal = urlCurrent.includes('localhost:3000')
     if(utils.isInstagramAndroid()) return this.getModalRedirect();
     if(urlCurrent.includes('/login')) return <Login/>
@@ -274,13 +274,13 @@ class Homepage extends React.Component{
     if(urlCurrent.includes('/statistics')) return <Statistics islocal={isLocal}/>
     if(urlCurrent.includes('/pro')) return <Pro language={this.props.language}/>
     if(urlCurrent.includes('/visitId-')) {
-      console.log('created vId')
+      logUtils.loggerText('created vId')
       vId = utils.getVisitId(urlCurrent)
       sendCreatingVisit = true
     }
-    console.log('visitId', vId)
+    logUtils.loggerText('visitId', vId)
     if(!vId && !sendCreatingVisit) {
-      console.log('creating vId')
+      logUtils.loggerText('creating vId')
       sendCreatingVisit = true
       dbInteractions.createRecordNonEditable('visits', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitBody()).then(res => {
         vId = res
@@ -468,7 +468,7 @@ class Homepage extends React.Component{
   async upsertUser(athleteData) {
     dbInteractions.getRecordId('users', process.env.REACT_APP_JWT_TOKEN, 'strava_id', athleteData.id).then(res => {
       let body = apiUtils.getUserBodyStrava(athleteData,false,false)
-      console.log('res:', res)
+      logUtils.loggerText('res:', res)
       if(res && res.record && res.record.length && res.record[0].id) {
         body = {...body,...apiUtils.getModifiedFields()}
         dbInteractions.updateRecordEditable('users', process.env.REACT_APP_JWT_TOKEN, res.record[0].id, body).then(res => {
@@ -699,7 +699,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('Complete raw activity: ', res)
+        logUtils.loggerText('Complete raw activity: ', res)
         this.upsertActivity(res)
         if(res) {
           activities[indexActivity].coordinates = utils.polylineToGeoJSON(res.map.polyline)
@@ -754,7 +754,7 @@ class Homepage extends React.Component{
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivity'})
-        console.log('activity: ', activity)
+        logUtils.loggerText('activity: ', activity)
       })
   }
 
