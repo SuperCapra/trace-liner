@@ -10,6 +10,8 @@ import he from 'he';
 import utils from '../utils/proUtils';
 import u from '../utils/utils';
 import brandingPalette from '../config/brandingPalette';
+import apiUtils from '../utils/apiUtils';
+import dbInteractions from '../services/dbInteractions';
 
 function Pro(props) {
     const {language} = props
@@ -25,6 +27,15 @@ function Pro(props) {
         return widthScreen * 0.4
     }  
 
+    const createVisitPro = () => {
+        dbInteractions.createRecordNonEditable('visits_pro', process.env.REACT_APP_JWT_TOKEN, apiUtils.getVisitProBody()).then(res => {
+            console.log('created visit pro:', res)
+            setVisitId(res)
+        }).catch(e => {
+          console.error('error creating the visit for the pro:', e)
+        })
+    }
+
     const [loadedGPX, setLoadedGPX] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [width, setWidth] = useState(getWidth())
@@ -39,6 +50,7 @@ function Pro(props) {
     const [isMobile, setIsMobile] = useState(u.isMobile())
     const [fillAltitude, setFillAltitude] = useState(true)
     const [underBorder, setUnderBorder] = useState(true)
+    const [visitId, setVisitId] = useState(undefined)
 
     const loadGPX = () => {
         console.log('loadedGPX', loadedGPX)
@@ -113,6 +125,7 @@ function Pro(props) {
         handleTickness(value)
     }
     const downloadSVG = () => {
+        createExport()
         const svgElement = svgRef.current
         const serializer = new XMLSerializer()
         const source = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + serializer.serializeToString(svgElement)
@@ -144,6 +157,32 @@ function Pro(props) {
         setUnderBorder(!underBorder)
         normalizeGpxInfo(gpxInfo, width, height, resolution, altitudePaddingTemp, thickness, !underBorder)
     }
+    const updateVisits = (field, value) => {
+        let body = {}
+        body[field] = value
+        dbInteractions.updateRecordEditable('visits_pro', process.env.REACT_APP_JWT_TOKEN, visitId, body).then(res => {
+            console.log('updated visit pro:', res)
+        }).catch(e => {
+            console.error('error updating the visit pro:', e)
+        })
+    }
+    const createExport = () => {
+        let body = apiUtils.getExportProBody()
+        body.visit_pro_id = visitId
+        body.thickness = thickness
+        body.resolution = resolution
+        body.padding = type === 'altitude' ? altitudePadding : null
+        body.fill = type === 'altitude' ? fillAltitude : null
+        body.border = type === 'altitude' ? !underBorder : null
+        body.show_route = type === 'route'
+        body.show_altitude = type === 'altitude'
+        dbInteractions.createRecordNonEditable('exports_pro', process.env.REACT_APP_JWT_TOKEN, body).then(res => {
+            console.log('created export pro:', res)
+            updateVisits('has_exported', true)
+        }).catch(e => {
+            console.error('error creating the export pro:', e)
+        })
+    }
 
     const normalizeGpxInfo = (t,w,h,r,p,ti,ub) => {
         console.log('normalizeGpxInfo, resolution:', resolution)
@@ -170,6 +209,7 @@ function Pro(props) {
 
     const processGPX = (event) => {
         console.log('processGPX, event:', event)
+        updateVisits('has_loaded_gpx', true)
         setIsLoading(true)
         if(event && event.target && event.target.files && event.target.files.length) {
             const file = event.target.files[0];
@@ -201,6 +241,7 @@ function Pro(props) {
     }
 
     useEffect(() => {
+        if(!visitId) createVisitPro()
         if(!gpxInfo) return
         const handleResize = () => {
             const tempW = getWidth()
@@ -216,7 +257,8 @@ function Pro(props) {
         }
     },[
         gpxInfo,
-        resolution
+        resolution,
+        visitId
     ])
 
     const buttons = () => {

@@ -185,6 +185,30 @@ const apiUtils = {
             is_error : true,
         }
         return {...result, ...this.getTimestampFields()}
+    },
+    getVisitProBody() {
+        let result = {
+            has_exported : false,
+            has_loaded_gpx : false,
+            is_mobile : utils.isMobile(),
+            user_agent : navigator.userAgent
+        }
+        result = {...result,...this.getTimestampFields()}
+        return result
+    },
+    getExportProBody() {
+        let result = {
+            visit_pro_id : null,
+            thickness : null,
+            resolution : null,
+            padding : null,
+            fill : false,
+            border : false,
+            show_route : false,
+            show_altitude : false
+        }
+        result = {...result,...this.getTimestampFields()}
+        return result
     }
 }
 
