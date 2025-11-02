@@ -526,21 +526,7 @@ function ButtonImage(props) {
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
         </div>
-        <div className="wrapper-buttons-left">
-          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
-        </div>
-        <div className="wrapper-buttons-left">
-          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
-        </div>
-        <div className="wrapper-buttons-left">
-          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
-          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
-        </div>
+
       </div>
       <div className="wrapper-texts">
         {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
