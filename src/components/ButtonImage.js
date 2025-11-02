@@ -47,7 +47,7 @@ function ButtonImage(props) {
   const [showMode4, setShowMode4] = useState(false);
   const [showMode5, setShowMode5] = useState(false);
   const [showMode6, setShowMode6] = useState(false);
-  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
+  const [drawingColor, setDrawingColor] = useState(colorText.textyellow);
 
   const colorsController = []
   const [images,setImages] = useState([{
@@ -520,6 +520,21 @@ function ButtonImage(props) {
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_2}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
         </div>
         <div className="wrapper-buttons-left">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}

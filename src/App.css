@@ -1189,6 +1189,15 @@ p {
   bottom: 30px;
   height: 20px;
 }
+.partner-logos-container{
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+}
+.partner-logo-dimention{
+  margin: 5px;
+  width: 2%;
+}
 .instagram-logo:hover{
   cursor: pointer;
   filter: brightness(0.8);
@@ -1774,6 +1783,10 @@ p {
   height: 20vmin;
 }
 .design-position{
+  position: absolute;
+  z-index: 3;
+}
+.partner-position{
   position: absolute;
   z-index: 3;
 }

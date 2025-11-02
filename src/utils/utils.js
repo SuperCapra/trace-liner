@@ -275,6 +275,10 @@ const utilsFunction = {
         return this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1])
     },
 
+    getDistance(a,b) {
+        return Math.sqrt(this.elevate2(a[0],b[0]) + this.elevate2(a[1],b[1]))
+    },
+
     getOufCircle(cd,endCoordinates,dimentionCircleFinish,startCoordinates,dimentionCircleStart) {
         return this.quadraticFunction(cd,endCoordinates) > (dimentionCircleFinish * dimentionCircleFinish) && this.quadraticFunction(cd,startCoordinates) > (dimentionCircleStart * dimentionCircleStart)
     },

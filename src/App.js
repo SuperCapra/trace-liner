@@ -594,6 +594,7 @@ class Homepage extends React.Component{
               average: utils.getAverageSpeedMetric(e.distance, e.moving_time),
               pace: utils.getPaceMetric(e.distance, e.moving_time),
               altitudeStream: [],
+              deviceName: e.device_name,
               metric: {
                 beautyAverage: utils.getAverageSpeedMetric(e.distance, e.moving_time) + 'km/h',
                 beautyPace: utils.getPaceMetric(e.distance, e.moving_time) + '/km',
