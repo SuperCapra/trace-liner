@@ -502,7 +502,6 @@ function ImageComponent(props) {
   },[drawCircle, drawLoop])
 
   const drawLoopNoCircle = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
-    console.log('drawLoopNoCircle dimentionCircleFinish', dimentionCircleFinish)
     let drawing = false
     let drawingArray = []
     for(let i = 0; i < lengthCoordinates; i++) {
