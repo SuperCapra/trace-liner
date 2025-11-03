@@ -1198,6 +1198,9 @@ p {
   margin: 5px;
   width: 2%;
 }
+.margin-bottom-20-percent{
+  margin-bottom: 20%;
+}
 .instagram-logo:hover{
   cursor: pointer;
   filter: brightness(0.8);

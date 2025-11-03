@@ -47,6 +47,9 @@ function ButtonImage(props) {
   const [showMode4, setShowMode4] = useState(false);
   const [showMode5, setShowMode5] = useState(false);
   const [showMode6, setShowMode6] = useState(false);
+  const [showRoute1, setShowRoute1] = useState(true);
+  const [showRoute2, setShowRoute2] = useState(false);
+  const [showRoute3, setShowRoute3] = useState(false);
   const [drawingColor, setDrawingColor] = useState(colorText.textyellow);
 
   const colorsController = []
@@ -203,7 +206,25 @@ function ButtonImage(props) {
         setFalseOthermode(type)
         enableMode6()
       }
+    } else if(type === 'route1') {
+      if(showRoute1) return
+      handleClick({type: 'show-hide', subtype: type, show: !showRoute1})
+      setFalseOtherRoute(type)
+    } else if(type === 'route2') {
+      if(showRoute2) return
+      handleClick({type: 'show-hide', subtype: type, show: !showRoute2})
+      setFalseOtherRoute(type)
+    } else if(type === 'route3') {
+      if(showRoute3) return
+      handleClick({type: 'show-hide', subtype: type, show: !showRoute3})
+      setFalseOtherRoute(type)
     }
+  }
+
+  const setFalseOtherRoute = (route) => {
+    setShowRoute1(route === 'route1')
+    setShowRoute2(route === 'route2')
+    setShowRoute3(route === 'route3')
   }
 
   const setFalseOthermode = (mode) => {
@@ -413,11 +434,6 @@ function ButtonImage(props) {
   }
   
   const textViewController = (label, propagationKey, value, isVisible, deactivated) => {
-    console.log('label', label)
-    console.log('propagationKey', propagationKey)
-    console.log('value', value)
-    console.log('isVisible', isVisible)
-    console.log('deactivated', deactivated)
     let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
       <div>
         {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
@@ -521,10 +537,25 @@ function ButtonImage(props) {
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_2}</p>
         </div>
-        <div className="wrapper-buttons-left">
+        <div className="wrapper-buttons-left margin-bottom-20-percent">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showRoute1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('route1')} />)}
+          {!showRoute1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('route1')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].ROUTE_1}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showRoute2 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('route2')} />)}
+          {!showRoute2 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('route2')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].ROUTE_2}</p>
+        </div>
+        <div className="wrapper-buttons-left">
+          {showRoute3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('route3')} />)}
+          {!showRoute3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('route3')} />)}
+          <p className="p-dimention-xs">{vocabulary[language].ROUTE_3}</p>
         </div>
 
       </div>
