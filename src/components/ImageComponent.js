@@ -489,7 +489,7 @@ function ImageComponent(props) {
     return drawingArray
   },[transformCoordinates])
 
-  const drawLineSimple = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal) => {
+  const drawLineSingle = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal) => {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.01
     ctx.globalCompositeOperation = 'source-over';
@@ -521,7 +521,21 @@ function ImageComponent(props) {
     return drawingArray
   },[transformCoordinates])
 
-  const drawLineSimplePatternRoad = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+  const drawLinePatternTripleLine = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = width * 0.01
+    ctx.strokeStyle = 'white' 
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+  },[drawLoopNoCircle])
+
+  const drawLinePatternBrokenTripleLine = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.03
     ctx.globalCompositeOperation = 'source-over';
@@ -546,14 +560,14 @@ function ImageComponent(props) {
     }
   },[drawCircle])
 
-  const drawOverlapCircles = useCallback((drawingArray, ctx, diameterOverlapCircle, drawMiddle) => {
+  const drawOverlapCircles = useCallback((drawingArray, ctx, diameterOverlapCircle, drawMiddle, distance, color) => {
     for(let i = 0; i < drawingArray.length; i++) {
-      drawCircle(ctx, drawingArray[i], diameterOverlapCircle / 4, true, 'white')
-      if(drawMiddle && i < drawingArray.length - 1) drawCircleMiddle(drawingArray[i], drawingArray[i + 1], ctx, diameterOverlapCircle / 4, 'white')
+      drawCircle(ctx, drawingArray[i], diameterOverlapCircle / distance, true, color)
+      if(drawMiddle && i < drawingArray.length - 1) drawCircleMiddle(drawingArray[i], drawingArray[i + 1], ctx, diameterOverlapCircle / distance, color)
     }
   },[drawCircleMiddle,drawCircle])
 
-  const drawLineSimplePatternOffRoad = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+  const drawLinePatternDotReverted = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
     ctx.strokeStyle = color 
     ctx.lineWidth = width * 0.03
     ctx.globalCompositeOperation = 'source-over';
@@ -564,7 +578,42 @@ function ImageComponent(props) {
     let diameterOverlapCircle = width * 0.01
     ctx.lineWidth = diameterOverlapCircle
     ctx.strokeStyle = 'white' 
-    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle)
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, 4, color)
+    ctx.stroke()
+  },[drawOverlapCircles,drawLoopNoCircle])
+
+  const drawLinePatternTripleLineDotted = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+    
+    let drawingArray = drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = width * 0.02
+    ctx.strokeStyle = 'white' 
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.strokeStyle = color 
+    ctx.globalCompositeOperation = 'source-over';
+    let diameterOverlapCircle = width * 0.005
+    ctx.lineWidth = diameterOverlapCircle
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, true, 2.5, color)
+    ctx.stroke()
+  },[drawLoopNoCircle])
+
+  const drawLinePatternDot = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = 'white' 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'destination-out';
+
+    let drawingArray = drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'source-over';
+    let diameterOverlapCircle = width * 0.01
+    ctx.lineWidth = diameterOverlapCircle
+    ctx.strokeStyle = color
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, true, 4, color)
     ctx.stroke()
   },[drawOverlapCircles,drawLoopNoCircle])
 
@@ -605,7 +654,8 @@ function ImageComponent(props) {
 
       let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
       let lengthCoordinates = coordinates.length
-      let divisorForResolution =  100 * (r3 ? 5 : 1)
+      // let divisorForResolution =  100 * 1
+      let divisorForResolution =  100 * (r2 ? 3 : 1)
       let ratioForResolution = Math.round(lengthCoordinates / 200)
       let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
       let resolutionUsing = (resolutionPercentage / divisorForResolution) * lengthCoordinates / ratioForResolution
@@ -619,9 +669,13 @@ function ImageComponent(props) {
       logUtils.loggerText('mode4Enabled from drawLine:', mode4Enabled)
       ctx.clearRect(0, 0, width, height);
 
-      if(r1) drawLineSimple(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
-      else if(r2) drawLineSimplePatternRoad(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
-      else if(r3) drawLineSimplePatternOffRoad(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      if(r1) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      else if(r2) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      else if(r3) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
+      //TODO abilitate after january 2nd 2026
+      // if(r1) drawLinePatternBrokenTripleLine(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      // else if(r2) drawLinePatternTripleLineDotted(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      // else if(r3) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
 
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     } catch (e) {
@@ -635,9 +689,9 @@ function ImageComponent(props) {
     visitId,
     infoLog,
     transformCoordinates,
-    drawLineSimple,
-    drawLineSimplePatternRoad,
-    drawLineSimplePatternOffRoad
+    drawLineSingle,
+    drawLinePatternTripleLineDotted,
+    drawLinePatternDot
   ])
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {

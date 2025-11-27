@@ -542,7 +542,7 @@ function ButtonImage(props) {
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
         </div>
-        <div className="wrapper-buttons-left">
+        {/* <div className="wrapper-buttons-left">
           {showRoute1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('route1')} />)}
           {!showRoute1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('route1')} />)}
           <p className="p-dimention-xs">{vocabulary[language].ROUTE_1}</p>
@@ -556,8 +556,7 @@ function ButtonImage(props) {
           {showRoute3 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('route3')} />)}
           {!showRoute3 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('route3')} />)}
           <p className="p-dimention-xs">{vocabulary[language].ROUTE_3}</p>
-        </div>
-
+        </div> */}
       </div>
       <div className="wrapper-texts">
         {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}

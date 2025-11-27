@@ -75,9 +75,9 @@ const vocabulary = {
         BACKGROUND: 'BACK',
         MESSAGE_ANDROID: 'Instagram\'s browser might block image exports. Open traceliner in your browser at traceliner.com or tap on three point right above and select "Open in browser"',
         MESSAGE_BROWSER: 'Open in browser',
-        ROUTE_1: 'STD ROUTE',
+        ROUTE_1: 'ROAD ROUTE',
         ROUTE_2: 'ALT ROUTE',
-        ROUTE_3: 'CUST ROUTE',
+        ROUTE_3: 'RUN ROUTE',
     },
     it: {
         MONTH_1: 'Gennaio',
@@ -155,9 +155,9 @@ const vocabulary = {
         BACKGROUND: 'SFONDO',
         MESSAGE_ANDROID: 'Instagram potrebbe bloccare l\'export delle immagini. Apri traceliner dal tuo browser andando su traceliner.com o clicca i tre puntini in alto e seleziona "Apri nel Browser"',
         MESSAGE_BROWSER: 'Apri nel browser',
-        ROUTE_1: 'STD ROUTE',
+        ROUTE_1: 'ROAD ROUTE',
         ROUTE_2: 'ALT ROUTE',
-        ROUTE_3: 'CUST ROUTE',
+        ROUTE_3: 'RUN ROUTE',
     }
 }
 

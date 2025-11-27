@@ -24,7 +24,7 @@ function Statistics(props) {
     const childGroupy1DateSettingRef = useRef();
     const childGroupy2DateSettingRef = useRef();
     const childGroupy1AscendingSettingRef = useRef();
-    const childGroupy2AscendingSettingRef = useRef();
+    // const childGroupy2AscendingSettingRef = useRef();
     const childTablesRef = useRef();
 
     const [groupBy1DateSetting,setGroupBy1DateSetting] = useState('day');
