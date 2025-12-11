@@ -16,10 +16,21 @@ import {ReactComponent as DesignBySVG} from '../assets/images/logoImage.svg'
 import {ReactComponent as LogoInternalSVG} from '../assets/images/logoInternal.svg'
 import {ReactComponent as DesignedSVG} from '../assets/images/designed.svg'
 import {ReactComponent as InstagramYellowSVG} from '../assets/images/buttonInstagramYellow.svg'
+import GarminLogo from '../assets/images/GarminLogoFillRotated.png'
+import StravaPoweredBy from '../assets/images/StravaPoweredByOrizontalRotated.png'
 
 function ImageComponent(props) {
 
   const {athlete, activity,/**, club,*/ language, activityId, userId, visitId, handleBack/**, handleBubbleLanguage*/} = props
+
+  const deviceNameController = (activity) => {
+    if(activity.deviceName && activity.deviceName.toLowerCase().includes('garmin')) setShowGarmin(true)
+    else setShowGarmin(false)
+  }
+  const partnerController = useCallback(() => {
+    if(athlete) setShowPartner(true)
+    else setShowPartner(false)
+  }, [athlete])
 
   const [canvasWidth, setCanvasWidth] = useState(0);
   const [canvasHeight, setCanvasHeight] = useState(0);
@@ -27,7 +38,7 @@ function ImageComponent(props) {
   const [drawingWidth, setDrawingWidth] = useState(0);
   const [xCrop, setXCrop] = useState(0);
   const [yCrop, setYCrop] = useState(0);
-  const [drawingColor, setDrawingColor] = useState(colorText.textwhite);
+  const [drawingColor, setDrawingColor] = useState(colorText.textyellow);
   const [filterColor] = useState('white');
   const [ratio, setRatio] = useState('9:16');
   const [showTitle, setShowTitle] = useState(true);
@@ -54,6 +65,11 @@ function ImageComponent(props) {
   const [showMode5, setShowMode5] = useState(false);
   const [showMode6, setShowMode6] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showRoute1, setShowRoute1] = useState(true);
+  const [showRoute2, setShowRoute2] = useState(false);
+  const [showRoute3, setShowRoute3] = useState(false);
+  const [showGarmin, setShowGarmin] = useState(false);
+  const [showPartner, setShowPartner] = useState(false);
 
   const containerRef = useRef(null);
   const textTitleRef = useRef(null);
@@ -120,6 +136,13 @@ function ImageComponent(props) {
     left: showMode5 ? (textUp ? 'unset' : '3%') : 'unset',
     right: showMode5 ? (textUp ? '3%' : 'unset') : '3%',
   }
+  const styleWrapperPartner = {
+    position: 'absolute',
+    minWidth: '100%',
+    top: showMode5 ? (textUp ? 'unset' : '2%') : 'unset',
+    bottom: '0%',
+    left: '-5%',
+  } 
   const classesForSketch = () => {
     let result = 'round-corner canvas-position canvas-filter'
     if(showMode3 || showMode4) {
@@ -321,9 +344,7 @@ function ImageComponent(props) {
   const transformCoordinates = useCallback((coord, zoomFactor, width, height, mapCenter, min, max, dimentionCircleFinish, mode5Enabled) => {
     if(mode5Enabled) return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - (textUp ? max : min) ) * zoomFactor + (textUp ? dimentionCircleFinish : height - dimentionCircleFinish)]
     else return [(coord[0] - mapCenter[0]) * zoomFactor + width / 2, - (coord[1] - mapCenter[1]) * zoomFactor + height / 2]
-  }, [
-    textUp
-  ])
+  }, [textUp])
 
   const drawElevation = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled) => {
     try {
@@ -359,7 +380,7 @@ function ImageComponent(props) {
       logUtils.loggerText('maxAltitude:', maxAltitude)
       logUtils.loggerText('minAltitude:', minAltitude)
       logUtils.loggerText('altitudeGap:', altitudeGap)
-      console.log('mode4Enabled from drawElevation:', mode4Enabled)
+      logUtils.loggerText('mode4Enabled from drawElevation:', mode4Enabled)
       if(!mode4Enabled) ctx.clearRect(0, 0, width, height);
   
       ctx.strokeStyle = color 
@@ -410,7 +431,7 @@ function ImageComponent(props) {
       //   ctx.stroke()
       // }
     } catch (e) {
-      console.log('e', e)
+      console.error('e', e)
       insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawElevation','exception')})
     }
   },[
@@ -422,11 +443,185 @@ function ImageComponent(props) {
     visitId
   ])
 
-  const drawLine = useCallback((color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled) => {
+  const drawCircle = useCallback((ctx, coordinates, diameter, fill, color) => {
+    ctx.beginPath()
+    ctx.arc(coordinates[0], coordinates[1], diameter, 0, Math.PI * 2);
+    ctx.stroke()
+    if(fill) {
+      ctx.fillStyle = color
+      ctx.fill()
+    }
+  },[])
+
+  const drawLoop = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish) => {
+    let drawing = true
+    let drawingArray = []
+    for(let i = 0; i < lengthCoordinates; i++) {
+      let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
+      let cdPlus
+      if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
+      if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
+        if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+          if(!drawing) {
+            drawing = true
+            ctx.beginPath()
+          }
+          ctx.lineTo(cd[0],cd[1])
+          drawingArray.push(cd)
+        } else {
+          if(drawing) ctx.stroke()
+          drawing = false
+        }
+      } else {
+        if(!drawing && cdPlus && utils.comingOutsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+          drawing = true
+          ctx.beginPath()
+          ctx.lineTo(cdPlus[0],cdPlus[1])
+        } 
+        else if(drawing && cdPlus && utils.comingInsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
+          ctx.lineTo(cd[0],cd[1])
+          drawingArray.push(cd)
+          ctx.stroke()
+          drawing = false
+        }
+      }
+    }
+    return drawingArray
+  },[transformCoordinates])
+
+  const drawLineSingle = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.01
+    ctx.globalCompositeOperation = 'source-over';
+    drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
+    drawCircle(ctx, endCoordinates, dimentionCircleFinish)
+
+    drawLoop(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish)
+
+    ctx.stroke()
+  },[drawCircle, drawLoop])
+
+  const drawLoopNoCircle = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    let drawing = false
+    let drawingArray = []
+    for(let i = 0; i < lengthCoordinates; i++) {
+      let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
+      if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0 || i === lengthCoordinates - 1) {
+        if(!drawing) {
+          drawing = true
+          ctx.beginPath()
+        }
+        ctx.lineTo(cd[0],cd[1])
+        drawingArray.push(cd)
+        if(i === lengthCoordinates - 1) {
+          ctx.stroke()
+        }
+      }
+    }
+    return drawingArray
+  },[transformCoordinates])
+
+  const drawLinePatternTripleLine = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = width * 0.01
+    ctx.strokeStyle = 'white' 
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+  },[drawLoopNoCircle])
+
+  const drawLinePatternBrokenTripleLine = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = width * 0.01
+    ctx.strokeStyle = 'white' 
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+  },[drawLoopNoCircle])
+
+  const drawCircleMiddle = useCallback((c0, c1, ctx, diameter, color) => {
+    if(!c0 || !c1 || utils.getDistance(c0,c1) < diameter * 9) return
+    let distance01 = utils.getDistance(c0, c1)
+    let numberCircles = Math.floor(distance01 / (diameter * 9))
+    for(let i = 1; i <= numberCircles; i++) {
+      let cX = c0[0] + (c1[0] - c0[0]) * (i / (numberCircles + 1))
+      let cY = c0[1] + (c1[1] - c0[1]) * (i / (numberCircles + 1))
+      drawCircle(ctx, [cX, cY], diameter, true, color)
+    }
+  },[drawCircle])
+
+  const drawOverlapCircles = useCallback((drawingArray, ctx, diameterOverlapCircle, drawMiddle, distance, color) => {
+    for(let i = 0; i < drawingArray.length; i++) {
+      drawCircle(ctx, drawingArray[i], diameterOverlapCircle / distance, true, color)
+      if(drawMiddle && i < drawingArray.length - 1) drawCircleMiddle(drawingArray[i], drawingArray[i + 1], ctx, diameterOverlapCircle / distance, color)
+    }
+  },[drawCircleMiddle,drawCircle])
+
+  const drawLinePatternDotReverted = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+
+    let drawingArray = drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    let diameterOverlapCircle = width * 0.01
+    ctx.lineWidth = diameterOverlapCircle
+    ctx.strokeStyle = 'white' 
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, 4, color)
+    ctx.stroke()
+  },[drawOverlapCircles,drawLoopNoCircle])
+
+  const drawLinePatternTripleLineDotted = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = color 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'source-over';
+    
+    let drawingArray = drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.lineWidth = width * 0.02
+    ctx.strokeStyle = 'white' 
+    drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.strokeStyle = color 
+    ctx.globalCompositeOperation = 'source-over';
+    let diameterOverlapCircle = width * 0.005
+    ctx.lineWidth = diameterOverlapCircle
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, true, 2.5, color)
+    ctx.stroke()
+  },[drawLoopNoCircle])
+
+  const drawLinePatternDot = useCallback((coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish) => {
+    ctx.strokeStyle = 'white' 
+    ctx.lineWidth = width * 0.03
+    ctx.globalCompositeOperation = 'destination-out';
+
+    let drawingArray = drawLoopNoCircle(coordinates, lengthCoordinates, resolutionUsing, ctx, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+    ctx.stroke()
+    ctx.globalCompositeOperation = 'source-over';
+    let diameterOverlapCircle = width * 0.01
+    ctx.lineWidth = diameterOverlapCircle
+    ctx.strokeStyle = color
+    drawOverlapCircles(drawingArray, ctx, diameterOverlapCircle, true, 4, color)
+    ctx.stroke()
+  },[drawOverlapCircles,drawLoopNoCircle])
+
+  const drawLine = useCallback(async (color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled, r1, r2, r3) => {
     try {
       let canvasSketch = document.getElementById('canvasSketch')
       if(!canvasSketch) {
-        setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled),100)
+        setTimeout(() => drawLine(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled, mode5Enabled, r1, r2, r3),100)
         return
       }
 
@@ -458,65 +653,31 @@ function ImageComponent(props) {
       let mapCenter = [mapCenterX, mapCenterY]
 
       let zoomFactor = Math.min(width / mapWidth, height / mapHeight) * (mode4Enabled ? 0.5 : 0.95)
-      logUtils.loggerText('zoomFactor:', zoomFactor)
-      console.log('mode4Enabled from drawLine:', mode4Enabled)
-      ctx.clearRect(0, 0, width, height);
-
-      ctx.strokeStyle = color 
-      ctx.lineWidth = width * 0.01
       let lengthCoordinates = coordinates.length
+      // let divisorForResolution =  100 * 1
+      let divisorForResolution =  100 * (r2 ? 3 : 1)
       let ratioForResolution = Math.round(lengthCoordinates / 200)
       let resolutionPercentage = resolutionChanging ? resolutionChanging : ( valueResolution ? valueResolution : setValueResolution(lengthCoordinates))
-      let resolutionUsing = (resolutionPercentage / 100) * lengthCoordinates / ratioForResolution
-      console.log('lengthCoordinates', lengthCoordinates)
-      let scaleFactor = Number((lengthCoordinates * 0.05).toFixed(0))
-      console.log('scaleFactor:', scaleFactor)
-      let drawing = true
+      let resolutionUsing = (resolutionPercentage / divisorForResolution) * lengthCoordinates / ratioForResolution
       let dimentionCircleStart = width * 0.005
       let dimentionCircleFinish = width * 0.02
       let endCoordinates = transformCoordinates(coordinates[lengthCoordinates - 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
       let startCoordinates = transformCoordinates(coordinates[0], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
       let dimentionCircleStartReal = utils.quadraticFunction(endCoordinates, startCoordinates) > (dimentionCircleFinish + dimentionCircleStart * 2) ** 2 ? (dimentionCircleStart * 2) : dimentionCircleStart
       let startCoordinatesReal = dimentionCircleStartReal > dimentionCircleStart ? startCoordinates : endCoordinates
-      drawCircle(ctx, startCoordinatesReal, dimentionCircleStartReal, true, color)
-      drawCircle(ctx, endCoordinates, dimentionCircleFinish)
-      ctx.beginPath()
-    
+      logUtils.loggerText('zoomFactor:', zoomFactor)
+      logUtils.loggerText('mode4Enabled from drawLine:', mode4Enabled)
+      ctx.clearRect(0, 0, width, height);
 
-      for(let i = 0; i < coordinates.length; i++) {
-        let cd = transformCoordinates(coordinates[i], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
-        let cdPlus
-        if(coordinates[i + 1]) cdPlus = transformCoordinates(coordinates[i + 1], zoomFactor, width, height, mapCenter, minY, maxY, dimentionCircleFinish, mode5Enabled)
-        if(i % Math.floor(lengthCoordinates/resolutionUsing) === 0) {
-          if(utils.getOufCircle(cd, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-            if(!drawing) {
-              drawing = true
-              ctx.beginPath()
-            }
-            ctx.lineTo(cd[0],cd[1])
-          } else {
-            if(drawing) ctx.stroke()
-            drawing = false
-          }
-        } else {
-          if(!drawing && cdPlus && utils.comingOutsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-            drawing = true
-            ctx.beginPath()
-            ctx.lineTo(cdPlus[0],cdPlus[1])
-          } 
-          else if(drawing && cdPlus && utils.comingInsidePlus(cd, cdPlus, endCoordinates, dimentionCircleFinish, startCoordinates, dimentionCircleStart)) {
-            ctx.lineTo(cd[0],cd[1])
-            ctx.stroke()
-            drawing = false
-          }
-        }
-        // ctx.lineTo(cd[0],cd[1])
-      }
+      drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
+      //TODO abilitate after january 2nd 2026
+      // if(r1) drawLinePatternBrokenTripleLine(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      // else if(r2) drawLinePatternTripleLineDotted(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      // else if(r3) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
 
-      ctx.stroke()
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     } catch (e) {
-      console.log('e', e)
+      console.error('e', e)
       insertLogsModal({body: apiUtils.getErrorLogsBody(visitId,'Exception:' + String(e),JSON.stringify(infoLog),'Imagecomponent','drawLine','exception')})
     }
   },[
@@ -525,18 +686,11 @@ function ImageComponent(props) {
     drawElevation,
     visitId,
     infoLog,
-    transformCoordinates
+    transformCoordinates,
+    drawLineSingle,
+    drawLinePatternTripleLineDotted,
+    drawLinePatternDot
   ])
-
-  const drawCircle = (ctx, coordinates, diameter, fill, color) => {
-    ctx.beginPath()
-    ctx.arc(coordinates[0], coordinates[1], diameter, 0, Math.PI * 2);
-    ctx.stroke()
-    if(fill) {
-      ctx.fillStyle = color
-      ctx.fill()
-    }
-  }
 
   const drawElevationVertical = useCallback((color, canvasWidth, canvasHeight, resolutionChanging) => {
     let canvasSketch = document.getElementById('canvasSketch')
@@ -714,8 +868,7 @@ function ImageComponent(props) {
     logUtils.loggerText('handleClickDispatcher:', data)
     if(data.type === 'downloadshare') {
       handleDownloadShare(data.subtype)
-    } else
-    if(data.type === 'filterSlider') {
+    } else if(data.type === 'filterSlider') {
       infoLog.filter = String(data.value)
       setValueFilter(data.value)
       drawFilter()
@@ -726,7 +879,7 @@ function ImageComponent(props) {
       if(showMode3) {
         if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight, data.value)
         else drawElevationVertical(drawingColor, canvasWidth, canvasHeight, data.value)
-      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value, showMode4, showMode5)
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, data.value, showMode4, showMode5, showRoute1, showRoute2, showRoute3)
     }
     else if(data.type === 'changing-color') handleColorChange(data.color)
     else if(data.type === 'rectangle' || data.type === 'square' || data.type === 'post') {
@@ -780,7 +933,7 @@ function ImageComponent(props) {
         infoLog.showcoordinates = !infoLog.showcoordinates
         setShowCoordinates(data.show)
         if(data.show) {
-          console.log('coordinates')
+          logUtils.loggerText('coordinates')
           enableMode1(false, false, false, true)
         }
       } else if(data.subtype === 'mode1') {
@@ -825,6 +978,8 @@ function ImageComponent(props) {
           setFalseOthermode(data)
           enableMode6(data.start)
         }
+      } else if(data.subtype.startsWith('route')) {
+        setFalseOtherRoute(data.subtype)
       }
     } else if(data.type === 'switch-text') {
       setTextUp(data.textUp)
@@ -840,6 +995,16 @@ function ImageComponent(props) {
     }
   }
 
+  const setFalseOtherRoute = (route) => {
+    console.info('route to set visible:', route)
+    console.info('showRoute1:', showRoute1)
+    console.info('showRoute2:', showRoute2)
+    console.info('showRoute3:', showRoute3)
+    setShowRoute1(route === 'route1')
+    setShowRoute2(route === 'route2')
+    setShowRoute3(route === 'route3')
+  }
+
   const setFalseOthermode = (data) => {
     if(data.subtype !== 'mode1') setShowMode1(!data.show)
     if(data.subtype !== 'mode2') setShowMode2(!data.show)
@@ -850,7 +1015,7 @@ function ImageComponent(props) {
   }
 
   const enableMode1 = (bool, isStart, start, refresh) => {
-    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, false, false, showRoute1, showRoute2, showRoute3)
     if(isStart) {
       setShowTitle(bool)
       setShowDate(bool)
@@ -864,7 +1029,7 @@ function ImageComponent(props) {
   }
 
   const enableMode2 = (start) => {
-    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight)
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, false, false, showRoute1, showRoute2, showRoute3)
     setShowTitle(true)
     setShowDate(true)
     setShowDistance(true)
@@ -888,9 +1053,7 @@ function ImageComponent(props) {
   }
 
   const enableMode4 = (start) => {
-    if(!start) {
-      drawLine(drawingColor, canvasWidth, canvasHeight, undefined, true)
-    }
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, true, false, showRoute1, showRoute2, showRoute3)
     setShowTitle(false)
     setShowDate(false)
     // setShowDistance(true)
@@ -902,7 +1065,7 @@ function ImageComponent(props) {
   }
 
   const enableMode5 = (start) => {
-    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, false, true)
+    if(!start) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, false, true, showRoute1, showRoute2, showRoute3)
     setShowTitle(true)
     setShowDate(false)
     setShowDistance(true)
@@ -925,7 +1088,7 @@ function ImageComponent(props) {
     if(showMode3) {
       if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
       else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-    } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5)
+    } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5, showRoute1, showRoute2, showRoute3)
     drawFilter()
   }
 
@@ -1004,7 +1167,7 @@ function ImageComponent(props) {
       if(showMode3) {
         if(!altitudeVertical) drawElevation(drawingColor, canvasWidth, canvasHeight)
         else drawElevationVertical(drawingColor, canvasWidth, canvasHeight)
-      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5);
+      } else if(showMode1 || showMode2 || showMode4 || showMode5) drawLine(drawingColor, canvasWidth, canvasHeight, undefined, showMode4, showMode5, showRoute1, showRoute2, showRoute3);
   };
 
     // Important: Set src after defining onload to ensure it is loaded before drawing
@@ -1022,7 +1185,10 @@ function ImageComponent(props) {
     showMode5,
     altitudeVertical,
     xCrop,
-    yCrop
+    yCrop,
+    showRoute1,
+    showRoute2,
+    showRoute3
   ])
 
   const setImage = (newImage) => {
@@ -1128,7 +1294,7 @@ function ImageComponent(props) {
         ))}
       </div>
     ) : <div></div>
-    console.log('elementReturning:', elementReturning)
+    logUtils.loggerText('elementReturning:', elementReturning)
     return(<div ref={textDataRef} style={styleTextUnderSketch}>{elementReturning}</div>)
   }
 
@@ -1137,11 +1303,11 @@ function ImageComponent(props) {
   // }
 
   const updateFontSize = () => {
-    console.log('udating font size...')
+    logUtils.loggerText('udating font size...')
     if (containerRef.current) {
       const width = containerRef.current.offsetWidth;
       const widthScreen = window.innerWidth
-      console.log('widthScreen:', widthScreen)
+      logUtils.loggerText('widthScreen:', widthScreen)
       setFontSizeTitle(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.054}px`)
       setFontSizeSubtitle(widthScreen > 800 ? `${width * 0.04}px` : `${width * 0.036}px`)
       setFontSizeData(widthScreen > 800 ? `${width * 0.05}px` : `${width * 0.045}px`)
@@ -1154,12 +1320,12 @@ function ImageComponent(props) {
     if(!showMode5) return
     const elemntToMatch = document.getElementById(textUp ? 'ancorSketchData' : 'ancorSketchText')
     const elementHeightTotal = document.getElementById('ancorTotalHeight')
-    console.log('elemntToMatch.offsetHeight')
+    logUtils.loggerText('elemntToMatch.offsetHeight')
     if(elemntToMatch && elementHeightTotal) {
       let heightElementMatching = elementHeightTotal.offsetHeight * (textUp ? 0.07 : 0.795)
       let height = elemntToMatch.offsetHeight
-      console.log('height', height)
-      console.log('heightElementMatching', heightElementMatching)
+      logUtils.loggerText('height', height)
+      logUtils.loggerText('heightElementMatching', heightElementMatching)
       if(ratio !== '4:5') setTopSketch((textUp ? (heightElementMatching + height) * 2.2 : (heightElementMatching - height) / 3) + 'px')
       else setTopSketch((textUp ? (heightElementMatching + height) * 1.8 : (heightElementMatching - height) / 7) + 'px')
     }
@@ -1170,6 +1336,8 @@ function ImageComponent(props) {
   ])
 
   useEffect(() => {
+    partnerController()
+    deviceNameController(activity)
     updateFontSize()
     updateSketchHeight()
 
@@ -1184,7 +1352,10 @@ function ImageComponent(props) {
     canvasWidth,
     handleCrop,
     imageSrc,
-    updateSketchHeight
+    updateSketchHeight,
+    activity,
+    athlete,
+    partnerController
     // club
   ])
 
@@ -1241,6 +1412,10 @@ function ImageComponent(props) {
           <div id="canvasLogo" className="design-position" style={styleWrapperDesign}>
             <DesignBySVG style={styleDesignBy}></DesignBySVG>
           </div>
+          {showPartner && <div className="partner-logos-container partner-position" style={styleWrapperPartner}>
+            <img src={StravaPoweredBy} className="partner-logo-dimention" alt="Strava Powered By"/>
+            {showGarmin && <img src={GarminLogo} className="partner-logo-dimention" alt="Garmin Logo"/>}
+          </div>}
         </div>
         {isLoading && 
           <div className="background-loading" id="loader">

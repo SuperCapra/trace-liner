@@ -135,6 +135,35 @@ const tableDefinitions = `
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         active BOOLEAN DEFAULT TRUE
     );
+
+    CREATE TABLE IF NOT EXISTS visits_pro (
+        id SERIAL PRIMARY KEY,
+        has_exported BOOLEAN DEFAULT FALSE,
+        has_loaded_gpx BOOLEAN DEFAULT FALSE,
+        is_mobile BOOLEAN DEFAULT FALSE,
+        timestamp TIMESTAMP,
+        timestamp_local TIMESTAMP,
+        timezone_offset VARCHAR(20),
+        timezone_name VARCHAR(100),
+        user_agent VARCHAR(255)
+    );
+
+    CREATE TABLE IF NOT EXISTS exports_pro (
+        id SERIAL PRIMARY KEY,
+        visit_pro_id INTEGER REFERENCES visits_pro(id),
+        thickness INTEGER,
+        resolution INTEGER,
+        padding INTEGER,
+        fill BOOLEAN DEFAULT FALSE,
+        border BOOLEAN DEFAULT FALSE,
+        show_route BOOLEAN DEFAULT FALSE,
+        show_altitude BOOLEAN DEFAULT FALSE,
+        timestamp TIMESTAMP,
+        timestamp_local TIMESTAMP,
+        timezone_offset VARCHAR(20),
+        timezone_name VARCHAR(100)
+    );
+
 `;
 
 // Function to create tables if they don't exist
