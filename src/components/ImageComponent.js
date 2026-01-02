@@ -669,11 +669,9 @@ function ImageComponent(props) {
       logUtils.loggerText('mode4Enabled from drawLine:', mode4Enabled)
       ctx.clearRect(0, 0, width, height);
 
-      drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
-      //TODO abilitate after january 2nd 2026
-      // if(r1) drawLinePatternBrokenTripleLine(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
-      // else if(r2) drawLinePatternTripleLineDotted(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
-      // else if(r3) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
+      if(r1) drawLinePatternBrokenTripleLine(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      else if(r2) drawLinePatternTripleLineDotted(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, maxY, mode5Enabled, zoomFactor, dimentionCircleFinish)
+      else if(r3) drawLineSingle(coordinates, lengthCoordinates, resolutionUsing, ctx, color, width, height, mapCenter, minY, minX, maxX, maxY, mode5Enabled, zoomFactor, startCoordinates, endCoordinates, dimentionCircleStart, dimentionCircleFinish, dimentionCircleStartReal, startCoordinatesReal)
 
       if(mode4Enabled) drawElevation(color, canvasWidth, canvasHeight, resolutionChanging, mode4Enabled)
     } catch (e) {
