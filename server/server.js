@@ -205,12 +205,15 @@ app.post('/api/query', authenticateToken, async (req, res) => {
 })
 app.get('/api/strava-webhooks', async (req, res) => {
   try {
+    console.log('Received Strava webhook verification request', req.query);
     let mode = req.query['hub.mode'];
     let token = req.query['hub.verify_token'];
     let challenge = req.query['hub.challenge'];
     if(token === process.env.REACT_APP_WEBHOOK_TOKEN && mode === 'subscribe') {
+      console.log('Access succeeded for Strava webhook verification');
       res.status(200).json({ challenge: challenge });
     } else {
+      console.log('Access denied for Strava webhook verification');
       res.status(403).json({ error: 'Access denied' });
     }
   } catch (e) {
