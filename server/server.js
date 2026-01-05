@@ -203,6 +203,47 @@ app.post('/api/query', authenticateToken, async (req, res) => {
     res.status(500).json({error: e})
   }
 })
+app.get('/api/strava-webhooks', async (req, res) => {
+  try {
+    let mode = req.query['hub.mode'];
+    let token = req.query['hub.verify_token'];
+    let challenge = req.query['hub.challenge'];
+    if(token === process.env.REACT_APP_WEBHOOK_TOKEN && mode === 'subscribe') {
+      res.status(200).json({ challenge: challenge });
+    } else {
+      res.status(403).json({ error: 'Access denied' });
+    }
+  } catch (e) {
+    console.error('Exception querying:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.post('/api/strava-webhooks', async (req, res) => {
+  const event = req.body;
+  console.log('Received Strava webhook event:', event);
+  res.sendStatus(200);
+
+  // Defensive checks
+  if (event.object_type !== 'activity') return;
+  if (!['create', 'update', 'delete'].includes(event.aspect_type)) return;
+
+  /*
+    event structure:
+    {
+      aspect_type,
+      event_time,
+      object_id,     // activity_id
+      object_type,
+      owner_id,      // athlete_id
+      subscription_id
+    }
+  */
+
+  // 1. Persist raw event (optional but useful)
+  // 2. Look up athlete access token via owner_id
+  // 3. Fetch full activity if create/update
+  // 4. Store activity idempotently
+});
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
 
