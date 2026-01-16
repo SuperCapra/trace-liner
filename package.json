@@ -14,6 +14,7 @@
     "bcrypt": "^6.0.0",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",
+    "crypto-browserify": "^3.12.1",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "gpxparser": "^3.0.8",

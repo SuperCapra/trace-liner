@@ -1,5 +1,4 @@
 const db = require('./db');
-
 // Define the SQL for creating tables
 const tableDefinitions = `
     CREATE TABLE IF NOT EXISTS users (
@@ -164,16 +163,25 @@ const tableDefinitions = `
         timezone_name VARCHAR(100)
     );
 
+    CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+    CREATE TABLE IF NOT EXISTS users_auth (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        auth_token bytea NOT NULL
+    );
 `;
 
 // Function to create tables if they don't exist
-const createTables = async () => {
+const createTables = async (key) => {
   try {
-    await db.pool.query(tableDefinitions);
+    const client = await db.pool.connect();
+    await client.query(tableDefinitions);
+    client.release();
     console.log('Tables are ensured to exist!');
   } catch (err) {
     console.error('Error creating tables:', err);
-    process.exit(1); // Exit the process on failure
+    process.exit(1);
   }
 };
 

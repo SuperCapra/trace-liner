@@ -17,6 +17,29 @@ const dbUtils = {
       
         return result
     },
+    getQueryAuth(data,token) {
+        this.loggerText('data', data)
+      
+        const columns = Object.keys(data)
+        const values = Object.values(data)
+        const placeholders = columns.map((_,index) => `$${index + 1}`)
+        let indexToken = columns.findIndex(e => e === 'auth_token')
+        if(indexToken >= 0) placeholders[indexToken] =`pgp_sym_encrypt(${placeholders[indexToken]}, '${token}')`
+      
+        const query = `INSERT into users_auth (${columns.join(',')})
+          VALUES (${placeholders.join(',')}) 
+          RETURNING id`
+
+        console.log('query:', query)
+        console.log('values:', values)
+      
+        const result = {
+          query: query,
+          values: values
+        }
+      
+        return result
+    },
     getQueryUpdate(data,table,id) {
         this.loggerText('data', data)
         

@@ -13,7 +13,7 @@ const dbUtils = require('./dbUtils');
 app.use(express.json());
 
 (async () => {
-  await tables.createTables();
+  await tables.createTables(process.env.TOKEN_ENCRYPTION_KEY);
 })();
 
 const authenticateToken = (req, res, next) => {
@@ -129,6 +129,18 @@ app.post('/api/editable/:table', authenticateToken, async (req, res) => {
     // console.log('creating record id:', id)
     const result = {
       table: table,
+      id: id
+    }
+    res.status(201).json(result)
+  } catch (e) {
+    console.error('Exception inserting non editable record:', e)
+    res.status(500).json({error: e})
+  }
+})
+app.post('/api/ua/users_auth', authenticateToken, async (req, res) => {
+  try {
+    const id = await db.addUsersAuth(req.body, process.env.TOKEN_ENCRYPTION_KEY)
+    const result = {
       id: id
     }
     res.status(201).json(result)

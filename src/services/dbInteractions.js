@@ -40,6 +40,26 @@ const dbInteractions = {
         })
         return id
     },
+    async createRecordAuth(table,token,body) {
+        const url = apiUtils.getUrlHost() + `/api/ua/users_auth`
+        // console.log('table:', table)
+        // console.log('token:', token)
+        // console.log('body:', body)
+        const id = await fetch(url, {
+            method : 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        }).then(response => response.json())
+        .then(data => {
+            return data.id
+        }).catch(e => {
+            console.error(`Error creating ${table} record:`, e)
+        })
+        return id
+    },
     async updateRecordEditable(table,token,idUpdating,body) {
         const url = apiUtils.getUrlHost() + `/api/editable/${table}/${idUpdating}`
         const id = await fetch(url, {

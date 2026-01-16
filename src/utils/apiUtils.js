@@ -99,11 +99,18 @@ const apiUtils = {
             sex : athleteData.sex,
             username : athleteData.username,
             token : null,
-            has_strava : true,
+            has_strava : true
+            //access_token : athleteData.access_token,
         }
         if(creating) result = {...result, ...this.getCreatedFields()}
         if(updating) result = {...result, ...this.getModifiedFields()}
         return result
+    },
+    getAuthDataBody(userId,authToken) {
+        return {
+            user_id : userId,
+            auth_token : authToken 
+        }
     },
     getUserBodyNoStrava() {
         let result = {
