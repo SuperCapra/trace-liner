@@ -21,6 +21,11 @@ const addRecord = async (recordData, table) => {
 
   return result.rows[0].id
 }
+const addUsersAuth = async (recordData, t) => {
+  const qd = dbUtils.getQueryAuth(recordData, t)
+  const result = await pool.query(qd.query, qd.values)
+  return result.rows[0].user_id
+}
 const modifyRecord = async (recordData, table, id) => {
   const qd = dbUtils.getQueryUpdate(recordData, table, id)
 
@@ -44,17 +49,17 @@ const getRecordFields = async (table,fields,field,value) => {
 }
 const getQueryResult = async (query) => {
   const trimmedQuery = query.trim().toUpperCase();
-  if (!trimmedQuery.startsWith('SELECT')) {
-    throw new Error('Only SELECT queries are allowed.');
-  }
+  // if (!trimmedQuery.startsWith('SELECT')) {
+  //   throw new Error('Only SELECT queries are allowed.');
+  // }
   return (await pool.query(query)).rows
 }
 const register = async (data, table) => {
   const qd = dbUtils.getQueryInsert(data, table)
 
-  if (!qd.query.startsWith('INSERT')) {
-    throw new Error('Only INSERT queries are allowed.');
-  }
+  // if (!qd.query.startsWith('INSERT')) {
+  //   throw new Error('Only INSERT queries are allowed.');
+  // }
   const result = await pool.query(qd.query, qd.values)
   return result.rows[0].id
 }
@@ -82,5 +87,6 @@ module.exports = {
   pool,
   getQueryResult,
   register,
-  getTimestampGMT
+  getTimestampGMT,
+  addUsersAuth
 };

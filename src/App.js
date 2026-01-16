@@ -423,6 +423,7 @@ class Homepage extends React.Component{
   getAccessTokenAndActivities(userCode) {
     isLoading = true
     console.info('getting the access token...')
+    console.info('userCode: ', userCode)
     let urlToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
       '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
       '&client_secret=' + process.env.REACT_APP_STRAVA_CLIENT_SECRET + 
@@ -445,7 +446,9 @@ class Homepage extends React.Component{
           window.location.reload();
         }
         accessToken = res.access_token
+        console.log('accessToken: ', accessToken)
         athleteData = res.athlete
+        athleteData['access_token'] = accessToken
         this.upsertUser(athleteData)
         let refreshToken = res.refresh_token
         logUtils.loggerText('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
@@ -476,6 +479,11 @@ class Homepage extends React.Component{
           let bodyVisit = {user_id: uId}
           if(body.has_strava) bodyVisit['has_strava_login'] = true
           this.updateVisit(bodyVisit)
+          let bodyAuth = apiUtils.getAuthDataBody(uId,athleteData.access_token)
+          dbInteractions.createRecordAuth('users_auth', process.env.REACT_APP_JWT_TOKEN, bodyAuth).then(res => {
+          }).catch(e => {
+            console.error('error inerting the token:', e)
+          })
         }).catch(e => {
           console.error('error creating the user:', e)
         })
