@@ -168,12 +168,13 @@ const tableDefinitions = `
     CREATE TABLE IF NOT EXISTS users_auth (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
-        auth_token bytea NOT NULL
+        auth_token bytea NOT NULL,
+        timestamp TIMESTAMP,
     );
 `;
 
 // Function to create tables if they don't exist
-const createTables = async (key) => {
+const createTables = async () => {
   try {
     const client = await db.pool.connect();
     await client.query(tableDefinitions);

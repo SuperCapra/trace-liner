@@ -109,7 +109,8 @@ const apiUtils = {
     getAuthDataBody(userId,authToken) {
         return {
             user_id : userId,
-            auth_token : authToken 
+            auth_token : authToken,
+            timestamp: this.getTimestampGMT(),
         }
     },
     getUserBodyNoStrava() {
