@@ -446,7 +446,6 @@ class Homepage extends React.Component{
           window.location.reload();
         }
         accessToken = res.access_token
-        console.log('accessToken: ', accessToken)
         athleteData = res.athlete
         athleteData['access_token'] = accessToken
         this.upsertUser(athleteData)

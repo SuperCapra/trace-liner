@@ -49,9 +49,9 @@ const getRecordFields = async (table,fields,field,value) => {
 }
 const getQueryResult = async (query) => {
   const trimmedQuery = query.trim().toUpperCase();
-  // if (!trimmedQuery.startsWith('SELECT')) {
-  //   throw new Error('Only SELECT queries are allowed.');
-  // }
+  if (!trimmedQuery.startsWith('SELECT')) {
+    throw new Error('Only SELECT queries are allowed.');
+  }
   return (await pool.query(query)).rows
 }
 const register = async (data, table) => {

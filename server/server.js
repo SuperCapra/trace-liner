@@ -13,7 +13,7 @@ const dbUtils = require('./dbUtils');
 app.use(express.json());
 
 (async () => {
-  await tables.createTables(process.env.TOKEN_ENCRYPTION_KEY);
+  await tables.createTables();
 })();
 
 const authenticateToken = (req, res, next) => {
