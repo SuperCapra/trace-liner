@@ -1,14 +1,11 @@
 const express = require('express');
 const tables = require('./tables');
 const path = require('path');
-const multer = require('multer');
 const jwt = require('jsonwebtoken');
 const app = express();
 const bcrypt = require('bcrypt');
 const helmet = require('helmet');
 const db = require('./db');
-const fs = require('fs');
-const dbUtils = require('./dbUtils');
 
 app.use(express.json());
 
@@ -26,107 +23,10 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
-// // enables cors for all routea
-// app.use(cors());
-
-// // Route to handle image requests
-// app.get('/image-proxy', async (req, res) => {
-//   const imageUrl = req.query.url;
-  
-//   try {
-//     // Fetch the image from the external service
-//     const response = await axios.get(imageUrl, { responseType: 'stream' });
-    
-//     // Forward the image back to the client
-//     res.setHeader('Content-Type', response.headers['content-type']);
-//     response.data.pipe(res);
-//   } catch (error) {
-//     res.status(500).send('Error fetching image');
-//   }
-// });
-
-// Set up multer for handling file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, 'uploads');
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath);
-    }
-    cb(null, uploadPath); // Store the file in 'uploads' directory
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-const upload = multer({ storage });
-
-// Proxy route for handling image upload
-app.post('/upload',authenticateToken, upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).send('No file uploaded.');
-  }
-
-  // The image was uploaded successfully, now return the URL
-  try {
-    const imageUrl = req.query.server + `/uploads/${req.file.filename}`;
-    res.json({ url: imageUrl });
-  } catch (e) {
-    console.error('Server upload error:', e)
-  }
-});
-
-// Serve and delete image after download
-app.get('/uploads/:filename', authenticateToken, (req, res) => {
-  const filePath = path.join(__dirname, 'uploads', req.params.filename);
-  try {
-    // navigator.share({
-    //   title: req.params.filename,
-    //   files: filePath
-    // });
-    // Send the file for download
-    res.download(filePath, (err) => {
-      if (err) {
-        console.error('Error downloading the file:', err);
-      }
-    });
-  } catch (e) {
-    console.log(e)
-    // Send the file for download
-    res.download(filePath, (err) => {
-      if (err) {
-        console.error('Error downloading the file:', err);
-      }
-    });
-  } finally {
-    // fs.unlink(filePath, (err) => {
-    //   if (err) {
-    //     console.error('Error deleting the file:', err);
-    //   } else {
-    //     console.log('File successfully deleted:', req.params.filename);
-    //   }
-    // });
-  }
-});
-
-app.post('/delete/:filename', authenticateToken, (req,res) => {
-  const filePath = path.join(__dirname, 'uploads', req.params.filename);
-  // console.log('filePath:', req.params.filename)
-  // console.log('filePath:', filePath)
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error('Error deleting the file:', err);
-    } else {
-      console.log('File successfully deleted:', req.params.filename);
-    }
-  });
-})
 app.post('/api/editable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecord(req.body, table)
-    // console.log('req.body:', req.body)
-    // console.log('creating record:', table)
-    // console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -169,9 +69,6 @@ app.post('/api/noneditable/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
     const id = await db.addRecord(req.body, table)
-    // console.log('req.body:', req.body)
-    // console.log('creating record:', table)
-    // console.log('creating record id:', id)
     const result = {
       table: table,
       id: id
@@ -200,19 +97,19 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
 app.post('/api/query', authenticateToken, async (req, res) => {
   try {
     const query = req.body.query
-    // console.log('fields:',fields)
-    // console.log('Array.isArray(fields):',Array.isArray(fields))
     let records
     if(query) {
-      records = await db.getQueryResult(query)
+      result = await db.getQueryResult(query)
     }
-    const result = {
-      records: records
+    console.log('res', result)
+    if(result && result.command === 'SELECT' && result.rows) {
+      res.status(201).json({records: result.rows})
+    } else if(result && result.command) {
+      res.status(200).json({message: result.command + ' executed successfully'})
     }
-    res.status(201).json(result)
   } catch (e) {
-    console.error('Exception querying:', e)
-    res.status(500).json({error: e})
+    console.error('Exception querying:', e.message)
+    res.status(400).json({error: e.message})
   }
 })
 app.get('/api/strava-webhooks', async (req, res) => {

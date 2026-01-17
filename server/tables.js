@@ -167,8 +167,10 @@ const tableDefinitions = `
 
     CREATE TABLE IF NOT EXISTS users_auth (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id),
+        user_id INTEGER UNIQUE REFERENCES users(id),
         auth_token bytea NOT NULL,
+        refresh_token bytea NOT NULL,
+        expires_at VARCHAR(255),
         timestamp TIMESTAMP
     );
 `;

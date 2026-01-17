@@ -440,6 +440,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
+        console.log('res: ', res)
         logUtils.loggerText('res: ', res)
         if(res && res.errors && res.errors.length) {
           window.history.pushState({}, document.title, window.location.pathname);
@@ -447,8 +448,13 @@ class Homepage extends React.Component{
         }
         accessToken = res.access_token
         athleteData = res.athlete
-        athleteData['access_token'] = accessToken
-        this.upsertUser(athleteData)
+        let tokens = {
+          access_token: res.access_token,
+          refresh_token: res.refresh_token,
+          expires_at: res.expires_at
+        }
+        if(athleteData && athleteData.id)
+        this.upsertUser(athleteData,tokens)
         let refreshToken = res.refresh_token
         logUtils.loggerText('Strava User Id:', process.env.REACT_APP_STRAVA_USER_ID)
         if(String(athleteData.id) === process.env.REACT_APP_STRAVA_USER_ID) {
@@ -467,7 +473,7 @@ class Homepage extends React.Component{
       })
   }
 
-  async upsertUser(athleteData) {
+  async upsertUser(athleteData, tokens) {
     dbInteractions.getRecordId('users', process.env.REACT_APP_JWT_TOKEN, 'strava_id', athleteData.id).then(res => {
       let body = apiUtils.getUserBodyStrava(athleteData,false,false)
       logUtils.loggerText('res:', res)
@@ -478,7 +484,7 @@ class Homepage extends React.Component{
           let bodyVisit = {user_id: uId}
           if(body.has_strava) bodyVisit['has_strava_login'] = true
           this.updateVisit(bodyVisit)
-          let bodyAuth = apiUtils.getAuthDataBody(uId,athleteData.access_token)
+          let bodyAuth = apiUtils.getAuthDataBody(uId, tokens.access_token, tokens.refresh_token, tokens.expires_at)
           dbInteractions.createRecordAuth('users_auth', process.env.REACT_APP_JWT_TOKEN, bodyAuth).then(res => {
           }).catch(e => {
             console.error('error inerting the token:', e)
