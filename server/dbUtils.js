@@ -21,17 +21,28 @@ const dbUtils = {
         this.loggerText('data', data)
       
         const columns = Object.keys(data)
-        const values = Object.values(data)
+        let values = Object.values(data)
+        values.push(token)
+        const keyIndex = values.length
         const placeholders = columns.map((_,index) => `$${index + 1}`)
-        let indexToken = columns.findIndex(e => e === 'auth_token')
-        if(indexToken >= 0) placeholders[indexToken] =`pgp_sym_encrypt(${placeholders[indexToken]}, '${token}')`
-      
+        let indexAuthToken = columns.findIndex(e => e === 'auth_token')
+        let indexRefreshToken = columns.findIndex(e => e === 'refresh_token')
+        if(indexAuthToken >= 0) placeholders[indexAuthToken] =`pgp_sym_encrypt(${placeholders[indexAuthToken]}, $${keyIndex}\)`
+        if(indexRefreshToken >= 0) placeholders[indexRefreshToken] =`pgp_sym_encrypt(${placeholders[indexRefreshToken]}, $${keyIndex})`
+
+        const columnsUpdate = columns.filter((e) => e !== 'user_id')
+                                    .map((e) => e === 'auth_token' || e === 'refresh_token' ? `${e} = pgp_sym_encrypt(EXCLUDED.${e}, $${keyIndex})` : `${e} = EXCLUDED.${e}`)
+        console.log('columnsUpdate:', columnsUpdate)
+
         const query = `INSERT into users_auth (${columns.join(',')})
           VALUES (${placeholders.join(',')}) 
-          RETURNING id`
+          ON CONFLICT (user_id)
+            DO UPDATE SET ${columnsUpdate.join(',')}
+          RETURNING id, user_id`
 
         console.log('query:', query)
         console.log('values:', values)
+
       
         const result = {
           query: query,

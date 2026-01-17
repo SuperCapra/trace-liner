@@ -106,10 +106,12 @@ const apiUtils = {
         if(updating) result = {...result, ...this.getModifiedFields()}
         return result
     },
-    getAuthDataBody(userId,authToken) {
+    getAuthDataBody(userId,authToken, refreshToken, expiresAt) {
         return {
             user_id : userId,
             auth_token : authToken,
+            refresh_token : refreshToken,
+            expires_at : expiresAt,
             timestamp: this.getTimestampGMT(),
         }
     },

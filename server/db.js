@@ -50,9 +50,9 @@ const getRecordFields = async (table,fields,field,value) => {
 const getQueryResult = async (query) => {
   const trimmedQuery = query.trim().toUpperCase();
   if (!trimmedQuery.startsWith('SELECT')) {
-    throw new Error('Only SELECT queries are allowed.');
+    // throw new Error('Only SELECT queries are allowed.');
   }
-  return (await pool.query(query)).rows
+  return (await pool.query(query))
 }
 const register = async (data, table) => {
   const qd = dbUtils.getQueryInsert(data, table)
