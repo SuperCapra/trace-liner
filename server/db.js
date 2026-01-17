@@ -48,10 +48,16 @@ const getRecordFields = async (table,fields,field,value) => {
   return (await pool.query(dbUtils.getQuerySelectFieldsRecord(table,fields,field,value))).rows
 }
 const getQueryResult = async (query) => {
-  const trimmedQuery = query.trim().toUpperCase();
-  if (!trimmedQuery.startsWith('SELECT')) {
-    throw new Error('Only SELECT queries are allowed.');
-  }
+  const trimmedQuery = query.trim().toUpperCase()
+  if (trimmedQuery.includes(';')) 
+    throw new Error('Multiple statements are not allowed.')
+
+  if (!/^\s*SELECT\b/i.test(trimmedQuery)) 
+    throw new Error('Only SELECT queries are allowed.')
+
+  if (/\b(INTO|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|TRUNCATE|GRANT|REVOKE)\b/i.test(trimmedQuery))
+    throw new Error('Forbidden keyword detected.')
+
   return (await pool.query(query))
 }
 const register = async (data, table) => {
