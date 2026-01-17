@@ -169,7 +169,7 @@ const tableDefinitions = `
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
         auth_token bytea NOT NULL,
-        timestamp TIMESTAMP,
+        timestamp TIMESTAMP
     );
 `;
 
