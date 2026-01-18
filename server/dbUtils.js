@@ -27,22 +27,17 @@ const dbUtils = {
         const placeholders = columns.map((_,index) => `$${index + 1}`)
         let indexAuthToken = columns.findIndex(e => e === 'auth_token')
         let indexRefreshToken = columns.findIndex(e => e === 'refresh_token')
-        if(indexAuthToken >= 0) placeholders[indexAuthToken] =`pgp_sym_encrypt(${placeholders[indexAuthToken]}, $${keyIndex}\)`
-        if(indexRefreshToken >= 0) placeholders[indexRefreshToken] =`pgp_sym_encrypt(${placeholders[indexRefreshToken]}, $${keyIndex})`
+        if(indexAuthToken >= 0) placeholders[indexAuthToken] =`pgp_sym_encrypt(${placeholders[indexAuthToken]}::text, $${keyIndex})`
+        if(indexRefreshToken >= 0) placeholders[indexRefreshToken] =`pgp_sym_encrypt(${placeholders[indexRefreshToken]}::text, $${keyIndex})`
 
         const columnsUpdate = columns.filter((e) => e !== 'user_id')
-                                    .map((e) => e === 'auth_token' || e === 'refresh_token' ? `${e} = pgp_sym_encrypt(EXCLUDED.${e}, $${keyIndex})` : `${e} = EXCLUDED.${e}`)
-        console.log('columnsUpdate:', columnsUpdate)
+                                    .map((e) => e === 'auth_token' || e === 'refresh_token' ? `${e} = pgp_sym_encrypt(EXCLUDED.${e}::text, $${keyIndex})` : `${e} = EXCLUDED.${e}`)
 
         const query = `INSERT into users_auth (${columns.join(',')})
           VALUES (${placeholders.join(',')}) 
           ON CONFLICT (user_id)
             DO UPDATE SET ${columnsUpdate.join(',')}
           RETURNING id, user_id`
-
-        console.log('query:', query)
-        console.log('values:', values)
-
       
         const result = {
           query: query,

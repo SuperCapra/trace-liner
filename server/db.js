@@ -16,9 +16,7 @@ const pool = new Pool({
 
 const addRecord = async (recordData, table) => {
   const qd = dbUtils.getQueryInsert(recordData, table)
-
   const result = await pool.query(qd.query, qd.values)
-
   return result.rows[0].id
 }
 const addUsersAuth = async (recordData, t) => {
@@ -30,8 +28,6 @@ const modifyRecord = async (recordData, table, id) => {
   const qd = dbUtils.getQueryUpdate(recordData, table, id)
 
   const result = await pool.query(qd.query, qd.values)
-  // console.log('qd', qd)
-  // console.log('result', result)
   return result.rows[0].id
 }
 
