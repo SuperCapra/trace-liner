@@ -97,11 +97,9 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
 app.post('/api/query', authenticateToken, async (req, res) => {
   try {
     const query = req.body.query
-    let records
     if(query) {
       result = await db.getQueryResult(query)
     }
-    console.log('res', result)
     if(result && result.command === 'SELECT' && result.rows) {
       res.status(201).json({records: result.rows})
     } else if(result && result.command) {
