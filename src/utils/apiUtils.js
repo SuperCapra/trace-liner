@@ -113,6 +113,7 @@ const apiUtils = {
             refresh_token : refreshToken,
             expires_at : expiresAt,
             timestamp: this.getTimestampGMT(),
+            connected: true
         }
     },
     getUserBodyNoStrava() {
