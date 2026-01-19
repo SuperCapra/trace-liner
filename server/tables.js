@@ -171,7 +171,8 @@ const tableDefinitions = `
         auth_token bytea NOT NULL,
         refresh_token bytea NOT NULL,
         expires_at VARCHAR(255),
-        timestamp TIMESTAMP
+        timestamp TIMESTAMP,
+        connected BOOLEAN DEFAULT FALSE
     );
 `;
 

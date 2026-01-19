@@ -45,14 +45,14 @@ const getRecordFields = async (table,fields,field,value) => {
 }
 const getQueryResult = async (query) => {
   const trimmedQuery = query.trim().toUpperCase()
-  // if (trimmedQuery.includes(';')) 
-  //   throw new Error('Multiple statements are not allowed.')
+  if (trimmedQuery.includes(';')) 
+    throw new Error('Multiple statements are not allowed.')
 
-  // if (!/^\s*SELECT\b/i.test(trimmedQuery)) 
-  //   throw new Error('Only SELECT queries are allowed.')
+  if (!/^\s*SELECT\b/i.test(trimmedQuery)) 
+    throw new Error('Only SELECT queries are allowed.')
 
-  // if (/\b(INTO|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|TRUNCATE|GRANT|REVOKE)\b/i.test(trimmedQuery))
-  //   throw new Error('Forbidden keyword detected.')
+  if (/\b(INTO|INSERT|UPDATE|DELETE|DROP|ALTER|CREATE|TRUNCATE|GRANT|REVOKE)\b/i.test(trimmedQuery))
+    throw new Error('Forbidden keyword detected.')
 
   return (await pool.query(query))
 }
