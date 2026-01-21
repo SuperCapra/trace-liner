@@ -147,7 +147,7 @@ function Statistics(props) {
         dbInteractions.processQuery(queries.getQueryCountFilter('users', 'HAS_STRAVA = true'), process.env.REACT_APP_JWT_TOKEN).then(res => {
             console.log('res:',res)
             if(res.records) {
-                setNumberStravaUsers(Number(res.records[0].count) + 18)
+                setNumberStravaUsers(Number(res.records[0].count) + 15)
             }
         }).catch(e => {
             console.error('error querying number of visits:', e)

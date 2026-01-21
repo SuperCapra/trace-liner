@@ -31,7 +31,7 @@ const dbUtils = {
         if(indexRefreshToken >= 0) placeholders[indexRefreshToken] =`pgp_sym_encrypt(${placeholders[indexRefreshToken]}::text, $${keyIndex})`
 
         const columnsUpdate = columns.filter((e) => e !== 'user_id')
-                                    .map((e) => e === 'auth_token' || e === 'refresh_token' ? `${e} = pgp_sym_encrypt(EXCLUDED.${e}::text, $${keyIndex})` : `${e} = EXCLUDED.${e}`)
+                                    .map((e) => `${e} = EXCLUDED.${e}`)
 
         const query = `INSERT into users_auth (${columns.join(',')})
           VALUES (${placeholders.join(',')}) 
@@ -43,6 +43,7 @@ const dbUtils = {
           query: query,
           values: values
         }
+        console.log('query', query)
       
         return result
     },
