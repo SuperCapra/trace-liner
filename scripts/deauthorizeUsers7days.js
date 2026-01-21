@@ -9,7 +9,7 @@ async function run() {
         SELECT user_id, pgp_sym_decrypt(auth_token, $1) AS access_token, pgp_sym_decrypt(refresh_token, $1) AS refresh_token, users.Name, users.lastmodified_at
         FROM users_auth
         INNER JOIN users ON users.id = users_auth.user_id
-        WHERE users.lastmodified_at > NOW() - INTERVAL '30 days'
+        WHERE users.lastmodified_at > NOW() - INTERVAL '7 days'
     `, [process.env.TOKEN_ENCRYPTION_KEY])
     if(!users || !users.rows) {
         console.log('No users found to deauthorize.')
@@ -27,7 +27,7 @@ async function run() {
                 SELECT user_id, pgp_sym_decrypt(pgp_sym_decrypt(auth_token, $1)::bytea, $1) AS access_token, pgp_sym_decrypt(pgp_sym_decrypt(refresh_token, $1)::bytea, $1) AS refresh_token, users.Name, users.lastmodified_at
                 FROM users_auth
                 INNER JOIN users ON users.id = users_auth.user_id
-                WHERE users.lastmodified_at < NOW() - INTERVAL '30 days' and users_auth.user_id = $2
+                WHERE users.lastmodified_at < NOW() - INTERVAL '7 days' and users_auth.user_id = $2
             `, [process.env.TOKEN_ENCRYPTION_KEY, u.user_id])
             u = res.rows[0]
         }
