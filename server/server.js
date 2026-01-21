@@ -101,7 +101,7 @@ app.post('/api/query', authenticateToken, async (req, res) => {
       result = await db.getQueryResult(query)
     }
     if(result && result.command === 'SELECT' && result.rows) {
-      res.status(201).json({records: result.rows, number: result.rows && result.rows.length ? result.rows.length : 0})
+      res.status(201).json({number: result.rows && result.rows.length ? result.rows.length : 0,records: result.rows})
     } else if(result && result.command) {
       res.status(200).json({message: result.command + ' executed successfully'})
     }

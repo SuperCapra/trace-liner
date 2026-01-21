@@ -11,8 +11,16 @@ async function run() {
         INNER JOIN users ON users.id = users_auth.user_id
         WHERE users.lastmodified_at > NOW() - INTERVAL '30 days'
     `, [process.env.TOKEN_ENCRYPTION_KEY])
-
+    if(!users || !users.rows) {
+        console.log('No users found to deauthorize.')
+        return
+    }
+    console.log(`Found ${users.rows.length} users to deauthorize.`)
     for (const u of users.rows) {
+        if(u.access_token === null || u.refresh_token === null) {
+            console.error(`Skipping user ${u.user_id} due to null tokens.`)
+            continue
+        }
         if(u.refresh_token.length > 40) {
             const res = (`
                 SELECT user_id, pgp_sym_decrypt(pgp_sym_decrypt(auth_token, $1)::bytea, $1) AS access_token, pgp_sym_decrypt(pgp_sym_decrypt(refresh_token, $1)::bytea, $1) AS refresh_token, users.Name, users.lastmodified_at
@@ -24,14 +32,12 @@ async function run() {
         }
         try {
             let response = await deauthorizeStrava(u.access_token)
-            console.log(`Deauthorized user ${u.user_id}:`, response)
+            console.log(`Deauthorized user ${u.user_id}`)
             if(response.errors) {
                 let responseRefresh = await refreshToken(u.refresh_token)
-                console.log(`responserefresh user ${u.user_id}:`, responseRefresh)
                 if(!responseRefresh.errors) {
                     let newAccessToken = responseRefresh.access_token
                     let responseDeauth = await deauthorizeStrava(newAccessToken)
-                    console.log(`Deauthorized user after refresh ${u.user_id}:`, responseDeauth)
                     await pool.query(`
                         DELETE FROM users_auth
                         WHERE user_id = $1
