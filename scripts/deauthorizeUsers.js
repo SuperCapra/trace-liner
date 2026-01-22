@@ -9,13 +9,13 @@ async function run() {
         SELECT user_id, pgp_sym_decrypt(auth_token, $1) AS access_token, pgp_sym_decrypt(refresh_token, $1) AS refresh_token, users.Name, users.lastmodified_at
         FROM users_auth
         INNER JOIN users ON users.id = users_auth.user_id
-        WHERE users.lastmodified_at > NOW() - INTERVAL '30 days'
+        WHERE users.lastmodified_at < NOW() - INTERVAL '30 days'
     `, [process.env.TOKEN_ENCRYPTION_KEY])
     if(!users || !users.rows) {
         console.log('No users found to deauthorize.')
         return
     }
-    console.log('ros[0]', users.rows[0])
+    //console.log('ros[0]', users.rows[0])
     console.log(`Found ${users.rows.length} users to deauthorize.`)
     for (const u of users.rows) {
         if(u.access_token === null || u.refresh_token === null) {
