@@ -15,7 +15,7 @@ async function run() {
         console.log('No users found to deauthorize.')
         return
     }
-    console.log('ros[0]', users.rows[0])
+    //console.log('ros[0]', users.rows[0])
     console.log(`Found ${users.rows.length} users to deauthorize.`)
     for (const u of users.rows) {
         if(u.access_token === null || u.refresh_token === null) {
