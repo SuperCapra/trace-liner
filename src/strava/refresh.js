@@ -7,7 +7,6 @@ const refreshToken = async (refreshToken) => {
         '&refresh_token=' + refreshToken +
         '&grant_type=refresh_token'
         
-    console.log('urlRefresh', urlRefresh)
     const response = await fetch(urlRefresh, {
         method: 'POST',
         headers: {
