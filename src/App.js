@@ -423,7 +423,7 @@ class Homepage extends React.Component{
   getAccessTokenAndActivities(userCode) {
     isLoading = true
     console.info('getting the access token...')
-    console.info('userCode: ', userCode)
+    logUtils.loggerText('userCode: ', userCode)
     let urlToken = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_TOKEN_DIRECTORY +
       '?client_id=' + process.env.REACT_APP_STRAVA_CLIENT_ID + 
       '&client_secret=' + process.env.REACT_APP_STRAVA_CLIENT_SECRET + 
@@ -440,7 +440,6 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.log('res: ', res)
         logUtils.loggerText('res: ', res)
         if(res && res.errors && res.errors.length) {
           window.history.pushState({}, document.title, window.location.pathname);
@@ -464,7 +463,7 @@ class Homepage extends React.Component{
             console.error(e)
           }
         }
-        console.info('athleteData: ', athleteData)
+        logUtils.loggerText('athleteData: ', athleteData)
         if(accessToken) this.getActivities()
       })
       .catch(e => {
@@ -599,7 +598,7 @@ class Homepage extends React.Component{
       },
     }).then(response => response.json())
       .then(res => {
-        console.info('Raw activities: ', res)
+        logUtils.loggerText('Raw activities: ', res)
         if(res) {
           res.forEach(e => {
             logUtils.loggerText('Activity: ', e)
@@ -684,7 +683,7 @@ class Homepage extends React.Component{
       .finally(() => {
         isLoading = false
         this.changeStage({stage:'ShowingActivities'})
-        console.info('Activities: ', activities)
+        logUtils.loggerText('Activities: ', activities)
       })
   }
 
@@ -756,7 +755,7 @@ class Homepage extends React.Component{
       method: 'GET',
     }).then(response => response.json())
       .then(res => {
-        console.info('Result altitude stream: ', res)
+        logUtils.loggerText('Result altitude stream: ', res)
         activities[indexActivity].altitudeStream = res.altitude.data
         activities[indexActivity].distanceStream = res.distance.data
         activities[indexActivity].hasAltitudeStream = activities[indexActivity].altitudeStream && activities[indexActivity].altitudeStream.length ? true : false
