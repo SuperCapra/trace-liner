@@ -1,4 +1,4 @@
-const db = require('./db');
+import db from './db.js';
 // Define the SQL for creating tables
 const tableDefinitions = `
     CREATE TABLE IF NOT EXISTS users (
@@ -185,8 +185,8 @@ const createTables = async () => {
     console.log('Tables are ensured to exist!');
   } catch (err) {
     console.error('Error creating tables:', err);
-    process.exit(1);
+    return false;
   }
 };
 
-module.exports = {createTables}
+export default createTables;

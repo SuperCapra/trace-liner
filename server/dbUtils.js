@@ -1,3 +1,4 @@
+import 'dotenv/config';
 const dbUtils = {
     getQueryInsert(data,table) {
         this.loggerText('data', data)
@@ -91,4 +92,4 @@ const dbUtils = {
     }
 }
 
-module.exports = dbUtils;
+export default dbUtils;

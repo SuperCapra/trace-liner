@@ -12,16 +12,16 @@ const saleforceApiUtils = {
         fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${setting.REACT_APP_JWT_TOKEN}`,
+                'Authorization': `Bearer ${setting.VITE_JWT_TOKEN}`,
                 'Content-Type': 'application/json',
             },
             body: this.getBodyStringified(setting, userCode, 'Token__c', 'StravaUserId__c', this.getBodyTokens(name, refreshToken))
         }).then(response => response.json())
         .then(data => {
-            // console.log('Upsert Success:', data);
+            logUtils.loggerText('Upsert Success:', data);
         })
         .catch(error => {
-            // console.error('Error:', error);
+            logUtils.loggerText('Error:', error);
         });
     },
     storeLog(setting, infoLog) {
@@ -33,26 +33,26 @@ const saleforceApiUtils = {
         fetch(url, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${setting.REACT_APP_JWT_TOKEN}`,
+                'Authorization': `Bearer ${setting.VITE_JWT_TOKEN}`,
                 'Content-Type': 'application/json',
             },
             body: this.getBodyStringified(setting, this.getExternalId(infoLog), 'TracelinerLog__c', 'ExternalId__c', this.getBodyLog(infoLog))
         }).then(response => response.json())
         .then(data => {
-            // console.log('Upsert Success:', data);
+            logUtils.loggerText('Upsert Success:', data);
         })
         .catch(error => {
-            // console.error('Error:', error);
+            logUtils.loggerText('Error:', error);
         });
     },
     getBodyStringified(setting, externalId, object, field, body) {
         return  JSON.stringify({
-            username: setting.REACT_APP_SALESFORCE_USERNAME,
-            password: setting.REACT_APP_SALESFORCE_PASSWORD,
-            securityToken: setting.REACT_APP_SALESFORCE_SECURITY_TOKEN,
-            clientId: setting.REACT_APP_SALESFORCE_CLIENT_ID,
-            clientSecret: setting.REACT_APP_SALESFORCE_SECRET_KEY,
-            instanceUrl: setting.REACT_APP_SALESFORCE_URL,
+            username: setting.VITE_SALESFORCE_USERNAME,
+            password: setting.VITE_SALESFORCE_PASSWORD,
+            securityToken: setting.VITE_SALESFORCE_SECURITY_TOKEN,
+            clientId: setting.VITE_SALESFORCE_CLIENT_ID,
+            clientSecret: setting.VITE_SALESFORCE_SECRET_KEY,
+            instanceUrl: setting.VITE_SALESFORCE_URL,
             externalId: externalId,
             object: object,
             field: field,

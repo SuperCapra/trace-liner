@@ -1,7 +1,7 @@
-require('dotenv').config()
+import 'dotenv/config';
 
-const deauthorizeStrava = async (accessToken) => {
-    let urlDeauthorize = process.env.REACT_APP_STRAVA_HOST + process.env.REACT_APP_DEAUTHORIZE_DIRECTORY +
+export const deauthorizeStrava = async (accessToken) => {
+    let urlDeauthorize = process.env.VITE_STRAVA_HOST + process.env.VITE_DEAUTHORIZE_DIRECTORY +
         '?access_token=' + accessToken
   
     const response = await fetch(urlDeauthorize, {
@@ -17,6 +17,6 @@ const deauthorizeStrava = async (accessToken) => {
   return response.json()
 }
 
-module.exports = {
+export default {
   deauthorizeStrava
 }

@@ -155,9 +155,6 @@ const utilsFunction = {
         let lat = 0
         let lng = 0
         let coordinates = []
-        let shift = 0
-        let result = 0
-        let byte = null
         let latitude_change
         let longitude_change
         let factor = Math.pow(10, precision || 5)
@@ -167,26 +164,26 @@ const utilsFunction = {
         // loop iteration, a single coordinate is decoded.
         while (index < str.length) {
             // Reset shift, result, and byte
-            byte = null;
-            shift = 0;
-            result = 0;
+            let byte;
+            let shift = 0;
+            let tempResult = 0;
             do {
                 byte = str.charCodeAt(index++) - 63;
-                result |= (byte & 0x1f) << shift;
+                tempResult |= (byte & 0x1f) << shift;
                 shift += 5;
             } while (byte >= 0x20);
         
-            latitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            latitude_change = ((tempResult & 1) ? ~(tempResult >> 1) : (tempResult >> 1));
         
-            shift = result = 0;
+            shift = tempResult = 0;
         
             do {
                 byte = str.charCodeAt(index++) - 63;
-                result |= (byte & 0x1f) << shift;
+                tempResult |= (byte & 0x1f) << shift;
                 shift += 5;
             } while (byte >= 0x20);
         
-            longitude_change = ((result & 1) ? ~(result >> 1) : (result >> 1));
+            longitude_change = ((tempResult & 1) ? ~(tempResult >> 1) : (tempResult >> 1));
         
             lat += latitude_change;
             lng += longitude_change;
@@ -312,7 +309,7 @@ const utilsFunction = {
         return result
     },
 
-    isMobile(club, admin) {
+    isMobile() {
         const toMatch = [
             /Android/i,
             /webOS/i,
@@ -368,6 +365,146 @@ const utilsFunction = {
         ]
         if(!t || (t && !t.length)) return false
         else return variants.includes(t.toLowerCase())
+    },
+
+    computeElevationGain(elevationStream) {
+        if(!elevationStream || !elevationStream.length) return undefined
+        let elevationGain = 0
+        for(let i = 1; i < elevationStream.length; i++) {
+            if(elevationStream[i] > elevationStream[i-1] && elevationStream[i] - elevationStream[i-1] < 0.7) {
+                elevationGain += (elevationStream[i] - elevationStream[i-1])
+            }
+        }
+        return Number(elevationGain.toFixed(0))
+    },   
+
+    computeDuration(durationStream) {
+        if(!durationStream || !durationStream.length) return undefined
+        let startRawTime = durationStream[0].time
+        let endRawTime = durationStream[durationStream.length - 1].time
+        console.log('startRawTime: ', startRawTime.substring(0,10))
+        console.log('endRawTime: ', endRawTime.substring(0,10))
+        let result = {
+            movingTime: 0,
+            movingTimeStructured: {
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+            },
+            elapsedTime: 0,
+            elapsedTimeStructured: {
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+            },
+            startDate: startRawTime.substring(0,10),
+            startLocalDate: undefined,
+            startDateTime: startRawTime,
+            startLocalDateTime: undefined,
+            startLocalDateTimeStructured: {
+                year: startRawTime ? new Date(startRawTime).getFullYear() : undefined,
+                month: startRawTime ? new Date(startRawTime).getMonth() + 1 : undefined,
+                day: startRawTime ? new Date(startRawTime).getDate() : undefined,
+                hours: startRawTime ? new Date(startRawTime).getHours() : undefined,
+                minutes: startRawTime ? new Date(startRawTime).getMinutes() : undefined,
+                seconds: startRawTime ? new Date(startRawTime).getSeconds() : undefined,
+            },
+            endDate: endRawTime.substring(0,10),
+            endLocalDate: undefined,
+            endDateTime: endRawTime,
+            endLocalDateTime: undefined,
+            endLocalDateTimeStructured: {
+                year: endRawTime ? new Date(endRawTime).getFullYear() : undefined,
+                month: endRawTime ? new Date(endRawTime).getMonth() + 1 : undefined,
+                day: endRawTime ? new Date(endRawTime).getDate() : undefined,
+                hours: endRawTime ? new Date(endRawTime).getHours() : undefined,
+                minutes: endRawTime ? new Date(endRawTime).getMinutes() : undefined,
+                seconds: endRawTime ? new Date(endRawTime).getSeconds() : undefined,
+            },
+        }
+        result.startLocalDate = this.getDateStringifiedFromStructured(result.startLocalDateTimeStructured)
+        result.startLocalDateTime = this.getDatetimeStringifiedFromStructured(result.startLocalDateTimeStructured)
+        result.endLocalDate = this.getDateStringifiedFromStructured(result.endLocalDateTimeStructured)
+        result.endLocalDateTime = this.getDatetimeStringifiedFromStructured(result.endLocalDateTimeStructured)
+        result.elapsedTime = Math.max(durationStream.length - 1, 1)
+        let startMovingTime = this.getSecondsFrom1900(result.startLocalDateTimeStructured)
+        let endMovingTime = this.getSecondsFrom1900(result.endLocalDateTimeStructured)
+        result.movingTime = endMovingTime - startMovingTime
+        result.movingTimeStructured.hours = Math.floor(result.movingTime / 3600)
+        result.movingTimeStructured.minutes = Math.floor((result.movingTime - (result.movingTimeStructured.hours * 3600)) / 60)
+        result.movingTimeStructured.seconds = result.movingTime - (result.movingTimeStructured.hours * 3600) - (result.movingTimeStructured.minutes * 60)
+        result.elapsedTimeStructured.hours = Math.floor(result.elapsedTime / 3600)
+        result.elapsedTimeStructured.minutes = Math.floor((result.elapsedTime - (result.elapsedTimeStructured.hours * 3600)) / 60)
+        result.elapsedTimeStructured.seconds = result.elapsedTime - (result.elapsedTimeStructured.hours * 3600) - (result.elapsedTimeStructured.minutes * 60)
+        console.log('computeDuration result: ', result)
+        return result
+    },
+
+    getSecondsFrom1900(dateTimeStructured) {
+        let result
+        let yearsFrom1900 = dateTimeStructured.year - 1900
+        let leapYears = Math.floor(yearsFrom1900 / 4) - Math.floor(dateTimeStructured.year / 100) + Math.floor(dateTimeStructured.year / 400) + 15
+        console.log('leapYears: ', leapYears)
+        let yearMinus1900inSeconds = (((dateTimeStructured.year - 1900) * 365) + leapYears) * 24 * 60 * 60
+        let monthInSeconds = 0
+        for(let i = 1; i < dateTimeStructured.month; i++) {
+            if(i === 2) monthInSeconds += (28 + ((dateTimeStructured.year % 4 === 0 && dateTimeStructured.year % 100 !== 0) || (dateTimeStructured.year % 400 === 0) ? 1 : 0)) * 24 * 60 * 60
+            else if([1,3,5,7,8,10,12].includes(i)) monthInSeconds += 31 * 24 * 60 * 60
+            else monthInSeconds += 30 * 24 * 60 * 60
+        }
+        let dayInSeconds = (dateTimeStructured.day - 1) * 24 * 60 * 60
+        let hoursInSeconds = dateTimeStructured.hours * 60 * 60
+        let minutesInSeconds = dateTimeStructured.minutes * 60
+        let seconds = dateTimeStructured.seconds
+        result = yearMinus1900inSeconds + monthInSeconds + dayInSeconds + hoursInSeconds + minutesInSeconds + seconds
+        
+        return result
+    },
+
+    getDatetimeStringifiedFromStructured(dateTimeStructured) {
+        let h = String(dateTimeStructured.hours).padStart(2,'0')
+        let min = String(dateTimeStructured.minutes).padStart(2,'0')
+        let s = String(dateTimeStructured.seconds).padStart(2,'0')
+        let result = this.getDateStringifiedFromStructured(dateTimeStructured) + 'T' + h + ':' + min + ':' + s
+        return result
+    },
+    getDateStringifiedFromStructured(dateTimeStructured) {
+        let y = dateTimeStructured.year
+        let m = (String(dateTimeStructured.month)).padStart(2,'0')
+        let d = String(dateTimeStructured.day).padStart(2,'0')
+        let result = y + '-' + m + '-' + d
+        return result
+    },
+    haversineDistance(p1, p2) {
+        const R = 6371000;
+
+        const toRad = (deg) => deg * Math.PI / 180;
+
+        const lat1 = toRad(p1[1]);
+        const lon1 = toRad(p1[0]);
+        const lat2 = toRad(p2[1]);
+        const lon2 = toRad(p2[0]);
+
+        const dLat = lat2 - lat1;
+        const dLon = lon2 - lon1;
+
+        const a =
+            Math.sin(dLat / 2) ** 2 +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(dLon / 2) ** 2;
+
+        const c = 2 * Math.asin(Math.sqrt(a));
+
+        return R * c;
+    },
+    getTotalDistance(points) {
+        let dist = 0;
+
+        for (let i = 1; i < points.length; i++) {
+            dist += this.haversineDistance(points[i - 1], points[i]);
+        }
+
+        return Number(dist.toFixed(0));
     }
 }
 

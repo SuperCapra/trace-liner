@@ -1,16 +1,16 @@
-const dbUtils = require('./dbUtils');
-// import utils from '../src/utils/utils';
-const { Pool } = require('pg');
-require('dotenv').config();
+import dbUtils from './dbUtils.js';
+import {Pool} from 'pg';
+import 'dotenv/config';
 
 const isLocal = process.env.DB_HOST === 'localhost';
 
-const pool = new Pool({
+export const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  // ssl: false,
   ssl: isLocal ? false : { rejectUnauthorized: false },
 });
 
@@ -79,7 +79,7 @@ const getTimestampGMT = () => {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
-module.exports = {
+export default {
   addRecord,
   modifyRecord,
   getRecords,

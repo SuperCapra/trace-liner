@@ -19,14 +19,14 @@ const colorText = {
 //     textgunmetal: '#282C34',
 // }
 
-const colorBackground = {
-    deepmahogany: '#4C2A29',
-    indigoblue: '#19196F',
-    ultramarineblue: '#3A86FE',
-    charcoalgrey: '#6E757D',
-    coral: '#FE6F61',
-    sunray: '#FFC857',
-    pistacchiogreen: '#3DDD97',
-}
+// const colorBackground = {
+//     deepmahogany: '#4C2A29',
+//     indigoblue: '#19196F',
+//     ultramarineblue: '#3A86FE',
+//     charcoalgrey: '#6E757D',
+//     coral: '#FE6F61',
+//     sunray: '#FFC857',
+//     pistacchiogreen: '#3DDD97',
+// }
 
 export default colorText

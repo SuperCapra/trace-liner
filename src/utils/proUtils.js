@@ -42,7 +42,7 @@ const utilsFuctions = {
         let normalizedAltitude = []
         let minY = Math.min(...altitudeArray, 0)
         let maxY = Math.max(...altitudeArray)
-        let minX = 0
+        // let minX = 0
         let maxX = altitudeArray.length
         let gapAltitude = maxY - minY
         let zoomFactorX = ((width - tickness) / maxX)
@@ -67,9 +67,9 @@ const utilsFuctions = {
             heightRoute: undefined
         }
         let minX = Math.min(...coordinates.map(x => x[0]))
-        let minY = Math.min(...coordinates.map(x => x[1]))
+        // let minY = Math.min(...coordinates.map(x => x[1]))
         let maxX = Math.max(...coordinates.map(x => x[0]))
-        let maxY = Math.max(...coordinates.map(x => x[1]))
+        // let maxY = Math.max(...coordinates.map(x => x[1]))
         if(!coordinates || (coordinates && !coordinates.length)) return undefined
         console.log('getRoutePath, coordinates:', coordinates)
         let pathData = 'M ' + coordinates[0][0] + ',' + coordinates[0][1]
@@ -87,9 +87,9 @@ const utilsFuctions = {
         }
         if(!altritudeStream || (altritudeStream && !altritudeStream.length)) return undefined;
         let maxY = Math.max(...altritudeStream.map(x => x[1]))
-        let realMaxY = Math.max(...notNormalizedAltitudeStream.map(x => x[1]))
-        let realMinY = Math.min(...notNormalizedAltitudeStream.map(x => x[1]))
-        let gapRealY = realMaxY - realMinY
+        // let realMaxY = Math.max(...notNormalizedAltitudeStream.map(x => x[1]))
+        // let realMinY = Math.min(...notNormalizedAltitudeStream.map(x => x[1]))
+        // let gapRealY = realMaxY - realMinY
         let totalPadding = maxY * (1 + (underBorder ? padding : 0) / 100)
         let pathData = 'M ' + altritudeStream[0][0] + ',' + altritudeStream[0][1]
 

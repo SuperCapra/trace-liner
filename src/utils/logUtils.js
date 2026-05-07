@@ -1,9 +1,9 @@
 const logUtils = {
     logger(message) {
-        if(process.env.NODE_ENV === 'development') console.log(message)
+        if(import.meta.env.DEV) console.log(message)
     },
     loggerText(text,message) {
-        if(process.env.NODE_ENV === 'development') console.log(text,message)
+        if(import.meta.env.DEV) console.log(text,message)
     }
 }
 
