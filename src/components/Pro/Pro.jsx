@@ -3,8 +3,8 @@ import './Pro.css';
 import {useState, useEffect, useRef, useCallback} from 'react';
 import ButtonGpxSVG from '../../assets/images/buttonGpx.svg?react'
 import { vocabulary } from '../../config/vocabularyPro';
-import GPXParser from 'gpxparser';
-import LoaderLogo from './LoaderLogo';
+import { XMLParser } from "fast-xml-parser";
+import LoaderLogo from '../LoaderLogo/LoaderLogo';
 import Modal from '../ModalExport/ModalExport';
 import he from 'he';
 import utils from '../../utils/proUtils';
@@ -18,7 +18,6 @@ function Pro(props) {
     const svgRef = useRef(null)
 
     const getWidth = () => {
-        console.log('getWidth')
         const widthScreen = window.innerWidth;
         return widthScreen * 0.8
     }  
@@ -29,7 +28,6 @@ function Pro(props) {
 
     const createVisitPro = () => {
         dbInteractions.createRecordNonEditable('visits_pro', import.meta.env.VITE_JWT_TOKEN, apiUtils.getVisitProBody()).then(res => {
-            console.log('created visit pro:', res)
             setVisitId(res)
         }).catch(e => {
           console.error('error creating the visit for the pro:', e)
@@ -53,7 +51,6 @@ function Pro(props) {
     const [visitId, setVisitId] = useState(undefined)
 
     const loadGPX = () => {
-        // console.log('loadedGPX', loadedGPX)
         const gpxInput = document.getElementById('gpxInput')
         if(gpxInput) gpxInput.click()
     }
@@ -208,6 +205,11 @@ function Pro(props) {
     };
 
     const normalizeGpxInfo = useCallback((t, w, h) => {
+        let altitudeStream = t.altitudeStream
+        let coordinates = t.coordinates
+        let timingStreamSeconds = t.timingStreamSeconds
+        let name = t.name
+
         const data = computeGpxInfo(
             t,
             w,
@@ -227,6 +229,10 @@ function Pro(props) {
         );
 
         setGpxInfo({
+            altitudeStream: altitudeStream,
+            coordinates: coordinates,
+            timingStreamSeconds: timingStreamSeconds,
+            name: name,
             routePath: data.routeInformation.pathData,
             routeWidth: data.routeInformation.widthRoute,
             routeHeight: data.routeInformation.heightRoute,
@@ -277,21 +283,24 @@ function Pro(props) {
             let tempGpxInfo = {}
             reader.onload = (e) => {
                 let gpxFile = e.target.result
-                const gpx = new GPXParser()
-                gpx.parse(gpxFile)
-                console.log('gpx.metadata.time: ', gpx.metadata.time)
-                console.log('gpx:', gpx)
-                console.log('unix time stamp in seconds', Math.floor(gpx.tracks[0].points[0].time)/1000)
-                const tracks = gpx.tracks.map(track => ({
-                    altitudeStream: [...track.points.map(point => (point.ele))],
-                    coordinates: track.points && track.points.length ? track.points.map(point => ([
-                        point.lon,
-                        point.lat
-                    ])) : undefined,
-                    timingStreamSeconds: track.points && track.points.length ? [...track.points.map(point => (Math.floor(point.time) / 1000))] : undefined,
-                    name: track.name ? he.decode(track.name) : undefined,
-                }))
-                tempGpxInfo = tracks[0]
+                const parser = new XMLParser({  
+                    ignoreAttributes: false,
+                    attributeNamePrefix: ""
+                })
+                const json = parser.parse(gpxFile);
+                const gpx = json.gpx
+                const trk = gpx.trk ? gpx.trk : undefined
+                const trkpt = trk && trk.trkseg && trk.trkseg.trkpt ? trk.trkseg.trkpt : undefined
+                let elevationStream = trkpt && trkpt.length ? [...trkpt.map(point => (point.ele))] : undefined
+                let coordinatesStream = trkpt && trkpt.length ? [...trkpt.map(point => ([Number(point.lon), Number(point.lat)]))] : undefined
+                let durationData =  u.computeDuration(trkpt)
+                tempGpxInfo = {
+                    altitudeStream: elevationStream,
+                    coordinates: coordinatesStream,
+                    timingStreamSeconds: durationData,
+                    name: trk.name ? he.decode(trk.name) : undefined,
+                }
+                setGpxInfo(tempGpxInfo)
                 normalizeGpxInfo(tempGpxInfo, width, height, resolution, altitudePadding, thickness, underBorder)
             }
 

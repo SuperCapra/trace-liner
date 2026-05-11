@@ -7,7 +7,7 @@ import LoaderLogo from './components/LoaderLogo/LoaderLogo.jsx'
 // import Statistics from './components/Statistics/Statistics.jsx';
 // import Login from './components/Login/Login.js';
 // import SignUp from './components/SignUp/SignUp.js';
-// import Pro from './components/Pro/Pro.jsx';
+import Pro from './components/Pro/Pro.jsx';
 import ArrowDown from './assets/images/arrow.svg?react'
 import LogoExtendedSVG from './assets/images/logoExtended.svg?react'
 import ButtonStravaSVG from './assets/images/buttonStrava.svg?react'
@@ -132,7 +132,6 @@ class Homepage extends React.Component{
         const reader = new FileReader();
         reader.onload = (e) => {
           let gpxFile = e.target.result
-          console.log('gpxFile: ', gpxFile)
           const parser = new XMLParser({  
             ignoreAttributes: false,
             attributeNamePrefix: ""
@@ -278,7 +277,7 @@ class Homepage extends React.Component{
     // if(urlCurrent.includes('/login')) return <Login/>
     // if(urlCurrent.includes('/signup')) return <SignUp/>
     if(urlCurrent.includes('/statistics')) return <Suspense fallback={<div className={mainWrapperClassesSuspance}><LoaderLogo/></div>}><Statistics islocal={isLocal}/></Suspense>
-    // if(urlCurrent.includes('/pro')) return <Pro language={this.props.language}/>
+    if(urlCurrent.includes('/pro')) return <Pro language={this.props.language}/>
     if(urlCurrent.includes('/visitId-')) {
       logUtils.loggerText('created vId')
       vId = utils.getVisitId(urlCurrent)
