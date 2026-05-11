@@ -1,4 +1,4 @@
-require('dotenv').config()
+import 'dotenv/config';
 
 const { pool } = require('../server/db')
 const { deauthorizeStrava } = require('../src/strava/deauthorize')
@@ -23,7 +23,7 @@ async function run() {
             continue
         }
         if(u.refresh_token.length > 40) {
-            const res = (`
+            const res = await pool.query(`
                 SELECT user_id, pgp_sym_decrypt(pgp_sym_decrypt(auth_token, $1)::bytea, $1) AS access_token, pgp_sym_decrypt(pgp_sym_decrypt(refresh_token, $1)::bytea, $1) AS refresh_token, users.Name, users.lastmodified_at
                 FROM users_auth
                 INNER JOIN users ON users.id = users_auth.user_id

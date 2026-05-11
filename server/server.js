@@ -1,16 +1,22 @@
-const express = require('express');
-const tables = require('./tables');
-const path = require('path');
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import createTables from './tables.js';
+import {join, dirname} from 'path';
+import {fileURLToPath} from 'url';
+import jwt from 'jsonwebtoken';
+// import bcrypt from 'bcrypt';
+import helmet from 'helmet';
+import db from './db.js';
+import 'dotenv/config';
+
 const app = express();
-const bcrypt = require('bcrypt');
-const helmet = require('helmet');
-const db = require('./db');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 app.use(express.json());
 
 (async () => {
-  await tables.createTables();
+  console.log('Creating tables if they do not exist...')
+  await createTables();
 })();
 
 const authenticateToken = (req, res, next) => {
@@ -96,6 +102,7 @@ app.patch('/api/noneditable/:table/:recordId', authenticateToken, async (req, re
 })
 app.post('/api/query', authenticateToken, async (req, res) => {
   try {
+    let result
     const query = req.body.query
     if(query) {
       result = await db.getQueryResult(query)
@@ -154,31 +161,31 @@ app.post('/api/strava-webhooks', async (req, res) => {
   // 3. Fetch full activity if create/update
   // 4. Store activity idempotently
 });
-app.post('/api/register', async (req, res) => {
-  const { username, password } = req.body;
+// app.post('/api/register', async (req, res) => {
+//   const { username, password } = req.body;
 
-  try {
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    let data = {
-      username: username,
-      password_hash: hashedPassword,
-      active: true,
-      created_at: db.getTimestampGMT()
-    }
-    await db.register(data, 'traceliner_users');
+//   try {
+//     const saltRounds = 10;
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
+//     let data = {
+//       username: username,
+//       password_hash: hashedPassword,
+//       active: true,
+//       created_at: db.getTimestampGMT()
+//     }
+//     await db.register(data, 'traceliner_users');
 
-    res.status(201).json({message: 'user created'});
-  } catch (e) {
-    console.error('Exception querying:', e)
-    res.status(500).json({error: e})
-  }
-})
+//     res.status(201).json({message: 'user created'});
+//   } catch (e) {
+//     console.error('Exception querying:', e)
+//     res.status(500).json({error: e})
+//   }
+// })
 app.get('/api/:table', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    const fields = req.body.fields
-    const whereClause = req.body.whereClause
+    const fields = req?.body?.fields
+    const whereClause = req?.body?.whereClause
     let records
     if(fields && Array.isArray(fields) && fields.length) {
       records = await db.getRecordsFields(table,fields,whereClause)
@@ -199,7 +206,7 @@ app.get('/api/:table', authenticateToken, async (req, res) => {
 app.get('/api/:table/:field/:value', authenticateToken, async (req, res) => {
   try {
     const table = req.params.table
-    const fields = req.body.fields
+    const fields = req?.body?.fields
     const field = req.params.field
     const value = req.params.value
     let record
@@ -293,26 +300,26 @@ app.use((req, res, next) => {
 });
 
 // Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.static(join(__dirname, '../dist')));
 
 app.get('/visitId-:id', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  res.sendFile(join(__dirname, '../dist', 'index.html'));
 });
 app.get('/statistics', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  res.sendFile(join(__dirname, '../dist', 'index.html'));
 });
 app.get('/pro', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build', 'index.html'));
+  res.sendFile(join(__dirname, '../dist', 'index.html'));
 });
 // app.get('/signup', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../build', 'index.html'));
+//   res.sendFile(join(__dirname, '../dist', 'index.html'));
 // });
 
-app.get('*', (req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '../build', '404.html'));
+app.use((req, res) => {
+  res.status(404).sendFile(join(__dirname, '../dist', '404.html'));
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5173;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

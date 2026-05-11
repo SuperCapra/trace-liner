@@ -45,16 +45,16 @@ const statisticsUtils = {
                     monthString = 'Nov'
                     break
                 default:
-                    monthString = 'Dic'
+                    monthString = 'Dec'
             }
-            let result = day + '-' + month + '-' + year.substring(2,4)
+            // let result = day + '-' + month + '-' + year.substring(2,4)
 
             if(returnYear) return year
             else if(returnMonth) return monthString + ' ' + year
             else if(returnDay) return day + '-' + month + '-' + year.substring(2,4)
             else return  day + '-' + month + '-' + year.substring(2,4) + ' ' + hour + ':' + min
         } catch (e) {
-            return ''
+            return e
         }
     },
     getFormattedDay(timestamp) {
