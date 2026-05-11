@@ -10,7 +10,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "heroku-start": "node server/server.js",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
