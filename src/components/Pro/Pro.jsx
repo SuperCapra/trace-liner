@@ -412,7 +412,6 @@ function Pro(props) {
     const classesAltitudeButton = getClassesAltitudeButton()
 
     const svgCreator = () => {
-        console.log('svgCreator, gpxInfo:', gpxInfo)
         return(<div className="pro-container">
             <div className="buttons-wrapper-header">
                 <div className="buttons-wrapper-header-row-1">
