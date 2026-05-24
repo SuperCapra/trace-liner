@@ -224,10 +224,14 @@ const utilsFunction = {
     },
 
     getAverageSpeedMetric(distance, duration, mantissa) {
+        console.log('distance: ', distance)
+        console.log('duration: ', duration)
         return (!distance || !duration) ? 0 : Number(((distance / duration) * 3.6).toFixed(mantissa ? mantissa : 0))
     },
 
     getAverageSpeedImperial(distance, duration, mantissa) {
+        console.log('distance: ', distance)
+        console.log('duration: ', duration)
         return (!distance || !duration) ? 0 : Number((((distance / duration) * 3.6) * 0.621371).toFixed(mantissa ? mantissa : 0))
     },
 
@@ -429,18 +433,19 @@ const utilsFunction = {
         result.elapsedTime = Math.max(durationStream.length - 1, 1)
         let startMovingTime = this.getSecondsFrom1900(result.startLocalDateTimeStructured)
         let endMovingTime = this.getSecondsFrom1900(result.endLocalDateTimeStructured)
-        result.movingTime = endMovingTime - startMovingTime
-        result.movingTimeStructured.hours = Math.floor(result.movingTime / 3600)
-        result.movingTimeStructured.minutes = Math.floor((result.movingTime - (result.movingTimeStructured.hours * 3600)) / 60)
-        result.movingTimeStructured.seconds = result.movingTime - (result.movingTimeStructured.hours * 3600) - (result.movingTimeStructured.minutes * 60)
-        result.elapsedTimeStructured.hours = Math.floor(result.elapsedTime / 3600)
-        result.elapsedTimeStructured.minutes = Math.floor((result.elapsedTime - (result.elapsedTimeStructured.hours * 3600)) / 60)
-        result.elapsedTimeStructured.seconds = result.elapsedTime - (result.elapsedTimeStructured.hours * 3600) - (result.elapsedTimeStructured.minutes * 60)
+        result.movingTime = endMovingTime && startMovingTime ? endMovingTime - startMovingTime : (result.elapsedTime ? result.elapsedTime : undefined)
+        result.movingTimeStructured.hours = result.movingTime ? Math.floor(result.movingTime / 3600) : undefined
+        result.movingTimeStructured.minutes = result.movingTime ? Math.floor((result.movingTime - (result.movingTimeStructured.hours * 3600)) / 60) : undefined
+        result.movingTimeStructured.seconds = result.movingTime ? result.movingTime - (result.movingTimeStructured.hours * 3600) - (result.movingTimeStructured.minutes * 60) : undefined
+        result.elapsedTimeStructured.hours = result.elapsedTime ? Math.floor(result.elapsedTime / 3600) : undefined
+        result.elapsedTimeStructured.minutes = result.elapsedTime ? Math.floor((result.elapsedTime - (result.elapsedTimeStructured.hours * 3600)) / 60) : undefined
+        result.elapsedTimeStructured.seconds = result.elapsedTime ? result.elapsedTime - (result.elapsedTimeStructured.hours * 3600) - (result.elapsedTimeStructured.minutes * 60) : undefined
         console.log('computeDuration result: ', result)
         return result
     },
 
     getSecondsFrom1900(dateTimeStructured) {
+        if(!dateTimeStructured.year || !dateTimeStructured.month || !dateTimeStructured.day || dateTimeStructured.hours === undefined || dateTimeStructured.minutes === undefined || dateTimeStructured.seconds === undefined) return undefined
         let result
         let yearsFrom1900 = dateTimeStructured.year - 1900
         let leapYears = Math.floor(yearsFrom1900 / 4) - Math.floor(dateTimeStructured.year / 100) + Math.floor(dateTimeStructured.year / 400) + 15
@@ -462,6 +467,7 @@ const utilsFunction = {
     },
 
     getDatetimeStringifiedFromStructured(dateTimeStructured) {
+        if(!dateTimeStructured.year || !dateTimeStructured.month || !dateTimeStructured.day) return undefined
         let h = String(dateTimeStructured.hours).padStart(2,'0')
         let min = String(dateTimeStructured.minutes).padStart(2,'0')
         let s = String(dateTimeStructured.seconds).padStart(2,'0')
@@ -469,6 +475,7 @@ const utilsFunction = {
         return result
     },
     getDateStringifiedFromStructured(dateTimeStructured) {
+        if(!dateTimeStructured.year || !dateTimeStructured.month || !dateTimeStructured.day) return undefined
         let y = dateTimeStructured.year
         let m = (String(dateTimeStructured.month)).padStart(2,'0')
         let d = String(dateTimeStructured.day).padStart(2,'0')

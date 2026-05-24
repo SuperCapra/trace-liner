@@ -199,6 +199,7 @@ class Homepage extends React.Component{
           }
 
           let averageSpeed = utils.getAverageSpeedMetric(activityPreparing.distance, activityPreparing.movingTime)
+          console.log('averageSpeed: ', averageSpeed)
           let pace = utils.getPaceMetric(activityPreparing.distance, activityPreparing.movingTime)
           activityPreparing.movingTime = activityPreparing.coordinates && activityPreparing.coordinates.length ? activityPreparing.coordinates.length : undefined
           activityPreparing.durationMoving = activityPreparing.movingTime
