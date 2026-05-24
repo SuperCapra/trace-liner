@@ -277,6 +277,7 @@ function ButtonImage(props) {
   }
 
   const enableMode5 = () => {
+    setShowName(true)
     setShowDistance(true)
     setShowElevation(true)
     setShowDuration(true)
@@ -435,14 +436,14 @@ function ButtonImage(props) {
   
   const textRouteController = (label, propagationKey, isVisible, deactivated) => {
     let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
         {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
       <p className="p-dimention-xs">{vocabulary[language][label]}</p>
     </div>)
     let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ViewSVG style={subEyeStyle}/>)}
         {!isVisible && (<HideSVG style={subEyeStyle}/>)}
       </div>
@@ -452,14 +453,14 @@ function ButtonImage(props) {
   }
   const textViewController = (label, propagationKey, value, isVisible, deactivated) => {
     let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ViewSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
         {!isVisible && (<HideSVG style={subEyeStyle} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
       <p className="p-dimention-xs">{vocabulary[language][label]}: {value}</p>
     </div>)
     let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ViewSVG style={subEyeStyle}/>)}
         {!isVisible && (<HideSVG style={subEyeStyle}/>)}
       </div>
@@ -469,14 +470,14 @@ function ButtonImage(props) {
   }
   const textArrowController = (label, propagationKey, isVisible, deactivated) => {
     let activatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-activated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ArrowDownSVG style={subSwitchStyle} onClick={() => propagateShowHide(propagationKey)} />)}
         {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown} onClick={() => propagateShowHide(propagationKey)} />)}
       </div>
       <p className="p-dimention-xs">{vocabulary[language][label]}</p>
     </div>)
     let deactivatedElement = (<div className="wrapper-buttons-left wrapper-buttons-left-deactivated">
-      <div>
+      <div className="height-fixed">
         {isVisible && (<ArrowDownSVG style={subSwitchStyle}/>)}
         {!isVisible && (<ArrowDownSVG style={subSwitchStyleDown}/>)}
       </div>
@@ -548,17 +549,17 @@ function ButtonImage(props) {
 
     return (<div className="wrapper-modes-text">
       <div className="wrapper-modes">        
-        <div className="wrapper-buttons-left">
+        <div className="wrapper-buttons-left height-fixed">
           {showMode1 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
           {!showMode1 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode1')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_1}</p>
         </div>
-        <div className="wrapper-buttons-left">
+        <div className="wrapper-buttons-left height-fixed">
           {showMode5 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           {!showMode5 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode5')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_2}</p>
         </div>
-        <div className="wrapper-buttons-left margin-bottom-20-percent">
+        <div className="wrapper-buttons-left margin-bottom-20-percent height-fixed">
           {showMode6 && (<ViewSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           {!showMode6 && (<HideSVG style={eyeStyle} onClick={() => propagateShowHide('mode6')} />)}
           <p className="p-dimention-xs">{vocabulary[language].MODE_3}</p>
@@ -574,7 +575,7 @@ function ButtonImage(props) {
         </div>
       </div>
       <div className="wrapper-texts">
-        {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showDate, showMode6)}
+        {activity.beautyName && textViewController('BUTTON_TITLE', 'name', activity.beautyName, showName, showMode6)}
         {activity.beautyDatetimeLanguages && activity.beautyDatetimeLanguages[language] && textViewController('BUTTON_DATE', 'date', activity.beautyDatetimeLanguages[language], showDate, showMode6 || showMode5)}
         {activity[unitMeasure] && activity[unitMeasure].beautyDistance && elemenntDistance}
         {activity[unitMeasure] && activity[unitMeasure].beautyElevation && elemenntElevation}
