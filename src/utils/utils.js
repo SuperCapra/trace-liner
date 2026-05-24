@@ -382,8 +382,8 @@ const utilsFunction = {
         if(!durationStream || !durationStream.length) return undefined
         let startRawTime = durationStream[0].time
         let endRawTime = durationStream[durationStream.length - 1].time
-        console.log('startRawTime: ', startRawTime.substring(0,10))
-        console.log('endRawTime: ', endRawTime.substring(0,10))
+        console.log('startRawTime: ', startRawTime?.substring(0,10))
+        console.log('endRawTime: ', endRawTime?.substring(0,10))
         let result = {
             movingTime: 0,
             movingTimeStructured: {
@@ -397,7 +397,7 @@ const utilsFunction = {
                 minutes: 0,
                 seconds: 0,
             },
-            startDate: startRawTime.substring(0,10),
+            startDate: startRawTime?.substring(0,10),
             startLocalDate: undefined,
             startDateTime: startRawTime,
             startLocalDateTime: undefined,
@@ -409,7 +409,7 @@ const utilsFunction = {
                 minutes: startRawTime ? new Date(startRawTime).getMinutes() : undefined,
                 seconds: startRawTime ? new Date(startRawTime).getSeconds() : undefined,
             },
-            endDate: endRawTime.substring(0,10),
+            endDate: endRawTime?.substring(0,10),
             endLocalDate: undefined,
             endDateTime: endRawTime,
             endLocalDateTime: undefined,
