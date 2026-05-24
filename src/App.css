@@ -397,12 +397,18 @@ p {
 }
 .wrapper-buttons-left{
   font-size: calc(3vmin);
-  height: 30px;
+  min-height: 30px;
+  /* height: 30px; */
   display:flex;
   flex-direction: row;
   align-items: center;
   justify-content: left;
   text-align: left;
+}
+.height-fixed{
+  height: 30px !important;
+  display: flex;
+  align-items: center;
 }
 .wrapper-buttons-left-deactivated{
   text-decoration: line-through;
