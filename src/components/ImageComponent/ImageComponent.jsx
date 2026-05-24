@@ -990,6 +990,7 @@ function ImageComponent(props) {
           enableMode1(false, false, false)
         }
       } else if(data.subtype === 'mode1') {
+        // Regular mode
         setInfoLog(saleforceApiUtils.setMode1(infoLog))
         setShowMode1(data.show)
         if(data.show) {
@@ -1018,6 +1019,7 @@ function ImageComponent(props) {
           enableMode4(data.start)
         }
       } else if(data.subtype === 'mode5') {
+        // Mode with the line undeneath (mode 2 on the front end)
         setInfoLog(saleforceApiUtils.setMode5(infoLog))
         setShowMode5(data.show)
         if(data.show) {
@@ -1025,6 +1027,7 @@ function ImageComponent(props) {
           enableMode5(data.start)
         }
       } else if(data.subtype === 'mode6') {
+        // Mode only with the data (mode 6 on the front end)
         setInfoLog(saleforceApiUtils.setMode6(infoLog))
         setShowMode6(data.show)
         if(data.show) {
