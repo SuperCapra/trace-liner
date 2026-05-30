@@ -12,7 +12,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "heroku-start": "node server/server.js",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "deauth-now" : "node scripts/deauthorizeUsersNow.js",
+    "deauth-week" : "node scripts/deauthorizeUsersWeek.js",
+    "deauth" : "node scripts/deauthorizeUsers.js"
   },
   "dependencies": {
     "dotenv": "^17.4.2",
