@@ -178,6 +178,9 @@
         background-color: color-mix(in srgb, var(--palette-background) 50%, white);
         justify-content: center;
     }
+    .table-scrolling{
+        width: calc(1650px - 40px);
+    }
 }
 @media print, screen and (max-width: 1700px) {
     .label-stat{
