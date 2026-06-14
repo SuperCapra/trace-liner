@@ -266,7 +266,7 @@ app.post('/api/salesforce-login-and-upsert', authenticateToken, async (req, res)
       throw new Error(`Salesforce upsert failed: ${upsertData.message}`);
     }
 
-    console.log('Upsert Response:', upsertData);
+    //console.log('Upsert Response:', upsertData);
 
     // Send the upsert response back to the client
     res.json(upsertData);

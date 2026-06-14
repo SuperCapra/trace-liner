@@ -44,7 +44,7 @@ const dbUtils = {
           query: query,
           values: values
         }
-        console.log('query', query)
+        //console.log('query', query)
       
         return result
     },
